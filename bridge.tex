@@ -1,0 +1,136 @@
+\usepackage{color}
+\usepackage{fullpage}
+\usepackage{longtable}
+
+% Solid heart and diamond symbols for use with color fonts. Solution from
+% https://tex.stackexchange.com/questions/9641/filled-diamondsuit-and-heartsuit/9643#9643
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
+\DeclareMathSymbol{\vardiamond}{\mathalpha}{extraup}{87}
+
+% The rest is adapted from the bridge-pln package on CTAN:
+% https://ctan.org/pkg/bridge-pln
+
+% Suit definitions
+\newcommand{\s}{\ensuremath{\spadesuit}}
+\newcommand{\h}{\ensuremath{{\color{red}\varheart}}}
+\renewcommand{\d}{\ensuremath{{\color{red}\vardiamond}}}
+\renewcommand{\c}{\ensuremath{\clubsuit}}
+\newcommand{\nt}{\textsc{nt}}
+
+\newcommand{\hand}[4]{{%
+  %Example: \hand{AKJ765}{AK9}{--}{T983}
+  \setlength{\tabcolsep}{0.5ex}
+  \begin{tabular}[t]{rl}
+    \s&#1\\
+    \h&#2\\
+    \d&#3\\
+    \c&#4\\
+  \end{tabular}
+}}
+
+\newcommand{\NESW}{{
+  \setlength{\tabcolsep}{0mm}
+  \begin{centering}
+  \begin{tabular}[t]{|ccc|}
+    \hline
+    &N&\\
+    ~W&&E~{}~\\
+    &S&\\
+    \hline
+  \end{tabular}
+  \end{centering}
+}}
+
+\newcounter{dealno}
+
+\newcommand{\deal}{
+  % For an explanation of the use of \expandafter, see the definition of
+  % \problem below.
+  \ifdefined\showsolutions
+    \expandafter\fulldeal
+  \else
+    \expandafter\isolatedhand
+  \fi
+}
+
+\newcommand{\fulldeal}[6]{
+  % Arguments are: dealer, vulnerability, N E S W
+  \begin{tabular}[t]{lll}
+    \stepcounter{dealno}
+    \textbf{Deal \arabic{dealno}}&#3&
+    \begin{tabular}[t]{l}Dlr: #1\\ Vul: #2\end{tabular}\\
+    #6&\NESW&#4\\
+    &#5&
+  \end{tabular}
+}
+
+\newcommand{\isolatedhand}[6]{
+  % Arguments are: dealer, vulnerability, N E S W
+  % We only want to show dealer, vulnerability, and the South hand
+  \begin{tabular}{lll}
+    \stepcounter{dealno}
+    \textbf{Deal \arabic{dealno}}&
+    \begin{tabular}[t]{l}
+      Dlr: #1\\ Vul: #2
+    \end{tabular}&
+    #5
+  \end{tabular}
+}
+
+\newenvironment{bidding}{
+  \begin{tabular}{llll}%
+    \emph{West}&
+    \emph{North}&
+    \emph{East}&
+    \emph{South}\\}{
+  \end{tabular}
+}
+
+% It might be simplest to just check if \showsolutions is defined once at the
+% very beginning and change the difinition of \problem in response to that. but
+% this way, we can define it and undefine it in the middle of the document and
+% get interesting results. This is particularly useful during testing and
+% debugging.
+\newcommand{\problem}{%
+  \ifdefined\showsolutions
+    % We use \expandafter to get rid of the \else...\fi before passing
+    % arguments to the \problemwithsolution.
+    \expandafter\problemwithsolution
+  \else
+    \expandafter\problemwithoutsolution
+  \fi
+}
+
+\newcommand{\problemwithsolution}[4]{
+  % Arguments are: deal, bidding, answer, explanation
+  \hline\\
+  \begin{tabular}[t]{c}
+    #1\\\\#2
+  \end{tabular}
+  &
+  \begin{minipage}[t]{3in}
+    Answer: #3\\ % Extra separation between the short answer and the explanation
+
+    #4
+  \end{minipage}
+  \vspace*{0.5ex}\\
+}
+
+\newcommand{\problemwithoutsolution}[4]{
+  % Arguments are: deal, bidding, answer, explanation
+  % We surround the whole thing with blank lines to give the hand a little more
+  % room to be considered on its own.
+  \hline\\
+  #1&#2\\
+  \\
+}
+
+\newenvironment{problemset}{
+  \begin{center}
+    \begin{longtable}[H]{ll}
+}{
+      \hline
+    \end{longtable}
+  \end{center}
+}
