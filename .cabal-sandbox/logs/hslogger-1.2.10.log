@@ -1,0 +1,73 @@
+Configuring hslogger-1.2.10...
+Building hslogger-1.2.10...
+Preprocessing library hslogger-1.2.10...
+[1 of 8] Compiling System.Log       ( src/System/Log.hs, dist/dist-sandbox-f2132b95/build/System/Log.o )
+[2 of 8] Compiling System.Log.Formatter ( src/System/Log/Formatter.hs, dist/dist-sandbox-f2132b95/build/System/Log/Formatter.o )
+[3 of 8] Compiling System.Log.Handler ( src/System/Log/Handler.hs, dist/dist-sandbox-f2132b95/build/System/Log/Handler.o )
+[4 of 8] Compiling System.Log.Handler.Simple ( src/System/Log/Handler/Simple.hs, dist/dist-sandbox-f2132b95/build/System/Log/Handler/Simple.o )
+[5 of 8] Compiling System.Log.Handler.Syslog ( src/System/Log/Handler/Syslog.hs, dist/dist-sandbox-f2132b95/build/System/Log/Handler/Syslog.o )
+
+src/System/Log/Handler/Syslog.hs:52:1: Warning:
+    Module ‘Network.BSD’ is deprecated:
+      This platform dependent module is no longer supported.
+
+src/System/Log/Handler/Syslog.hs:198:16: Warning:
+    In the use of ‘sClose’ (imported from Network.Socket):
+    Deprecated: "use 'close'"
+
+src/System/Log/Handler/Syslog.hs:214:11: Warning:
+    In the use of ‘getHostByName’ (imported from Network.BSD):
+    Deprecated: "This platform dependent module is no longer supported."
+
+src/System/Log/Handler/Syslog.hs:216:41: Warning:
+    In the use of ‘hostAddresses’ (imported from Network.BSD):
+    Deprecated: "This platform dependent module is no longer supported."
+
+src/System/Log/Handler/Syslog.hs:260:33: Warning:
+    In the use of ‘sendTo’ (imported from Network.Socket):
+    Deprecated: "Use sendTo defined in "Network.Socket.ByteString""
+
+src/System/Log/Handler/Syslog.hs:261:33: Warning:
+    In the use of ‘send’ (imported from Network.Socket):
+    Deprecated: "Use send defined in "Network.Socket.ByteString""
+
+src/System/Log/Handler/Syslog.hs:278:16: Warning:
+    In the use of ‘sClose’ (imported from Network.Socket):
+    Deprecated: "use 'close'"
+[6 of 8] Compiling System.Log.Handler.Growl ( src/System/Log/Handler/Growl.hs, dist/dist-sandbox-f2132b95/build/System/Log/Handler/Growl.o )
+
+src/System/Log/Handler/Growl.hs:21:1: Warning:
+    Module ‘Network.BSD’ is deprecated:
+      This platform dependent module is no longer supported.
+
+src/System/Log/Handler/Growl.hs:47:59: Warning:
+    In the use of ‘sClose’ (imported from Network.Socket):
+    Deprecated: "use 'close'"
+
+src/System/Log/Handler/Growl.hs:50:21: Warning:
+    In the use of ‘sendTo’ (imported from Network.Socket):
+    Deprecated: "Use sendTo defined in "Network.Socket.ByteString""
+
+src/System/Log/Handler/Growl.hs:106:30: Warning:
+    In the use of ‘getHostByName’ (imported from Network.BSD):
+    Deprecated: "This platform dependent module is no longer supported."
+
+src/System/Log/Handler/Growl.hs:107:33: Warning:
+    In the use of ‘hostAddress’ (imported from Network.BSD):
+    Deprecated: "This platform dependent module is no longer supported."
+
+src/System/Log/Handler/Growl.hs:109:32: Warning:
+    In the use of ‘sendTo’ (imported from Network.Socket):
+    Deprecated: "Use sendTo defined in "Network.Socket.ByteString""
+[7 of 8] Compiling System.Log.Handler.Log4jXML ( src/System/Log/Handler/Log4jXML.hs, dist/dist-sandbox-f2132b95/build/System/Log/Handler/Log4jXML.o )
+[8 of 8] Compiling System.Log.Logger ( src/System/Log/Logger.hs, dist/dist-sandbox-f2132b95/build/System/Log/Logger.o )
+
+src/System/Log/Logger.hs:201:1: Warning:
+    Module ‘Control.Monad.Error’ is deprecated:
+      Use "Control.Monad.Except" instead
+In-place registering hslogger-1.2.10...
+Creating package registration file:
+/tmp/pkgConf-hslogger-1.29398195822001100545.10
+Installing library in
+/home/alan/bridge_trainer/.cabal-sandbox/lib/x86_64-linux-ghc-7.10.3/hslogger-1.2.10-E56kcFbQTQuLreFJ4TajrW
+Registering hslogger-1.2.10...

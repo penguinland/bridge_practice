@@ -1,0 +1,240 @@
+
+package: HUnit-1.6.0.0
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+dependencies: deepseq-1.4.1.1 call-stack-0.1.0 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: MissingH-1.4.0.1
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+dependencies: unix-2.7.1.0 time-1.5.0.1 regex-compat-0.95.1
+              random-1.1 process-1.2.3.0 parsec-3.1.13.0 old-time-1.1.0.3
+              old-locale-1.0.0.7 network-2.7.0.0 mtl-2.2.2 hslogger-1.2.10
+              filepath-1.4.0.0 directory-1.2.2.0 containers-0.5.6.2 base-4.8.2.0
+              array-0.5.1.0 HUnit-1.6.0.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: call-stack-0.1.0
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+dependencies: base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: fail-4.9.0.0
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+dependencies: base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: generic-deriving-1.12.1
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+flags: -base-4-9
+dependencies: template-haskell-2.10.0.0 ghc-prim-0.4.0.0
+              containers-0.5.6.2 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: hashable-1.2.7.0
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+flags: -sse41 sse2 integer-gmp -examples
+dependencies: text-1.2.3.0 integer-gmp-1.0.0.0 ghc-prim-0.4.0.0
+              deepseq-1.4.1.1 bytestring-0.10.6.0 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: hslogger-1.2.10
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+flags: small_base -buildtests
+dependencies: unix-2.7.1.0 time-1.5.0.1 process-1.2.3.0
+              old-locale-1.0.0.7 network-2.7.0.0 mtl-2.2.2 directory-1.2.2.0
+              containers-0.5.6.2 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: mtl-2.2.2
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+dependencies: transformers-0.4.2.0 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: network-2.7.0.0
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+dependencies: unix-2.7.1.0 bytestring-0.10.6.0 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: old-locale-1.0.0.7
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+dependencies: base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: old-time-1.1.0.3
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+dependencies: old-locale-1.0.0.7 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: parsec-3.1.13.0
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+dependencies: text-1.2.3.0 semigroups-0.18.4 mtl-2.2.2 fail-4.9.0.0
+              bytestring-0.10.6.0 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: random-1.1
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+dependencies: time-1.5.0.1 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: regex-base-0.93.2
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+flags: splitbase newbase
+dependencies: mtl-2.2.2 containers-0.5.6.2 bytestring-0.10.6.0
+              base-4.8.2.0 array-0.5.1.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: regex-compat-0.95.1
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+flags: splitbase newbase
+dependencies: regex-posix-0.95.2 regex-base-0.93.2 base-4.8.2.0
+              array-0.5.1.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: regex-posix-0.95.2
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+flags: splitbase newbase
+dependencies: regex-base-0.93.2 containers-0.5.6.2
+              bytestring-0.10.6.0 base-4.8.2.0 array-0.5.1.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: semigroups-0.18.4
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+flags: unordered-containers transformers text tagged hashable
+       deepseq containers -bytestring-builder bytestring binary
+dependencies: unordered-containers-0.2.9.0
+              transformers-compat-0.6.1.4 transformers-0.4.2.0 text-1.2.3.0
+              tagged-0.8.5 hashable-1.2.7.0 deepseq-1.4.1.1 containers-0.5.6.2
+              bytestring-0.10.6.0 binary-0.7.5.0 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: tagged-0.8.5
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+flags: transformers deepseq
+dependencies: transformers-compat-0.6.1.4 transformers-0.4.2.0
+              template-haskell-2.10.0.0 deepseq-1.4.1.1 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: text-1.2.3.0
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+flags: -integer-simple -developer -bytestring-builder
+dependencies: integer-gmp-1.0.0.0 ghc-prim-0.4.0.0 deepseq-1.4.1.1
+              bytestring-0.10.6.0 binary-0.7.5.0 base-4.8.2.0 array-0.5.1.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: transformers-compat-0.6.1.4
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+flags: -two -three mtl generic-deriving four -five
+dependencies: transformers-0.4.2.0 ghc-prim-0.4.0.0
+              generic-deriving-1.12.1 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
+
+package: unordered-containers-0.2.9.0
+os: linux
+arch: x86_64
+compiler: ghc-7.10.3
+client: cabal-install-1.22.6.0
+flags: -debug
+dependencies: hashable-1.2.7.0 deepseq-1.4.1.1 base-4.8.2.0
+install-outcome: InstallOk
+docs-outcome: NotTried
+tests-outcome: NotTried
