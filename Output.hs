@@ -1,4 +1,6 @@
-module Output (Showable, toLatex) where
+module Output (
+  Showable
+, toLatex) where
 
 class Showable a where
   toLatex :: a -> String

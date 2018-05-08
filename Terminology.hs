@@ -1,19 +1,7 @@
 module Terminology (
-  Showable
-, North
-, East
-, South
-, West
-, Suit
-, Clubs
-, Diamonds
-, Hearts
-, Spades
-, Call
-, Pass
-, Double
-, Redouble
-, Bid
+  Direction(..)
+, Suit(..)
+, Call(..)
 ) where
 
 import Output(Showable, toLatex)
@@ -40,8 +28,8 @@ instance Showable Suit where
 
 data Call = Pass | Double | Redouble | Bid Int Suit
 
-instance Showable Suit where
-    toLatex Pass     = "P"
-    toLatex Double   = "X"
-    toLatex Redouble = "XX"
-    toLatex Bid l s  = show l ++ toLatex s
+instance Showable Call where
+    toLatex Pass      = "P"
+    toLatex Double    = "X"
+    toLatex Redouble  = "XX"
+    toLatex (Bid l s) = show l ++ toLatex s
