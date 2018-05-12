@@ -8,7 +8,9 @@ module Dealer(
 , Deal
 ) where
 
+import Data.List(transpose)
 import Data.List.Utils(join, split, wholeMap, fixedWidth)
+import Data.String.Utils(strip)
 import qualified Data.Map.Strict as Map
 import System.Process(readProcess)
 
@@ -48,14 +50,38 @@ data Deal = Deal T.Direction T.Vulnerability S.Hand S.Hand S.Hand S.Hand
 
 instance Showable Deal where
     toLatex (Deal d v n e s w) =
-        "  \\deal{" ++ toLatex d ++ "}{" ++ toLatex v ++ "{%\n" ++
+        "  \\deal{" ++ toLatex d ++ "}{" ++ toLatex v ++ "}%\n" ++
         (join "" . map format $ [n, e, s, w])
       where
           format h = "    {" ++ toLatex h ++ "}\n"
 
 
-eval :: T.Direction -> T.Vulnerability -> Dealer -> IO (Maybe String)
-eval dir vul deal = let
-    result = readProcess "dealer" ["-s", "0"] (toProgram deal)
+eval :: T.Direction -> T.Vulnerability -> Dealer -> Int -> IO (Maybe Deal)
+eval dir vul deal seed = let
+    result :: IO String
+    result = readProcess "dealer" ["-s", show seed] (toProgram deal)
+
+    toSuits :: [String] -> Maybe [[String]]
+    toSuits (_:s:h:d:c:_:_:_) = Just $ map splitSuit [s, h, d, c]
+    toSuits problem       = error $ join "\n" problem
+
+    splitSuit :: String -> [String]
+    splitSuit = map strip . wholeMap (fixedWidth (repeat 20))
+
+    toHand :: [String] -> Maybe S.Hand
+    toHand (s:h:d:c:[]) = Just $ S.Hand s h d c
+    toHand  _           = Nothing
+
+    toDeal :: [[String]] -> Maybe Deal
+    toDeal suits = let
+        maybeHands = sequence . map toHand . transpose $ suits
+      in
+        case maybeHands of
+            Just (n:e:s:w:[]) -> Just $ Deal dir vul n e s w
+            Just _            -> Nothing
+            Nothing           -> Nothing
   in
-    result >>= return . Just
+    do
+        output <- result
+        let lines = split "\n" output
+        return $ toSuits lines >>= toDeal
