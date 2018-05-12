@@ -14,6 +14,7 @@ import Output(Showable, toLatex)
 import qualified Terminology as T
 
 
+--               spades hearts diams. clubs
 data Hand = Hand String String String String
 
 instance Showable Hand where
