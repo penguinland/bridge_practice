@@ -2,6 +2,7 @@ module Terminology (
   Direction(..)
 , Suit(..)
 , Call(..)
+, Vulnerability(..)
 ) where
 
 import Output(Showable, toLatex)
@@ -33,3 +34,12 @@ instance Showable Call where
     toLatex Double    = "X"
     toLatex Redouble  = "XX"
     toLatex (Bid l s) = show l ++ toLatex s
+
+
+data Vulnerability = NS | EW | Both | Neither
+
+instance Showable Vulnerability where
+    toLatex NS      = "N/S"
+    toLatex EW      = "E/W"
+    toLatex Both    = "Both"
+    toLatex Neither = "Neither"
