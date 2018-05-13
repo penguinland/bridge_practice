@@ -1,6 +1,7 @@
 module Structures (
   Hand(..)
 , Bidding
+, currentBidder
 , startBidding
 , (>-)
 ) where
@@ -35,6 +36,9 @@ instance Showable Bidding where
         formatRow = join "&" . reverse . map (fromMaybe "" . liftM toLatex)
         finish T.North = newRow
         finish _       = "&"
+
+currentBidder :: Bidding -> T.Direction
+currentBidder (Bidding d _) = d
 
 startBidding :: T.Direction -> Bidding
 startBidding T.North = Bidding T.North []

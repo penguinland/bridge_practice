@@ -5,6 +5,7 @@ import Structures(Hand(..), Bidding, startBidding, (>-))
 import Output(toLatex)
 import qualified Terminology
 import Dealer
+import Auction
 
 main :: IO ()
 --main = putStrLn . toLatex $ Hand "A K Q" "J 10 9" "8 7 6" "5 4 3 2"
@@ -17,9 +18,18 @@ main = putStrLn . toLatex $ b
         >- Terminology.Bid 1 Terminology.Spades >- Terminology.Double
         >- Terminology.Redouble >- Terminology.Bid 2 Terminology.Clubs
 -}
+{-
 main = do
   let deal = addNewReq "one" "1" newDeal
   maybeDeal <- eval Terminology.North Terminology.Both deal 0
   case maybeDeal of
     Nothing -> putStrLn "unknown"
     Just d -> putStrLn . toLatex $ d
+-}
+main = let
+    (bidding, deal) = newAuction Terminology.East &> strong1NT &> strong1NT
+    maybeDeal = eval Terminology.East Terminology.Both deal 0
+  in
+    (putStrLn . toLatex $ bidding) >> maybeDeal >>= (\deal -> case deal of
+        Nothing -> putStrLn "unknown"
+        Just d -> putStrLn . toLatex $ d)
