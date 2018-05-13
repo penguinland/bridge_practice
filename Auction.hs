@@ -1,35 +1,35 @@
 module Auction (
-  Bids
+  Auction
 , Action
 , newAuction
 , (&>)
 , rawCall
 , rawPass
 , strong1NT
+, jacobyTransfer
 ) where
 
-import Data.Bifunctor
+import Data.Bifunctor(first, second)
 
 import Dealer(Dealer, newDeal, addNewReq)
 import Structures(Bidding, startBidding, (>-), currentBidder)
 import qualified Terminology as T
 
-type Bids = (Bidding, Dealer)
+type Auction = (Bidding, Dealer)
+type Action = String -> Auction -> Auction
 
-type Action = String -> Bids -> Bids
 
-
-newAuction :: T.Direction -> Bids
+newAuction :: T.Direction -> Auction
 newAuction dealer = (startBidding dealer, newDeal)
 
 
-bids &> action = let
+auction &> action = let
     toName T.North = "north"
     toName T.East  = "east"
     toName T.South = "south"
     toName T.West  = "west"
   in
-    action (toName . currentBidder . fst $ bids) bids
+    action (toName . currentBidder . fst $ auction) auction
 
 
 rawCall :: T.Call -> Action  -- No constraints on the deal
@@ -37,6 +37,7 @@ rawCall c _ = first (>- c)
 
 rawPass :: Action
 rawPass = rawCall T.Pass
+
 
 strong1NT :: Action
 strong1NT caller =
@@ -47,3 +48,17 @@ strong1NT caller =
     second (addNewReq (caller ++ "_strong1nt_strength")
                       ("hcp(" ++ caller ++ ") >= 15 && hcp(" ++
                         caller ++ ") <= 17"))
+
+jacobyTransfer :: T.Suit -> Action
+jacobyTransfer suit caller =
+  let
+    transferSuit T.Spades = T.Hearts
+    transferSuit T.Hearts = T.Diamonds
+    transferSuit _        = error "Jacoby transfer of non-major!"
+    suitName T.Spades = "spades"
+    suitName T.Hearts = "hearts"
+    suitName _        = error "Jacoby transfer of non-major!"
+  in
+    first (>- (T.Bid 2 $ transferSuit suit)) .
+    second (addNewReq (caller ++ "_jacoby_transfer_" ++ suitName suit)
+                      (suitName suit ++ "(" ++ caller ++ ") >= 5"))

@@ -3,33 +3,34 @@ import Data.List.Utils
 
 import Structures(Hand(..), Bidding, startBidding, (>-))
 import Output(toLatex)
-import qualified Terminology
+import qualified Terminology as T
 import Dealer
 import Auction
 
 main :: IO ()
 --main = putStrLn . toLatex $ Hand "A K Q" "J 10 9" "8 7 6" "5 4 3 2"
---main = putStrLn . toLatex $ Terminology.Spades
---main = putStrLn . toLatex $ Bidding Terminology.Neither Terminology.North [[Nothing, Just Terminology.Double], [Just Terminology.Redouble]]
+--main = putStrLn . toLatex $ T.Spades
+--main = putStrLn . toLatex $ Bidding T.Neither T.North [[Nothing, Just T.Double], [Just T.Redouble]]
 {-
 main = putStrLn . toLatex $ b
   where
-    b = startBidding Terminology.West >- Terminology.Pass
-        >- Terminology.Bid 1 Terminology.Spades >- Terminology.Double
-        >- Terminology.Redouble >- Terminology.Bid 2 Terminology.Clubs
+    b = startBidding T.West >- T.Pass
+        >- T.Bid 1 T.Spades >- T.Double
+        >- T.Redouble >- T.Bid 2 T.Clubs
 -}
 {-
 main = do
   let deal = addNewReq "one" "1" newDeal
-  maybeDeal <- eval Terminology.North Terminology.Both deal 0
+  maybeDeal <- eval T.North T.Both deal 0
   case maybeDeal of
     Nothing -> putStrLn "unknown"
     Just d -> putStrLn . toLatex $ d
 -}
 main = let
-    (bidding, deal) = newAuction Terminology.East &> strong1NT &> strong1NT
-    maybeDeal = eval Terminology.East Terminology.Both deal 0
+    (bidding, deal) = newAuction T.East &> strong1NT &> rawPass &> jacobyTransfer T.Spades
+    maybeDeal = eval T.East T.Both deal 0
   in
-    (putStrLn . toLatex $ bidding) >> maybeDeal >>= (\deal -> case deal of
+    (putStrLn . toLatex $ bidding) >> putStrLn "" >> maybeDeal >>=
+    (\deal -> case deal of
         Nothing -> putStrLn "unknown"
         Just d -> putStrLn . toLatex $ d)
