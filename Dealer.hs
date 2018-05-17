@@ -4,6 +4,7 @@ module Dealer(
 , addDefn
 , addReq
 , addNewReq
+, forbidNewReq
 , eval
 , Deal
 ) where
@@ -37,6 +38,9 @@ addReq expr (Dealer m l) = Dealer m (expr:l)
 
 addNewReq :: String -> String -> Dealer -> Dealer
 addNewReq name defn = addReq name . addDefn name defn
+
+forbidNewReq :: String -> String -> Dealer -> Dealer
+forbidNewReq name defn = addReq ("!" ++ name) . addDefn name defn
 
 toProgram :: Dealer -> String
 toProgram (Dealer defns conds) = join "\n" $
@@ -101,7 +105,7 @@ eval dir vul deal seed = let
       in
         case maybeHands of
             Just (n:e:s:w:[]) -> Just $ Deal dir vul n e s w
-            Just _            -> error "Unexpected suits!"
+            Just _            -> error $ "Unexpected suits!" ++ show seed
             Nothing           -> Nothing
   in
     do

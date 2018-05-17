@@ -27,7 +27,8 @@ main = do
     Just d -> putStrLn . toLatex $ d
 -}
 main = let
-    (bidding, deal) = newAuction T.East &> strong1NT &> rawPass &> jacobyTransfer T.Spades
+    situation = strong1NT &> makePass &> jacobyTransfer T.Spades
+    ((bidding, deal), _) = situation $ newAuction T.East
     maybeDeal = eval T.East T.Both deal 0
   in
     (putStrLn . toLatex $ bidding) >> putStrLn "" >> maybeDeal >>=
