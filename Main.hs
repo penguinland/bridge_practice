@@ -31,7 +31,9 @@ main = let
     (bidding, deal) = situation $ newAuction T.East
     maybeDeal = eval T.East T.Both deal 0
   in
-    (putStrLn . toLatex $ bidding) >> putStrLn "" >> maybeDeal >>=
+    (putStrLn . toLatex $ bidding) >> putStrLn "" >>
+    (putStrLn . toProgram $ deal) >> putStrLn "" >>
+    maybeDeal >>=
     (\deal -> case deal of
         Nothing -> putStrLn "unknown"
         Just d -> putStrLn . toLatex $ d)

@@ -7,6 +7,7 @@ module Dealer(
 , forbidNewReq
 , invert
 , eval
+, toProgram -- TODO: remove when done debugging
 , Deal
 ) where
 
@@ -30,7 +31,7 @@ newDeal = Dealer Map.empty []
 instance Monoid Dealer where
     mempty = newDeal
     mappend (Dealer defnsA reqsA) (Dealer defnsB reqsB) =
-        Dealer (Map.unionWithKey noDupes defnsA defnsB) (reqsA ++ reqsB)
+        Dealer (Map.unionWithKey noDupes defnsA defnsB) (reqsB ++ reqsA)
       where
         noDupes k a b = if a == b then a else error $ "2 definitons for " ++ k
 
@@ -58,7 +59,7 @@ toProgram (Dealer defns conds) = join "\n" $
     ["generate 1000000", "produce 1", ""] ++
     (Map.foldMapWithKey (\k v -> ["    " ++ k ++ " = " ++ v]) defns)
     ++ ["", "condition",
-        "    " ++ (join " && " conds),
+        "    " ++ (join " && " . reverse $ conds),
         "action", "    printall"]
 
 --                                           North  East   South  West

@@ -86,20 +86,20 @@ pointRange min max =
     constrain (join "_" ["range", show min, show max])
               ["hcp(", ") >= " ++ show min ++ " && hcp(", ") <= " ++ show max]
 
-suitLengthOp :: String -> T.Suit -> Int -> Action
-suitLengthOp op suit length = let
+suitLengthOp :: String -> String -> T.Suit -> Int -> Action
+suitLengthOp op suffix suit length = let
     toName T.Spades   = "spades"
     toName T.Hearts   = "hearts"
     toName T.Diamonds = "diamonds"
     toName T.Clubs    = "clubs"
     suitName = toName suit
   in
-    constrain (join "_" [suitName, "eq", show length])
+    constrain (join "_" [suitName, suffix, show length])
               [suitName ++ "(", ") " ++ op ++ " " ++ show length]
 
-suitLengthEq = suitLengthOp "=="
+suitLengthEq = suitLengthOp "==" "eq"
 
-suitLengthMin = suitLengthOp ">="
+suitLengthMin = suitLengthOp ">=" "gt"
 
 
 strong1NT :: Action
