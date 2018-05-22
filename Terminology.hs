@@ -16,6 +16,12 @@ instance Showable Direction where
     toLatex South = "S"
     toLatex West  = "W"
 
+instance Show Direction where
+    show North = "north"
+    show East  = "east"
+    show South = "south"
+    show West  = "west"
+
 
 data Suit = Clubs | Diamonds | Hearts | Spades | Notrump
 
@@ -25,6 +31,12 @@ instance Showable Suit where
     toLatex Hearts    = "\\h"
     toLatex Spades    = "\\s"
     toLatex Notrump   = "\\nt"
+
+instance Show Suit where
+    show Clubs =    "clubs"
+    show Diamonds = "diamonds"
+    show Hearts =   "hearts"
+    show Spades =   "spades"
 
 
 data Call = Pass | Double | Redouble | Bid Int Suit

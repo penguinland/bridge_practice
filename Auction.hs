@@ -57,11 +57,7 @@ newAuction dealer = (startBidding dealer, newDeal)
 constrain :: String -> [String] -> Action
 constrain name defnPieces (bidding, dealer) =
   let
-    toName T.North = "north"
-    toName T.East  = "east"
-    toName T.South = "south"
-    toName T.West  = "west"
-    bidderName = toName . currentBidder $ bidding
+    bidderName = show . currentBidder $ bidding
     fullName = name ++ "_" ++ bidderName
     fullDefn = join bidderName defnPieces
   in
@@ -87,15 +83,9 @@ pointRange min max =
               ["hcp(", ") >= " ++ show min ++ " && hcp(", ") <= " ++ show max]
 
 suitLengthOp :: String -> String -> T.Suit -> Int -> Action
-suitLengthOp op suffix suit length = let
-    toName T.Spades   = "spades"
-    toName T.Hearts   = "hearts"
-    toName T.Diamonds = "diamonds"
-    toName T.Clubs    = "clubs"
-    suitName = toName suit
-  in
-    constrain (join "_" [suitName, suffix, show length])
-              [suitName ++ "(", ") " ++ op ++ " " ++ show length]
+suitLengthOp op suffix suit length =
+    constrain (join "_" [show suit, suffix, show length])
+              [show suit ++ "(", ") " ++ op ++ " " ++ show length]
 
 suitLengthEq = suitLengthOp "==" "eq"
 
