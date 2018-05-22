@@ -28,7 +28,7 @@ main = do
 -}
 main = let
     situation = strong1NT &> makePass &> jacobyTransfer T.Spades
-    ((bidding, deal), _) = situation $ newAuction T.East
+    (bidding, deal) = situation $ newAuction T.East
     maybeDeal = eval T.East T.Both deal 0
   in
     (putStrLn . toLatex $ bidding) >> putStrLn "" >> maybeDeal >>=

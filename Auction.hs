@@ -15,13 +15,13 @@ import Control.Monad.Trans.State.Strict(State, state, evalState, get, put)
 import Data.Bifunctor(first, second)
 import Data.List.Utils(join)
 
-import Dealer(Dealer, newDeal, addNewReq, forbidNewReq)
+import Dealer(Dealer, newDeal, addNewReq, forbidNewReq, invert)
 import Structures(Bidding, startBidding, (>-), currentBidder)
 import qualified Terminology as T
 
 -- The Bool is whether subsequent actions are to be taken (True) or forbidden
 -- (False).
-type Auction = ((Bidding, Dealer), Bool)
+type Auction = (Bidding, Dealer)
 type Action = Auction -> Auction
 
 {-
@@ -41,20 +41,21 @@ instance Monoid Action where
 -- 6-card suit and game-going strength at the same time, even though a 6 card
 -- suit on its own is fine and game-going strength on its own is also fine.
 forbid :: Action -> Action
-forbid action (bidding, False) = (bidding, False)  -- Double-forbids don't count
-forbid action (bidding, True) = (second $ const True) . action .
-                                (second $ const False) $ (bidding, True)
+forbid action (bidding, dealer) = let
+    (_, dealerToInvert) = action . newAuction . currentBidder $ bidding
+  in
+    (bidding, dealer `mappend` invert dealerToInvert)
 
 
 newAuction :: T.Direction -> Auction
-newAuction dealer = ((startBidding dealer, newDeal), True)
+newAuction dealer = (startBidding dealer, newDeal)
 
 
 -- constrain takes the name of a constraint and pieces of a definition that
 -- should be joined together with the name of the bidder.
 -- TODO: consider making the pieces a String -> String function instead?
 constrain :: String -> [String] -> Action
-constrain name defnPieces ((bidding, dealer), require) =
+constrain name defnPieces (bidding, dealer) =
   let
     toName T.North = "north"
     toName T.East  = "east"
@@ -63,14 +64,12 @@ constrain name defnPieces ((bidding, dealer), require) =
     bidderName = toName . currentBidder $ bidding
     fullName = name ++ "_" ++ bidderName
     fullDefn = join bidderName defnPieces
-    op = if require then addNewReq else forbidNewReq
   in
-    ((bidding, op fullName fullDefn dealer), require)
+    (bidding, addNewReq fullName fullDefn dealer)
 
 
 makeCall :: T.Call -> Action
-makeCall call (auction, False) = (auction, False)
-makeCall call (auction, True) = (first (>- call) auction, True)
+makeCall call = first (>- call)
 
 
 makePass :: Action

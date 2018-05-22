@@ -5,6 +5,7 @@ module Dealer(
 , addReq
 , addNewReq
 , forbidNewReq
+, invert
 , eval
 , Deal
 ) where
@@ -26,6 +27,13 @@ data Dealer = Dealer (Map.Map String String) [String]
 newDeal :: Dealer
 newDeal = Dealer Map.empty []
 
+instance Monoid Dealer where
+    mempty = newDeal
+    mappend (Dealer defnsA reqsA) (Dealer defnsB reqsB) =
+        Dealer (Map.unionWithKey noDupes defnsA defnsB) (reqsA ++ reqsB)
+      where
+        noDupes k a b = if a == b then a else error $ "2 definitons for " ++ k
+
 addDefn :: String -> String -> Dealer -> Dealer
 addDefn name defn (Dealer m l) =
   case Map.lookup name m of
@@ -41,6 +49,9 @@ addNewReq name defn = addReq name . addDefn name defn
 
 forbidNewReq :: String -> String -> Dealer -> Dealer
 forbidNewReq name defn = addReq ("!" ++ name) . addDefn name defn
+
+invert :: Dealer -> Dealer
+invert (Dealer defns reqs) = Dealer defns ["!(" ++ join " && " reqs ++ ")"]
 
 toProgram :: Dealer -> String
 toProgram (Dealer defns conds) = join "\n" $
