@@ -1,5 +1,6 @@
 import Data.Maybe
 import Data.List.Utils
+--import Control.Monad.Trans.State.Strict(execState)
 
 import Structures(Hand(..), Bidding, startBidding, (>-))
 import Output(toLatex)
@@ -27,8 +28,8 @@ main = do
     Just d -> putStrLn . toLatex $ d
 -}
 main = let
-    situation = strong1NT &> makePass &> jacobyTransfer T.Spades
-    (bidding, deal) = situation $ newAuction T.East
+    situation = strong1NT >> makePass >> jacobyTransfer T.Spades
+    (bidding, deal) = finish T.East situation
     maybeDeal = eval T.East T.Both deal 0
   in
     (putStrLn . toLatex $ bidding) >> putStrLn "" >>

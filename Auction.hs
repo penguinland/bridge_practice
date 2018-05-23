@@ -2,7 +2,7 @@ module Auction (
   Auction
 , Action
 , newAuction
-, (&>)
+, finish
 , forbid
 , makeCall
 , makePass
@@ -11,7 +11,7 @@ module Auction (
 , jacobyTransfer
 ) where
 
-import Control.Monad.Trans.State.Strict(State, state, evalState, get, put)
+import Control.Monad.Trans.State.Strict(State, execState, get, put, modify)
 import Data.Bifunctor(first, second)
 import Data.List.Utils(join)
 
@@ -19,53 +19,40 @@ import Dealer(Dealer, newDeal, addNewReq, forbidNewReq, invert)
 import Structures(Bidding, startBidding, (>-), currentBidder)
 import qualified Terminology as T
 
--- The Bool is whether subsequent actions are to be taken (True) or forbidden
--- (False).
 type Auction = (Bidding, Dealer)
-type Action = Auction -> Auction
-
-{-
--- This doesn't work because type synonyms like Action cannot be part of type
--- classes without using the TypeSynonymInstances extension.
-instance Monoid Action where
-    mempty = id
-    mappend = flip (.)
--}
-
-(&>) :: Action -> Action -> Action
-(&>) = flip (.)  -- Think of this as mappend
-
-
--- ERROR: this doesn't forbid groups of things together. Example: if Jacoby
--- Transfers need to forbid Texas Transfers, we need to forbid having both a
--- 6-card suit and game-going strength at the same time, even though a 6 card
--- suit on its own is fine and game-going strength on its own is also fine.
-forbid :: Action -> Action
-forbid action (bidding, dealer) = let
-    (_, dealerToInvert) = action . newAuction . currentBidder $ bidding
-  in
-    (bidding, dealer `mappend` invert dealerToInvert)
+type Action = State Auction ()
 
 
 newAuction :: T.Direction -> Auction
 newAuction dealer = (startBidding dealer, newDeal)
 
 
+finish :: T.Direction -> Action -> Auction
+finish firstBidder = flip execState (newAuction firstBidder)
+
+
+forbid :: Action -> Action
+forbid action = do
+    (bidding, dealer) <- get
+    let freshAuction = newAuction . currentBidder $ bidding
+        (_, dealerToInvert) = execState action freshAuction
+    put (bidding, dealer `mappend` invert dealerToInvert)
+
+
 -- constrain takes the name of a constraint and pieces of a definition that
 -- should be joined together with the name of the bidder.
 -- TODO: consider making the pieces a String -> String function instead?
 constrain :: String -> [String] -> Action
-constrain name defnPieces (bidding, dealer) =
-  let
-    bidderName = show . currentBidder $ bidding
-    fullName = name ++ "_" ++ bidderName
-    fullDefn = join bidderName defnPieces
-  in
-    (bidding, addNewReq fullName fullDefn dealer)
+constrain name defnPieces = do
+    (bidding, dealer) <- get
+    let bidderName = show . currentBidder $ bidding
+        fullName = name ++ "_" ++ bidderName
+        fullDefn = join bidderName defnPieces
+    put (bidding, addNewReq fullName fullDefn dealer)
 
 
 makeCall :: T.Call -> Action
-makeCall call = first (>- call)
+makeCall call = modify $ first (>- call)
 
 
 makePass :: Action
@@ -87,38 +74,35 @@ suitLengthOp op suffix suit length =
     constrain (join "_" [show suit, suffix, show length])
               [show suit ++ "(", ") " ++ op ++ " " ++ show length]
 
-suitLengthEq = suitLengthOp "==" "eq"
+suitLength = suitLengthOp "==" "eq"
 
-suitLengthMin = suitLengthOp ">=" "gt"
+minSuitLength = suitLengthOp ">=" "ge"
+
+maxSuitLength = suitLengthOp "<=" "le"
 
 
 strong1NT :: Action
-strong1NT = balancedHand &> pointRange 15 17 &> makeCall (T.Bid 1 T.Notrump)
+strong1NT = do
+    balancedHand
+    pointRange 15 17
+    makeCall $ T.Bid 1 T.Notrump
+
+
+majorTransferSuit :: T.Suit -> T.Suit
+majorTransferSuit T.Spades = T.Hearts
+majorTransferSuit T.Hearts = T.Diamonds
+majorTransferSuit _        = error "Major transfer of non-major!"
 
 
 texasTransfer :: T.Suit -> Action
-texasTransfer suit =
-  let
-    transferSuit T.Spades = T.Hearts
-    transferSuit T.Hearts = T.Diamonds
-    transferSuit _        = error "Texas transfer of non-major!"
-    suitName T.Spades = "spades"
-    suitName T.Hearts = "hearts"
-    suitName _        = error "Texas transfer of non-major!"
-  in
-    suitLengthMin suit 6 &> pointRange 10 15 &>
-    makeCall (T.Bid 4 $ transferSuit suit)
+texasTransfer suit = do
+    minSuitLength suit 6
+    pointRange 10 15
+    makeCall (T.Bid 4 $ majorTransferSuit suit)
 
 
 jacobyTransfer :: T.Suit -> Action
-jacobyTransfer suit =
-  let
-    transferSuit T.Spades = T.Hearts
-    transferSuit T.Hearts = T.Diamonds
-    transferSuit _        = error "Jacoby transfer of non-major!"
-    suitName T.Spades = "spades"
-    suitName T.Hearts = "hearts"
-    suitName _        = error "Jacoby transfer of non-major!"
-  in
-    suitLengthMin suit 5 &> forbid (texasTransfer suit) &>
-    makeCall (T.Bid 2 $ transferSuit suit)
+jacobyTransfer suit = do
+    minSuitLength suit 5
+    forbid (texasTransfer suit)
+    makeCall (T.Bid 2 $ majorTransferSuit suit)
