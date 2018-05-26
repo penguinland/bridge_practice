@@ -42,9 +42,9 @@ instance Show Suit where
 data Call = Pass | Double | Redouble | Bid Int Suit
 
 instance Showable Call where
-    toLatex Pass      = "P"
-    toLatex Double    = "X"
-    toLatex Redouble  = "XX"
+    toLatex Pass      = "Pass"
+    toLatex Double    = "Dbl"
+    toLatex Redouble  = "Rdb"
     toLatex (Bid l s) = show l ++ toLatex s
 
 

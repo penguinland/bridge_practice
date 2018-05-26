@@ -7,6 +7,7 @@ import Output(toLatex)
 import qualified Terminology as T
 import DealerProg
 import Auction
+import Situation
 
 main :: IO ()
 --main = putStrLn . toLatex $ Hand "A K Q" "J 10 9" "8 7 6" "5 4 3 2"
@@ -27,14 +28,27 @@ main = do
     Nothing -> putStrLn "unknown"
     Just d -> putStrLn . toLatex $ d
 -}
+--main = putStrLn . toLatex . fst . newAuction $ T.South
 main = let
-    situation = strong1NT >> makePass >> jacobyTransfer T.Spades
-    (bidding, deal) = finish T.East situation
-    maybeDeal = eval T.East T.Both deal 0
-  in
-    (putStrLn . toLatex $ bidding) >> putStrLn "" >>
-    (putStrLn . toProgram $ deal) >> putStrLn "" >>
-    maybeDeal >>=
-    (\deal -> case deal of
-        Nothing -> putStrLn "unknown"
-        Just d -> putStrLn . toLatex $ d)
+    situation = strong1NT >> makePass >> jacobyTransfer T.Spades >> makePass
+    (bidding, deal) = finish T.South situation
+    --maybeDeal = eval T.South T.Both deal 0
+    problem = Situation T.South T.Both deal bidding (T.Bid 2 T.Spades)
+        "It's a Jacoby transfer."
+  in do
+    putStrLn . toLatex $ bidding
+    putStrLn ""
+    putStrLn . toProgram $ deal
+    putStrLn ""
+    {-
+    deal <- maybeDeal
+    case deal of
+        Nothing -> putStrLn "invalid deal"
+        Just d -> putStrLn . toLatex $ d
+    putStrLn ""
+    -}
+    maybeSitInst <- instantiate problem 0
+    case maybeSitInst of
+        Nothing -> putStrLn "invalid problem"
+        Just s -> putStrLn . toLatex $ s
+    putStrLn ""
