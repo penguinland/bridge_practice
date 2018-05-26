@@ -15,11 +15,11 @@ import Control.Monad.Trans.State.Strict(State, execState, get, put, modify)
 import Data.Bifunctor(first, second)
 import Data.List.Utils(join)
 
-import Dealer(Dealer, newDeal, addNewReq, forbidNewReq, invert)
+import DealerProg(DealerProg, newDeal, addNewReq, forbidNewReq, invert)
 import Structures(Bidding, startBidding, (>-), currentBidder)
 import qualified Terminology as T
 
-type Auction = (Bidding, Dealer)
+type Auction = (Bidding, DealerProg)
 type Action = State Auction ()
 
 
@@ -33,10 +33,10 @@ finish firstBidder = flip execState (newAuction firstBidder)
 
 forbid :: Action -> Action
 forbid action = do
-    (bidding, dealer) <- get
+    (bidding, dealerProg) <- get
     let freshAuction = newAuction . currentBidder $ bidding
         (_, dealerToInvert) = execState action freshAuction
-    put (bidding, dealer `mappend` invert dealerToInvert)
+    put (bidding, dealerProg `mappend` invert dealerToInvert)
 
 
 -- constrain takes the name of a constraint and pieces of a definition that
@@ -44,11 +44,11 @@ forbid action = do
 -- TODO: consider making the pieces a String -> String function instead?
 constrain :: String -> [String] -> Action
 constrain name defnPieces = do
-    (bidding, dealer) <- get
+    (bidding, dealerProg) <- get
     let bidderName = show . currentBidder $ bidding
         fullName = name ++ "_" ++ bidderName
         fullDefn = join bidderName defnPieces
-    put (bidding, addNewReq fullName fullDefn dealer)
+    put (bidding, addNewReq fullName fullDefn dealerProg)
 
 
 makeCall :: T.Call -> Action

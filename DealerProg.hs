@@ -1,5 +1,5 @@
-module Dealer(
-  Dealer
+module DealerProg(
+  DealerProg
 , newDeal
 , addDefn
 , addReq
@@ -23,39 +23,40 @@ import qualified Structures as S
 import qualified Terminology as T
 
 
-data Dealer = Dealer (Map.Map String String) [String]
+data DealerProg = DealerProg (Map.Map String String) [String]
 
-newDeal :: Dealer
-newDeal = Dealer Map.empty []
+newDeal :: DealerProg
+newDeal = DealerProg Map.empty []
 
-instance Monoid Dealer where
+instance Monoid DealerProg where
     mempty = newDeal
-    mappend (Dealer defnsA reqsA) (Dealer defnsB reqsB) =
-        Dealer (Map.unionWithKey noDupes defnsA defnsB) (reqsB ++ reqsA)
+    mappend (DealerProg defnsA reqsA) (DealerProg defnsB reqsB) =
+        DealerProg (Map.unionWithKey noDupes defnsA defnsB) (reqsB ++ reqsA)
       where
         noDupes k a b = if a == b then a else error $ "2 definitons for " ++ k
 
-addDefn :: String -> String -> Dealer -> Dealer
-addDefn name defn (Dealer m l) =
+addDefn :: String -> String -> DealerProg -> DealerProg
+addDefn name defn (DealerProg m l) =
   case Map.lookup name m of
-    Nothing    -> Dealer (Map.insert name defn m) l
-    Just defn' -> if defn == defn' then Dealer m l
+    Nothing    -> DealerProg (Map.insert name defn m) l
+    Just defn' -> if defn == defn' then DealerProg m l
                                    else error $ "2 defintions for " ++ name
 
-addReq :: String -> Dealer -> Dealer
-addReq expr (Dealer m l) = Dealer m (expr:l)
+addReq :: String -> DealerProg -> DealerProg
+addReq expr (DealerProg m l) = DealerProg m (expr:l)
 
-addNewReq :: String -> String -> Dealer -> Dealer
+addNewReq :: String -> String -> DealerProg -> DealerProg
 addNewReq name defn = addReq name . addDefn name defn
 
-forbidNewReq :: String -> String -> Dealer -> Dealer
+forbidNewReq :: String -> String -> DealerProg -> DealerProg
 forbidNewReq name defn = addReq ("!" ++ name) . addDefn name defn
 
-invert :: Dealer -> Dealer
-invert (Dealer defns reqs) = Dealer defns ["!(" ++ join " && " reqs ++ ")"]
+invert :: DealerProg -> DealerProg
+invert (DealerProg defns reqs) =
+    DealerProg defns ["!(" ++ join " && " reqs ++ ")"]
 
-toProgram :: Dealer -> String
-toProgram (Dealer defns conds) = join "\n" $
+toProgram :: DealerProg -> String
+toProgram (DealerProg defns conds) = join "\n" $
     ["generate 1000000", "produce 1", ""] ++
     (Map.foldMapWithKey (\k v -> ["    " ++ k ++ " = " ++ v]) defns)
     ++ ["", "condition",
@@ -76,7 +77,7 @@ instance Showable Deal where
           noPercent (a:z) = a:(noPercent z)
 
 
-eval :: T.Direction -> T.Vulnerability -> Dealer -> Int -> IO (Maybe Deal)
+eval :: T.Direction -> T.Vulnerability -> DealerProg -> Int -> IO (Maybe Deal)
 eval dir vul deal seed = let
     result :: IO (Maybe String)
     result = do

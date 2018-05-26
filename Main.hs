@@ -5,7 +5,7 @@ import Data.List.Utils
 import Structures(Hand(..), Bidding, startBidding, (>-))
 import Output(toLatex)
 import qualified Terminology as T
-import Dealer
+import DealerProg
 import Auction
 
 main :: IO ()
