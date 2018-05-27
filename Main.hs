@@ -30,16 +30,16 @@ main = do
 -}
 --main = putStrLn . toLatex . fst . newAuction $ T.South
 main = let
-    situation = strong1NT >> makePass >> jacobyTransfer T.Spades >> makePass
-    (bidding, deal) = finish T.South situation
+    scenario = strong1NT >> makePass >> jacobyTransfer T.Spades >> makePass
+    --(bidding, deal) = finish T.South situation
     --maybeDeal = eval T.South T.Both deal 0
-    problem = Situation T.South T.Both deal bidding (T.Bid 2 T.Spades)
+    problem = situation T.South T.Both scenario (T.Bid 2 T.Spades)
         "It's a Jacoby transfer."
   in do
-    putStrLn . toLatex $ bidding
-    putStrLn ""
-    putStrLn . toProgram $ deal
-    putStrLn ""
+    --putStrLn . toLatex $ bidding
+    --putStrLn ""
+    --putStrLn . toProgram $ deal
+    --putStrLn ""
     {-
     deal <- maybeDeal
     case deal of

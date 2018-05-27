@@ -6,6 +6,11 @@ module Auction (
 , forbid
 , makeCall
 , makePass
+, pointRange
+, suitLength
+, minSuitLength
+, maxSuitLength
+, allSuits
 , strong1NT
 , texasTransfer
 , jacobyTransfer
@@ -81,6 +86,9 @@ minSuitLength = suitLengthOp ">=" "ge"
 maxSuitLength = suitLengthOp "<=" "le"
 
 
+allSuits :: (T.Suit -> Action) -> Action
+allSuits = sequence_ . flip map [T.Clubs, T.Diamonds, T.Hearts, T.Spades]
+
 strong1NT :: Action
 strong1NT = do
     balancedHand
@@ -106,3 +114,8 @@ jacobyTransfer suit = do
     minSuitLength suit 5
     forbid (texasTransfer suit)
     makeCall (T.Bid 2 $ majorTransferSuit suit)
+
+
+-- TODO: withholdBid
+-- TODO: hasCard
+-- TODO: rule of 20, etc.?
