@@ -1,5 +1,6 @@
 module Situation (
-  situation
+  Situation
+, situation
 , SituationInstance(..)
 , instantiate
 ) where

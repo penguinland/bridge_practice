@@ -1,6 +1,7 @@
 import Data.Maybe
 import Data.List.Utils
 --import Control.Monad.Trans.State.Strict(execState)
+import System.Random(mkStdGen, StdGen)
 
 import Structures(Hand(..), Bidding, startBidding, (>-))
 import Output(toLatex)
@@ -34,8 +35,11 @@ main = let
     scenario = strong1NT >> makePass >> jacobyTransfer T.Spades >> makePass
     --(bidding, deal) = finish T.South situation
     --maybeDeal = eval T.South T.Both deal 0
-    problem = situation T.South T.Both scenario (T.Bid 2 T.Spades)
+    problem' = situation T.South T.Both scenario (T.Bid 2 T.Spades)
         "It's a Jacoby transfer."
+    topic :: StdGen -> [Situation]
+    topic _ = [problem']
+    problem = Top.choice (mkStdGen 0 :: StdGen) topic
   in do
     --putStrLn . toLatex $ bidding
     --putStrLn ""
