@@ -9,7 +9,7 @@ import qualified Terminology as T
 import DealerProg
 import Auction
 import Situation
-import qualified Topic as Top
+import Topic(wrap, choose, (<~), base, option)
 
 main :: IO ()
 --main = putStrLn . toLatex $ Hand "A K Q" "J 10 9" "8 7 6" "5 4 3 2"
@@ -32,14 +32,24 @@ main = do
 -}
 --main = putStrLn . toLatex . fst . newAuction $ T.South
 main = let
-    scenario = strong1NT >> makePass >> jacobyTransfer T.Spades >> makePass
+    --scenario = strong1NT >> makePass >> jacobyTransfer T.Spades >> makePass
     --(bidding, deal) = finish T.South situation
     --maybeDeal = eval T.South T.Both deal 0
-    problem' = situation T.South T.Both scenario (T.Bid 2 T.Spades)
-        "It's a Jacoby transfer."
-    topic :: StdGen -> [Situation]
-    topic _ = [problem']
-    problem = Top.choice (mkStdGen 0 :: StdGen) topic
+    --problem' = situation T.South T.Both scenario (T.Bid 2 T.Spades)
+    --    "It's a Jacoby transfer."
+    --topic :: Situations
+    --topic = sitFun (\_ -> sitList [rawSit problem'])
+
+    problemMaker suit = let
+        scenario = strong1NT >> makePass >> jacobyTransfer suit >> makePass
+      in
+        situation T.South T.Both scenario (T.Bid 2 suit)
+            "It's still a Jacoby transfer."
+    topic' = base problemMaker <~ option [T.Spades, T.Hearts]
+    topic'' :: StdGen -> [StdGen -> Situation]
+    topic'' _ = [topic']
+    topic = wrap topic''
+    problem = choose topic (mkStdGen 0 :: StdGen)
   in do
     --putStrLn . toLatex $ bidding
     --putStrLn ""
