@@ -6,6 +6,7 @@ module Topic(
 , wrap
 , base
 , option
+, Topic(..)
 ) where
 
 --import Control.Monad.Fix(MonadFix)
@@ -29,6 +30,8 @@ data SituationsUnfixed next = RawSit S.Situation
 -- exists somewhere, but I couldn't find it on Hoogle.
 data Fix f = Fix (f (Fix f))
 
+-- TODO: Make this into a data or newtype so that Situations can themselves be
+-- Situationable below.
 type Situations = Fix SituationsUnfixed
 
 
@@ -39,8 +42,13 @@ instance Situationable S.Situation where
     wrap = Fix . RawSit
 instance (Situationable s) => Situationable [s] where
     wrap = Fix . SitList . map wrap
-instance (Situationable s, Randomizer r, RandomGen r) => Situationable (r -> s) where
+instance (Situationable s, Randomizer r, RandomGen r) =>
+        Situationable (r -> s) where
     wrap f = Fix . SitFun $ (\g -> let (g', _) = make g in wrap (f g'))
+-- The following doesn't work because Situations is a type synonym and you can
+-- only apply typeclasses to non-synonyms.
+--instance Situationable Situations where
+--    wrap = id
 
 
 base :: Optionable o => (a -> o) -> (StdGen -> a -> o)
@@ -64,7 +72,8 @@ instance (Optionable s) => Optionable (b -> s) where
         f g' $ (as !! i)
 
 -- This is a way of applying options to the base version.
-(<~) :: (StdGen -> a -> o) -> ((StdGen -> a -> o) -> StdGen -> o) -> (StdGen -> o)
+(<~) :: Optionable o => (StdGen -> a -> o) ->
+    ((StdGen -> a -> o) -> StdGen -> o) -> (StdGen -> o)
 b <~ o = o b
 
 
@@ -80,3 +89,5 @@ choose (Fix (SitFun f))   g = let
   in
     choose (f g') g''
 
+
+data Topic = Topic {name :: String, situations :: Situations}
