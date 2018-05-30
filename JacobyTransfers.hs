@@ -1,0 +1,159 @@
+module JacobyTransfers(topic) where
+
+import Data.List.Utils(join)
+
+import Topic(Topic(..), base, option, (<~), wrap)
+import Auction(forbid, makeCall, makePass, pointRange, suitLength,
+               minSuitLength, maxSuitLength, Action, balancedHand, withholdBid,
+               constrain)
+import Situation(situation, Situation)
+import qualified Terminology as T
+
+
+topic :: Topic
+topic = Topic "Jacoby transfers" situations
+  where
+    prepare s = wrap $ s <~ option T.allVulnerabilities
+    situations = wrap [
+        prepare $ base initiateTransfer <~ option T.majorSuits
+      , prepare $ base completeTransfer <~ option T.majorSuits
+      , wrap . map (prepare . base) $ [majors55gf, majors55inv]
+      ]
+
+-- TODO: Add separate commentary for 5-4 non-gf hands. Alternately, forbid 5-4
+-- non-gf hands, and add that situation into the Smolen topic.
+
+
+strong1NT :: Action
+strong1NT = do
+    pointRange 15 17
+    balancedHand
+    makeCall $ T.Bid 1 T.Notrump
+
+
+no2LevelOvercall :: [T.Suit] -> Action
+no2LevelOvercall = sequence_ . map (forbid . condition)
+  where
+    condition s = pointRange 11 40 >> minSuitLength s 5
+
+
+transferSuit :: T.Suit -> T.Suit
+transferSuit T.Hearts = T.Diamonds
+transferSuit T.Spades = T.Hearts
+transferSuit _        = error "Jacoby-like transfer of non-major suit!"
+
+otherMajor :: T.Suit -> T.Suit
+otherMajor T.Hearts = T.Spades
+otherMajor T.Spades = T.Hearts
+otherMajor _        = error "Other major of non-major suit!"
+
+
+-- Although this topic is about Jacoby transfers, we exclude auctions that would
+-- be better served by a Texas transfer so as not to confuse the learner.
+texasTransfer :: T.Suit -> Action
+texasTransfer suit = do
+    minSuitLength suit 6
+    pointRange 10 15
+    makeCall (T.Bid 4 $ transferSuit suit)
+
+
+equalMajors :: Action
+equalMajors = do
+    constrain "equal_majors" ["hearts(", ") == spades(", ")"]
+
+
+smolen :: T.Suit -> Action  -- The suit is the longer major.
+smolen suit = do
+    minSuitLength suit 5
+    minSuitLength (otherMajor suit) 4
+    pointRange 10 40
+    -- With 5-5 in the majors, make a Jacoby transfer then bid the other suit.
+    -- With 6-6, I guess you do the same? but it never comes up.
+    forbid equalMajors
+
+
+jacobyTransfer :: T.Suit -> Action
+jacobyTransfer suit = do
+    minSuitLength suit 5
+    forbid $ texasTransfer suit
+    forbid $ smolen suit
+    -- Make this simple by leaving out 5-5 hands. They go in another situation.
+    forbid equalMajors
+    makeCall (T.Bid 2 $ transferSuit suit)
+
+
+initiateTransfer :: T.Suit -> T.Vulnerability -> Situation
+initiateTransfer suit vul = let
+    action = do
+        strong1NT
+        no2LevelOvercall T.allSuits >> makePass
+        withholdBid $ jacobyTransfer suit
+    -- TODO: pass in a Showable function, to support LaTeX and web output.
+    explanation = join "\n" [
+        "Partner has opened a strong 1\\nt. You have a 5 card major, and"
+      , "would like to choose that as the trump suit. Make a Jacoby transfer"
+      , "by bidding the suit directly below your own. That way, you get to"
+      , "pick the suit, but your partner's strong hand gets to be declarer."
+      ]
+  in
+    situation T.North vul action (T.Bid 2 $ transferSuit suit) explanation
+
+
+completeTransfer :: T.Suit -> T.Vulnerability -> Situation
+completeTransfer suit vul = let
+    higherSuits = if suit == T.Spades then [] else [T.Spades]
+    action = do
+        strong1NT
+        no2LevelOvercall T.allSuits >> makePass
+        jacobyTransfer suit
+        no2LevelOvercall higherSuits >> makePass
+    explanation = join "\n" [
+        "You have opened a strong 1\\nt, and partner has made a Jacoby"
+      , "transfer. Complete the transfer by bidding the next higher suit."
+      , "Partner promises at least 5 cards in that major, but wants your "
+      , "stronger hand to be declarer."
+      ]
+  in
+    situation T.North vul action (T.Bid 2 suit) explanation
+
+
+majors55inv :: T.Vulnerability -> Situation
+majors55inv vul = let
+    action = do
+        strong1NT
+        no2LevelOvercall T.allSuits >> makePass
+        suitLength T.Hearts 5
+        suitLength T.Spades 5
+        pointRange 7 9
+    explanation = join "\n" [
+        "Partner has opened a strong 1\\nt. With 5-5 in the majors and"
+      , "invitational strength, first make a Jacoby transfer into hearts,"
+      , "and then bid 2\\s afterwards. Partner will then have the options of"
+      , "passing 2\\s with a minimum hand and a spade fit, bidding 3\\h with a"
+      , "minimum hand and no spade fit (in which case a heart fit is"
+      , "guaranteed), or bidding one of the majors at the 4 level with a"
+      , "maximum. This wrong-sides the contract when the 1\\nt{} bidder has a"
+      , "doubleton heart."
+      ]
+  in
+    situation T.North vul action (T.Bid 2 T.Diamonds) explanation
+
+
+majors55gf :: T.Vulnerability -> Situation
+majors55gf vul = let
+    action = do
+        strong1NT
+        no2LevelOvercall T.allSuits >> makePass
+        suitLength T.Hearts 5
+        suitLength T.Spades 5
+        pointRange 10 14
+    explanation = join "\n" [
+        "Partner has opened a strong 1\\nt. With 5-5 in the majors and"
+      , "game-forcing strength, first make a Jacoby transfer into spades,"
+      , "and then bid 3\\h afterwards. Partner will then have the options of"
+      , "which game to bid."
+      , "This wrong-sides the contract when the 1\\nt{} bidder has a"
+      , "doubleton spade."
+      ]
+  in
+    situation T.North vul action (T.Bid 2 T.Hearts) explanation

@@ -4,12 +4,13 @@ import Data.List.Utils
 import System.Random(mkStdGen, StdGen)
 
 import Structures(Hand(..), Bidding, startBidding, (>-))
-import Output(toLatex)
+import Output(toLatex, Showable)
 import qualified Terminology as T
 import DealerProg
 import Auction
 import Situation
 import Topic(wrap, choose, (<~), base, option, Topic(..), Situations)
+import qualified JacobyTransfers
 
 main :: IO ()
 --main = putStrLn . toLatex $ Hand "A K Q" "J 10 9" "8 7 6" "5 4 3 2"
@@ -50,7 +51,13 @@ main = let
     topic'' :: StdGen -> Situations --[StdGen -> Situation]
     topic'' _ = wrap [topic']
     topic = Topic "Jacoby transfers" (wrap topic'')
-    problem = choose (situations topic) (mkStdGen 0)
+    --problem = choose (situations topic) (mkStdGen 0)
+    problem = choose (situations JacobyTransfers.topic) (mkStdGen 2)
+    {-
+    -- The type signature below doesn't work because the variance is backwards
+    --tryShow :: Showable s => (s -> String) -> (s -> String) -> IO ()
+    tryShow f g = putStrLn (f T.Pass ++ g T.Hearts)
+    -}
   in do
     --putStrLn . toLatex $ bidding
     --putStrLn ""
@@ -68,3 +75,4 @@ main = let
         Nothing -> putStrLn "invalid problem"
         Just s -> putStrLn . toLatex $ s
     putStrLn ""
+    --tryShow toLatex toLatex

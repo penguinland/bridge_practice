@@ -11,6 +11,7 @@ module DealerProg(
 , Deal
 ) where
 
+import Data.Char(toUpper)
 import Data.List(transpose)
 import Data.List.Utils(join, split, wholeMap, fixedWidth)
 import Data.String.Utils(strip)
@@ -68,9 +69,11 @@ data Deal = Deal T.Direction T.Vulnerability S.Hand S.Hand S.Hand S.Hand
 
 instance Showable Deal where
     toLatex (Deal d v n e s w) =
-        "  \\deal{" ++ toLatex d ++ "}{" ++ toLatex v ++ "}%\n" ++
+        "  \\deal{" ++ (capitalize $ show d) ++ "}{" ++ toLatex v ++ "}%\n" ++
         (noPercent . join "" . map format $ [n, e, s, w])
       where
+          capitalize (h:t) = toUpper h : t
+          capitalize _     = error "Attempt to capitalize empty direction!?"
           format h = "    {" ++ toLatex h ++ "}%\n"
           -- The very last hand at the end of the deal shouldn't end in a %
           noPercent (a:b:[]) = [b]

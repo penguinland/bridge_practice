@@ -4,9 +4,11 @@ module Auction (
 , newAuction
 , finish
 , forbid
+, constrain
 , makeCall
 , makePass
 , pointRange
+, balancedHand
 , suitLength
 , minSuitLength
 , maxSuitLength
@@ -14,6 +16,7 @@ module Auction (
 , strong1NT
 , texasTransfer
 , jacobyTransfer
+, withholdBid
 ) where
 
 import Control.Monad.Trans.State.Strict(State, execState, get, put, modify)
@@ -116,6 +119,12 @@ jacobyTransfer suit = do
     makeCall (T.Bid 2 $ majorTransferSuit suit)
 
 
--- TODO: withholdBid
+withholdBid :: Action -> Action
+withholdBid action = do
+    (bidding, dealerProg) <- get
+    let freshAuction = newAuction . currentBidder $ bidding
+        (_, dealerToWithhold) = execState action freshAuction
+    put (bidding, dealerProg `mappend` dealerToWithhold)
+
 -- TODO: hasCard
 -- TODO: rule of 20, etc.?
