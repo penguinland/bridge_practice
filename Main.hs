@@ -9,7 +9,7 @@ import qualified Terminology as T
 import DealerProg
 import Auction
 import Situation
-import Topic(wrap, choose, (<~), base, option, Topic(..))
+import Topic(wrap, choose, (<~), base, option, Topic(..), Situations)
 
 main :: IO ()
 --main = putStrLn . toLatex $ Hand "A K Q" "J 10 9" "8 7 6" "5 4 3 2"
@@ -46,8 +46,9 @@ main = let
         situation T.South T.Both scenario (T.Bid 2 suit)
             "It's still a Jacoby transfer."
     topic' = base problemMaker <~ option [T.Spades, T.Hearts]
-    topic'' :: StdGen -> [StdGen -> Situation]
-    topic'' _ = [topic']
+    -- Note that the call to `wrap` in here is optional! It's idempotent.
+    topic'' :: StdGen -> Situations --[StdGen -> Situation]
+    topic'' _ = wrap [topic']
     topic = Topic "Jacoby transfers" (wrap topic'')
     problem = choose (situations topic) (mkStdGen 0)
   in do

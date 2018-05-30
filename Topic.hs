@@ -26,29 +26,24 @@ data SituationsUnfixed next = RawSit S.Situation
                             | SitList [next]
                             | SitFun (StdGen -> next)
 
--- The "Haskell For All" post about free monads suggests that this already
--- exists somewhere, but I couldn't find it on Hoogle.
-data Fix f = Fix (f (Fix f))
-
--- TODO: Make this into a data or newtype so that Situations can themselves be
--- Situationable below.
-type Situations = Fix SituationsUnfixed
+-- Situations is the fixed point monad of SituationsUnfixed. See the "Haskell
+-- For All" post about free monads for details.
+data Situations = Situations (SituationsUnfixed Situations)
 
 
 class Situationable s where
     wrap :: s -> Situations
 
 instance Situationable S.Situation where
-    wrap = Fix . RawSit
+    wrap = Situations . RawSit
 instance (Situationable s) => Situationable [s] where
-    wrap = Fix . SitList . map wrap
+    wrap = Situations . SitList . map wrap
+-- TODO: figure out how to do this next line without using Randomizer.
 instance (Situationable s, Randomizer r, RandomGen r) =>
         Situationable (r -> s) where
-    wrap f = Fix . SitFun $ (\g -> let (g', _) = make g in wrap (f g'))
--- The following doesn't work because Situations is a type synonym and you can
--- only apply typeclasses to non-synonyms.
---instance Situationable Situations where
---    wrap = id
+    wrap f = Situations . SitFun $ (\g -> let (g', _) = make g in wrap (f g'))
+instance Situationable Situations where
+    wrap = id
 
 
 base :: Optionable o => (a -> o) -> (StdGen -> a -> o)
@@ -78,13 +73,13 @@ b <~ o = o b
 
 
 choose :: Situations -> StdGen -> S.Situation
-choose (Fix (RawSit s))   _ = s
-choose (Fix (SitList ss)) g = let
+choose (Situations (RawSit s))   _ = s
+choose (Situations (SitList ss)) g = let
     (n, g') = next g
     i = n `mod` length ss :: Int
   in
     choose (ss !! i) g'
-choose (Fix (SitFun f))   g = let
+choose (Situations (SitFun f))   g = let
     (g', g'') = split g
   in
     choose (f g') g''
