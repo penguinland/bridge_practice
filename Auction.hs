@@ -12,10 +12,6 @@ module Auction (
 , suitLength
 , minSuitLength
 , maxSuitLength
-, allSuits
-, strong1NT
-, texasTransfer
-, jacobyTransfer
 , withholdBid
 ) where
 
@@ -77,6 +73,7 @@ pointRange min max =
     constrain (join "_" ["range", show min, show max])
               ["hcp(", ") >= " ++ show min ++ " && hcp(", ") <= " ++ show max]
 
+
 suitLengthOp :: String -> String -> T.Suit -> Int -> Action
 suitLengthOp op suffix suit length =
     constrain (join "_" [show suit, suffix, show length])
@@ -87,36 +84,6 @@ suitLength = suitLengthOp "==" "eq"
 minSuitLength = suitLengthOp ">=" "ge"
 
 maxSuitLength = suitLengthOp "<=" "le"
-
-
-allSuits :: (T.Suit -> Action) -> Action
-allSuits = sequence_ . flip map [T.Clubs, T.Diamonds, T.Hearts, T.Spades]
-
-strong1NT :: Action
-strong1NT = do
-    balancedHand
-    pointRange 15 17
-    makeCall $ T.Bid 1 T.Notrump
-
-
-majorTransferSuit :: T.Suit -> T.Suit
-majorTransferSuit T.Spades = T.Hearts
-majorTransferSuit T.Hearts = T.Diamonds
-majorTransferSuit _        = error "Major transfer of non-major!"
-
-
-texasTransfer :: T.Suit -> Action
-texasTransfer suit = do
-    minSuitLength suit 6
-    pointRange 10 15
-    makeCall (T.Bid 4 $ majorTransferSuit suit)
-
-
-jacobyTransfer :: T.Suit -> Action
-jacobyTransfer suit = do
-    minSuitLength suit 5
-    forbid (texasTransfer suit)
-    makeCall (T.Bid 2 $ majorTransferSuit suit)
 
 
 withholdBid :: Action -> Action

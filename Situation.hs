@@ -14,10 +14,14 @@ import Structures(Bidding)
 import Terminology(Call, Direction, Vulnerability)
 
 
-data Situation = Situation Direction Vulnerability Bidding DealerProg Call (OutputType -> String)
-data SituationInstance = SituationInstance Bidding Call (OutputType -> String) Deal
+data Situation =
+    Situation Direction Vulnerability Bidding DealerProg Call
+        (OutputType -> String)
+data SituationInstance =
+    SituationInstance Bidding Call (OutputType -> String) Deal
 
-situation :: Direction -> Vulnerability -> Action -> Call -> (OutputType -> String) -> Situation
+situation :: Direction -> Vulnerability -> Action -> Call ->
+    (OutputType -> String) -> Situation
 situation d v a c s = Situation d v bidding deal c s
   where
     (bidding, deal) = finish d a
