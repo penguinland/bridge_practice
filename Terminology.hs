@@ -36,11 +36,11 @@ allDirections = [North, East, South, West]
 data Suit = Clubs | Diamonds | Hearts | Spades | Notrump deriving Eq
 
 instance Showable Suit where
-    toLatex Clubs     = "\\c"
-    toLatex Diamonds  = "\\d"
-    toLatex Hearts    = "\\h"
-    toLatex Spades    = "\\s"
-    toLatex Notrump   = "\\nt"
+    toLatex Clubs     = "\\c{}"
+    toLatex Diamonds  = "\\d{}"
+    toLatex Hearts    = "\\h{}"
+    toLatex Spades    = "\\s{}"
+    toLatex Notrump   = "\\nt{}"
 
 instance Show Suit where
     show Clubs =    "clubs"

@@ -9,15 +9,15 @@ import Data.List.Utils(join)
 
 import Auction(Action, finish)
 import DealerProg(DealerProg, eval, Deal)
-import Output(Showable, toLatex)
+import Output(Showable, toLatex, OutputType(..))
 import Structures(Bidding)
 import Terminology(Call, Direction, Vulnerability)
 
 
-data Situation = Situation Direction Vulnerability Bidding DealerProg Call String
-data SituationInstance = SituationInstance Bidding Call String Deal
+data Situation = Situation Direction Vulnerability Bidding DealerProg Call (OutputType -> String)
+data SituationInstance = SituationInstance Bidding Call (OutputType -> String) Deal
 
-situation :: Direction -> Vulnerability -> Action -> Call -> String -> Situation
+situation :: Direction -> Vulnerability -> Action -> Call -> (OutputType -> String) -> Situation
 situation d v a c s = Situation d v bidding deal c s
   where
     (bidding, deal) = finish d a
@@ -27,7 +27,7 @@ instance Showable SituationInstance where
         "\\problem{" ++ join "%\n}{%\n" [toLatex d
                                         ,toLatex b
                                         ,toLatex c
-                                        ,s] ++ "%\n}"
+                                        ,s LaTeX] ++ "%\n}"
 
 
 instantiate ::Situation -> Int -> IO (Maybe SituationInstance)

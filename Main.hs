@@ -4,7 +4,7 @@ import Data.List.Utils
 import System.Random(mkStdGen, StdGen)
 
 import Structures(Hand(..), Bidding, startBidding, (>-))
-import Output(toLatex, Showable)
+import Output(toLatex, Showable, OutputType(..), output)
 import qualified Terminology as T
 import DealerProg
 import Auction
@@ -45,7 +45,7 @@ main = let
         scenario = strong1NT >> makePass >> jacobyTransfer suit >> makePass
       in
         situation T.South T.Both scenario (T.Bid 2 suit)
-            "It's still a Jacoby transfer."
+            (const "It's still a Jacoby transfer.")
     topic' = base problemMaker <~ option [T.Spades, T.Hearts]
     -- Note that the call to `wrap` in here is optional! It's idempotent.
     topic'' :: StdGen -> Situations --[StdGen -> Situation]
@@ -53,11 +53,8 @@ main = let
     topic = Topic "Jacoby transfers" (wrap topic'')
     --problem = choose (situations topic) (mkStdGen 0)
     problem = choose (situations JacobyTransfers.topic) (mkStdGen 2)
-    {-
-    -- The type signature below doesn't work because the variance is backwards
-    --tryShow :: Showable s => (s -> String) -> (s -> String) -> IO ()
-    tryShow f g = putStrLn (f T.Pass ++ g T.Hearts)
-    -}
+    tryShow :: OutputType -> IO ()
+    tryShow f = putStrLn $ output f T.Pass ++ output f T.Hearts
   in do
     --putStrLn . toLatex $ bidding
     --putStrLn ""
@@ -75,4 +72,4 @@ main = let
         Nothing -> putStrLn "invalid problem"
         Just s -> putStrLn . toLatex $ s
     putStrLn ""
-    --tryShow toLatex toLatex
+    tryShow LaTeX
