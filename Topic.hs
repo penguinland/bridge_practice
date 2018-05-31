@@ -9,7 +9,6 @@ module Topic(
 , Topic(..)
 ) where
 
---import Control.Monad.Fix(MonadFix)
 import Data.Bifunctor(first)
 import System.Random(RandomGen, StdGen, next, split, mkStdGen)
 
@@ -22,26 +21,23 @@ class Randomizer r where
 instance Randomizer StdGen where
     make = first mkStdGen . next
 
-data SituationsUnfixed next = RawSit S.Situation
-                            | SitList [next]
-                            | SitFun (StdGen -> next)
 
--- Situations is the fixed point monad of SituationsUnfixed. See the "Haskell
--- For All" post about free monads for details.
-data Situations = Situations (SituationsUnfixed Situations)
+data Situations = RawSit S.Situation
+                | SitList [Situations]
+                | SitFun (StdGen -> Situations)
 
 
 class Situationable s where
     wrap :: s -> Situations
 
 instance Situationable S.Situation where
-    wrap = Situations . RawSit
+    wrap = RawSit
 instance (Situationable s) => Situationable [s] where
-    wrap = Situations . SitList . map wrap
+    wrap = SitList . map wrap
 -- TODO: figure out how to do this next line without using Randomizer.
 instance (Situationable s, Randomizer r, RandomGen r) =>
         Situationable (r -> s) where
-    wrap f = Situations . SitFun $ (\g -> let (g', _) = make g in wrap (f g'))
+    wrap f = SitFun $ (\g -> let (g', _) = make g in wrap (f g'))
 instance Situationable Situations where
     wrap = id
 
@@ -73,13 +69,13 @@ b <~ o = o b
 
 
 choose :: Situations -> StdGen -> S.Situation
-choose (Situations (RawSit s))   _ = s
-choose (Situations (SitList ss)) g = let
+choose (RawSit s)   _ = s
+choose (SitList ss) g = let
     (n, g') = next g
     i = n `mod` length ss :: Int
   in
     choose (ss !! i) g'
-choose (Situations (SitFun f))   g = let
+choose (SitFun f)   g = let
     (g', g'') = split g
   in
     choose (f g') g''
