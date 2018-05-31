@@ -12,7 +12,7 @@ main = let
     (g', g'') = split g
     problem = choose (situations JacobyTransfers.topic) g'
   in do
-    maybeSitInst <- instantiate problem (fst $ next g'')
+    maybeSitInst <- instantiate problem g''
     case maybeSitInst of
         Nothing -> putStrLn "invalid problem"
         Just s -> putStrLn . toLatex $ s

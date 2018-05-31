@@ -6,6 +6,7 @@ module Situation (
 ) where
 
 import Data.List.Utils(join)
+import System.Random(StdGen, next)
 
 import Auction(Action, finish)
 import DealerProg(DealerProg, eval, Deal)
@@ -34,7 +35,7 @@ instance Showable SituationInstance where
                                         ,s LaTeX] ++ "%\n}"
 
 
-instantiate ::Situation -> Int -> IO (Maybe SituationInstance)
-instantiate (Situation dn v b dl c s) seed = do
-    maybeDeal <- eval dn v dl seed
+instantiate ::Situation -> StdGen -> IO (Maybe SituationInstance)
+instantiate (Situation dn v b dl c s) g = do
+    maybeDeal <- eval dn v dl (fst . next $ g)
     return (maybeDeal >>= return . SituationInstance b c s)
