@@ -1,0 +1,21 @@
+generate 1000000
+produce 1
+
+    balanced_north = shape(north, any 4333 + any 5332 + any 4432)
+    clubs_ge_5_east = clubs(east) >= 5
+    diamonds_ge_5_east = diamonds(east) >= 5
+    equal_majors_south = hearts(south) == spades(south)
+    hearts_ge_5_east = hearts(east) >= 5
+    hearts_ge_5_south = hearts(south) >= 5
+    hearts_ge_6_south = hearts(south) >= 6
+    range_10_15_south = hcp(south) >= 10 && hcp(south) <= 15
+    range_10_40_south = hcp(south) >= 10 && hcp(south) <= 40
+    range_11_40_east = hcp(east) >= 11 && hcp(east) <= 40
+    range_15_17_north = hcp(north) >= 15 && hcp(north) <= 17
+    spades_ge_4_south = spades(south) >= 4
+    spades_ge_5_east = spades(east) >= 5
+
+condition
+    range_15_17_north && balanced_north && !(clubs_ge_5_east && range_11_40_east) && !(diamonds_ge_5_east && range_11_40_east) && !(hearts_ge_5_east && range_11_40_east) && !(spades_ge_5_east && range_11_40_east) && hearts_ge_5_south && !(range_10_15_south && hearts_ge_6_south) && !(!(equal_majors_south) && range_10_40_south && spades_ge_4_south && hearts_ge_5_south) && !(equal_majors_south)
+action
+    printall
