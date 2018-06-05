@@ -5,7 +5,6 @@ module Topic(
 , Situationable
 , wrap
 , base
-, option
 , Topic(..)
 ) where
 
@@ -15,6 +14,9 @@ import System.Random(RandomGen, StdGen, next, split, mkStdGen)
 import qualified Situation as S
 
 
+-- This is solely to get Haskell to figure out that the Situationable typeclass
+-- can apply to functions that take in random number generators. It would be
+-- nice to get rid of this.
 class Randomizer r where
     make :: RandomGen g => g -> (r, g)
 
@@ -42,6 +44,10 @@ instance Situationable Situations where
     wrap = id
 
 
+-- If you have a function that takes arguments and makes Situations, call base
+-- with it to pass in options via (<~). Example syntax:
+-- sits :: Situations
+-- sits = wrap $ base makeSits <~ [opt1A, opt1B] <~ [opt2A, opt2B, opt2C]
 base :: Optionable o => (a -> o) -> (StdGen -> a -> o)
 base = const
 
@@ -63,10 +69,8 @@ instance (Optionable s) => Optionable (b -> s) where
         f g' $ (as !! i)
 
 -- This is a way of applying options to the base version.
--- TODO: We only ever use (<~) with option. Roll them into a single function.
-(<~) :: Optionable o => (StdGen -> a -> o) ->
-    ((StdGen -> a -> o) -> StdGen -> o) -> (StdGen -> o)
-b <~ o = o b
+(<~) :: Optionable o => (StdGen -> a -> o) -> [a] -> (StdGen -> o)
+b <~ as = option as b
 
 
 choose :: Topic -> StdGen -> S.Situation

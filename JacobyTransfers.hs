@@ -3,7 +3,7 @@ module JacobyTransfers(topic) where
 import Data.List.Utils(join)
 
 import Output(output)
-import Topic(Topic(..), base, option, (<~), wrap)
+import Topic(Topic(..), base, (<~), wrap)
 import Auction(forbid, makeCall, makePass, pointRange, suitLength,
                minSuitLength, maxSuitLength, Action, balancedHand, withholdBid,
                constrain)
@@ -19,10 +19,10 @@ oneNT = T.Bid 1 T.Notrump
 topic :: Topic
 topic = Topic "Jacoby transfers" situations
   where
-    prepare s = wrap $ s <~ option T.allVulnerabilities
+    prepare s = wrap $ s <~ T.allVulnerabilities
     situations = wrap [
-        prepare $ base initiateTransfer <~ option T.majorSuits
-      , prepare $ base completeTransfer <~ option T.majorSuits
+        prepare $ base initiateTransfer <~ T.majorSuits
+      , prepare $ base completeTransfer <~ T.majorSuits
       , wrap . map (prepare . base) $ [majors55gf, majors55inv]
       ]
 
