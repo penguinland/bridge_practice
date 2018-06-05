@@ -63,22 +63,25 @@ instance (Optionable s) => Optionable (b -> s) where
         f g' $ (as !! i)
 
 -- This is a way of applying options to the base version.
+-- TODO: We only ever use (<~) with option. Roll them into a single function.
 (<~) :: Optionable o => (StdGen -> a -> o) ->
     ((StdGen -> a -> o) -> StdGen -> o) -> (StdGen -> o)
 b <~ o = o b
 
 
-choose :: Situations -> StdGen -> S.Situation
-choose (RawSit s)   _ = s
-choose (SitList ss) g = let
-    (n, g') = next g
-    i = n `mod` length ss :: Int
-  in
-    choose (ss !! i) g'
-choose (SitFun f)   g = let
-    (g', g'') = split g
-  in
-    choose (f g') g''
+choose :: Topic -> StdGen -> S.Situation
+choose = choose' . situations
+  where
+    choose' (RawSit s)   _ = s
+    choose' (SitList ss) g = let
+        (n, g') = next g
+        i = n `mod` length ss :: Int
+      in
+        choose' (ss !! i) g'
+    choose' (SitFun f)   g = let
+        (g', g'') = split g
+      in
+        choose' (f g') g''
 
 
 data Topic = Topic {name :: String, situations :: Situations}

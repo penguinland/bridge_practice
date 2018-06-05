@@ -10,7 +10,7 @@ main :: IO ()
 main = let
     g = mkStdGen 0
     (g', g'') = split g
-    problem = choose (situations JacobyTransfers.topic) g'
+    problem = choose JacobyTransfers.topic g'
   in do
     maybeSitInst <- instantiate problem g''
     case maybeSitInst of
