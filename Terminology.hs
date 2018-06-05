@@ -65,13 +65,13 @@ instance Showable Call where
     toLatex (Bid l s) = show l ++ toLatex s
 
 
-data Vulnerability = NS | EW | Both | Neither deriving Eq
+data Vulnerability = NS | EW | Both | None deriving Eq
 
 instance Showable Vulnerability where
-    toLatex NS      = "N/S"
-    toLatex EW      = "E/W"
-    toLatex Both    = "Both"
-    toLatex Neither = "Neither"
+    toLatex NS   = "N/S"
+    toLatex EW   = "E/W"
+    toLatex Both = "Both"
+    toLatex None = "None"
 
 allVulnerabilities :: [Vulnerability]
-allVulnerabilities = [NS, EW, Both, Neither]
+allVulnerabilities = [NS, EW, Both, None]
