@@ -94,13 +94,12 @@ initiateTransfer suit vul = let
         strong1NT
         no2LevelOvercall T.allSuits >> makePass
         withholdBid $ jacobyTransfer suit
-    explanation fmt = join "\n" [
-        "Partner has opened a strong " ++ output fmt oneNT ++
-            ". You have a 5 card major, and"
-      , "would like to choose that as the trump suit. Make a Jacoby transfer"
-      , "by bidding the suit directly below your own. That way, you get to"
-      , "pick the suit, but your partner's strong hand gets to be declarer."
-      ]
+    explanation fmt =
+        "Partner has opened a strong " ++ output fmt oneNT ++ ". You have a \
+      \ 5-card major, and would like to choose that as the trump suit. Make a \
+      \ Jacoby transfer by bidding the suit directly below your own. That \
+      \ way, you get to pick the trump suit, but your partner will be \
+      \ declarer so his strong hand will stay hidden."
   in
     situation T.North vul action (T.Bid 2 $ transferSuit suit) explanation
 
@@ -113,12 +112,11 @@ completeTransfer suit vul = let
         no2LevelOvercall T.allSuits >> makePass
         jacobyTransfer suit
         no2LevelOvercall higherSuits >> makePass
-    explanation fmt = join "\n" [
-        "You have opened a strong " ++ output fmt oneNT ++ ","
-      , "and partner has made a Jacoby transfer. Complete the transfer by"
-      , " bidding the next higher suit. Partner promises at least 5 cards in"
-      , " that major, but wants your stronger hand to be declarer."
-      ]
+    explanation fmt =
+        "You have opened a strong " ++ output fmt oneNT ++ ", and partner has \
+      \ made a Jacoby transfer. Complete the transfer by bidding the next \
+      \ higher suit. Partner promises at least 5 cards in that major, but \
+      \ wants you to be declarer so your stronger hand stays hidden."
   in
     situation T.North vul action (T.Bid 2 suit) explanation
 
@@ -131,20 +129,17 @@ majors55inv vul = let
         suitLength T.Hearts 5
         suitLength T.Spades 5
         pointRange 7 9
-    explanation fmt = join "\n" [
-        "Partner has opened a strong " ++ output fmt oneNT ++
-            ". With 5-5 in the majors and"
-      , "invitational strength, first make a Jacoby transfer into hearts,"
-      , "and then bid " ++ output fmt (T.Bid 2 T.Spades) ++ " afterwards."
-      , " Partner will then have the options of"
-      , "passing " ++ output fmt (T.Bid 2 T.Spades) ++ " with a minimum hand"
-      , "and a spade fit, bidding " ++ output fmt (T.Bid 3 T.Hearts)
-      , "with a minimum hand and no spade fit (in which case a heart fit is"
-      , "guaranteed), or bidding one of the majors at the 4 level with a"
-      , "maximum. This wrong-sides the contract when the " ++
-             output fmt oneNT ++ " bidder has a"
-      , "doubleton heart."
-      ]
+    explanation fmt =
+        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5-5 in \
+      \ the majors and invitational strength, first make a Jacoby transfer \
+      \ into hearts, and then bid " ++ output fmt (T.Bid 2 T.Spades) ++ " \
+      \ afterwards. Partner will then have the options of passing " ++
+        output fmt (T.Bid 2 T.Spades) ++ " with a minimum hand and a spade \
+      \ fit, bidding " ++ output fmt (T.Bid 3 T.Hearts) ++ "with a minimum \
+      \ hand and no spade fit (in which case a heart fit is guaranteed), or \
+      \ bidding one of the majors at the 4 level with a maximum. This \
+      \ wrong-sides the contract when the " ++ output fmt oneNT ++ " bidder \
+      \ has a doubleton heart."
   in
     situation T.North vul action (T.Bid 2 T.Diamonds) explanation
 
@@ -157,14 +152,19 @@ majors55gf vul = let
         suitLength T.Hearts 5
         suitLength T.Spades 5
         pointRange 10 14
-    explanation fmt = join "\n" [
-        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5-5 in"
-      , "the majors and"
-      , "game-forcing strength, first make a Jacoby transfer into spades,"
-      , "and then bid " ++ output fmt (T.Bid 3 T.Hearts) ++ " afterwards."
-      , "Partner will then have the options of which game to bid."
-      , "This wrong-sides the contract when the " ++ output fmt oneNT
-      , " bidder has a doubleton spade."
-      ]
+    explanation fmt =
+        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5-5 in \
+        \ the majors and \
+        \ game-forcing strength, first make a Jacoby transfer into spades, \
+        \ and then bid " ++ output fmt (T.Bid 3 T.Hearts) ++ " afterwards. \
+        \ Partner will then have the options of which game to bid. \
+        \ This wrong-sides the contract when the " ++ output fmt oneNT ++ " \
+        \ bidder has a doubleton spade."
   in
     situation T.North vul action (T.Bid 2 T.Hearts) explanation
+
+
+-- TODO: Make more detailed situations for when responder has no interest in
+-- game and an unbalanced hand, invitational strength and a balanced hand, and
+-- game-forcing strength with an unbalanced hand. Make situations for all of
+-- these from the perspective of both opener and responder.
