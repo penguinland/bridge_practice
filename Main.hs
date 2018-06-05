@@ -4,9 +4,11 @@ import Output(toLatex)
 import Situation(instantiate)
 import Topic(choose, situations)
 import qualified JacobyTransfers
+import ProblemSet(generate)
 
 
 main :: IO ()
+{-
 main = let
     g = mkStdGen 0
     (g', g'') = split g
@@ -16,3 +18,7 @@ main = let
     case maybeSitInst of
         Nothing -> putStrLn "invalid problem"
         Just s -> putStrLn . toLatex $ s
+-}
+main = do
+    probs <- generate 1 [JacobyTransfers.topic] (mkStdGen 0)
+    putStrLn . toLatex . (!! 0) $ probs

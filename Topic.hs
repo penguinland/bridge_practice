@@ -84,4 +84,4 @@ choose = choose' . situations
         choose' (f g') g''
 
 
-data Topic = Topic {name :: String, situations :: Situations}
+data Topic = Topic {topicName :: String, situations :: Situations}
