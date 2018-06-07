@@ -166,5 +166,5 @@ majors55gf vul = let
 
 -- TODO: Make more detailed situations for when responder has no interest in
 -- game and an unbalanced hand, invitational strength and a balanced hand, and
--- game-forcing strength with an unbalanced hand. Make situations for all of
+-- game-forcing strength with a balanced hand. Make situations for all of
 -- these from the perspective of both opener and responder.

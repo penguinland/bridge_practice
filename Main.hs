@@ -4,21 +4,13 @@ import Output(toLatex)
 import Situation(instantiate)
 import Topic(choose, situations)
 import qualified JacobyTransfers
-import ProblemSet(generate)
+import ProblemSet(generate, outputLatex)
 
 
 main :: IO ()
 {-
-main = let
-    g = mkStdGen 0
-    (g', g'') = split g
-    problem = choose JacobyTransfers.topic g'
-  in do
-    maybeSitInst <- instantiate problem g''
-    case maybeSitInst of
-        Nothing -> putStrLn "invalid problem"
-        Just s -> putStrLn . toLatex $ s
--}
 main = do
-    probs <- generate 1 [JacobyTransfers.topic] (mkStdGen 0)
-    putStrLn . toLatex . (!! 0) $ probs
+    probs <- generate 2 [JacobyTransfers.topic] (mkStdGen 0)
+    putStrLn . concat . map toLatex $ probs
+-}
+main = outputLatex 2 [JacobyTransfers.topic] "test" (mkStdGen 0) >>= putStrLn
