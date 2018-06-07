@@ -118,7 +118,7 @@ completeTransfer suit vul = let
       \ higher suit. Partner promises at least 5 cards in that major, but \
       \ wants you to be declarer so your stronger hand stays hidden."
   in
-    situation T.North vul action (T.Bid 2 suit) explanation
+    situation T.South vul action (T.Bid 2 suit) explanation
 
 
 majors55inv :: T.Vulnerability -> Situation

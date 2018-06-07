@@ -13,4 +13,4 @@ main = do
     probs <- generate 2 [JacobyTransfers.topic] (mkStdGen 0)
     putStrLn . concat . map toLatex $ probs
 -}
-main = outputLatex 2 [JacobyTransfers.topic] "test" (mkStdGen 0) >>= putStrLn
+main = outputLatex 10 [JacobyTransfers.topic] "test" (mkStdGen 1) >>= putStrLn
