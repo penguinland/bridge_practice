@@ -1,10 +1,9 @@
 module DealerProg(
   DealerProg
 , newDeal
-, addDefn
-, addReq
+, addDefn  -- TODO: does this need to be public?
+, addReq   -- TODO: does this need to be public?
 , addNewReq
-, forbidNewReq
 , invert
 , eval
 , toProgram -- TODO: remove when done debugging
@@ -12,8 +11,8 @@ module DealerProg(
 
 import Data.List(transpose)
 import Data.List.Utils(join, split, wholeMap, fixedWidth)
-import Data.String.Utils(strip)
 import qualified Data.Map.Strict as Map
+import Data.String.Utils(strip)
 import GHC.IO.Exception(ExitCode(ExitSuccess))
 import System.Process(readProcessWithExitCode)
 
@@ -46,9 +45,6 @@ addReq expr (DealerProg m l) = DealerProg m (expr:l)
 
 addNewReq :: String -> String -> DealerProg -> DealerProg
 addNewReq name defn = addReq name . addDefn name defn
-
-forbidNewReq :: String -> String -> DealerProg -> DealerProg
-forbidNewReq name defn = addReq ("!" ++ name) . addDefn name defn
 
 invert :: DealerProg -> DealerProg
 invert (DealerProg defns reqs) =
@@ -87,15 +83,17 @@ eval dir vul deal seed = let
     -- 9.  initial random seed
     -- 10. time spent computing
     -- 11. blank line
-    toSuits (_:s:h:d:c:_:_:_:_:_:_:[]) = Just $ map splitSuit [s, h, d, c]
+    toSuits all@(_:s:h:d:c:_)
+     | length all == 11 = Just $ map splitSuit [s, h, d, c]
     -- If that didn't work, we have totally misunderstood something.
-    toSuits problem       = error $ join "\n" problem
+    toSuits problem     = error $ join "\n"
+        ("Unexpected output from dealer invocation:":problem)
 
     splitSuit :: String -> [String]
     splitSuit = map strip . wholeMap (fixedWidth (repeat 20))
 
     toHand :: [String] -> Maybe S.Hand
-    toHand (s:h:d:c:[]) = Just $ S.Hand s h d c
+    toHand ([s, h, d, c]) = Just $ S.Hand s h d c
     toHand  _           = Nothing
 
     toDeal :: [[String]] -> Maybe S.Deal
@@ -103,10 +101,12 @@ eval dir vul deal seed = let
         maybeHands = sequence . map toHand . transpose $ suits
       in
         case maybeHands of
-            Just (n:e:s:w:[]) -> Just $ S.Deal dir vul n e s w
-            Just _            -> error $ "Unexpected suits!" ++ show seed
-            Nothing           -> Nothing
+            Just ([n, e, s, w]) -> Just $ S.Deal dir vul n e s w
+            Just _              -> error $ "Unexpected suits!" ++ show seed
+            Nothing             -> Nothing
   in
     do
         output <- result  -- output is a Maybe String
+        -- Note: the do notation takes care of the IO monad, and the binds on
+        -- this next line take care of the Maybe monad.
         return $ output >>= (toSuits . split "\n") >>= toDeal

@@ -19,7 +19,7 @@ import Control.Monad.Trans.State.Strict(State, execState, get, put, modify)
 import Data.Bifunctor(first, second)
 import Data.List.Utils(join)
 
-import DealerProg(DealerProg, newDeal, addNewReq, forbidNewReq, invert)
+import DealerProg(DealerProg, newDeal, addNewReq, invert)
 import Structures(Bidding, startBidding, (>-), currentBidder)
 import qualified Terminology as T
 
