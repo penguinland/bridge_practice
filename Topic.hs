@@ -54,25 +54,21 @@ base :: Optionable o => (a -> o) -> (StdGen -> a -> o)
 base = const
 
 class Optionable o where
-    option :: (StdGen -> a -> o) -> [a] -> (StdGen -> o)
+    (<~) :: (StdGen -> a -> o) -> [a] -> (StdGen -> o)
 
 instance Optionable S.Situation where
-    option f as g = let
+    (f <~ as) g = let
         (n, g') = next g
         i = n `mod` length as :: Int
       in
         f g' $ (as !! i)
 
 instance (Optionable s) => Optionable (b -> s) where
-    option f as g = let
+    (f <~ as) g = let
         (n, g') = next g
         i = n `mod` length as :: Int
       in
         f g' $ (as !! i)
-
--- This is a way of applying options to the base version.
-(<~) :: Optionable o => (StdGen -> a -> o) -> [a] -> (StdGen -> o)
-b <~ as = option b as
 
 
 choose :: Topic -> StdGen -> S.Situation
