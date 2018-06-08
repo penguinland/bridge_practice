@@ -56,17 +56,14 @@ startBidding T.South = Bidding T.South [[Nothing, Nothing, Nothing]]
 (Bidding T.South (b:bs)) >- c = Bidding T.West  (((Just c):b):bs)
 
 
---                                           Nor. East Sou. West
+--                                           N    E    S    W
 data Deal = Deal T.Direction T.Vulnerability Hand Hand Hand Hand
 
 instance Showable Deal where
     toLatex (Deal d v n e s w) =
-        "  \\deal{" ++ (capitalize $ show d) ++ "}{" ++ toLatex v ++ "}%\n" ++
-        (noPercent . join "" . map format $ [n, e, s, w])
+        "  \\deal{" ++ (capitalize $ show d) ++ "}{" ++
+           join "}%\n    {" (toLatex v : map toLatex [n, e, s, w]) ++
+           "}\n"
       where
-          capitalize (h:t) = toUpper h : t
-          capitalize _     = error "Attempt to capitalize empty direction!?"
-          format h = "    {" ++ toLatex h ++ "}%\n"
-          -- The very last hand at the end of the deal shouldn't end in a %
-          noPercent (a:b:[]) = [b]
-          noPercent (a:z) = a:(noPercent z)
+        capitalize (h:t) = toUpper h : t
+        capitalize _     = error "Attempt to capitalize empty direction!?"
