@@ -8,6 +8,8 @@ module Topic(
 , Topic(..)
 ) where
 
+-- TODO: Use this for StdGen stuff.
+import Control.Monad.Trans.State.Strict(State, runState, get, put)
 import Data.Bifunctor(first)
 import System.Random(RandomGen, StdGen, next, split, mkStdGen)
 
