@@ -11,7 +11,7 @@ module Topic(
 -- TODO: Use this for StdGen stuff.
 import Control.Monad.Trans.State.Strict(State, runState, get, put)
 import Data.Bifunctor(first)
-import System.Random(RandomGen, StdGen, next, split, mkStdGen)
+import System.Random(RandomGen, StdGen, next, split, mkStdGen, randomR)
 
 import qualified Situation as S
 
@@ -71,19 +71,20 @@ instance (Optionable s) => Optionable (b -> s) where
         f g' $ (as !! i)
 
 
-choose :: Topic -> StdGen -> (S.Situation, StdGen)
+choose :: Topic -> State StdGen S.Situation
 choose = choose' . situations
   where
-    choose' (RawSit s)   g = (s, g)
-    choose' (SitList ss) g = let
-        (n, g') = next g
-        i = n `mod` length ss :: Int
-      in
-        choose' (ss !! i) g'
-    choose' (SitFun f)   g = let
-        (g', g'') = split g
-      in
-        choose' (f g') g''
+    choose' (RawSit s)   = return s
+    choose' (SitList ss) = do
+        g <- get
+        let (i, g') = randomR (0, length ss - 1) g
+        put g'
+        choose' (ss !! i)
+    choose' (SitFun f)   = do
+        g <- get
+        let (g', g'') = split g
+        put g''
+        choose' (f g')
 
 
 data Topic = Topic {topicName :: String, situations :: Situations}
