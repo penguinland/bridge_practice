@@ -71,10 +71,10 @@ instance (Optionable s) => Optionable (b -> s) where
         f g' $ (as !! i)
 
 
-choose :: Topic -> StdGen -> S.Situation
+choose :: Topic -> StdGen -> (S.Situation, StdGen)
 choose = choose' . situations
   where
-    choose' (RawSit s)   _ = s
+    choose' (RawSit s)   g = (s, g)
     choose' (SitList ss) g = let
         (n, g') = next g
         i = n `mod` length ss :: Int
