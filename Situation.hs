@@ -9,9 +9,9 @@ import Data.List.Utils(join)
 import System.Random(StdGen, next)
 
 import Auction(Action, finish)
-import DealerProg(DealerProg, eval, Deal)
+import DealerProg(DealerProg, eval)
 import Output(Showable, toLatex, OutputType(..))
-import Structures(Bidding)
+import Structures(Bidding, Deal)
 import Terminology(Call, Direction, Vulnerability)
 
 

@@ -4,9 +4,11 @@ module Structures (
 , currentBidder
 , startBidding
 , (>-)
+, Deal(..)
 ) where
 
 import Control.Monad(liftM)
+import Data.Char(toUpper)
 import Data.List.Utils(join, replace)
 import Data.Maybe(fromMaybe)
 import System.Process(readProcess)
@@ -52,3 +54,19 @@ startBidding T.South = Bidding T.South [[Nothing, Nothing, Nothing]]
 (Bidding T.North (b:bs)) >- c = Bidding T.East  (((Just c):b):bs)
 (Bidding T.East  (b:bs)) >- c = Bidding T.South (((Just c):b):bs)
 (Bidding T.South (b:bs)) >- c = Bidding T.West  (((Just c):b):bs)
+
+
+--                                           Nor. East Sou. West
+data Deal = Deal T.Direction T.Vulnerability Hand Hand Hand Hand
+
+instance Showable Deal where
+    toLatex (Deal d v n e s w) =
+        "  \\deal{" ++ (capitalize $ show d) ++ "}{" ++ toLatex v ++ "}%\n" ++
+        (noPercent . join "" . map format $ [n, e, s, w])
+      where
+          capitalize (h:t) = toUpper h : t
+          capitalize _     = error "Attempt to capitalize empty direction!?"
+          format h = "    {" ++ toLatex h ++ "}%\n"
+          -- The very last hand at the end of the deal shouldn't end in a %
+          noPercent (a:b:[]) = [b]
+          noPercent (a:z) = a:(noPercent z)

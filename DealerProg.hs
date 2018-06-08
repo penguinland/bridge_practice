@@ -8,10 +8,8 @@ module DealerProg(
 , invert
 , eval
 , toProgram -- TODO: remove when done debugging
-, Deal
 ) where
 
-import Data.Char(toUpper)
 import Data.List(transpose)
 import Data.List.Utils(join, split, wholeMap, fixedWidth)
 import Data.String.Utils(strip)
@@ -64,23 +62,8 @@ toProgram (DealerProg defns conds) = join "\n" $
         "    " ++ (join " && " . reverse $ conds),
         "action", "    printall"]
 
---                                           North  East   South  West
-data Deal = Deal T.Direction T.Vulnerability S.Hand S.Hand S.Hand S.Hand
 
-instance Showable Deal where
-    toLatex (Deal d v n e s w) =
-        "  \\deal{" ++ (capitalize $ show d) ++ "}{" ++ toLatex v ++ "}%\n" ++
-        (noPercent . join "" . map format $ [n, e, s, w])
-      where
-          capitalize (h:t) = toUpper h : t
-          capitalize _     = error "Attempt to capitalize empty direction!?"
-          format h = "    {" ++ toLatex h ++ "}%\n"
-          -- The very last hand at the end of the deal shouldn't end in a %
-          noPercent (a:b:[]) = [b]
-          noPercent (a:z) = a:(noPercent z)
-
-
-eval :: T.Direction -> T.Vulnerability -> DealerProg -> Int -> IO (Maybe Deal)
+eval :: T.Direction -> T.Vulnerability -> DealerProg -> Int -> IO (Maybe S.Deal)
 eval dir vul deal seed = let
     result :: IO (Maybe String)
     result = do
@@ -115,12 +98,12 @@ eval dir vul deal seed = let
     toHand (s:h:d:c:[]) = Just $ S.Hand s h d c
     toHand  _           = Nothing
 
-    toDeal :: [[String]] -> Maybe Deal
+    toDeal :: [[String]] -> Maybe S.Deal
     toDeal suits = let
         maybeHands = sequence . map toHand . transpose $ suits
       in
         case maybeHands of
-            Just (n:e:s:w:[]) -> Just $ Deal dir vul n e s w
+            Just (n:e:s:w:[]) -> Just $ S.Deal dir vul n e s w
             Just _            -> error $ "Unexpected suits!" ++ show seed
             Nothing           -> Nothing
   in
