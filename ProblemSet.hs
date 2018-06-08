@@ -3,6 +3,7 @@ module ProblemSet(
 , outputLatex
 ) where
 
+import Control.Monad.Trans.State.Strict(State, runState, get, put)
 import Data.List(sort)
 import Data.List.Utils(join, replace)
 import System.IO(readFile, writeFile)
@@ -14,18 +15,19 @@ import Topic(Topic, topicName, choose)
 
 
 -- TODO: move this somewhere more universal
-pickItem :: StdGen -> [a] -> (a, StdGen)
-pickItem g [] = error "Picked item from empty list"
-pickItem g as = let
-    (n, g') = randomR (0, length as - 1) g
-  in
-    (as !! n, g')
+pickItem :: [a] -> State StdGen a
+pickItem [] = error "Picked item from empty list"
+pickItem as = do
+    g <- get
+    let (n, g') = randomR (0, length as - 1) g
+    put g'
+    return (as !! n)
 
 
 generate :: Int -> [Topic] -> StdGen -> IO [SituationInstance]
 generate 0 _      _ = return []
 generate n topics g = let
-    (topic, g') = pickItem g topics
+    (topic, g') = runState (pickItem topics) g
     (g'', g''') = split g'
     sit = choose topic g''
     (g4, g5) = split g'''
