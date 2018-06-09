@@ -9,13 +9,14 @@ module Situation (
 -- (Situation?) so it's easy to look into which one is generating
 -- unexpected/unintiuitive/incorrect deals.
 
-import Control.Monad.Trans.State.Strict(State, get, put)
+import Control.Monad.Trans.State.Strict(State)
 import Data.List.Utils(join)
 import System.Random(StdGen, next)
 
 import Auction(Action, finish)
 import DealerProg(DealerProg, eval)
 import Output(Showable, toLatex, OutputType(..))
+import Random(use)
 import Structures(Bidding, Deal)
 import Terminology(Call, Direction, Vulnerability)
 
@@ -43,13 +44,11 @@ instance Showable SituationInstance where
 -- thing here?
 instantiate :: Situation -> State StdGen (IO (Maybe SituationInstance))
 instantiate (Situation dn v b dl c s) = do
-    g <- get
-    let (n, g') = next g
-        instantiate' :: IO (Maybe SituationInstance)
+    n <- use next
+    let instantiate' :: IO (Maybe SituationInstance)
         instantiate' = do
             maybeDeal <- eval dn v dl n
             -- This do notation takes care of the IO monad, and the binds take
             -- care of the Maybe monad.
             return (maybeDeal >>= return . SituationInstance b c s)
-    put g'
     return instantiate'

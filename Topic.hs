@@ -8,10 +8,11 @@ module Topic(
 , Topic(..)
 ) where
 
-import Control.Monad.Trans.State.Strict(State, runState, get, put)
+import Control.Monad.Trans.State.Strict(State)
 import Data.Bifunctor(first)
 import System.Random(RandomGen, StdGen, next, split, mkStdGen, randomR)
 
+import Random(use, pickItem)
 import qualified Situation as S
 
 
@@ -74,16 +75,8 @@ choose :: Topic -> State StdGen S.Situation
 choose = choose' . topicSituations
   where
     choose' (RawSit s)   = return s
-    choose' (SitList ss) = do
-        g <- get
-        let (i, g') = randomR (0, length ss - 1) g
-        put g'
-        choose' (ss !! i)
-    choose' (SitFun f)   = do
-        g <- get
-        let (g', g'') = split g
-        put g''
-        choose' (f g')
+    choose' (SitList ss) = pickItem ss >>= choose'
+    choose' (SitFun f)   = use split >>= (choose' . f)
 
 
 data Topic = Topic {topicName :: String, topicSituations :: Situations}

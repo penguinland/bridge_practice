@@ -3,26 +3,16 @@ module ProblemSet(
 , outputLatex
 ) where
 
-import Control.Monad.Trans.State.Strict(State, runState, get, put)
+import Control.Monad.Trans.State.Strict(runState)
 import Data.List(sort)
 import Data.List.Utils(join, replace)
 import System.IO(readFile, writeFile)
 import System.Random(StdGen, next, split, randomR)
 
 import Output(toLatex)
+import Random(pickItem)
 import Situation(instantiate, SituationInstance)
 import Topic(Topic, topicName, choose)
-
-
--- TODO: move this somewhere more universal
-pickItem :: [a] -> State StdGen a
-pickItem [] = error "Picked item from empty list"
-pickItem as = do
-    -- TODO: Find the right idiom for this get->something->put business
-    g <- get
-    let (n, g') = randomR (0, length as - 1) g
-    put g'
-    return (as !! n)
 
 
 generate :: Int -> [Topic] -> StdGen -> IO [SituationInstance]
