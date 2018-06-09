@@ -8,7 +8,6 @@ module Topic(
 , Topic(..)
 ) where
 
--- TODO: Use this for StdGen stuff.
 import Control.Monad.Trans.State.Strict(State, runState, get, put)
 import Data.Bifunctor(first)
 import System.Random(RandomGen, StdGen, next, split, mkStdGen, randomR)
@@ -72,7 +71,7 @@ instance (Optionable s) => Optionable (b -> s) where
 
 
 choose :: Topic -> State StdGen S.Situation
-choose = choose' . situations
+choose = choose' . topicSituations
   where
     choose' (RawSit s)   = return s
     choose' (SitList ss) = do
@@ -87,4 +86,4 @@ choose = choose' . situations
         choose' (f g')
 
 
-data Topic = Topic {topicName :: String, situations :: Situations}
+data Topic = Topic {topicName :: String, topicSituations :: Situations}

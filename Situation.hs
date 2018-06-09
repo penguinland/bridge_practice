@@ -5,6 +5,10 @@ module Situation (
 , instantiate
 ) where
 
+-- TODO: Attach some kind of debugging string to each SituationInstance
+-- (Situation?) so it's easy to look into which one is generating
+-- unexpected/unintiuitive/incorrect deals.
+
 import Control.Monad.Trans.State.Strict(State, get, put)
 import Data.List.Utils(join)
 import System.Random(StdGen, next)
