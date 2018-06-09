@@ -2,7 +2,6 @@ module Topic(
   Situations
 , choose
 , (<~)
-, Situationable
 , wrap
 , base
 , Topic(..)
