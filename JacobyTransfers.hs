@@ -34,11 +34,12 @@ strong1NT :: Action
 strong1NT = do
     pointRange 15 17
     balancedHand
-    makeCall $ T.Bid 1 T.Notrump
+    makeCall oneNT
 
 
 no2LevelOvercall :: [T.Suit] -> Action
-no2LevelOvercall = sequence_ . map (forbid . condition)
+no2LevelOvercall suits =
+    (sequence_ . map (forbid . condition) $ suits) >> makePass
   where
     condition s = pointRange 11 40 >> minSuitLength s 5
 
@@ -92,13 +93,13 @@ initiateTransfer :: T.Suit -> T.Vulnerability -> Situation
 initiateTransfer suit vul = let
     action = do
         strong1NT
-        no2LevelOvercall T.allSuits >> makePass
+        no2LevelOvercall T.allSuits
         withholdBid $ jacobyTransfer suit
     explanation fmt =
-        "Partner has opened a strong " ++ output fmt oneNT ++ ". You have a \
-      \ 5-card major, and would like to choose that as the trump suit. Make a \
-      \ Jacoby transfer by bidding the suit directly below your own. That \
-      \ way, you get to pick the trump suit, but your partner will be \
+        "Partner has opened a strong " ++ output fmt oneNT ++ ". You have a\
+      \ 5-card major, and would like to choose that as the trump suit. Make a\
+      \ Jacoby transfer by bidding the suit directly below your own. That\
+      \ way, you get to pick the trump suit, but your partner will be\
       \ declarer so his strong hand will stay hidden."
   in
     situation T.North vul action (T.Bid 2 $ transferSuit suit) explanation
@@ -109,13 +110,13 @@ completeTransfer suit vul = let
     higherSuits = if suit == T.Spades then [] else [T.Spades]
     action = do
         strong1NT
-        no2LevelOvercall T.allSuits >> makePass
+        no2LevelOvercall T.allSuits
         jacobyTransfer suit
-        no2LevelOvercall higherSuits >> makePass
+        no2LevelOvercall higherSuits
     explanation fmt =
-        "You have opened a strong " ++ output fmt oneNT ++ ", and partner has \
-      \ made a Jacoby transfer. Complete the transfer by bidding the next \
-      \ higher suit. Partner promises at least 5 cards in that major, but \
+        "You have opened a strong " ++ output fmt oneNT ++ ", and partner has\
+      \ made a Jacoby transfer. Complete the transfer by bidding the next\
+      \ higher suit. Partner promises at least 5 cards in that major, but\
       \ wants you to be declarer so your stronger hand stays hidden."
   in
     situation T.South vul action (T.Bid 2 suit) explanation
@@ -125,20 +126,20 @@ majors55inv :: T.Vulnerability -> Situation
 majors55inv vul = let
     action = do
         strong1NT
-        no2LevelOvercall T.allSuits >> makePass
+        no2LevelOvercall T.allSuits
         suitLength T.Hearts 5
         suitLength T.Spades 5
         pointRange 7 9
     explanation fmt =
-        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5-5 in \
-      \ the majors and invitational strength, first make a Jacoby transfer \
-      \ into hearts, and then bid " ++ output fmt (T.Bid 2 T.Spades) ++ " \
+        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5-5 in\
+      \ the majors and invitational strength, first make a Jacoby transfer\
+      \ into hearts, and then bid " ++ output fmt (T.Bid 2 T.Spades) ++ "\
       \ afterwards. Partner will then have the options of passing " ++
-        output fmt (T.Bid 2 T.Spades) ++ " with a minimum hand and a spade \
-      \ fit, bidding " ++ output fmt (T.Bid 3 T.Hearts) ++ "with a minimum \
-      \ hand and no spade fit (in which case a heart fit is guaranteed), or \
-      \ bidding one of the majors at the 4 level with a maximum. This \
-      \ wrong-sides the contract when the " ++ output fmt oneNT ++ " bidder \
+        output fmt (T.Bid 2 T.Spades) ++ " with a minimum hand and a spade\
+      \ fit, bidding " ++ output fmt (T.Bid 3 T.Hearts) ++ "with a minimum\
+      \ hand and no spade fit (in which case a heart fit is guaranteed), or\
+      \ bidding one of the majors at the 4 level with a maximum. This\
+      \ wrong-sides the contract when the " ++ output fmt oneNT ++ " bidder\
       \ has a doubleton heart."
   in
     situation T.North vul action (T.Bid 2 T.Diamonds) explanation
@@ -148,17 +149,17 @@ majors55gf :: T.Vulnerability -> Situation
 majors55gf vul = let
     action = do
         strong1NT
-        no2LevelOvercall T.allSuits >> makePass
+        no2LevelOvercall T.allSuits
         suitLength T.Hearts 5
         suitLength T.Spades 5
         pointRange 10 14
     explanation fmt =
-        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5-5 in \
-        \ the majors and \
-        \ game-forcing strength, first make a Jacoby transfer into spades, \
-        \ and then bid " ++ output fmt (T.Bid 3 T.Hearts) ++ " afterwards. \
-        \ Partner will then have the options of which game to bid. \
-        \ This wrong-sides the contract when the " ++ output fmt oneNT ++ " \
+        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5-5 in\
+        \ the majors and\
+        \ game-forcing strength, first make a Jacoby transfer into spades,\
+        \ and then bid " ++ output fmt (T.Bid 3 T.Hearts) ++ " afterwards.\
+        \ Partner will then have the options of which game to bid.\
+        \ This wrong-sides the contract when the " ++ output fmt oneNT ++ "\
         \ bidder has a doubleton spade."
   in
     situation T.North vul action (T.Bid 2 T.Hearts) explanation
