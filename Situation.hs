@@ -34,9 +34,16 @@ instance Showable SituationInstance where
             "%\n}"
 
 
-instantiate ::Situation -> StdGen -> IO (Maybe SituationInstance)
-instantiate (Situation dn v b dl c s) g = do
-    maybeDeal <- eval dn v dl (fst . next $ g)
-    -- The do notation takes care of the IO monad, and the binds take care of
-    -- the Maybe monad.
-    return (maybeDeal >>= return . SituationInstance b c s)
+-- TODO: Find a way to make this cleaner. Monad transformers might be a relevant
+-- thing here?
+instantiate :: Situation -> StdGen -> (IO (Maybe SituationInstance), StdGen)
+instantiate (Situation dn v b dl c s) g = let
+    (n, g') = next g
+    instantiate' :: IO (Maybe SituationInstance)
+    instantiate' = do
+        maybeDeal <- eval dn v dl n
+        -- The do notation takes care of the IO monad, and the binds take care
+        -- of the Maybe monad.
+        return (maybeDeal >>= return . SituationInstance b c s)
+  in
+    (instantiate', g')

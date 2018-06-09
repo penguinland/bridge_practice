@@ -28,13 +28,12 @@ generate :: Int -> [Topic] -> StdGen -> IO [SituationInstance]
 generate 0 _      _ = return []
 generate n topics g = let
     (sit, g') = runState (pickItem topics >>= choose) g
-    (g'', g''') = split g'
-    sitInst = instantiate sit g''
+    (sitInst, g'') = instantiate sit g'
   in do
     maybeSit <- sitInst
     case maybeSit of
-        Nothing -> generate n topics g'''  -- Try again
-        Just d -> generate (n - 1) topics g''' >>= (return . (d :))
+        Nothing -> generate n topics g''  -- Try again
+        Just d -> generate (n - 1) topics g'' >>= (return . (d :))
 
 
 outputLatex :: Int -> [Topic] -> String -> StdGen -> IO String
