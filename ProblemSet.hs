@@ -18,6 +18,7 @@ import Topic(Topic, topicName, choose)
 pickItem :: [a] -> State StdGen a
 pickItem [] = error "Picked item from empty list"
 pickItem as = do
+    -- TODO: Find the right idiom for this get->something->put business
     g <- get
     let (n, g') = randomR (0, length as - 1) g
     put g'
@@ -27,8 +28,7 @@ pickItem as = do
 generate :: Int -> [Topic] -> StdGen -> IO [SituationInstance]
 generate 0 _      _ = return []
 generate n topics g = let
-    (sit, g') = runState (pickItem topics >>= choose) g
-    (sitInst, g'') = instantiate sit g'
+    (sitInst, g'') = runState (pickItem topics >>= choose >>= instantiate) g
   in do
     maybeSit <- sitInst
     case maybeSit of

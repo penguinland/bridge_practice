@@ -5,6 +5,7 @@ module Situation (
 , instantiate
 ) where
 
+import Control.Monad.Trans.State.Strict(State, get, put)
 import Data.List.Utils(join)
 import System.Random(StdGen, next)
 
@@ -36,14 +37,15 @@ instance Showable SituationInstance where
 
 -- TODO: Find a way to make this cleaner. Monad transformers might be a relevant
 -- thing here?
-instantiate :: Situation -> StdGen -> (IO (Maybe SituationInstance), StdGen)
-instantiate (Situation dn v b dl c s) g = let
-    (n, g') = next g
-    instantiate' :: IO (Maybe SituationInstance)
-    instantiate' = do
-        maybeDeal <- eval dn v dl n
-        -- The do notation takes care of the IO monad, and the binds take care
-        -- of the Maybe monad.
-        return (maybeDeal >>= return . SituationInstance b c s)
-  in
-    (instantiate', g')
+instantiate :: Situation -> State StdGen (IO (Maybe SituationInstance))
+instantiate (Situation dn v b dl c s) = do
+    g <- get
+    let (n, g') = next g
+        instantiate' :: IO (Maybe SituationInstance)
+        instantiate' = do
+            maybeDeal <- eval dn v dl n
+            -- This do notation takes care of the IO monad, and the binds take
+            -- care of the Maybe monad.
+            return (maybeDeal >>= return . SituationInstance b c s)
+    put g'
+    return instantiate'
