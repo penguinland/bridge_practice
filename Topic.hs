@@ -1,5 +1,5 @@
 module Topic(
-  Situations
+  Situations  -- Note that constructors aren't public; use wrap instead.
 , choose
 , (<~)
 , wrap
