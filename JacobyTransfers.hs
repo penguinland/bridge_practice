@@ -9,6 +9,7 @@ import Auction(forbid, makeCall, makePass, pointRange, suitLength,
                constrain)
 import Situation(situation, Situation)
 import qualified Terminology as T
+import qualified CommonBids as B
 
 
 -- syntactic sugar
@@ -28,13 +29,6 @@ topic = Topic "Jacoby transfers" situations
 
 -- TODO: Add separate commentary for 5-4 non-gf hands. Alternately, forbid 5-4
 -- non-gf hands, and add that situation into the Smolen topic.
-
-
-strong1NT :: Action
-strong1NT = do
-    pointRange 15 17
-    balancedHand
-    makeCall oneNT
 
 
 no2LevelOvercall :: [T.Suit] -> Action
@@ -92,7 +86,7 @@ jacobyTransfer suit = do
 initiateTransfer :: T.Suit -> T.Vulnerability -> Situation
 initiateTransfer suit vul = let
     action = do
-        strong1NT
+        B.strong1NT
         no2LevelOvercall T.allSuits
         withholdBid $ jacobyTransfer suit
     explanation fmt =
@@ -109,7 +103,7 @@ completeTransfer :: T.Suit -> T.Vulnerability -> Situation
 completeTransfer suit vul = let
     higherSuits = if suit == T.Spades then [] else [T.Spades]
     action = do
-        strong1NT
+        B.strong1NT
         no2LevelOvercall T.allSuits
         jacobyTransfer suit
         no2LevelOvercall higherSuits
@@ -125,7 +119,7 @@ completeTransfer suit vul = let
 majors55inv :: T.Vulnerability -> Situation
 majors55inv vul = let
     action = do
-        strong1NT
+        B.strong1NT
         no2LevelOvercall T.allSuits
         suitLength T.Hearts 5
         suitLength T.Spades 5
@@ -148,7 +142,7 @@ majors55inv vul = let
 majors55gf :: T.Vulnerability -> Situation
 majors55gf vul = let
     action = do
-        strong1NT
+        B.strong1NT
         no2LevelOvercall T.allSuits
         suitLength T.Hearts 5
         suitLength T.Spades 5

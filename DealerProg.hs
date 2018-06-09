@@ -1,7 +1,7 @@
 module DealerProg(
   DealerProg
 , newDeal
-, addDefn  -- TODO: does this need to be public?
+, addDefn
 , addReq   -- TODO: does this need to be public?
 , addNewReq
 , invert
