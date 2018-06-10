@@ -50,5 +50,5 @@ instantiate (Situation dn v b dl c s) = do
             maybeDeal <- eval dn v dl n
             -- This do notation takes care of the IO monad, and the binds take
             -- care of the Maybe monad.
-            return (maybeDeal >>= return . SituationInstance b c s)
+            return (SituationInstance b c s <$> maybeDeal)
     return instantiate'

@@ -33,7 +33,7 @@ topic = Topic "Jacoby transfers" situations
 
 no2LevelOvercall :: [T.Suit] -> Action
 no2LevelOvercall suits =
-    (sequence_ . map (forbid . condition) $ suits) >> makePass
+    mapM_ (forbid . condition) suits >> makePass
   where
     condition s = pointRange 11 40 >> minSuitLength s 5
 
@@ -59,8 +59,7 @@ texasTransfer suit = do
 
 
 equalMajors :: Action
-equalMajors = do
-    constrain "equal_majors" ["hearts(", ") == spades(", ")"]
+equalMajors = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
 
 smolen :: T.Suit -> Action  -- The suit is the longer major.

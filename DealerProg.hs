@@ -53,7 +53,7 @@ invert (DealerProg defns reqs) =
 toProgram :: DealerProg -> String
 toProgram (DealerProg defns conds) = join "\n" $
     ["generate 1000000", "produce 1", ""] ++
-    (Map.foldMapWithKey (\k v -> ["    " ++ k ++ " = " ++ v]) defns)
+    Map.foldMapWithKey (\k v -> ["    " ++ k ++ " = " ++ v]) defns
     ++ ["", "condition",
         "    " ++ (join " && " . reverse $ conds),
         "action", "    printall"]
@@ -93,17 +93,17 @@ eval dir vul deal seed = let
     splitSuit = map strip . wholeMap (fixedWidth (repeat 20))
 
     toHand :: [String] -> Maybe S.Hand
-    toHand ([s, h, d, c]) = Just $ S.Hand s h d c
+    toHand [s, h, d, c] = Just $ S.Hand s h d c
     toHand  _           = Nothing
 
     toDeal :: [[String]] -> Maybe S.Deal
     toDeal suits = let
-        maybeHands = sequence . map toHand . transpose $ suits
+        maybeHands = mapM toHand . transpose $ suits
       in
         case maybeHands of
-            Just ([n, e, s, w]) -> Just $ S.Deal dir vul n e s w
-            Just _              -> error $ "Unexpected suits!" ++ show seed
-            Nothing             -> Nothing
+            Just [n, e, s, w] -> Just $ S.Deal dir vul n e s w
+            Just _            -> error $ "Unexpected suits!" ++ show seed
+            Nothing           -> Nothing
   in
     do
         output <- result  -- output is a Maybe String

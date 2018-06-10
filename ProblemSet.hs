@@ -23,7 +23,7 @@ generate n topics g = let
     maybeSit <- sitInst
     case maybeSit of
         Nothing -> generate n topics g''  -- Try again
-        Just d -> generate (n - 1) topics g'' >>= (return . (d :))
+        Just d -> (d:) <$> generate (n - 1) topics g''
 
 
 outputLatex :: Int -> [Topic] -> String -> StdGen -> IO String

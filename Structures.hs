@@ -23,7 +23,7 @@ data Hand = Hand String String String String
 instance Showable Hand where
     toLatex (Hand s h d c) =
        "\\hand{" ++
-       (join "}{" $ map (replace "T" "10" . replace " " "\\,") [s, h, d, c])
+       join "}{" (map (replace "T" "10" . replace " " "\\,") [s, h, d, c])
        ++ "}"
 
 
@@ -36,7 +36,7 @@ instance Showable Bidding where
       where
         newRow = "\\\\\n    "
         rows = join newRow . reverse . map formatRow $ b
-        formatRow = join "&" . reverse . map (fromMaybe "" . liftM toLatex)
+        formatRow = join "&" . reverse . map (maybe "" toLatex)
         finish T.North = newRow
         finish _       = "&"
 
@@ -50,10 +50,10 @@ startBidding T.East  = Bidding T.East  [[Nothing, Nothing]]
 startBidding T.South = Bidding T.South [[Nothing, Nothing, Nothing]]
 
 (>-) :: Bidding -> T.Call -> Bidding
-(Bidding T.West  (  bs)) >- c = Bidding T.North ( [Just c]   :bs)
-(Bidding T.North (b:bs)) >- c = Bidding T.East  (((Just c):b):bs)
-(Bidding T.East  (b:bs)) >- c = Bidding T.South (((Just c):b):bs)
-(Bidding T.South (b:bs)) >- c = Bidding T.West  (((Just c):b):bs)
+(Bidding T.West     bs ) >- c = Bidding T.North ([Just c]  :bs)
+(Bidding T.North (b:bs)) >- c = Bidding T.East  ((Just c:b):bs)
+(Bidding T.East  (b:bs)) >- c = Bidding T.South ((Just c:b):bs)
+(Bidding T.South (b:bs)) >- c = Bidding T.West  ((Just c:b):bs)
 
 
 --                                           N    E    S    W
@@ -61,7 +61,7 @@ data Deal = Deal T.Direction T.Vulnerability Hand Hand Hand Hand
 
 instance Showable Deal where
     toLatex (Deal d v n e s w) =
-        "  \\deal{" ++ (capitalize $ show d) ++ "}{" ++
+        "  \\deal{" ++ capitalize (show d) ++ "}{" ++
            join "}%\n    {" (toLatex v : map toLatex [n, e, s, w]) ++
            "}\n"
       where
