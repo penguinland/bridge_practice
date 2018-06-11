@@ -2,7 +2,7 @@ module JacobyTransfers(topic) where
 
 import Data.List.Utils(join)
 
-import Output(output)
+import Output(output, Punct(NDash))
 import Topic(Topic(..), base, (<~), wrap)
 import Auction(forbid, makeCall, makePass, pointRange, suitLength,
                minSuitLength, maxSuitLength, Action, balancedHand, withholdBid,
@@ -130,12 +130,13 @@ majors55inv dealer vul = let
         suitLength T.Spades 5
         pointRange 7 9
     explanation fmt =
-        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5-5 in\
+        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5" ++
+        output fmt NDash ++ "5 in\
       \ the majors and invitational strength, first make a Jacoby transfer\
       \ into hearts, and then bid " ++ output fmt (T.Bid 2 T.Spades) ++ "\
       \ afterwards. Partner will then have the options of passing " ++
         output fmt (T.Bid 2 T.Spades) ++ " with a minimum hand and a spade\
-      \ fit, bidding " ++ output fmt (T.Bid 3 T.Hearts) ++ "with a minimum\
+      \ fit, bidding " ++ output fmt (T.Bid 3 T.Hearts) ++ " with a minimum\
       \ hand and no spade fit (in which case a heart fit is guaranteed), or\
       \ bidding one of the majors at the 4 level with a maximum. This\
       \ wrong-sides the contract when the " ++ output fmt oneNT ++ " bidder\
@@ -154,7 +155,8 @@ majors55gf dealer vul = let
         suitLength T.Spades 5
         pointRange 10 14
     explanation fmt =
-        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5-5 in\
+        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5" ++
+        output fmt NDash ++ "5 in\
         \ the majors and\
         \ game-forcing strength, first make a Jacoby transfer into spades,\
         \ and then bid " ++ output fmt (T.Bid 3 T.Hearts) ++ " afterwards.\

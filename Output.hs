@@ -3,6 +3,7 @@ module Output (
 , toLatex
 , OutputType(..)
 , output
+, Punct(..)
 ) where
 
 class Showable a where
@@ -29,3 +30,13 @@ instance Showable a => Outputtable (Wrap a) where
 
 output :: (Showable a) => OutputType -> a -> String
 output t = outputWrap t . Wrap
+
+
+data Punct = NDash
+           | MDash
+
+instance Showable Punct where
+    toLatex NDash = "--"
+    toLatex MDash = "---"
+    --toHtml NDash = "&ndash;"
+    --toHtml MDash = "&mdash;"
