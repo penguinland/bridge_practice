@@ -5,6 +5,7 @@ module Auction (
 , finish
 , forbid
 , constrain
+, define
 , makeCall
 , makePass
 , pointRange
@@ -19,7 +20,7 @@ import Control.Monad.Trans.State.Strict(State, execState, get, put, modify)
 import Data.Bifunctor(first, second)
 import Data.List.Utils(join)
 
-import DealerProg(DealerProg, newDeal, addNewReq, invert)
+import DealerProg(DealerProg, newDeal, addNewReq, addDefn, invert)
 import Structures(Bidding, startBidding, (>-), currentBidder)
 import qualified Terminology as T
 
@@ -43,16 +44,23 @@ forbid action = do
     put (bidding, dealerProg `mappend` invert dealerToInvert)
 
 
--- constrain takes the name of a constraint and pieces of a definition that
--- should be joined together with the name of the bidder.
+-- modifyDealerProg takes the name of a constraint and pieces of a definition
+-- that should be joined together with the name of the bidder.
 -- TODO: consider making the pieces a String -> String function instead?
-constrain :: String -> [String] -> Action
-constrain name defnPieces = do
+modifyDealerProg :: (String -> String -> DealerProg -> DealerProg) ->
+        String -> [String] -> Action
+modifyDealerProg op name defnPieces = do
     (bidding, dealerProg) <- get
     let bidderName = show . currentBidder $ bidding
         fullName = name ++ "_" ++ bidderName
         fullDefn = join bidderName defnPieces
-    put (bidding, addNewReq fullName fullDefn dealerProg)
+    put (bidding, op fullName fullDefn dealerProg)
+
+constrain :: String -> [String] -> Action
+constrain = modifyDealerProg addNewReq
+
+define :: String -> [String] -> Action
+define = modifyDealerProg addDefn
 
 
 makeCall :: T.Call -> Action

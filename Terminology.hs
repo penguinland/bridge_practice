@@ -1,6 +1,7 @@
 module Terminology (
   Direction(..)
 , allDirections
+, next
 , Suit(..)
 , allSuits
 , minorSuits
@@ -31,6 +32,13 @@ instance Show Direction where
 
 allDirections :: [Direction]
 allDirections = [North, East, South, West]
+
+
+next :: Direction -> Direction
+next North = East
+next East  = South
+next South = West
+next West  = North
 
 
 data Suit = Clubs | Diamonds | Hearts | Spades | Notrump deriving Eq

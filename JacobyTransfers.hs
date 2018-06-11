@@ -22,9 +22,12 @@ topic = Topic "Jacoby transfers" situations
   where
     prepare s = wrap $ s <~ T.allVulnerabilities
     situations = wrap [
-        prepare $ base initiateTransfer <~ T.majorSuits
-      , prepare $ base completeTransfer <~ T.majorSuits
-      , wrap . map (prepare . base) $ [majors55gf, majors55inv]
+        prepare $ base initiateTransfer <~ T.allDirections <~ T.majorSuits
+      , prepare $ base completeTransfer <~ T.allDirections <~ T.majorSuits
+      -- Note that with 5-5 and game-going strength, you would have opened the
+      -- bidding if you had a chance.
+      , wrap . map prepare $ [ base majors55gf <~ [T.West, T.North]
+                             , base majors55inv <~ T.allDirections]
       ]
 
 -- TODO: Add separate commentary for 5-4 non-gf hands. Alternately, forbid 5-4
@@ -82,9 +85,10 @@ jacobyTransfer suit = do
     makeCall (T.Bid 2 $ transferSuit suit)
 
 
-initiateTransfer :: T.Suit -> T.Vulnerability -> Situation
-initiateTransfer suit vul = let
+initiateTransfer :: T.Direction -> T.Suit -> T.Vulnerability -> Situation
+initiateTransfer dealer suit vul = let
     action = do
+        B.setDealerAndOpener dealer T.North
         B.strong1NT
         no2LevelOvercall T.allSuits
         withholdBid $ jacobyTransfer suit
@@ -95,13 +99,14 @@ initiateTransfer suit vul = let
       \ way, you get to pick the trump suit, but your partner will be\
       \ declarer so his strong hand will stay hidden."
   in
-    situation T.North vul action (T.Bid 2 $ transferSuit suit) explanation
+    situation dealer vul action (T.Bid 2 $ transferSuit suit) explanation
 
 
-completeTransfer :: T.Suit -> T.Vulnerability -> Situation
-completeTransfer suit vul = let
+completeTransfer :: T.Direction -> T.Suit -> T.Vulnerability -> Situation
+completeTransfer dealer suit vul = let
     higherSuits = if suit == T.Spades then [] else [T.Spades]
     action = do
+        B.setDealerAndOpener dealer T.South
         B.strong1NT
         no2LevelOvercall T.allSuits
         jacobyTransfer suit
@@ -112,12 +117,13 @@ completeTransfer suit vul = let
       \ higher suit. Partner promises at least 5 cards in that major, but\
       \ wants you to be declarer so your stronger hand stays hidden."
   in
-    situation T.South vul action (T.Bid 2 suit) explanation
+    situation dealer vul action (T.Bid 2 suit) explanation
 
 
-majors55inv :: T.Vulnerability -> Situation
-majors55inv vul = let
+majors55inv :: T.Direction -> T.Vulnerability -> Situation
+majors55inv dealer vul = let
     action = do
+        B.setDealerAndOpener dealer T.North
         B.strong1NT
         no2LevelOvercall T.allSuits
         suitLength T.Hearts 5
@@ -135,12 +141,13 @@ majors55inv vul = let
       \ wrong-sides the contract when the " ++ output fmt oneNT ++ " bidder\
       \ has a doubleton heart."
   in
-    situation T.North vul action (T.Bid 2 T.Diamonds) explanation
+    situation dealer vul action (T.Bid 2 T.Diamonds) explanation
 
 
-majors55gf :: T.Vulnerability -> Situation
-majors55gf vul = let
+majors55gf :: T.Direction -> T.Vulnerability -> Situation
+majors55gf dealer vul = let
     action = do
+        B.setDealerAndOpener dealer T.North
         B.strong1NT
         no2LevelOvercall T.allSuits
         suitLength T.Hearts 5
@@ -155,7 +162,7 @@ majors55gf vul = let
         \ This wrong-sides the contract when the " ++ output fmt oneNT ++ "\
         \ bidder has a doubleton spade."
   in
-    situation T.North vul action (T.Bid 2 T.Hearts) explanation
+    situation dealer vul action (T.Bid 2 T.Hearts) explanation
 
 
 -- TODO: Make more detailed situations for when responder has no interest in

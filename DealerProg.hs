@@ -61,9 +61,10 @@ toProgram (DealerProg defns conds) = join "\n" $
 
 eval :: T.Direction -> T.Vulnerability -> DealerProg -> Int -> IO (Maybe S.Deal)
 eval dir vul deal seed = let
+    prog = toProgram deal
+
     result :: IO (Maybe String)
     result = do
-        let prog = toProgram deal
         (exitCode, stdout, stderr) <- readProcessWithExitCode
             "dealer" ["-s", show seed] prog
         if exitCode == ExitSuccess
@@ -87,7 +88,7 @@ eval dir vul deal seed = let
      | length all == 11 = Just $ map splitSuit [s, h, d, c]
     -- If that didn't work, we have totally misunderstood something.
     toSuits problem     = error $ join "\n"
-        ("Unexpected output from dealer invocation:":problem)
+        ("Unexpected output from dealer invocation:":prog:problem)
 
     splitSuit :: String -> [String]
     splitSuit = map strip . wholeMap (fixedWidth (repeat 20))
