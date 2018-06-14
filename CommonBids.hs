@@ -1,6 +1,10 @@
 module CommonBids(
   strong1NT
 , weak1NT
+, preempt4
+, preempt3
+, weak2
+, cannotPreempt
 , firstSeatOpener
 , secondSeatOpener
 , thirdSeatOpener
@@ -8,7 +12,7 @@ module CommonBids(
 , setDealerAndOpener
 ) where
 
-import Auction(Action, constrain, define, forbid, pointRange, balancedHand, makeCall, makePass)
+import Auction(Action, constrain, define, forbid, pointRange, balancedHand, makeCall, makePass, suitLength, minSuitLength, maxSuitLength)
 import DealerProg(addDefn, addReq)
 import qualified Terminology as T
 
@@ -24,6 +28,45 @@ weak1NT = do
     balancedHand
     pointRange 12 14
     makeCall (T.Bid 1 T.Notrump)
+
+
+preempt4 :: T.Suit -> Action
+preempt4 suit = do
+    minSuitLength suit 8
+    pointRange 5 13  -- TODO: figure out the correct point range
+    makeCall (T.Bid 4 suit)
+
+preempt3 :: T.Suit -> Action
+preempt3 T.Clubs = do  -- Compensate for 2C being a strong bid
+    forbid (preempt4 T.Clubs)
+    minSuitLength T.Clubs 6
+    maxSuitLength T.Clubs 7
+    pointRange 5 11
+    -- TODO: Clarify the nuance of opening 3C.
+    makeCall (T.Bid 3 T.Clubs)
+preempt3 suit = do
+    forbid (preempt4 suit)
+    suitLength suit 7
+    pointRange 5 9  -- TODO: figure out this point range, too.
+    makeCall (T.Bid 3 suit)
+
+weak2 :: T.Suit -> Action
+weak2 T.Clubs = error "Don't bid a weak 2C."
+weak2 suit = do
+    forbid (preempt4 suit)
+    forbid (preempt3 suit)
+    suitLength suit 6
+    pointRange 5 11
+    -- TODO: clarify hands with 11 HCP and a 6-card suit that should open at the
+    -- 1 level from hands that should open at the 2 level.
+    makeCall (T.Bid 2 suit)
+
+
+cannotPreempt :: Action
+cannotPreempt = do
+    sequence_ $ map (\s -> forbid (weak2 s)) [T.Diamonds, T.Hearts, T.Spades]
+    sequence_ $ map (\s -> forbid (preempt3 s)) T.allSuits
+    sequence_ $ map (\s -> forbid (preempt4 s)) T.allSuits
 
 
 get2LongestSuits :: Action
@@ -77,10 +120,13 @@ fourthSeatOpener =
 
 
 setDealerAndOpener :: T.Direction -> T.Direction -> Action
-setDealerAndOpener = helper [firstSeatOpener, secondSeatOpener,
-                             thirdSeatOpener, fourthSeatOpener]
+setDealerAndOpener = helper openingRules
   where
+    openingRules = [firstSeatOpener, secondSeatOpener,
+                    thirdSeatOpener, fourthSeatOpener]
     helper (action:actions) caller opener
       | caller == opener = action
-      | otherwise        = forbid action >> makePass >>
-                           helper actions (T.next caller) opener
+      | otherwise        = do forbid action
+                              cannotPreempt
+                              makePass
+                              helper actions (T.next caller) opener

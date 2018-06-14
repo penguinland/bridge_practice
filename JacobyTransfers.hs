@@ -34,13 +34,6 @@ topic = Topic "Jacoby transfers" situations
 -- non-gf hands, and add that situation into the Smolen topic.
 
 
-no2LevelOvercall :: [T.Suit] -> Action
-no2LevelOvercall suits =
-    mapM_ (forbid . condition) suits >> makePass
-  where
-    condition s = pointRange 11 40 >> minSuitLength s 5
-
-
 transferSuit :: T.Suit -> T.Suit
 transferSuit T.Hearts = T.Diamonds
 transferSuit T.Spades = T.Hearts
@@ -90,7 +83,7 @@ initiateTransfer dealer suit vul = let
     action = do
         B.setDealerAndOpener dealer T.North
         B.strong1NT
-        no2LevelOvercall T.allSuits
+        B.cannotPreempt >> makePass
         withholdBid $ jacobyTransfer suit
     explanation fmt =
         "Partner has opened a strong " ++ output fmt oneNT ++ ". You have a\
@@ -108,9 +101,9 @@ completeTransfer dealer suit vul = let
     action = do
         B.setDealerAndOpener dealer T.South
         B.strong1NT
-        no2LevelOvercall T.allSuits
+        B.cannotPreempt >> makePass
         jacobyTransfer suit
-        no2LevelOvercall higherSuits
+        B.cannotPreempt >> makePass  -- TODO: Allow overcalls of lower suits
     explanation fmt =
         "You have opened a strong " ++ output fmt oneNT ++ ", and partner has\
       \ made a Jacoby transfer. Complete the transfer by bidding the next\
@@ -125,7 +118,7 @@ majors55inv dealer vul = let
     action = do
         B.setDealerAndOpener dealer T.North
         B.strong1NT
-        no2LevelOvercall T.allSuits
+        B.cannotPreempt >> makePass
         suitLength T.Hearts 5
         suitLength T.Spades 5
         pointRange 7 9
@@ -150,7 +143,7 @@ majors55gf dealer vul = let
     action = do
         B.setDealerAndOpener dealer T.North
         B.strong1NT
-        no2LevelOvercall T.allSuits
+        B.cannotPreempt >> makePass
         suitLength T.Hearts 5
         suitLength T.Spades 5
         pointRange 10 14

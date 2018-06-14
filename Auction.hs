@@ -102,4 +102,3 @@ withholdBid action = do
     put (bidding, dealerProg `mappend` dealerToWithhold)
 
 -- TODO: hasCard
--- TODO: rule of 20, etc.?
