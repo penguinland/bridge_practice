@@ -107,6 +107,8 @@ eval dir vul deal seed = let
             Nothing           -> Nothing
   in
     do
+        -- Uncomment the next line during debugging.
+        --putStrLn prog
         output <- result  -- output is a Maybe String
         -- Note: the do notation takes care of the IO monad, and the binds on
         -- this next line take care of the Maybe monad.
