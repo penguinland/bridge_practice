@@ -17,27 +17,11 @@ oneNT :: T.Call
 oneNT = T.Bid 1 T.Notrump
 
 
-topic :: Topic
-topic = Topic "Jacoby transfers" situations
-  where
-    prepare s = wrap $ s <~ T.allVulnerabilities
-    situations = wrap [
-        prepare $ base initiateTransfer <~ T.allDirections <~ T.majorSuits
-      , prepare $ base completeTransfer <~ T.allDirections <~ T.majorSuits
-      -- Note that with 5-5 and game-going strength, you would have opened the
-      -- bidding if you had a chance.
-      , wrap . map prepare $ [ base majors55gf <~ [T.West, T.North]
-                             , base majors55inv <~ T.allDirections]
-      ]
-
--- TODO: Add separate commentary for 5-4 non-gf hands. Alternately, forbid 5-4
--- non-gf hands, and add that situation into the Smolen topic.
-
-
 transferSuit :: T.Suit -> T.Suit
 transferSuit T.Hearts = T.Diamonds
 transferSuit T.Spades = T.Hearts
 transferSuit _        = error "Jacoby-like transfer of non-major suit!"
+
 
 otherMajor :: T.Suit -> T.Suit
 otherMajor T.Hearts = T.Spades
@@ -68,29 +52,91 @@ smolen suit = do
     forbid equalMajors
 
 
+prepareJacobyTransfer :: T.Suit -> Action
+prepareJacobyTransfer suit = do
+    minSuitLength suit 5
+    forbid (texasTransfer suit)
+    forbid (smolen suit)
+
+
 jacobyTransfer :: T.Suit -> Action
 jacobyTransfer suit = do
-    minSuitLength suit 5
-    forbid $ texasTransfer suit
-    forbid $ smolen suit
+    prepareJacobyTransfer suit
     -- Make this simple by leaving out 5-5 hands. They go in another situation.
     forbid equalMajors
     makeCall (T.Bid 2 $ transferSuit suit)
 
+-- TODO: Add separate commentary for 5-4 non-gf hands. Alternately, forbid 5-4
+-- non-gf hands, and add that situation into the Smolen topic.
 
-initiateTransfer :: T.Direction -> T.Suit -> T.Vulnerability -> Situation
-initiateTransfer dealer suit vul = let
+
+setUpTransfer :: T.Direction -> T.Suit -> Action
+setUpTransfer dealer suit = do
+    B.setDealerAndOpener dealer T.North
+    B.strong1NT
+    B.cannotPreempt >> makePass
+    prepareJacobyTransfer suit
+
+
+setUpCompletion :: T.Direction -> T.Suit -> Action
+setUpCompletion dealer suit = do
+    B.setDealerAndOpener dealer T.South
+    B.strong1NT
+    B.cannotPreempt >> makePass
+    jacobyTransfer suit
+    B.cannotPreempt >> makePass  -- TODO: Allow overcalls of lower suits
+
+
+initiateTransferWeak :: T.Direction -> T.Suit -> T.Vulnerability -> Situation
+initiateTransferWeak dealer suit vul = let
     action = do
-        B.setDealerAndOpener dealer T.North
-        B.strong1NT
-        B.cannotPreempt >> makePass
-        withholdBid $ jacobyTransfer suit
+        setUpTransfer dealer suit
+        pointRange 0 7
+        forbid equalMajors  -- With 5-5 in the majors, pick the better one.
     explanation fmt =
-        "Partner has opened a strong " ++ output fmt oneNT ++ ". You have a\
-      \ 5-card major, and would like to choose that as the trump suit. Make a\
-      \ Jacoby transfer by bidding the suit directly below your own. That\
-      \ way, you get to pick the trump suit, but your partner will be\
-      \ declarer so his strong hand will stay hidden."
+        "Partner has opened a strong " ++ output fmt oneNT ++ ". You have\
+       \ such a weak hand that you have no interest in game, but you do have\
+       \ a 5-card major. Playing in it, even if it's a 5-2 fit, is more\
+       \ likely to succeed than playing in notrump. Make a Jacoby transfer\
+       \ into the suit, then pass and leave partner at the 2 level."
+  in
+    situation dealer vul action (T.Bid 2 $ transferSuit suit) explanation
+
+
+initiateTransferBInv :: T.Direction -> T.Suit -> T.Vulnerability -> Situation
+initiateTransferBInv dealer suit vul = let
+    action = do
+        setUpTransfer dealer suit
+        pointRange 8 9
+        forbid equalMajors
+        balancedHand
+    explanation fmt =
+        "Partner has opened a strong " ++ output fmt oneNT ++ ". You have\
+       \ a balanced hand with invitational strength, and a 5-card major.\
+       \ Make a Jacoby transfer into the suit, then bid " ++
+         output fmt (T.Bid 2 T.Notrump) ++ ". This gives partner the options\
+       \ of playing in notrump with 2-card " ++ init (show suit) ++ " support\
+       \  or in " ++ show suit ++ " with a fit, and the option of playing in\
+       \ partscore with a minimum hand and game with a maximum."
+  in
+    situation dealer vul action (T.Bid 2 $ transferSuit suit) explanation
+
+
+initiateTransferBGf :: T.Direction -> T.Suit -> T.Vulnerability -> Situation
+initiateTransferBGf dealer suit vul = let
+    action = do
+        setUpTransfer dealer suit
+        pointRange 10 14
+        forbid equalMajors
+        balancedHand
+    explanation fmt =
+        "Partner has opened a strong " ++ output fmt oneNT ++ ". You have\
+       \ a balanced hand with game-going but not slam-going strength, and a\
+       \ 5-card major. Make a Jacoby transfer into the suit, then bid " ++
+         output fmt (T.Bid 3 T.Notrump) ++ ". This gives partner the options\
+       \ of passing and playing in notrump with 2-card " ++ init (show suit) ++
+         " support or correcting to " ++ output fmt (T.Bid 4 suit) ++ " with\
+       \ a fit, knowing that you belong in game but not slam."
   in
     situation dealer vul action (T.Bid 2 $ transferSuit suit) explanation
 
@@ -99,16 +145,33 @@ completeTransfer :: T.Direction -> T.Suit -> T.Vulnerability -> Situation
 completeTransfer dealer suit vul = let
     higherSuits = if suit == T.Spades then [] else [T.Spades]
     action = do
-        B.setDealerAndOpener dealer T.South
-        B.strong1NT
-        B.cannotPreempt >> makePass
-        jacobyTransfer suit
-        B.cannotPreempt >> makePass  -- TODO: Allow overcalls of lower suits
+        setUpCompletion dealer suit
+        minSuitLength suit 3
     explanation fmt =
         "You have opened a strong " ++ output fmt oneNT ++ ", and partner has\
       \ made a Jacoby transfer. Complete the transfer by bidding the next\
       \ higher suit. Partner promises at least 5 cards in that major, but\
       \ wants you to be declarer so your stronger hand stays hidden."
+  in
+    situation dealer vul action (T.Bid 2 suit) explanation
+
+
+completeTransferShort :: T.Direction -> T.Suit -> T.Vulnerability -> Situation
+completeTransferShort dealer suit vul = let
+    higherSuits = if suit == T.Spades then [] else [T.Spades]
+    action = do
+        setUpCompletion dealer suit
+        suitLength suit 2
+    explanation fmt =
+        "You have opened a strong " ++ output fmt oneNT ++ ", and partner has\
+      \ made a Jacoby transfer, indicating they have at least 5 " ++
+        show suit ++ ". Even though you only have 2-card support, complete\
+      \ the transfer by bidding the next higher suit. You have at least a\
+      \ 7-card fit. If partner is very weak, " ++ output fmt (T.Bid 2 suit) ++
+       " rates to play better than notrump, and you want to be declarer so\
+      \ that your strong hand stays hidden. If partner has at least\
+      \ invitational strength, he will make another bid to give you options\
+      \ of where to play."
   in
     situation dealer vul action (T.Bid 2 suit) explanation
 
@@ -160,7 +223,19 @@ majors55gf dealer vul = let
     situation dealer vul action (T.Bid 2 T.Hearts) explanation
 
 
--- TODO: Make more detailed situations for when responder has no interest in
--- game and an unbalanced hand, invitational strength and a balanced hand, and
--- game-forcing strength with a balanced hand. Make situations for all of
--- these from the perspective of both opener and responder.
+topic :: Topic
+topic = Topic "Jacoby transfers" situations
+  where
+    prepare s = wrap $ s <~ T.allVulnerabilities
+    anyDirSuit s = base s <~ T.allDirections <~ T.majorSuits
+    situations = wrap [
+        prepare $ anyDirSuit initiateTransferWeak
+      , prepare $ anyDirSuit initiateTransferBInv
+      , prepare $ anyDirSuit initiateTransferBGf
+      , prepare $ anyDirSuit completeTransfer
+      , prepare $ anyDirSuit completeTransferShort
+      -- Note that with 5-5 and game-going strength, you would have opened the
+      -- bidding if you had a chance.
+      , wrap . map prepare $ [ base majors55gf <~ [T.West, T.North]
+                             , base majors55inv <~ T.allDirections]
+      ]
