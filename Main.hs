@@ -1,6 +1,6 @@
 import System.Random(mkStdGen)
 
-import qualified JacobyTransfers
+import qualified Topics.JacobyTransfers as JacobyTransfers
 import ProblemSet(outputLatex)
 
 

@@ -1,4 +1,4 @@
-module JacobyTransfers(topic) where
+module Topics.JacobyTransfers(topic) where
 
 import Data.List.Utils(join)
 

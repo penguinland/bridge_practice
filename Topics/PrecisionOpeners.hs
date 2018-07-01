@@ -1,4 +1,4 @@
-module PrecisionOpeners(topic) where
+module Topics.PrecisionOpeners(topic) where
 
 import Data.List.Utils(join)
 
