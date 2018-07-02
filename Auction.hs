@@ -13,6 +13,7 @@ module Auction (
 , suitLength
 , minSuitLength
 , maxSuitLength
+, hasTopN
 , withholdBid
 ) where
 
@@ -92,6 +93,13 @@ suitLength = suitLengthOp "==" "eq"
 minSuitLength = suitLengthOp ">=" "ge"
 
 maxSuitLength = suitLengthOp "<=" "le"
+
+
+hasTopN :: T.Suit -> Int -> Int -> Action
+hasTopN suit range minCount = do
+    constrain (join "_" [show suit, show minCount, "of", "top", show range])
+              ["top" ++ show range ++ "(", ", " ++ show suit ++
+               ") >= " ++ show minCount]
 
 
 withholdBid :: Action -> Action
