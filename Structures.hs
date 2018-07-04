@@ -40,8 +40,10 @@ instance Showable Bidding where
         finish T.North = newRow
         finish _       = "&"
 
+
 currentBidder :: Bidding -> T.Direction
 currentBidder (Bidding d _) = d
+
 
 startBidding :: T.Direction -> Bidding
 startBidding T.West  = Bidding T.West  []
@@ -49,11 +51,11 @@ startBidding T.North = Bidding T.North [[Nothing]]
 startBidding T.East  = Bidding T.East  [[Nothing, Nothing]]
 startBidding T.South = Bidding T.South [[Nothing, Nothing, Nothing]]
 
+
 (>-) :: Bidding -> T.Call -> Bidding
-(Bidding T.West     bs ) >- c = Bidding T.North ([Just c]  :bs)
-(Bidding T.North (b:bs)) >- c = Bidding T.East  ((Just c:b):bs)
-(Bidding T.East  (b:bs)) >- c = Bidding T.South ((Just c:b):bs)
-(Bidding T.South (b:bs)) >- c = Bidding T.West  ((Just c:b):bs)
+(Bidding T.West    bs ) >- c = Bidding T.North    ([Just c]  :bs)
+(Bidding d      (b:bs)) >- c = Bidding (T.next d) ((Just c:b):bs)
+_                       >- _ = error "Missing bidding for current direction"
 
 
 --                                           N    E    S    W
@@ -63,7 +65,7 @@ instance Showable Deal where
     toLatex (Deal d v n e s w) =
         "  \\deal{" ++ capitalize (show d) ++ "}{" ++
            join "}%\n    {" (toLatex v : map toLatex [n, e, s, w]) ++
-           "}\n"
+           "%\n  }"
       where
         capitalize (h:t) = toUpper h : t
         capitalize _     = error "Attempt to capitalize empty direction!?"

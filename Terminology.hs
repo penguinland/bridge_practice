@@ -51,10 +51,10 @@ instance Showable Suit where
     toLatex Notrump   = "\\nt{}"
 
 instance Show Suit where
-    show Clubs =    "clubs"
+    show Clubs    = "clubs"
     show Diamonds = "diamonds"
-    show Hearts =   "hearts"
-    show Spades =   "spades"
+    show Hearts   = "hearts"
+    show Spades   = "spades"
 
 allSuits :: [Suit]
 allSuits = [Clubs, Diamonds, Hearts, Spades]

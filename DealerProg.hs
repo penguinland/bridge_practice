@@ -31,7 +31,8 @@ instance Monoid DealerProg where
     mappend (DealerProg defnsA reqsA) (DealerProg defnsB reqsB) =
         DealerProg (Map.unionWithKey noDupes defnsA defnsB) (reqsB ++ reqsA)
       where
-        noDupes k a b = if a == b then a else error $ "2 definitons for " ++ k
+        noDupes k a b | a == b    = a
+                      | otherwise = error $ "2 definitons for " ++ k
 
 addDefn :: String -> String -> DealerProg -> DealerProg
 addDefn name defn (DealerProg m l) =

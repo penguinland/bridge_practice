@@ -18,12 +18,12 @@ import Topic(Topic, topicName, choose)
 generate :: Int -> [Topic] -> StdGen -> IO [SituationInstance]
 generate 0 _      _ = return []
 generate n topics g = let
-    (sitInst, g'') = runState (pickItem topics >>= choose >>= instantiate) g
+    (sitInst, g') = runState (pickItem topics >>= choose >>= instantiate) g
   in do
     maybeSit <- sitInst
     case maybeSit of
-        Nothing -> generate n topics g''  -- Try again
-        Just d -> (d:) <$> generate (n - 1) topics g''
+        Nothing -> generate n topics g'  -- Try again
+        Just d  -> (d:) <$> generate (n - 1) topics g'
 
 
 outputLatex :: Int -> [Topic] -> String -> StdGen -> IO String

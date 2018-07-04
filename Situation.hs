@@ -35,7 +35,7 @@ situation d v a c s = Situation d v bidding deal c s
 
 instance Showable SituationInstance where
     toLatex (SituationInstance b c s d) =
-        "\\problem{" ++
+        "\\problem{%\n" ++
             join "%\n}{%\n" [toLatex d, toLatex b, toLatex c, s LaTeX] ++
             "%\n}"
 
