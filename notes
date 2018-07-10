@@ -1,0 +1,6 @@
+To set up:
+
+cabal sandbox init
+cabal install
+cabal build
+binary is in dist/build/bridge-trainer/bridge-trainer
