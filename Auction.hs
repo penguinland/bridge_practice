@@ -4,6 +4,7 @@ module Auction (
 , newAuction
 , finish
 , forbid
+, alternatives
 , constrain
 , define
 , makeCall
@@ -43,6 +44,11 @@ forbid action = do
     let freshAuction = newAuction . currentBidder $ bidding
         (_, dealerToInvert) = execState action freshAuction
     put (bidding, dealerProg `mappend` invert dealerToInvert)
+
+
+alternatives :: [Action] -> Action
+-- We use deMorgan's laws. (A || B || C) becomes !(!A && !B && !C)
+alternatives = forbid . sequence_ . map forbid
 
 
 -- modifyDealerProg takes the name of a constraint and pieces of a definition
