@@ -3,7 +3,7 @@ module ProblemSet(
 , outputLatex
 ) where
 
-import Control.Monad.Trans.State.Strict(runState)
+import Control.Monad.Trans.State.Strict(runState, get)
 import Data.List(sort)
 import Data.List.Utils(join, replace)
 import System.IO(readFile, writeFile)
@@ -18,7 +18,12 @@ import Topic(Topic, topicName, choose)
 generate :: Int -> [Topic] -> StdGen -> IO [SituationInstance]
 generate 0 _      _ = return []
 generate n topics g = let
-    (sitInst, g') = runState (pickItem topics >>= choose >>= instantiate) g
+    makeInst = do
+        topic <- pickItem topics
+        gen <- get
+        situation <- choose topic
+        instantiate gen situation
+    (sitInst, g') = runState makeInst g
   in do
     maybeSit <- sitInst
     case maybeSit of
