@@ -25,7 +25,7 @@ type Commentary = OutputType -> String
 
 data Situation =
     Situation Direction Vulnerability Bidding DealerProg Call Commentary
-data SituationInstance = SituationInstance Bidding Call Commentary Deal
+data SituationInstance = SituationInstance Bidding Call Commentary Deal String
 
 situation :: Direction -> Vulnerability -> Action -> Call ->
     Commentary -> Situation
@@ -34,9 +34,9 @@ situation d v a c s = Situation d v bidding deal c s
     (bidding, deal) = finish d a
 
 instance Showable SituationInstance where
-    toLatex (SituationInstance b c s d) =
+    toLatex (SituationInstance b c s d ds) =
         "\\problem{%\n" ++
-            join "%\n}{%\n" [toLatex d, toLatex b, toLatex c, s LaTeX] ++
+            join "%\n}{%\n" [toLatex d, toLatex b, toLatex c, s LaTeX, ds] ++
             "%\n}"
 
 
@@ -50,5 +50,5 @@ instantiate (Situation dn v b dl c s) = do
             maybeDeal <- eval dn v dl n
             -- This do notation takes care of the IO monad, and the binds take
             -- care of the Maybe monad.
-            return (SituationInstance b c s <$> maybeDeal)
+            return (SituationInstance b c s <$> maybeDeal <*> Just "undefined")
     return instantiate'

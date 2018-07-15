@@ -102,8 +102,8 @@
   \fi
 }
 
-\newcommand{\problemwithsolution}[4]{
-  % Arguments are: deal, bidding, answer, explanation
+\newcommand{\problemwithsolution}[5]{
+  % Arguments are: deal, bidding, answer, explanation, debugging reference
   \hline\\
   \begin{tabular}[t]{c}
     #1\\\\#2
@@ -112,13 +112,15 @@
   \begin{minipage}[t]{3in}
     Answer: #3\\ % Extra separation between the short answer and the explanation
 
-    #4
+    #4\\ % TODO: Maybe just change the paragraph separation length?
+
+    Ref. #5
   \end{minipage}
   \vspace*{0.5ex}\\
 }
 
-\newcommand{\problemwithoutsolution}[4]{
-  % Arguments are: deal, bidding, answer, explanation
+\newcommand{\problemwithoutsolution}[5]{
+  % Arguments are: deal, bidding, answer, explanation, debugging reference
   % We surround the whole thing with blank lines to give the hand a little more
   % room to be considered on its own.
   \hline\\
