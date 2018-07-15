@@ -78,4 +78,6 @@ choose = choose' . topicSituations
     choose' (SitFun f)   = use split >>= (choose' . f)
 
 
-data Topic = Topic {topicName :: String, topicSituations :: Situations}
+data Topic = Topic {topicName :: String
+                   , refName :: String
+                   , topicSituations :: Situations}

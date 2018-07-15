@@ -277,7 +277,7 @@ notrumpInvite = let
 
 
 topic :: Topic
-topic = Topic "Scott's version of minor suit transfers" $
+topic = Topic "Scott's version of minor suit transfers" "MinTransScott" $
         wrap [ initiateTransfer
              , completeTransfer
              , superacceptTransfer

@@ -138,7 +138,7 @@ twoClubs6 = let
 
 
 topic :: Topic
-topic = Topic "Precision opening bids" situations
+topic = Topic "Precision opening bids" "PrecOpen" situations
   where
     situations = wrap [ oneClub
                       , oneDiamond

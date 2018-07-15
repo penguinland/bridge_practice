@@ -249,11 +249,12 @@ majors55gf = let
 
 
 topic :: Topic
-topic = Topic "Jacoby transfers" $ wrap [ initiateTransferWeak
-                                        , initiateTransferBInv
-                                        , initiateTransferBGf
-                                        , completeTransfer
-                                        , completeTransferShort
-                                        -- Combine the rare situations together
-                                        , wrap [majors55gf, majors55inv]
-                                        ]
+topic = Topic "Jacoby transfers"  "JacTrans" $
+    wrap [ initiateTransferWeak
+         , initiateTransferBInv
+         , initiateTransferBGf
+         , completeTransfer
+         , completeTransferShort
+         -- Combine the rare situations together
+         , wrap [majors55gf, majors55inv]
+         ]

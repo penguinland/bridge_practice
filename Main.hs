@@ -1,6 +1,8 @@
 import System.Random(mkStdGen)
 
 import qualified Topics.JacobyTransfers as JacobyTransfers
+import qualified Topics.MinorTransfersScott as MinorTransfers
+import qualified Topics.PrecisionOpeners as PrecisionOpeners
 import ProblemSet(outputLatex)
 
 
