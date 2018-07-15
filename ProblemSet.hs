@@ -12,7 +12,11 @@ import System.Random(StdGen)
 import Output(toLatex)
 import Random(pickItem)
 import Situation(instantiate, SituationInstance)
-import Topic(Topic, topicName, choose)
+import Topic(Topic, topicName, refName, choose)
+
+
+reference :: String -> StdGen -> String
+reference topic g = topic ++ " " ++ (show g)
 
 
 generate :: Int -> [Topic] -> StdGen -> IO [SituationInstance]
@@ -22,7 +26,8 @@ generate n topics g = let
         topic <- pickItem topics
         gen <- get
         situation <- choose topic
-        instantiate gen situation
+        let ref = reference (refName topic) gen
+        instantiate ref situation
     (sitInst, g') = runState makeInst g
   in do
     maybeSit <- sitInst

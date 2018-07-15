@@ -42,13 +42,14 @@ instance Showable SituationInstance where
 
 -- TODO: Find a way to make this cleaner. Monad transformers might be a relevant
 -- thing here?
-instantiate :: StdGen -> Situation -> State StdGen (IO (Maybe SituationInstance))
-instantiate g (Situation dn v b dl c s) = do
+instantiate :: String -> Situation ->
+        State StdGen (IO (Maybe SituationInstance))
+instantiate reference (Situation dn v b dl c s) = do
     n <- use next
     let instantiate' :: IO (Maybe SituationInstance)
         instantiate' = do
             maybeDeal <- eval dn v dl n
             -- This do notation takes care of the IO monad, and the binds take
             -- care of the Maybe monad.
-            return (SituationInstance b c s <$> maybeDeal <*> Just (show g))
+            return (SituationInstance b c s <$> maybeDeal <*> Just (reference))
     return instantiate'
