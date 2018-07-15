@@ -286,6 +286,6 @@ topic = Topic "Scott's version of minor suit transfers" $
                     , completeSuperaccept10CardFit
                     ]
              , failSuperaccept
-             , garbageTransfer
+             -- , garbageTransfer
              , notrumpInvite
              ]
