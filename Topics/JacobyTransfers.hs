@@ -100,8 +100,9 @@ initiateTransferWeak = let
            \ a 5-card major. Playing in it, even if it's a 5-2 fit, is more\
            \ likely to succeed than playing in notrump. Make a Jacoby transfer\
            \ into the suit, then pass and leave partner at the 2 level."
+        bid = T.Bid 2 $ transferSuit suit
       in
-        situation dealer vul action (T.Bid 2 $ transferSuit suit) explanation
+        situation "InitWeak" dealer vul action bid explanation
   in
     wrap $ base sit <~ T.allDirections <~ T.majorSuits <~ T.allVulnerabilities
 
@@ -122,8 +123,9 @@ initiateTransferBInv = let
            \ options of playing in notrump with 2-card " ++ init (show suit) ++
              " support or in " ++ show suit ++ " with a fit, and the option of\
            \ playing in partscore with a minimum hand and game with a maximum."
+        bid = T.Bid 2 $ transferSuit suit
       in
-        situation dealer vul action (T.Bid 2 $ transferSuit suit) explanation
+        situation "InitBInv" dealer vul action bid explanation
   in
     wrap $ base sit <~ T.allDirections <~ T.majorSuits <~ T.allVulnerabilities
 
@@ -145,8 +147,9 @@ initiateTransferBGf = let
              init (show suit) ++ " support or correcting to " ++
              output fmt (T.Bid 4 suit) ++ " with a fit, knowing that you\
            \ belong in game but not slam."
+        bid = T.Bid 2 $ transferSuit suit
       in
-        situation dealer vul action (T.Bid 2 $ transferSuit suit) explanation
+        situation "InitBGF" dealer vul action bid explanation
   in
     wrap $ base sit <~ T.allDirections <~ T.majorSuits <~ T.allVulnerabilities
 
@@ -163,8 +166,9 @@ completeTransfer = let
           \ has made a Jacoby transfer. Complete the transfer by bidding the\
           \ next higher suit. Partner promises at least 5 cards in that major,\
           \ but wants you to be declarer so your stronger hand stays hidden."
+        bid = T.Bid 2 suit
       in
-        situation dealer vul action (T.Bid 2 suit) explanation
+        situation "Complete" dealer vul action bid explanation
   in
     wrap $ base sit <~ T.allDirections <~ T.majorSuits <~ T.allVulnerabilities
 
@@ -186,8 +190,9 @@ completeTransferShort = let
           \ and you want to be declarer so that your strong hand stays hidden.\
           \ If partner has at least invitational strength, he will make\
           \ another bid to give you options of where to play."
+        bid = T.Bid 2 suit
       in
-        situation dealer vul action (T.Bid 2 suit) explanation
+        situation "Short" dealer vul action bid explanation
   in
     wrap $ base sit <~ T.allDirections <~ T.majorSuits <~ T.allVulnerabilities
 
@@ -214,8 +219,9 @@ majors55inv = let
           \ bidding one of the majors at the 4 level with a maximum. This\
           \ wrong-sides the contract when the " ++ output fmt oneNT ++ " bidder\
           \ has a doubleton heart."
+        bid = T.Bid 2 T.Diamonds
       in
-        situation dealer vul action (T.Bid 2 T.Diamonds) explanation
+        situation "55Inv" dealer vul action bid explanation
   in
     wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
 
@@ -239,8 +245,9 @@ majors55gf = let
             \ Partner will then have the options of which game to bid.\
             \ This wrong-sides the contract when the " ++ output fmt oneNT ++ "\
             \ bidder has a doubleton spade."
+        bid = T.Bid 2 T.Hearts
       in
-        situation dealer vul action (T.Bid 2 T.Hearts) explanation
+        situation "55GF" dealer vul action bid explanation
   in
     -- Note that with 5-5 and game-going strength, you would have opened the
     -- bidding if you had a chance. So, you must not have had a chance to bid

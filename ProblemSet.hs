@@ -11,12 +11,12 @@ import System.Random(StdGen)
 
 import Output(toLatex)
 import Random(pickItem)
-import Situation(instantiate, SituationInstance)
+import Situation(instantiate, sitRef, SituationInstance)
 import Topic(Topic, topicName, refName, choose)
 
 
-reference :: String -> StdGen -> String
-reference topic g = topic ++ " " ++ (show g)
+reference :: String -> String -> StdGen -> String
+reference topic sit g = topic ++ "." ++ sit ++ " " ++ (show g)
 
 
 generate :: Int -> [Topic] -> StdGen -> IO [SituationInstance]
@@ -26,7 +26,7 @@ generate n topics g = let
         topic <- pickItem topics
         gen <- get
         situation <- choose topic
-        let ref = reference (refName topic) gen
+        let ref = reference (refName topic) (sitRef situation) gen
         instantiate ref situation
     (sitInst, g') = runState makeInst g
   in do

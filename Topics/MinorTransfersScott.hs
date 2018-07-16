@@ -91,8 +91,9 @@ initiateTransfer = let
            \ an unbalaned hand with a long minor. Bid 2 steps below your suit\
            \ to transfer into it and make your partner declarer so their\
            \ stronger hand stays hidden."
+        bid = T.Bid 2 $ transferSuit suit
       in
-        situation dealer vul action (T.Bid 2 $ transferSuit suit) explanation
+        situation "Init" dealer vul action bid explanation
   in
     wrap $ base sit <~ [T.West, T.North] <~ T.minorSuits <~ T.allVulnerabilities
 
@@ -109,8 +110,9 @@ completeTransfer = let
           \ at least 3-card support including 1 of the top 2 cards to\
           \ superaccept, so just accept the transfer regularly and bid the\
           \ suit."
+        bid = T.Bid 3 suit
       in
-        situation dealer vul action (T.Bid 3 suit) explanation
+        situation "Complete" dealer vul action bid explanation
   in
     wrap $ base sit <~ [T.East, T.South] <~ T.minorSuits <~ T.allVulnerabilities
 
@@ -130,8 +132,9 @@ superacceptTransfer = let
           \ the option of bidding " ++ output fmt (T.Bid 3 T.Notrump) ++ " if\
           \ they think the suit will run, and wrong-siding the " ++
             output fmt (T.Bid 3 suit) ++ " contract if it won't."
+        bid = superacceptBid suit
       in
-        situation dealer vul action (superacceptBid suit) explanation
+        situation "SupAcc" dealer vul action bid explanation
   in
     wrap $ base sit <~ [T.East, T.South] <~ T.minorSuits <~ T.allVulnerabilities
 
@@ -151,8 +154,9 @@ completeSuperacceptAKQ = let
           \ a thin " ++ output fmt (T.Bid 3 T.Notrump) ++ ". If opener has a\
           \ stopper in every other suit, the game is likely be makable,\
           \ despite your lack of points."
+        bid = T.Bid 3 T.Notrump
       in
-        situation dealer vul action (T.Bid 3 T.Notrump) explanation
+        situation "3NTAKQ" dealer vul action bid explanation
   in
     wrap $ base sit <~ [T.North, T.West] <~ T.minorSuits <~ T.allVulnerabilities
 
@@ -174,8 +178,9 @@ completeSuperacceptKQJ10 = let
           \ likely to run.  Bid a thin " ++ output fmt (T.Bid 3 T.Notrump) ++
             ". If opener has a stopper in every other suit, the game is likely\
           \ be makable, despite your lack of points."
+        bid = T.Bid 3 T.Notrump
       in
-        situation dealer vul action (T.Bid 3 T.Notrump) explanation
+        situation "3NTKQJ" dealer vul action bid explanation
   in
     wrap $ base sit <~ [T.North, T.West] <~ T.minorSuits <~ T.allVulnerabilities
 
@@ -195,8 +200,9 @@ completeSuperaccept10CardFit = let
           \ either the ace or king of the suit. With your extra length and\
           \ both top honors, the suit should be running. Bid the notrump\
           \ game."
+        bid = T.Bid 3 T.Notrump
       in
-        situation dealer vul action (T.Bid 3 T.Notrump) explanation
+        situation "3NT10Fit" dealer vul action bid explanation
   in
     wrap $ base sit <~ [T.North, T.West] <~ T.minorSuits <~ T.allVulnerabilities
 
@@ -217,8 +223,9 @@ failSuperaccept = let
           \ look like the suit is going to run, so a notrump game probably\
           \ won't make. Sign off in partscore, even though you're wrong-siding\
           \ the contract."
+        bid = T.Bid 3 suit
       in
-        situation dealer vul action (T.Bid 3 suit) explanation
+        situation "SupFail" dealer vul action bid explanation
   in
     wrap $ base sit <~ [T.North, T.West] <~ T.minorSuits <~ T.allVulnerabilities
 
@@ -242,8 +249,9 @@ garbageTransfer = let
           \ in at least a 7-card fit and likely an 8-card fit, which is likely\
           \ to play better than staying in " ++ output fmt oneNT ++ ", even at\
           \ the 3 level."
+        bid = T.Bid 2 T.Notrump
       in
-        situation dealer vul action (T.Bid 2 T.Notrump) explanation
+        situation "GarTrans" dealer vul action bid explanation
   in
     wrap $ base sit <~ [T.North, T.West] <~ T.allVulnerabilities
 
@@ -270,14 +278,15 @@ notrumpInvite = let
           \ The Stayman bid is not alertable. This frees up a direct " ++
             output fmt (T.Bid 2 T.Notrump) ++ " reply to be a minor suit\
           \ transfer."
+        bid = T.Bid 2 T.Clubs
       in
-        situation dealer vul action (T.Bid 2 T.Clubs) explanation
+        situation "NTInv" dealer vul action bid explanation
   in
     wrap $ base sit <~ [T.North, T.West] <~ T.allVulnerabilities
 
 
 topic :: Topic
-topic = Topic "Scott's version of minor suit transfers" "MinTransScott" $
+topic = Topic "Scott's version of minor suit transfers" "MTScott" $
         wrap [ initiateTransfer
              , completeTransfer
              , superacceptTransfer

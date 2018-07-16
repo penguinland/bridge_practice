@@ -80,7 +80,7 @@ oneClub = let
             output fmt (T.Bid 1 T.Clubs) ++ ". This is the hallmark of the\
           \ Precision Club system."
       in
-        situation dealer vul action (T.Bid 1 T.Clubs) explanation
+        situation "1C" dealer vul action (T.Bid 1 T.Clubs) explanation
   in
     wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
 
@@ -97,7 +97,7 @@ oneDiamond = let
           \ club suit, open a diamond. Partner will announce that it ``could\
           \ be short.''"
       in
-        situation dealer vul action (T.Bid 1 T.Diamonds) explanation
+        situation "1D" dealer vul action (T.Bid 1 T.Diamonds) explanation
   in
     wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
 
@@ -113,7 +113,7 @@ oneMajor = let
             "With opening strength but not enough for a strong " ++
             output fmt (T.Bid 1 T.Clubs) ++ " open a 5-card major suit."
       in
-        situation dealer vul action (T.Bid 1 suit) explanation
+        situation "1M" dealer vul action (T.Bid 1 suit) explanation
   in
     wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities <~ T.majorSuits
 
@@ -132,7 +132,7 @@ twoClubs6 = let
             output fmt (T.Bid 1 T.Clubs) ++ " open a 6-card club suit at the\
           \ two level."
       in
-        situation dealer vul action (T.Bid 2 T.Clubs) explanation
+        situation "2C" dealer vul action (T.Bid 2 T.Clubs) explanation
   in
     wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
 
