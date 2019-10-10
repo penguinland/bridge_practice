@@ -17,8 +17,9 @@ cabal-version:       >=1.10
 
 executable bridge-trainer
   main-is:             Main.hs
-  -- other-modules:       
+  other-modules:       Auction, CommonBids, DealerProg, Output, ProblemSet, Random, Situation, Structures, Terminology, Topic, Topics.JacobyTransfers, Topics.MinorTransfersScott, Topics.PrecisionOpeners
   -- other-extensions:    
-  build-depends:       random, transformers, containers, MissingH, process, base >=4.8 && <4.9
-  -- hs-source-dirs:      
+  build-depends:       random, transformers, containers, MissingH, process, base==4.11.1.0
+  -- hs-source-dirs:
   default-language:    Haskell2010
+  ghc-options: -Wall

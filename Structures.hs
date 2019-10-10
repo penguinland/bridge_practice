@@ -7,11 +7,8 @@ module Structures (
 , Deal(..)
 ) where
 
-import Control.Monad(liftM)
 import Data.Char(toUpper)
 import Data.List.Utils(join, replace)
-import Data.Maybe(fromMaybe)
-import System.Process(readProcess)
 
 import Output(Showable, toLatex)
 import qualified Terminology as T

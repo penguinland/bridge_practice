@@ -16,7 +16,6 @@ import Data.String.Utils(strip)
 import GHC.IO.Exception(ExitCode(ExitSuccess))
 import System.Process(readProcessWithExitCode)
 
-import Output(Showable, toLatex)
 import qualified Structures as S
 import qualified Terminology as T
 
@@ -26,13 +25,15 @@ data DealerProg = DealerProg (Map.Map String String) [String]
 newDeal :: DealerProg
 newDeal = DealerProg Map.empty []
 
-instance Monoid DealerProg where
-    mempty = newDeal
-    mappend (DealerProg defnsA reqsA) (DealerProg defnsB reqsB) =
+instance Semigroup DealerProg where
+    (DealerProg defnsA reqsA) <> (DealerProg defnsB reqsB) =
         DealerProg (Map.unionWithKey noDupes defnsA defnsB) (reqsB ++ reqsA)
       where
         noDupes k a b | a == b    = a
                       | otherwise = error $ "2 definitons for " ++ k
+
+instance Monoid DealerProg where
+    mempty = newDeal
 
 addDefn :: String -> String -> DealerProg -> DealerProg
 addDefn name defn (DealerProg m l) =
@@ -85,8 +86,8 @@ eval dir vul deal seed = let
     -- 9.  initial random seed
     -- 10. time spent computing
     -- 11. blank line
-    toSuits all@(_:s:h:d:c:_)
-     | length all == 11 = Just $ map splitSuit [s, h, d, c]
+    toSuits output@(_:s:h:d:c:_)
+     | length output == 11 = Just $ map splitSuit [s, h, d, c]
     -- If that didn't work, we have totally misunderstood something.
     toSuits problem     = error $ join "\n"
         ("Unexpected output from dealer invocation:":prog:problem)

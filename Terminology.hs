@@ -41,6 +41,8 @@ next South = West
 next West  = North
 
 
+-- TODO: consider separating Suits from Strains, and only have Notrump in the
+-- latter.
 data Suit = Clubs | Diamonds | Hearts | Spades | Notrump deriving Eq
 
 instance Showable Suit where
@@ -55,6 +57,7 @@ instance Show Suit where
     show Diamonds = "diamonds"
     show Hearts   = "hearts"
     show Spades   = "spades"
+    show Notrump  = "notrump"
 
 allSuits :: [Suit]
 allSuits = [Clubs, Diamonds, Hearts, Spades]
