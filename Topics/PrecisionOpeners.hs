@@ -1,13 +1,10 @@
 module Topics.PrecisionOpeners(topic) where
 
-import Data.List.Utils(join)
-
-import Output(output, Punct(NDash))
+import Output(output)
 import Topic(Topic(..), base, (<~), wrap, Situations)
-import Auction(forbid, makeCall, makePass, pointRange, suitLength,
-               minSuitLength, maxSuitLength, Action, balancedHand, withholdBid,
-               constrain)
-import Situation(situation, Situation)
+import Auction(forbid, pointRange, suitLength, minSuitLength, {-maxSuitLength,-}
+               Action, balancedHand, constrain)
+import Situation(situation)
 import qualified Terminology as T
 import qualified CommonBids as B
 
@@ -118,6 +115,7 @@ oneMajor = let
     wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities <~ T.majorSuits
 
 
+{-
 twoClubs6 :: Situations
 twoClubs6 = let
     sit dealer vul = let
@@ -135,6 +133,7 @@ twoClubs6 = let
         situation "2C" dealer vul action (T.Bid 2 T.Clubs) explanation
   in
     wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+-}
 
 
 topic :: Topic

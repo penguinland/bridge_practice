@@ -19,7 +19,7 @@ executable bridge-trainer
   main-is:             Main.hs
   other-modules:       Auction, CommonBids, DealerProg, Output, ProblemSet, Random, Situation, Structures, Terminology, Topic, Topics.JacobyTransfers, Topics.MinorTransfersScott, Topics.PrecisionOpeners
   -- other-extensions:    
-  -- TODO: figure out how to set the base properly next time?
   build-depends:       random, transformers, containers, MissingH, process, base==4.11.1.0
   -- hs-source-dirs:
   default-language:    Haskell2010
+  ghc-options: -Wall

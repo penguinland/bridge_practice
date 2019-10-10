@@ -19,7 +19,7 @@ module Auction (
 ) where
 
 import Control.Monad.Trans.State.Strict(State, execState, get, put, modify)
-import Data.Bifunctor(first, second)
+import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
 import DealerProg(DealerProg, newDeal, addNewReq, addDefn, invert)
@@ -84,20 +84,24 @@ balancedHand =
 
 
 pointRange :: Int -> Int -> Action
-pointRange min max =
-    constrain (join "_" ["range", show min, show max])
-              ["hcp(", ") >= " ++ show min ++ " && hcp(", ") <= " ++ show max]
+pointRange minHcp maxHcp =
+    constrain (join "_" ["range", show minHcp, show maxHcp])
+              ["hcp(", ") >= " ++ show minHcp ++ " && " ++
+               "hcp(", ") <= " ++ show maxHcp]
 
 
 suitLengthOp :: String -> String -> T.Suit -> Int -> Action
-suitLengthOp op suffix suit length =
-    constrain (join "_" [show suit, suffix, show length])
-              [show suit ++ "(", ") " ++ op ++ " " ++ show length]
+suitLengthOp op suffix suit len =
+    constrain (join "_" [show suit, suffix, show len])
+              [show suit ++ "(", ") " ++ op ++ " " ++ show len]
 
+suitLength :: T.Suit -> Int -> Action
 suitLength = suitLengthOp "==" "eq"
 
+minSuitLength :: T.Suit -> Int -> Action
 minSuitLength = suitLengthOp ">=" "ge"
 
+maxSuitLength :: T.Suit -> Int -> Action
 maxSuitLength = suitLengthOp "<=" "le"
 
 
