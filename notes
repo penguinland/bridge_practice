@@ -4,3 +4,13 @@ cabal sandbox init
 cabal install
 cabal build
 binary is in dist/build/bridge-trainer/bridge-trainer
+
+New setup:
+TODO: clean this up soon
+stack new hellote
+cd hellote
+rm hellote.cabal
+stack init --resolver lts-11.22
+stack setup --resolver lts-11.22
+stack build --resolver lts-11.22
+./.stack-work/dist/x86_64-linux-tinfo6/Cabal-2.0.1.0/build/hellote-exe/hellote-exe
