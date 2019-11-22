@@ -1,8 +1,6 @@
+.stack-work/
+bridge-practice.cabal
+*~
+*.swp
 *.log
 *.aux
-*.o
-*.hi
-*.swp
-dist
-.cabal-sandbox/
-cabal.sandbox.config

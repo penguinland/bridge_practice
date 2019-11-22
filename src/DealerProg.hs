@@ -25,14 +25,13 @@ data DealerProg = DealerProg (Map.Map String String) [String]
 newDeal :: DealerProg
 newDeal = DealerProg Map.empty []
 
-instance Semigroup DealerProg where
-    (DealerProg defnsA reqsA) <> (DealerProg defnsB reqsB) =
+--instance Semigroup DealerProg where
+instance Monoid DealerProg where
+    mappend (DealerProg defnsA reqsA) (DealerProg defnsB reqsB) =
         DealerProg (Map.unionWithKey noDupes defnsA defnsB) (reqsB ++ reqsA)
       where
         noDupes k a b | a == b    = a
                       | otherwise = error $ "2 definitons for " ++ k
-
-instance Monoid DealerProg where
     mempty = newDeal
 
 addDefn :: String -> String -> DealerProg -> DealerProg
