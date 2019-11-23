@@ -21,6 +21,11 @@ description:         Please see the README on GitHub at <https://github.com/peng
 
 dependencies:
 - base >= 4.7 && < 5
+- containers
+- MissingH
+- process
+- random
+- transformers
 
 library:
   source-dirs: src
@@ -34,11 +39,6 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - containers
-    - MissingH
-    - process
-    - random
-    - transformers
     - bridge-practice
 
 tests:
@@ -50,9 +50,4 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - containers
-    - MissingH
-    - process
-    - random
-    - transformers
     - bridge-practice
