@@ -14,3 +14,6 @@ stack init --resolver lts-11.22
 stack setup --resolver lts-11.22
 stack build --resolver lts-11.22
 ./.stack-work/dist/x86_64-linux-tinfo6/Cabal-2.0.1.0/build/hellote-exe/hellote-exe
+
+stack install random
+stack install transformers
