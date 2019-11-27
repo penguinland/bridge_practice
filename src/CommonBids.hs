@@ -13,7 +13,8 @@ module CommonBids(
 ) where
 
 import Auction(Action, constrain, define, forbid, pointRange, balancedHand, makeCall, makePass, suitLength, minSuitLength, maxSuitLength)
-import DealerProg(addDefn, addReq)
+-- Not currently needed:
+--import DealerProg(addDefn, addReq)
 import qualified Terminology as T
 
 strong1NT :: Action
@@ -130,3 +131,4 @@ setDealerAndOpener = helper openingRules
                               cannotPreempt
                               makePass
                               helper actions (T.next caller) opener
+    helper [] _ _        = error "Specified a fifth-seat opener!?"

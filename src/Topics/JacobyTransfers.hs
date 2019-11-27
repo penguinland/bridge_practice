@@ -1,13 +1,10 @@
 module Topics.JacobyTransfers(topic) where
 
-import Data.List.Utils(join)
-
 import Output(output, Punct(NDash))
 import Topic(Topic(..), Situations, base, (<~), wrap)
 import Auction(forbid, makeCall, makePass, pointRange, suitLength,
-               minSuitLength, maxSuitLength, Action, balancedHand, withholdBid,
-               constrain)
-import Situation(situation, Situation)
+               minSuitLength, Action, balancedHand, constrain)
+import Situation(situation)
 import qualified Terminology as T
 import qualified CommonBids as B
 
@@ -157,7 +154,6 @@ initiateTransferBGf = let
 completeTransfer :: Situations
 completeTransfer = let
     sit dealer suit vul = let
-        higherSuits = if suit == T.Spades then [] else [T.Spades]
         action = do
             setUpCompletion dealer suit
             minSuitLength suit 3
@@ -176,7 +172,6 @@ completeTransfer = let
 completeTransferShort :: Situations
 completeTransferShort = let
     sit dealer suit vul = let
-        higherSuits = if suit == T.Spades then [] else [T.Spades]
         action = do
             setUpCompletion dealer suit
             suitLength suit 2

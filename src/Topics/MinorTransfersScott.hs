@@ -1,13 +1,10 @@
 module Topics.MinorTransfersScott(topic) where
 
-import Data.List.Utils(join)
-
 import Output(output, Punct(NDash))
 import Topic(Topic(..), Situations, base, (<~), wrap)
-import Auction(forbid, makeCall, makePass, pointRange, suitLength,
-               minSuitLength, maxSuitLength, Action, balancedHand, withholdBid,
-               hasTopN, constrain)
-import Situation(situation, Situation)
+import Auction(forbid, makeCall, makePass, pointRange, hasTopN, constrain,
+               minSuitLength, maxSuitLength, Action, balancedHand, withholdBid)
+import Situation(situation)
 import qualified Terminology as T
 import qualified CommonBids as B
 
@@ -295,6 +292,6 @@ topic = Topic "Scott's version of minor suit transfers" "MTScott" $
                     , completeSuperaccept10CardFit
                     ]
              , failSuperaccept
-             -- , garbageTransfer
+             , garbageTransfer
              , notrumpInvite
              ]

@@ -9,7 +9,7 @@ module Topic(
 
 import Control.Monad.Trans.State.Strict(State)
 import Data.Bifunctor(first)
-import System.Random(RandomGen, StdGen, next, split, mkStdGen, randomR)
+import System.Random(RandomGen, StdGen, next, split, mkStdGen)
 
 import Random(use, pickItem)
 import qualified Situation as S
