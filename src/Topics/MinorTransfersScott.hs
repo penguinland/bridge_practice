@@ -1,6 +1,6 @@
 module Topics.MinorTransfersScott(topic) where
 
-import Output(output, Punct(NDash))
+import Output(output)
 import Topic(Topic(..), Situations, base, (<~), wrap)
 import Auction(forbid, makeCall, makePass, pointRange, hasTopN, constrain,
                minSuitLength, maxSuitLength, Action, balancedHand, withholdBid)
@@ -227,32 +227,6 @@ failSuperaccept = let
     wrap $ base sit <~ [T.North, T.West] <~ T.minorSuits <~ T.allVulnerabilities
 
 
-garbageTransfer :: Situations
-garbageTransfer = let
-    sit dealer vul = let
-        action = do
-            B.setDealerAndOpener dealer T.North
-            B.strong1NT
-            B.cannotPreempt >> makePass
-            minSuitLength T.Clubs 5
-            minSuitLength T.Diamonds 5
-            pointRange 0 3  -- Very weak
-        explanation fmt =
-            "Partner has opened a strong " ++ output fmt oneNT ++ ". You are\
-          \ weak enough that it's unlikely to make, but you are also at least\
-          \ 5" ++ output fmt NDash ++ "5 in the minors. Pretend to make a\
-          \ transfer into diamonds. Regardless of whether partner superaccepts\
-          \ or completes the transfer normally, you can pass, knowing you're\
-          \ in at least a 7-card fit and likely an 8-card fit, which is likely\
-          \ to play better than staying in " ++ output fmt oneNT ++ ", even at\
-          \ the 3 level."
-        bid = T.Bid 2 T.Notrump
-      in
-        situation "GarTrans" dealer vul action bid explanation
-  in
-    wrap $ base sit <~ [T.North, T.West] <~ T.allVulnerabilities
-
-
 notrumpInvite :: Situations
 notrumpInvite = let
     sit dealer vul = let
@@ -292,6 +266,5 @@ topic = Topic "Scott's version of minor suit transfers" "MTScott" $
                     , completeSuperaccept10CardFit
                     ]
              , failSuperaccept
-             , garbageTransfer
              , notrumpInvite
              ]
