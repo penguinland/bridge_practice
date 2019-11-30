@@ -2,7 +2,7 @@ module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 
 import Output(output)
 import Topic(Topic(..), base, (<~), wrap, Situations)
-import Auction({-forbid,-} pointRange, suitLength, minSuitLength, maxSuitLength,
+import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, alternatives, constrain, makePass, makeCall)
 import Situation(situation)
 import qualified Terminology as T
@@ -30,6 +30,15 @@ bestFitSpades = do
     maxSuitLength T.Hearts 3
     maxSuitLength T.Diamonds 6
     maxSuitLength T.Clubs 3
+
+
+bestFitClubs :: Action
+bestFitClubs = do
+    maxSuitLength T.Spades 3
+    maxSuitLength T.Hearts 3
+    maxSuitLength T.Diamonds 6
+    minSuitLength T.Clubs 4
+    forbid $ constrain "s3334" ["shape(", ", 3334)"]  -- bid H instead?
 
 
 open :: Situations
@@ -129,6 +138,13 @@ passSignoff2Spades = let
                          , minSuitLength T.Spades 5 >> pointRange 0 6
                          ]
             makeCall (T.Bid 2 T.Spades)
+            -- Make sure there isn't a takeout double!
+            forbid $ do
+                pointRange 11 40
+                maxSuitLength T.Spades   2
+                minSuitLength T.Hearts   3
+                minSuitLength T.Diamonds 3
+                minSuitLength T.Clubs    3
             noDirectOvercall
             suitLength T.Spades spadeLength
         explanation _ =
@@ -142,6 +158,51 @@ passSignoff2Spades = let
     wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities <~ [3, 4]
 
 
+immediateSignoffClubs :: Situations
+immediateSignoffClubs = let
+    sit dealer vul = let
+        action = do
+            B.setDealerAndOpener dealer T.North
+            twoDiamondOpener
+            makeCall (T.Bid 2 T.Diamonds)
+            noDirectOvercall
+            bestFitClubs
+            pointRange 0 9
+        explanation _ =
+            "Without the strength to invite to game, sign off in a club " ++
+            "partial."
+      in
+        situation "3C" dealer vul action (T.Bid 3 T.Clubs) explanation
+  in
+    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+
+
+passSignoffClubs :: Situations
+passSignoffClubs = let
+    sit dealer vul = let
+        action = do
+            B.setDealerAndOpener dealer T.South
+            twoDiamondOpener
+            makeCall (T.Bid 2 T.Diamonds)
+            -- Make sure there isn't a takeout double!
+            forbid $ do
+                pointRange 11 40
+                minSuitLength T.Spades   3
+                minSuitLength T.Hearts   3
+                minSuitLength T.Diamonds 3
+                maxSuitLength T.Clubs    2
+            noDirectOvercall
+            bestFitClubs
+            pointRange 0 9
+            makeCall (T.Bid 3 T.Clubs)
+            noDirectOvercall
+        explanation _ =
+            "Partner has less-than-invitational values and is signing off. " ++
+            "Just pass."
+      in
+        situation "P3C" dealer vul action (T.Pass) explanation
+  in
+    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
 
 
 topic :: Topic
@@ -152,4 +213,6 @@ topic = Topic "SMP 2D auctions" "SMP2D" situations
                              , immediateSignoffSpades4
                              , immediateSignoffSpades5]
                       , passSignoff2Spades
+                      , immediateSignoffClubs
+                      , passSignoffClubs
                       ]
