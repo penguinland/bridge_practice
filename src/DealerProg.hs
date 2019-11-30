@@ -89,7 +89,7 @@ eval dir vul deal seed = let
      | length output == 11 = Just $ map splitSuit [s, h, d, c]
     -- If that didn't work, we have totally misunderstood something.
     toSuits problem     = error $ join "\n"
-        ("Unexpected output from dealer invocation:":prog:problem)
+        ("Unexpected output from dealer invocation:":prog:"Output was:":problem)
 
     splitSuit :: String -> [String]
     splitSuit = map strip . wholeMap (fixedWidth (repeat 20))
