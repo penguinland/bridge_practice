@@ -138,13 +138,7 @@ passSignoff2Spades = let
                          , minSuitLength T.Spades 5 >> pointRange 0 6
                          ]
             makeCall (T.Bid 2 T.Spades)
-            -- Make sure there isn't a takeout double!
-            forbid $ do
-                pointRange 11 40
-                maxSuitLength T.Spades   2
-                minSuitLength T.Hearts   3
-                minSuitLength T.Diamonds 3
-                minSuitLength T.Clubs    3
+            forbid $ B.takeoutDouble T.Spades
             noDirectOvercall
             suitLength T.Spades spadeLength
         explanation _ =
@@ -184,17 +178,11 @@ passSignoffClubs = let
             B.setDealerAndOpener dealer T.South
             twoDiamondOpener
             makeCall (T.Bid 2 T.Diamonds)
-            -- Make sure there isn't a takeout double!
-            forbid $ do
-                pointRange 11 40
-                minSuitLength T.Spades   3
-                minSuitLength T.Hearts   3
-                minSuitLength T.Diamonds 3
-                maxSuitLength T.Clubs    2
             noDirectOvercall
             bestFitClubs
             pointRange 0 9
             makeCall (T.Bid 3 T.Clubs)
+            forbid $ B.takeoutDouble T.Clubs
             noDirectOvercall
         explanation _ =
             "Partner has less-than-invitational values and is signing off. " ++

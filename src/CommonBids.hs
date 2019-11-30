@@ -10,6 +10,7 @@ module CommonBids(
 , thirdSeatOpener
 , fourthSeatOpener
 , setDealerAndOpener
+, takeoutDouble
 ) where
 
 import Auction(Action, constrain, define, forbid, pointRange, balancedHand, makeCall, makePass, suitLength, minSuitLength, maxSuitLength)
@@ -132,3 +133,14 @@ setDealerAndOpener = helper openingRules
                               makePass
                               helper actions (T.next caller) opener
     helper [] _ _        = error "Specified a fifth-seat opener!?"
+
+
+takeoutDouble :: T.Suit -> Action
+takeoutDouble shortSuit = do
+    pointRange 11 40
+    sequence_ $ map setSuitLength T.allSuits
+  where
+    setSuitLength suit =
+        if suit == shortSuit
+        then maxSuitLength suit 2
+        else minSuitLength suit 3
