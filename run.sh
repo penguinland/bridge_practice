@@ -26,6 +26,7 @@ mv test.pdf questions.pdf
 xelatex "\let\showsolutions\relax\input{test}"
 mv test.pdf solutions.pdf
 
-# Open the questions last so it's the topmost window.
-evince solutions.pdf&
-evince questions.pdf&
+# Open the questions last so it's the topmost window. Suppress both stdout and
+# stderr so they don't gum up the command prompt.
+evince solutions.pdf &> /dev/null &
+evince questions.pdf &> /dev/null &
