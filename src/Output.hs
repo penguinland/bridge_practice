@@ -4,6 +4,7 @@ module Output (
 , OutputType(..)
 , output
 , Punct(..)
+, Commentary
 ) where
 
 class Showable a where
@@ -40,3 +41,5 @@ instance Showable Punct where
     toLatex MDash = "---"
     --toHtml NDash = "&ndash;"
     --toHtml MDash = "&mdash;"
+
+type Commentary = OutputType -> String

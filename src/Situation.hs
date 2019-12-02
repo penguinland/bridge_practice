@@ -16,13 +16,11 @@ import System.Random(StdGen, next)
 
 import Auction(Action, finish)
 import DealerProg(DealerProg, eval)
-import Output(Showable, toLatex, OutputType(..))
+import Output(Showable, toLatex, OutputType(..), Commentary)
 import Random(use)
 import Structures(Bidding, Deal)
 import Terminology(Call, Direction, Vulnerability)
 
-
-type Commentary = OutputType -> String
 
 data Situation =
     Situation String Direction Vulnerability Bidding DealerProg Call Commentary
