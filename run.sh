@@ -26,7 +26,14 @@ mv test.pdf questions.pdf
 xelatex "\let\showsolutions\relax\input{test}"
 mv test.pdf solutions.pdf
 
+# Different OSes have different PDF viewers.
+UNAME=$(uname)
+case "$UNAME" in
+    (*Linux*) PDF_VIEWER='evince'; ;;
+    (*Darwin*) PDF_VIEWER='open'; ;;
+esac;
+
 # Open the questions last so it's the topmost window. Suppress both stdout and
 # stderr so they don't gum up the command prompt.
-evince solutions.pdf &> /dev/null &
-evince questions.pdf &> /dev/null &
+"$PDF_VIEWER" solutions.pdf &> /dev/null &
+"$PDF_VIEWER" questions.pdf &> /dev/null &
