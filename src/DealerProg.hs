@@ -21,8 +21,9 @@ import qualified Terminology as T
 
 
 type CondName = String
+type CondDefn = String
 
-data DealerProg = DealerProg (Map.Map CondName String) [CondName]
+data DealerProg = DealerProg (Map.Map CondName CondDefn) [CondName]
 
 newDeal :: DealerProg
 newDeal = DealerProg Map.empty []
@@ -36,7 +37,7 @@ instance Monoid DealerProg where
                       | otherwise = error $ "2 definitons for " ++ k
     mempty = newDeal
 
-addDefn :: CondName -> String -> DealerProg -> DealerProg
+addDefn :: CondName -> CondDefn -> DealerProg -> DealerProg
 addDefn name defn (DealerProg m l) =
   case Map.lookup name m of
     Nothing    -> DealerProg (Map.insert name defn m) l
@@ -46,7 +47,7 @@ addDefn name defn (DealerProg m l) =
 addReq :: CondName -> DealerProg -> DealerProg
 addReq expr (DealerProg m l) = DealerProg m (expr:l)
 
-addNewReq :: CondName -> String -> DealerProg -> DealerProg
+addNewReq :: CondName -> CondDefn -> DealerProg -> DealerProg
 addNewReq name defn = addReq name . addDefn name defn
 
 invert :: DealerProg -> DealerProg
