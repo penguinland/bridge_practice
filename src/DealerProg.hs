@@ -20,7 +20,9 @@ import qualified Structures as S
 import qualified Terminology as T
 
 
-data DealerProg = DealerProg (Map.Map String String) [String]
+type CondName = String
+
+data DealerProg = DealerProg (Map.Map CondName String) [CondName]
 
 newDeal :: DealerProg
 newDeal = DealerProg Map.empty []
@@ -34,17 +36,17 @@ instance Monoid DealerProg where
                       | otherwise = error $ "2 definitons for " ++ k
     mempty = newDeal
 
-addDefn :: String -> String -> DealerProg -> DealerProg
+addDefn :: CondName -> String -> DealerProg -> DealerProg
 addDefn name defn (DealerProg m l) =
   case Map.lookup name m of
     Nothing    -> DealerProg (Map.insert name defn m) l
     Just defn' -> if defn == defn' then DealerProg m l
                                    else error $ "2 defintions for " ++ name
 
-addReq :: String -> DealerProg -> DealerProg
+addReq :: CondName -> DealerProg -> DealerProg
 addReq expr (DealerProg m l) = DealerProg m (expr:l)
 
-addNewReq :: String -> String -> DealerProg -> DealerProg
+addNewReq :: CondName -> String -> DealerProg -> DealerProg
 addNewReq name defn = addReq name . addDefn name defn
 
 invert :: DealerProg -> DealerProg
@@ -54,10 +56,15 @@ invert (DealerProg defns reqs) =
 toProgram :: DealerProg -> String
 toProgram (DealerProg defns conds) = join "\n" $
     ["generate 1000000", "produce 1", ""] ++
-    Map.foldMapWithKey (\k v -> ["    " ++ k ++ " = " ++ v]) defns
+    Map.foldMapWithKey formatDefinition defns
     ++ ["", "condition",
-        "    " ++ (join " && " . reverse $ conds),
+        "    " ++ (join " && " . map conditionToString . reverse $ conds),
         "action", "    printall"]
+  where
+    conditionToString :: CondName -> String
+    conditionToString = id
+    formatDefinition name defn =
+        ["    " ++ conditionToString name ++ " = " ++ defn]
 
 
 eval :: T.Direction -> T.Vulnerability -> DealerProg -> Int -> IO (Maybe S.Deal)
