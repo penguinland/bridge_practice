@@ -24,6 +24,7 @@ instance Showable Hand where
        ++ "}"
 
 
+-- The direction is the next bidder
 data Bidding = Bidding T.Direction [[Maybe T.Call]]
 
 instance Showable Bidding where
