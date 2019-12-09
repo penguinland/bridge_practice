@@ -55,7 +55,7 @@ open :: Situations
 open = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.South
+            B.setOpener T.South
             twoDiamondOpener
         explanation fmt =
             "With an opening hand too weak to bid " ++
@@ -72,7 +72,7 @@ immediateSignoffSpades3 :: Situations
 immediateSignoffSpades3 = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.North
+            B.setOpener T.North
             twoDiamondOpener
             suitLength T.Spades 3
             makeCall (T.Bid 2 T.Diamonds)
@@ -94,7 +94,7 @@ immediateSignoffSpades4 :: Situations
 immediateSignoffSpades4 = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.North
+            B.setOpener T.North
             twoDiamondOpener
             suitLength T.Spades 4
             makeCall (T.Bid 2 T.Diamonds)
@@ -115,7 +115,7 @@ immediateSignoffSpades5 :: Situations
 immediateSignoffSpades5 = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.North
+            B.setOpener T.North
             twoDiamondOpener
             makeCall (T.Bid 2 T.Diamonds)
             noDirectOvercall
@@ -139,7 +139,7 @@ passSignoff2Spades :: Situations
 passSignoff2Spades = let
     sit dealer vul spadeLength = let
         action = do
-            B.setDealerAndOpener dealer T.South
+            B.setOpener T.South
             twoDiamondOpener
             makeCall (T.Bid 2 T.Diamonds)
             noDirectOvercall
@@ -166,7 +166,7 @@ immediateSignoffClubs :: Situations
 immediateSignoffClubs = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.North
+            B.setOpener T.North
             twoDiamondOpener
             makeCall (T.Bid 2 T.Diamonds)
             noDirectOvercall
@@ -185,7 +185,7 @@ passSignoffClubs :: Situations
 passSignoffClubs = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.South
+            B.setOpener T.South
             twoDiamondOpener
             makeCall (T.Bid 2 T.Diamonds)
             noDirectOvercall
@@ -207,7 +207,7 @@ immediateSignoffHearts :: Situations
 immediateSignoffHearts = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.North
+            B.setOpener T.North
             twoDiamondOpener
             makeCall (T.Bid 2 T.Diamonds)
             noDirectOvercall
@@ -228,7 +228,7 @@ passSignoffHearts :: Situations
 passSignoffHearts = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.South
+            B.setOpener T.South
             twoDiamondOpener
             makeCall (T.Bid 2 T.Diamonds)
             noDirectOvercall
@@ -251,7 +251,7 @@ correctSignoffHearts :: Situations
 correctSignoffHearts = let
     sit dealer vul heartLength = let
         action = do
-            B.setDealerAndOpener dealer T.South
+            B.setOpener T.South
             twoDiamondOpener
             makeCall (T.Bid 2 T.Diamonds)
             noDirectOvercall

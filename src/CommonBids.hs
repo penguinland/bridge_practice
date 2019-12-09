@@ -9,11 +9,13 @@ module CommonBids(
 , secondSeatOpener
 , thirdSeatOpener
 , fourthSeatOpener
-, setDealerAndOpener
+, setOpener
 , takeoutDouble
 ) where
 
 import Auction(Action, constrain, define, forbid, pointRange, balancedHand, makeCall, makePass, suitLength, minSuitLength, maxSuitLength)
+import Structures(currentBidder)
+import Control.Monad.Trans.State.Strict(get)
 -- Not currently needed:
 --import DealerProg(addDefn, addReq)
 import qualified Terminology as T
@@ -121,18 +123,20 @@ fourthSeatOpener =
     constrain "rule_of_15" ["hcp(", ") + spades(", ") >= 15"]
 
 
-setDealerAndOpener :: T.Direction -> T.Direction -> Action
-setDealerAndOpener = helper openingRules
+setOpener :: T.Direction -> Action
+setOpener opener = do
+    (bidding, _) <- get
+    helper openingRules (currentBidder bidding)
   where
     openingRules = [firstSeatOpener, secondSeatOpener,
                     thirdSeatOpener, fourthSeatOpener]
-    helper (action:actions) caller opener
+    helper (action:actions) caller
       | caller == opener = action
       | otherwise        = do forbid action
                               cannotPreempt
                               makePass
-                              helper actions (T.next caller) opener
-    helper [] _ _        = error "Specified a fifth-seat opener!?"
+                              helper actions (T.next caller)
+    helper [] _          = error "Specified a fifth-seat opener!?"
 
 
 takeoutDouble :: T.Suit -> Action

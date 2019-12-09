@@ -42,17 +42,17 @@ minorTransfer suit = do
     makeCall (T.Bid 2 $ transferSuit suit)
 
 
-setUpTransfer :: T.Direction -> T.Suit -> Action
-setUpTransfer dealer suit = do
-    B.setDealerAndOpener dealer T.North
+setUpTransfer :: T.Suit -> Action
+setUpTransfer suit = do
+    B.setOpener T.North
     B.strong1NT
     B.cannotPreempt >> makePass
     withholdBid (minorTransfer suit)
 
 
-setUpCompletion :: T.Direction -> T.Suit -> Action
-setUpCompletion dealer suit = do
-    B.setDealerAndOpener dealer T.South
+setUpCompletion :: T.Suit -> Action
+setUpCompletion suit = do
+    B.setOpener T.South
     B.strong1NT
     B.cannotPreempt >> makePass
     minorTransfer suit
@@ -66,9 +66,9 @@ canSuperaccept suit = do
         ["top2(", ", " ++ show suit ++ ") >= 1"]
 
 
-setUpSuperacceptCompletion :: T.Direction -> T.Suit -> Action
-setUpSuperacceptCompletion dealer suit = do
-    B.setDealerAndOpener dealer T.North
+setUpSuperacceptCompletion :: T.Suit -> Action
+setUpSuperacceptCompletion suit = do
+    B.setOpener T.North
     B.strong1NT
     B.cannotPreempt >> makePass
     minorTransfer suit
@@ -82,7 +82,7 @@ initiateTransfer :: Situations
 initiateTransfer = let
     sit dealer suit vul = let
         action = do
-            setUpTransfer dealer suit
+            setUpTransfer suit
         explanation fmt =
             "Partner has opened a strong " ++ output fmt oneNT ++ ". You have\
            \ an unbalaned hand with a long minor. Bid 2 steps below your suit\
@@ -99,7 +99,7 @@ completeTransfer :: Situations
 completeTransfer = let
     sit dealer suit vul = let
         action = do
-            setUpCompletion dealer suit
+            setUpCompletion suit
             forbid (canSuperaccept suit)
         explanation fmt =
             "You have opened a strong " ++ output fmt oneNT ++ ", and partner\
@@ -118,7 +118,7 @@ superacceptTransfer :: Situations
 superacceptTransfer = let
     sit dealer suit vul = let
         action = do
-            setUpCompletion dealer suit
+            setUpCompletion suit
             canSuperaccept suit
         explanation fmt =
             "You have opened a strong " ++ output fmt oneNT ++ ", and partner\
@@ -140,7 +140,7 @@ completeSuperacceptAKQ :: Situations
 completeSuperacceptAKQ = let
     sit dealer suit vul = let
         action = do
-            setUpSuperacceptCompletion dealer suit
+            setUpSuperacceptCompletion suit
             hasTopN suit 3 2
             pointRange 0 7  -- Not a situation where you'd naively bid 3N!
         explanation fmt =
@@ -162,7 +162,7 @@ completeSuperacceptKQJ10 :: Situations
 completeSuperacceptKQJ10 = let
     sit dealer suit vul = let
         action = do
-            setUpSuperacceptCompletion dealer suit
+            setUpSuperacceptCompletion suit
             forbid (hasTopN suit 3 2)
             hasTopN suit 5 3
             pointRange 0 7  -- Not a situation where you'd naively bid 3N!
@@ -186,7 +186,7 @@ completeSuperaccept10CardFit :: Situations
 completeSuperaccept10CardFit = let
     sit dealer suit vul = let
         action = do
-            setUpSuperacceptCompletion dealer suit
+            setUpSuperacceptCompletion suit
             hasTopN suit 2 1
             pointRange 0 7  -- Not a situation where you'd normally bid 3N!
             minSuitLength suit 7
@@ -208,7 +208,7 @@ failSuperaccept :: Situations
 failSuperaccept = let
     sit dealer suit vul = let
         action = do
-            setUpSuperacceptCompletion dealer suit
+            setUpSuperacceptCompletion suit
             forbid (hasTopN suit 2 1)
             forbid (hasTopN suit 5 3)
             pointRange 0 7  -- SKip invitational hands; there's too much nuance
@@ -231,7 +231,7 @@ notrumpInvite :: Situations
 notrumpInvite = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.North
+            B.setOpener T.North
             B.strong1NT
             B.cannotPreempt >> makePass
             balancedHand

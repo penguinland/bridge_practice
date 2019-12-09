@@ -67,17 +67,17 @@ jacobyTransfer suit = do
 -- non-gf hands, and add that situation into the Smolen topic.
 
 
-setUpTransfer :: T.Direction -> T.Suit -> Action
-setUpTransfer dealer suit = do
-    B.setDealerAndOpener dealer T.North
+setUpTransfer :: T.Suit -> Action
+setUpTransfer suit = do
+    B.setOpener T.North
     B.strong1NT
     B.cannotPreempt >> makePass
     prepareJacobyTransfer suit
 
 
-setUpCompletion :: T.Direction -> T.Suit -> Action
-setUpCompletion dealer suit = do
-    B.setDealerAndOpener dealer T.South
+setUpCompletion :: T.Suit -> Action
+setUpCompletion suit = do
+    B.setOpener T.South
     B.strong1NT
     B.cannotPreempt >> makePass
     jacobyTransfer suit
@@ -88,7 +88,7 @@ initiateTransferWeak :: Situations
 initiateTransferWeak = let
     sit dealer suit vul = let
         action = do
-            setUpTransfer dealer suit
+            setUpTransfer suit
             pointRange 0 7
             forbid equalMajors  -- With 5-5 in the majors, pick the better one.
         explanation fmt =
@@ -108,7 +108,7 @@ initiateTransferBInv :: Situations
 initiateTransferBInv = let
     sit dealer suit vul = let
         action = do
-            setUpTransfer dealer suit
+            setUpTransfer suit
             pointRange 8 9
             forbid equalMajors
             balancedHand
@@ -131,7 +131,7 @@ initiateTransferBGf :: Situations
 initiateTransferBGf = let
     sit dealer suit vul = let
         action = do
-            setUpTransfer dealer suit
+            setUpTransfer suit
             pointRange 10 14
             forbid equalMajors
             balancedHand
@@ -155,7 +155,7 @@ completeTransfer :: Situations
 completeTransfer = let
     sit dealer suit vul = let
         action = do
-            setUpCompletion dealer suit
+            setUpCompletion suit
             minSuitLength suit 3
         explanation fmt =
             "You have opened a strong " ++ output fmt oneNT ++ ", and partner\
@@ -173,7 +173,7 @@ completeTransferShort :: Situations
 completeTransferShort = let
     sit dealer suit vul = let
         action = do
-            setUpCompletion dealer suit
+            setUpCompletion suit
             suitLength suit 2
         explanation fmt =
             "You have opened a strong " ++ output fmt oneNT ++ ", and partner\
@@ -196,7 +196,7 @@ majors55inv :: Situations
 majors55inv = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.North
+            B.setOpener T.North
             B.strong1NT
             B.cannotPreempt >> makePass
             suitLength T.Hearts 5
@@ -225,7 +225,7 @@ majors55gf :: Situations
 majors55gf = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.North
+            B.setOpener T.North
             B.strong1NT
             B.cannotPreempt >> makePass
             suitLength T.Hearts 5

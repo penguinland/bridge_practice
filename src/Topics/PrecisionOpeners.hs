@@ -70,7 +70,7 @@ oneClub :: Situations
 oneClub = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.South
+            B.setOpener T.South
             oneClubOpener
         explanation fmt =
             "With 16 or more points, open a strong " ++
@@ -86,7 +86,7 @@ oneDiamond :: Situations
 oneDiamond = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.South
+            B.setOpener T.South
             oneDiamondOpener
         explanation fmt =
             "With opening strength but not enough for a strong " ++
@@ -103,7 +103,7 @@ oneMajor :: Situations
 oneMajor = let
     sit dealer vul suit = let
         action = do
-            B.setDealerAndOpener dealer T.South
+            B.setOpener T.South
             oneMajorOpener suit
             -- TODO: What if you're 5-5?
         explanation fmt =
@@ -120,7 +120,7 @@ twoClubs6 :: Situations
 twoClubs6 = let
     sit dealer vul = let
         action = do
-            B.setDealerAndOpener dealer T.South
+            B.setOpener T.South
             pointRange 10 15
             minSuitLength T.Clubs 6
             maxSuitLength T.Spades 4
