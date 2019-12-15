@@ -11,7 +11,7 @@ module Terminology (
 , allVulnerabilities
 ) where
 
-import Output(Showable, toLatex)
+import Output(Showable, toLatex, toHtml)
 
 
 data Direction = North | East | South | West deriving Eq
@@ -21,6 +21,10 @@ instance Showable Direction where
     toLatex East  = "E"
     toLatex South = "S"
     toLatex West  = "W"
+    toHtml North = "N"
+    toHtml East  = "E"
+    toHtml South = "S"
+    toHtml West  = "W"
 
 -- We keep these lowercase because that's the format that dealer wants. You'll
 -- have to upper-case them yourself to print them out.
@@ -51,6 +55,11 @@ instance Showable Suit where
     toLatex Hearts    = "\\h{}"
     toLatex Spades    = "\\s{}"
     toLatex Notrump   = "\\nt{}"
+    toHtml Clubs     = "&clubs;"
+    toHtml Diamonds  = "<span class='red'>&diams;</span>"
+    toHtml Hearts    = "<span class='red'>&hearts;</span>"
+    toHtml Spades    = "&spades;"
+    toHtml Notrump   = "<span class='smallcaps'>NT</span>"
 
 instance Show Suit where
     show Clubs    = "clubs"
@@ -74,6 +83,10 @@ instance Showable Call where
     toLatex Double    = "Dbl"
     toLatex Redouble  = "Rdb"
     toLatex (Bid l s) = show l ++ toLatex s
+    toHtml Pass      = "Pass"
+    toHtml Double    = "Dbl"
+    toHtml Redouble  = "Rdb"
+    toHtml (Bid l s) = show l ++ toHtml s
 
 
 data Vulnerability = NS | EW | Both | None deriving Eq
@@ -83,6 +96,10 @@ instance Showable Vulnerability where
     toLatex EW   = "E/W"
     toLatex Both = "Both"
     toLatex None = "None"
+    toHtml NS   = "N/S"
+    toHtml EW   = "E/W"
+    toHtml Both = "Both"
+    toHtml None = "None"
 
 allVulnerabilities :: [Vulnerability]
 allVulnerabilities = [NS, EW, Both, None]
