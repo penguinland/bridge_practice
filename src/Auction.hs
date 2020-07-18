@@ -16,6 +16,8 @@ module Auction (
 , maxSuitLength
 , hasTopN
 , withholdBid
+, compareSuitLength
+, SuitLengthComparator(..)
 ) where
 
 import Control.Monad.Trans.State.Strict(State, execState, get, put, modify)
@@ -112,11 +114,29 @@ hasTopN suit range minCount = do
                ") >= " ++ show minCount]
 
 
+-- Define the constraints in this action without modifying the current Auction.
 withholdBid :: Action -> Action
 withholdBid action = do
     (bidding, dealerProg) <- get
     let freshAuction = newAuction . currentBidder $ bidding
         (_, dealerToWithhold) = execState action freshAuction
     put (bidding, dealerProg `mappend` dealerToWithhold)
+
+
+data SuitLengthComparator = Longer | Equal | Shorter
+instance Show SuitLengthComparator where
+    show Longer = ">"
+    show Equal = "=="
+    show Shorter = "<"
+
+compareSuitLength :: T.Suit -> SuitLengthComparator -> T.Suit -> Action
+compareSuitLength suitA op suitB = let
+    toWord Longer = "longer"
+    toWord Equal = "equal"
+    toWord Shorter = "shorter"
+    name = join "_" [show suitA, toWord op, show suitB, "length"]
+  in
+    constrain name [show suitA ++ "(", ") " ++ show op ++ " " ++
+                    show suitB ++ "(", ")"]
 
 -- TODO: hasCard
