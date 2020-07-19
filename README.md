@@ -5,7 +5,7 @@ it should be straightforward to set everything up. You will need the following
 external tools installed:
 - Haskell and Stack
   - On a Mac, do this with `brew install haskell-stack`
-  - On Linux, this is `sudo apt-get install haskell-platform`
+  - On Ubuntu, this is `sudo apt-get install haskell-platform`
 - XeLaTeX
   - On a Mac, run `brew cask install mactex`
   - On Ubuntu, run `sudo apt-get install texlive-xetex`
