@@ -48,12 +48,15 @@ notTooStrong = do
 reverseStrength :: Action
 reverseStrength = pointRange 17 40
 
+-- Helper function, not exported
+reverseInMajors :: Action
+reverseInMajors = do
+    minSuitLength T.Hearts 5
+    minSuitLength T.Spades 5
+    reverseStrength
+
 b1s :: Action
-b1s = let
-    reverseInMajors = do
-        compareSuitLength T.Hearts Equal T.Spades
-        reverseStrength
-  in do
+b1s = do
     notTooStrong
     minSuitLength T.Spades 5
     -- If you're equal length in the majors and have enough points to reverse,
@@ -63,15 +66,10 @@ b1s = let
 
 
 b1h :: Action
-b1h = let
-    spadesFirst = do
-        -- If you're equal length in the majors but can't reverse, bid 1S.
-        compareSuitLength T.Hearts Equal T.Spades
-        forbid reverseStrength
-  in do
+b1h = do
     notTooStrong
     minSuitLength T.Hearts 5
-    forbid spadesFirst
+    alternatives [reverseInMajors, maxSuitLength T.Spades 4]
     makeCall (T.Bid 1 T.Hearts)
 
 
