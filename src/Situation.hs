@@ -23,7 +23,7 @@ import Terminology(Call, Direction, Vulnerability)
 
 
 data Situation =
-    Situation String Direction Vulnerability Bidding DealerProg Call Commentary
+    Situation String Bidding DealerProg Call Commentary Vulnerability Direction
 data SituationInstance = SituationInstance Bidding Call Commentary Deal String
 
 
@@ -31,9 +31,9 @@ sitRef :: Situation -> String
 sitRef (Situation r _ _ _ _ _ _) = r
 
 
-situation :: String -> Direction -> Vulnerability -> Action -> Call ->
-    Commentary -> Situation
-situation r d v a c s = Situation r d v bidding deal c s
+situation :: String -> Action -> Call -> Commentary -> Vulnerability ->
+    Direction -> Situation
+situation r a c s v d = Situation r bidding deal c s v d
   where
     (bidding, deal) = finish d a
 
@@ -48,7 +48,7 @@ instance Showable SituationInstance where
 -- thing here?
 instantiate :: String -> Situation ->
         State StdGen (IO (Maybe SituationInstance))
-instantiate reference (Situation _ dn v b dl c s) = do
+instantiate reference (Situation _ b dl c s v dn) = do
     n <- use next
     let instantiate' :: IO (Maybe SituationInstance)
         instantiate' = do

@@ -5,6 +5,7 @@ import Topic(Topic(..), base, (<~), wrap, Situations)
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, alternatives, constrain, makePass, makeCall)
 import Situation(situation)
+import SituationHelpers(stdWrap, wrapVulDlr)
 import qualified Terminology as T
 import qualified CommonBids as B
 
@@ -53,67 +54,58 @@ fitHearts = do
 
 open :: Situations
 open = let
-    sit dealer vul = let
-        action = do
-            B.setOpener T.South
-            twoDiamondOpener
-        explanation fmt =
-            "With an opening hand too weak to bid " ++
-            output fmt (T.Bid 1 T.Clubs) ++ ", open " ++
-            output fmt (T.Bid 2 T.Diamonds) ++ " with no 5-card major, " ++
-            "no 6-card club suit, and at most 1 diamond."
-      in
-        situation "Open" dealer vul action (T.Bid 2 T.Diamonds) explanation
+    action = do
+        B.setOpener T.South
+        twoDiamondOpener
+    explanation fmt =
+        "With an opening hand too weak to bid " ++
+        output fmt (T.Bid 1 T.Clubs) ++ ", open " ++
+        output fmt (T.Bid 2 T.Diamonds) ++ " with no 5-card major, " ++
+        "no 6-card club suit, and at most 1 diamond."
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+    stdWrap $ situation "Open" action (T.Bid 2 T.Diamonds) explanation
 
 
 immediateSignoffSpades3 :: Situations
 immediateSignoffSpades3 = let
-    sit dealer vul = let
-        action = do
-            B.setOpener T.North
-            twoDiamondOpener
-            suitLength T.Spades 3
-            makeCall (T.Bid 2 T.Diamonds)
-            noDirectOvercall
-            pointRange 0 9
-            bestFitSpades
-            suitLength T.Spades 4
-        explanation fmt =
-            "Without the strength for a game contract, sign off in " ++
-            output fmt (T.Bid 2 T.Spades) ++ " with a likely fit. If " ++
-            "you're stuck playing a 4-3 fit, oh well."
-      in
-        situation "S43" dealer vul action (T.Bid 2 T.Spades) explanation
+    action = do
+        B.setOpener T.North
+        twoDiamondOpener
+        suitLength T.Spades 3
+        makeCall (T.Bid 2 T.Diamonds)
+        noDirectOvercall
+        pointRange 0 9
+        bestFitSpades
+        suitLength T.Spades 4
+    explanation fmt =
+        "Without the strength for a game contract, sign off in " ++
+        output fmt (T.Bid 2 T.Spades) ++ " with a likely fit. If " ++
+        "you're stuck playing a 4-3 fit, oh well."
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+    stdWrap $ situation "S43" action (T.Bid 2 T.Spades) explanation
 
 
 immediateSignoffSpades4 :: Situations
 immediateSignoffSpades4 = let
-    sit dealer vul = let
-        action = do
-            B.setOpener T.North
-            twoDiamondOpener
-            suitLength T.Spades 4
-            makeCall (T.Bid 2 T.Diamonds)
-            noDirectOvercall
-            pointRange 0 9
-            bestFitSpades
-            suitLength T.Spades 4
-        explanation fmt =
-            "Without the strength for a game contract, sign off in " ++
-            output fmt (T.Bid 2 T.Spades) ++ " with a likely fit."
-      in
-        situation "S44" dealer vul action (T.Bid 2 T.Spades) explanation
+    action = do
+        B.setOpener T.North
+        twoDiamondOpener
+        suitLength T.Spades 4
+        makeCall (T.Bid 2 T.Diamonds)
+        noDirectOvercall
+        pointRange 0 9
+        bestFitSpades
+        suitLength T.Spades 4
+    explanation fmt =
+        "Without the strength for a game contract, sign off in " ++
+        output fmt (T.Bid 2 T.Spades) ++ " with a likely fit."
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+    stdWrap $ situation "S44" action (T.Bid 2 T.Spades) explanation
 
 
 immediateSignoffSpades5 :: Situations
 immediateSignoffSpades5 = let
-    sit dealer vul = let
+    sit = let
         action = do
             B.setOpener T.North
             twoDiamondOpener
@@ -126,18 +118,18 @@ immediateSignoffSpades5 = let
             "Without the strength for a game contract, sign off in " ++
             output fmt (T.Bid 2 T.Spades) ++ " with a guaranteed fit."
       in
-        situation "Sfit" dealer vul action (T.Bid 2 T.Spades) explanation
+        situation "Sfit" action (T.Bid 2 T.Spades) explanation
   in
     -- Although this can happen when anyone is dealer, it is very rare when East
     -- deals, and generating those hands is difficult for dealer (often
     -- requiring over 1,000,000 hands to be generated). Consequently, we limit
     -- these situations to times when East isn't dealer.
-    wrap $ base sit <~ [T.North, T.South, T.West] <~ T.allVulnerabilities
+    wrap $ base sit <~ T.allVulnerabilities <~ [T.North, T.South, T.West]
 
 
 passSignoff2Spades :: Situations
 passSignoff2Spades = let
-    sit dealer vul spadeLength = let
+    sit spadeLength = let
         action = do
             B.setOpener T.South
             twoDiamondOpener
@@ -157,99 +149,87 @@ passSignoff2Spades = let
             (if spadeLength == 4 then "." else
                 ", even though you might be in a 7-card fit.")
       in
-        situation "2SP" dealer vul action (T.Pass) explanation
+        situation "2SP" action (T.Pass) explanation
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities <~ [3, 4]
+    wrapVulDlr $ base sit <~ [3, 4]
 
 
 immediateSignoffClubs :: Situations
 immediateSignoffClubs = let
-    sit dealer vul = let
-        action = do
-            B.setOpener T.North
-            twoDiamondOpener
-            makeCall (T.Bid 2 T.Diamonds)
-            noDirectOvercall
-            bestFitClubs
-            pointRange 0 9
-        explanation _ =
-            "Without the strength to invite to game, sign off in a club " ++
-            "partial."
-      in
-        situation "3C" dealer vul action (T.Bid 3 T.Clubs) explanation
+    action = do
+        B.setOpener T.North
+        twoDiamondOpener
+        makeCall (T.Bid 2 T.Diamonds)
+        noDirectOvercall
+        bestFitClubs
+        pointRange 0 9
+    explanation _ =
+        "Without the strength to invite to game, sign off in a club " ++
+        "partial."
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+    stdWrap $ situation "3C" action (T.Bid 3 T.Clubs) explanation
 
 
 passSignoffClubs :: Situations
 passSignoffClubs = let
-    sit dealer vul = let
-        action = do
-            B.setOpener T.South
-            twoDiamondOpener
-            makeCall (T.Bid 2 T.Diamonds)
-            noDirectOvercall
-            bestFitClubs
-            pointRange 0 9
-            makeCall (T.Bid 3 T.Clubs)
-            forbid $ B.takeoutDouble T.Clubs
-            noDirectOvercall
-        explanation _ =
-            "Partner has less-than-invitational values and is signing off. " ++
-            "Just pass."
-      in
-        situation "3CP" dealer vul action (T.Pass) explanation
+    action = do
+        B.setOpener T.South
+        twoDiamondOpener
+        makeCall (T.Bid 2 T.Diamonds)
+        noDirectOvercall
+        bestFitClubs
+        pointRange 0 9
+        makeCall (T.Bid 3 T.Clubs)
+        forbid $ B.takeoutDouble T.Clubs
+        noDirectOvercall
+    explanation _ =
+        "Partner has less-than-invitational values and is signing off. " ++
+        "Just pass."
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+    stdWrap $ situation "3CP" action (T.Pass) explanation
 
 
 immediateSignoffHearts :: Situations
 immediateSignoffHearts = let
-    sit dealer vul = let
-        action = do
-            B.setOpener T.North
-            twoDiamondOpener
-            makeCall (T.Bid 2 T.Diamonds)
-            noDirectOvercall
-            fitHearts
-            pointRange 0 9
-        explanation fmt =
-            "Without the strength to invite to game, sign off in " ++
-            output fmt (T.Bid 2 T.Hearts) ++ ". Remember that opener might " ++
-            "pull the bid to " ++ output fmt (T.Bid 2 T.Spades) ++ " with " ++
-            "exactly 4315 shape."
-      in
-        situation "2H" dealer vul action (T.Bid 2 T.Hearts) explanation
+    action = do
+        B.setOpener T.North
+        twoDiamondOpener
+        makeCall (T.Bid 2 T.Diamonds)
+        noDirectOvercall
+        fitHearts
+        pointRange 0 9
+    explanation fmt =
+        "Without the strength to invite to game, sign off in " ++
+        output fmt (T.Bid 2 T.Hearts) ++ ". Remember that opener might " ++
+        "pull the bid to " ++ output fmt (T.Bid 2 T.Spades) ++ " with " ++
+        "exactly 4315 shape."
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+    stdWrap $ situation "2H" action (T.Bid 2 T.Hearts) explanation
 
 
 passSignoffHearts :: Situations
 passSignoffHearts = let
-    sit dealer vul = let
-        action = do
-            B.setOpener T.South
-            twoDiamondOpener
-            makeCall (T.Bid 2 T.Diamonds)
-            noDirectOvercall
-            fitHearts
-            pointRange 0 9
-            makeCall (T.Bid 2 T.Hearts)
-            forbid $ B.takeoutDouble T.Clubs
-            noDirectOvercall
-            minSuitLength T.Hearts 4
-        explanation _ =
-            "Partner has less-than-invitational values and is signing off. " ++
-            "Given that you have 4 hearts, pass."
-      in
-        situation "2HP" dealer vul action (T.Pass) explanation
+    action = do
+        B.setOpener T.South
+        twoDiamondOpener
+        makeCall (T.Bid 2 T.Diamonds)
+        noDirectOvercall
+        fitHearts
+        pointRange 0 9
+        makeCall (T.Bid 2 T.Hearts)
+        forbid $ B.takeoutDouble T.Clubs
+        noDirectOvercall
+        minSuitLength T.Hearts 4
+    explanation _ =
+        "Partner has less-than-invitational values and is signing off. " ++
+        "Given that you have 4 hearts, pass."
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+    stdWrap $ situation "2HP" action (T.Pass) explanation
 
 
 correctSignoffHearts :: Situations
 correctSignoffHearts = let
-    sit dealer vul heartLength = let
+    sit heartLength = let
         action = do
             B.setOpener T.South
             twoDiamondOpener
@@ -270,11 +250,11 @@ correctSignoffHearts = let
             output fmt (T.Bid 2 T.Spades) ++ " in case partner only had 3 " ++
             "hearts (e.g., 3343 or 3352 shape)."
       in
-        situation "2H2S" dealer vul action (T.Pass) explanation
+        situation "2H2S" action (T.Pass) explanation
   in
     -- We want to commonly show times when responder has just 3 hearts (and
     -- we're avoiding a 3-3 fit) and times when responder has a real heart suit.
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities <~ [3, 6]
+    wrapVulDlr $ base sit <~ [3, 6]
 
 
 topic :: Topic

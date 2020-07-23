@@ -5,6 +5,7 @@ import Topic(Topic(..), base, (<~), wrap, Situations)
 import Auction(forbid, pointRange, suitLength, minSuitLength, {-maxSuitLength,-}
                Action, balancedHand, constrain)
 import Situation(situation)
+import SituationHelpers(stdWrap, wrapVulDlr)
 import qualified Terminology as T
 import qualified CommonBids as B
 
@@ -68,40 +69,34 @@ oneDiamondOpener = do
 
 oneClub :: Situations
 oneClub = let
-    sit dealer vul = let
-        action = do
-            B.setOpener T.South
-            oneClubOpener
-        explanation fmt =
-            "With 16 or more points, open a strong " ++
-            output fmt (T.Bid 1 T.Clubs) ++ ". This is the hallmark of the\
-          \ Precision Club system."
-      in
-        situation "1C" dealer vul action (T.Bid 1 T.Clubs) explanation
+    action = do
+        B.setOpener T.South
+        oneClubOpener
+    explanation fmt =
+        "With 16 or more points, open a strong " ++
+        output fmt (T.Bid 1 T.Clubs) ++ ". This is the hallmark of the\
+      \ Precision Club system."
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+    stdWrap $ situation "1C" action (T.Bid 1 T.Clubs) explanation
 
 
 oneDiamond :: Situations
 oneDiamond = let
-    sit dealer vul = let
-        action = do
-            B.setOpener T.South
-            oneDiamondOpener
-        explanation fmt =
-            "With opening strength but not enough for a strong " ++
-            output fmt (T.Bid 1 T.Clubs) ++ " and no 5-card major or 6-card\
-          \ club suit, open a diamond. Partner will announce that it ``could\
-          \ be short.''"
-      in
-        situation "1D" dealer vul action (T.Bid 1 T.Diamonds) explanation
+    action = do
+        B.setOpener T.South
+        oneDiamondOpener
+    explanation fmt =
+        "With opening strength but not enough for a strong " ++
+        output fmt (T.Bid 1 T.Clubs) ++ " and no 5-card major or 6-card\
+      \ club suit, open a diamond. Partner will announce that it ``could\
+      \ be short.''"
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+    stdWrap $ situation "1D" action (T.Bid 1 T.Diamonds) explanation
 
 
 oneMajor :: Situations
 oneMajor = let
-    sit dealer vul suit = let
+    sit suit = let
         action = do
             B.setOpener T.South
             oneMajorOpener suit
@@ -110,29 +105,26 @@ oneMajor = let
             "With opening strength but not enough for a strong " ++
             output fmt (T.Bid 1 T.Clubs) ++ " open a 5-card major suit."
       in
-        situation "1M" dealer vul action (T.Bid 1 suit) explanation
+        situation "1M" action (T.Bid 1 suit) explanation
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities <~ T.majorSuits
+    wrapVulDlr $ base sit <~ T.majorSuits
 
 
 {-
 twoClubs6 :: Situations
 twoClubs6 = let
-    sit dealer vul = let
-        action = do
-            B.setOpener T.South
-            pointRange 10 15
-            minSuitLength T.Clubs 6
-            maxSuitLength T.Spades 4
-            maxSuitLength T.Hearts 4
-        explanation fmt =
-            "With opening strength but not enough for a strong " ++
-            output fmt (T.Bid 1 T.Clubs) ++ " open a 6-card club suit at the\
-          \ two level."
-      in
-        situation "2C" dealer vul action (T.Bid 2 T.Clubs) explanation
+    action = do
+        B.setOpener T.South
+        pointRange 10 15
+        minSuitLength T.Clubs 6
+        maxSuitLength T.Spades 4
+        maxSuitLength T.Hearts 4
+    explanation fmt =
+        "With opening strength but not enough for a strong " ++
+        output fmt (T.Bid 1 T.Clubs) ++ " open a 6-card club suit at the\
+      \ two level."
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+    stdWrap $ situation "2C" action (T.Bid 2 T.Clubs) explanation
 -}
 
 
