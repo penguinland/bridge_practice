@@ -1,27 +1,13 @@
 module SituationHelpers (
-  anyVulnerability
-, anyVulDlr
-, wrapVulDlr
+  wrapVulDlr
 , stdWrap
 ) where
 
 import System.Random(StdGen)
 
-import Auction(Action)
-import Output(Commentary)
-import Situation(situation, Situation)
+import Situation(Situation)
 import Topic(base, (<~), wrap, Situations)
-import Terminology(Direction, allDirections, Vulnerability, allVulnerabilities, Call)
-
-
-anyVulnerability :: Situation -> Situation
-anyVulnerability = error "TODO later"
-
-anyVulDlr :: String -> Action -> Call -> Commentary -> Situations
-anyVulDlr debug action call commentary = let
-    helper dir vul = situation debug dir vul action call commentary
-  in
-    wrap $ base helper <~ allDirections <~ allVulnerabilities
+import Terminology(Direction, allDirections, Vulnerability, allVulnerabilities)
 
 
 -- Used for taking a situation that has already had some options applied to it,
