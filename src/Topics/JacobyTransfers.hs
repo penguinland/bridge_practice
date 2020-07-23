@@ -5,6 +5,7 @@ import Topic(Topic(..), Situations, base, (<~), wrap)
 import Auction(forbid, makeCall, makePass, pointRange, suitLength,
                minSuitLength, Action, balancedHand, constrain)
 import Situation(situation)
+import SituationHelpers(stdWrap, wrapVulDlr)
 import qualified Terminology as T
 import qualified CommonBids as B
 
@@ -86,7 +87,7 @@ setUpCompletion suit = do
 
 initiateTransferWeak :: Situations
 initiateTransferWeak = let
-    sit dealer suit vul = let
+    sit suit = let
         action = do
             setUpTransfer suit
             pointRange 0 7
@@ -99,14 +100,14 @@ initiateTransferWeak = let
            \ into the suit, then pass and leave partner at the 2 level."
         bid = T.Bid 2 $ transferSuit suit
       in
-        situation "InitWeak" dealer vul action bid explanation
+        situation "InitWeak" action bid explanation
   in
-    wrap $ base sit <~ T.allDirections <~ T.majorSuits <~ T.allVulnerabilities
+    wrapVulDlr $ base sit <~ T.majorSuits
 
 
 initiateTransferBInv :: Situations
 initiateTransferBInv = let
-    sit dealer suit vul = let
+    sit suit = let
         action = do
             setUpTransfer suit
             pointRange 8 9
@@ -122,14 +123,14 @@ initiateTransferBInv = let
            \ playing in partscore with a minimum hand and game with a maximum."
         bid = T.Bid 2 $ transferSuit suit
       in
-        situation "InitBInv" dealer vul action bid explanation
+        situation "InitBInv" action bid explanation
   in
-    wrap $ base sit <~ T.allDirections <~ T.majorSuits <~ T.allVulnerabilities
+    wrapVulDlr $ base sit <~ T.majorSuits
 
 
 initiateTransferBGf :: Situations
 initiateTransferBGf = let
-    sit dealer suit vul = let
+    sit suit = let
         action = do
             setUpTransfer suit
             pointRange 10 14
@@ -146,14 +147,14 @@ initiateTransferBGf = let
            \ belong in game but not slam."
         bid = T.Bid 2 $ transferSuit suit
       in
-        situation "InitBGF" dealer vul action bid explanation
+        situation "InitBGF" action bid explanation
   in
-    wrap $ base sit <~ T.allDirections <~ T.majorSuits <~ T.allVulnerabilities
+    wrapVulDlr $ base sit <~ T.majorSuits
 
 
 completeTransfer :: Situations
 completeTransfer = let
-    sit dealer suit vul = let
+    sit suit = let
         action = do
             setUpCompletion suit
             minSuitLength suit 3
@@ -164,14 +165,14 @@ completeTransfer = let
           \ but wants you to be declarer so your stronger hand stays hidden."
         bid = T.Bid 2 suit
       in
-        situation "Complete" dealer vul action bid explanation
+        situation "Complete" action bid explanation
   in
-    wrap $ base sit <~ T.allDirections <~ T.majorSuits <~ T.allVulnerabilities
+    wrapVulDlr $ base sit <~ T.majorSuits
 
 
 completeTransferShort :: Situations
 completeTransferShort = let
-    sit dealer suit vul = let
+    sit suit = let
         action = do
             setUpCompletion suit
             suitLength suit 2
@@ -187,43 +188,40 @@ completeTransferShort = let
           \ another bid to give you options of where to play."
         bid = T.Bid 2 suit
       in
-        situation "Short" dealer vul action bid explanation
+        situation "Short" action bid explanation
   in
-    wrap $ base sit <~ T.allDirections <~ T.majorSuits <~ T.allVulnerabilities
+    wrapVulDlr $ base sit <~ T.majorSuits
 
 
 majors55inv :: Situations
 majors55inv = let
-    sit dealer vul = let
-        action = do
-            B.setOpener T.North
-            B.strong1NT
-            B.cannotPreempt >> makePass
-            suitLength T.Hearts 5
-            suitLength T.Spades 5
-            pointRange 7 9
-        explanation fmt =
-            "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5" ++
-            output fmt NDash ++ "5 in\
-          \ the majors and invitational strength, first make a Jacoby transfer\
-          \ into hearts, and then bid " ++ output fmt (T.Bid 2 T.Spades) ++ "\
-          \ afterwards. Partner will then have the options of passing " ++
-            output fmt (T.Bid 2 T.Spades) ++ " with a minimum hand and a spade\
-          \ fit, bidding " ++ output fmt (T.Bid 3 T.Hearts) ++ " with a minimum\
-          \ hand and no spade fit (in which case a heart fit is guaranteed), or\
-          \ bidding one of the majors at the 4 level with a maximum. This\
-          \ wrong-sides the contract when the " ++ output fmt oneNT ++ " bidder\
-          \ has a doubleton heart."
-        bid = T.Bid 2 T.Diamonds
-      in
-        situation "55Inv" dealer vul action bid explanation
+    action = do
+        B.setOpener T.North
+        B.strong1NT
+        B.cannotPreempt >> makePass
+        suitLength T.Hearts 5
+        suitLength T.Spades 5
+        pointRange 7 9
+    explanation fmt =
+        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5" ++
+        output fmt NDash ++ "5 in\
+      \ the majors and invitational strength, first make a Jacoby transfer\
+      \ into hearts, and then bid " ++ output fmt (T.Bid 2 T.Spades) ++ "\
+      \ afterwards. Partner will then have the options of passing " ++
+        output fmt (T.Bid 2 T.Spades) ++ " with a minimum hand and a spade\
+      \ fit, bidding " ++ output fmt (T.Bid 3 T.Hearts) ++ " with a minimum\
+      \ hand and no spade fit (in which case a heart fit is guaranteed), or\
+      \ bidding one of the majors at the 4 level with a maximum. This\
+      \ wrong-sides the contract when the " ++ output fmt oneNT ++ " bidder\
+      \ has a doubleton heart."
+    bid = T.Bid 2 T.Diamonds
   in
-    wrap $ base sit <~ T.allDirections <~ T.allVulnerabilities
+    stdWrap $ situation "55Inv" action bid explanation
 
 
 majors55gf :: Situations
 majors55gf = let
-    sit dealer vul = let
+    sit = let
         action = do
             B.setOpener T.North
             B.strong1NT
@@ -242,12 +240,12 @@ majors55gf = let
             \ bidder has a doubleton spade."
         bid = T.Bid 2 T.Hearts
       in
-        situation "55GF" dealer vul action bid explanation
+        situation "55GF" action bid explanation
   in
     -- Note that with 5-5 and game-going strength, you would have opened the
     -- bidding if you had a chance. So, you must not have had a chance to bid
     -- before your partner.
-    wrap $ base sit <~ [T.West, T.North] <~ T.allVulnerabilities
+    wrap $ base sit <~ T.allVulnerabilities <~ [T.West, T.North]
 
 
 topic :: Topic

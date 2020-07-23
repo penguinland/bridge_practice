@@ -80,7 +80,7 @@ setUpSuperacceptCompletion suit = do
 
 initiateTransfer :: Situations
 initiateTransfer = let
-    sit dealer suit vul = let
+    sit suit = let
         action = do
             setUpTransfer suit
         explanation fmt =
@@ -90,14 +90,14 @@ initiateTransfer = let
            \ stronger hand stays hidden."
         bid = T.Bid 2 $ transferSuit suit
       in
-        situation "Init" dealer vul action bid explanation
+        situation "Init" action bid explanation
   in
-    wrap $ base sit <~ [T.West, T.North] <~ T.minorSuits <~ T.allVulnerabilities
+    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.West, T.North]
 
 
 completeTransfer :: Situations
 completeTransfer = let
-    sit dealer suit vul = let
+    sit suit = let
         action = do
             setUpCompletion suit
             forbid (canSuperaccept suit)
@@ -109,14 +109,14 @@ completeTransfer = let
           \ suit."
         bid = T.Bid 3 suit
       in
-        situation "Complete" dealer vul action bid explanation
+        situation "Complete" action bid explanation
   in
-    wrap $ base sit <~ [T.East, T.South] <~ T.minorSuits <~ T.allVulnerabilities
+    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.East, T.South]
 
 
 superacceptTransfer :: Situations
 superacceptTransfer = let
-    sit dealer suit vul = let
+    sit suit = let
         action = do
             setUpCompletion suit
             canSuperaccept suit
@@ -131,14 +131,14 @@ superacceptTransfer = let
             output fmt (T.Bid 3 suit) ++ " contract if it won't."
         bid = superacceptBid suit
       in
-        situation "SupAcc" dealer vul action bid explanation
+        situation "SupAcc" action bid explanation
   in
-    wrap $ base sit <~ [T.East, T.South] <~ T.minorSuits <~ T.allVulnerabilities
+    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.East, T.South]
 
 
 completeSuperacceptAKQ :: Situations
 completeSuperacceptAKQ = let
-    sit dealer suit vul = let
+    sit suit = let
         action = do
             setUpSuperacceptCompletion suit
             hasTopN suit 3 2
@@ -153,14 +153,14 @@ completeSuperacceptAKQ = let
           \ despite your lack of points."
         bid = T.Bid 3 T.Notrump
       in
-        situation "3NTAKQ" dealer vul action bid explanation
+        situation "3NTAKQ" action bid explanation
   in
-    wrap $ base sit <~ [T.North, T.West] <~ T.minorSuits <~ T.allVulnerabilities
+    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
 completeSuperacceptKQJ10 :: Situations
 completeSuperacceptKQJ10 = let
-    sit dealer suit vul = let
+    sit suit = let
         action = do
             setUpSuperacceptCompletion suit
             forbid (hasTopN suit 3 2)
@@ -177,14 +177,14 @@ completeSuperacceptKQJ10 = let
           \ be makable, despite your lack of points."
         bid = T.Bid 3 T.Notrump
       in
-        situation "3NTKQJ" dealer vul action bid explanation
+        situation "3NTKQJ" action bid explanation
   in
-    wrap $ base sit <~ [T.North, T.West] <~ T.minorSuits <~ T.allVulnerabilities
+    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
 completeSuperaccept10CardFit :: Situations
 completeSuperaccept10CardFit = let
-    sit dealer suit vul = let
+    sit suit = let
         action = do
             setUpSuperacceptCompletion suit
             hasTopN suit 2 1
@@ -199,14 +199,14 @@ completeSuperaccept10CardFit = let
           \ game."
         bid = T.Bid 3 T.Notrump
       in
-        situation "3NT10Fit" dealer vul action bid explanation
+        situation "3NT10Fit" action bid explanation
   in
-    wrap $ base sit <~ [T.North, T.West] <~ T.minorSuits <~ T.allVulnerabilities
+    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
 failSuperaccept :: Situations
 failSuperaccept = let
-    sit dealer suit vul = let
+    sit suit = let
         action = do
             setUpSuperacceptCompletion suit
             forbid (hasTopN suit 2 1)
@@ -222,14 +222,14 @@ failSuperaccept = let
           \ the contract."
         bid = T.Bid 3 suit
       in
-        situation "SupFail" dealer vul action bid explanation
+        situation "SupFail" action bid explanation
   in
-    wrap $ base sit <~ [T.North, T.West] <~ T.minorSuits <~ T.allVulnerabilities
+    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
 notrumpInvite :: Situations
 notrumpInvite = let
-    sit dealer vul = let
+    sit = let
         action = do
             B.setOpener T.North
             B.strong1NT
@@ -251,9 +251,9 @@ notrumpInvite = let
           \ transfer."
         bid = T.Bid 2 T.Clubs
       in
-        situation "NTInv" dealer vul action bid explanation
+        situation "NTInv" action bid explanation
   in
-    wrap $ base sit <~ [T.North, T.West] <~ T.allVulnerabilities
+    wrap $ base sit <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
 topic :: Topic
