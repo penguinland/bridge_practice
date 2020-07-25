@@ -11,7 +11,7 @@ import System.Random(StdGen)
 
 import Output(toLatex)
 import Random(pickItem)
-import Situation(instantiate, sitRef, SituationInstance)
+import SituationInstance(instantiate, sitRef, SituationInstance)
 import Topic(Topic, topicName, refName, choose)
 
 
