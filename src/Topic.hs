@@ -70,14 +70,14 @@ instance (Optionable s) => Optionable (b -> s) where
         f g' (as !! i)
 
 
+data Topic = Topic {topicName :: String
+                   , refName :: String
+                   , topicSituations :: Situations}
+
+
 choose :: Topic -> State StdGen S.Situation
 choose = choose' . topicSituations
   where
     choose' (RawSit s)   = return s
     choose' (SitList ss) = pickItem ss >>= choose'
     choose' (SitFun f)   = use split >>= (choose' . f)
-
-
-data Topic = Topic {topicName :: String
-                   , refName :: String
-                   , topicSituations :: Situations}
