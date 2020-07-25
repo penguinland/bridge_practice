@@ -1,9 +1,7 @@
 module Topic(
   Situations  -- Note that constructors aren't public; use wrap instead.
 , choose
-, (<~)
 , wrap
-, base
 , Topic(..)
 ) where
 
@@ -43,31 +41,6 @@ instance (Situationable s, Randomizer r, RandomGen r) =>
     wrap f = SitFun (\g -> let (g', _) = make g in wrap (f g'))
 instance Situationable Situations where
     wrap = id
-
-
--- If you have a function that takes arguments and makes Situations, call base
--- with it to pass in options via (<~). Example syntax:
--- sits :: Situations
--- sits = wrap $ base makeSits <~ [opt1A, opt1B] <~ [opt2A, opt2B, opt2C]
-base :: Optionable o => (a -> o) -> (StdGen -> a -> o)
-base = const
-
-class Optionable o where
-    (<~) :: (StdGen -> a -> o) -> [a] -> (StdGen -> o)
-
-instance Optionable S.Situation where
-    (f <~ as) g = let
-        (n, g') = next g
-        i = n `mod` length as :: Int
-      in
-        f g' (as !! i)
-
-instance (Optionable s) => Optionable (b -> s) where
-    (f <~ as) g = let
-        (n, g') = next g
-        i = n `mod` length as :: Int
-      in
-        f g' (as !! i)
 
 
 data Topic = Topic {topicName :: String

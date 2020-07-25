@@ -1,10 +1,10 @@
 module Topics.PrecisionOpeners(topic) where
 
 import Output(output)
-import Topic(Topic(..), base, (<~), wrap, Situations)
+import Topic(Topic(..), wrap, Situations)
 import Auction(forbid, pointRange, suitLength, minSuitLength, {-maxSuitLength,-}
                Action, balancedHand, constrain)
-import Situation(situation)
+import Situation(situation, base, (<~))
 import SituationHelpers(stdWrap, wrapVulDlr)
 import qualified Terminology as T
 import qualified CommonBids as B

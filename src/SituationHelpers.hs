@@ -5,8 +5,8 @@ module SituationHelpers (
 
 import System.Random(StdGen)
 
-import Situation(Situation)
-import Topic(base, (<~), wrap, Situations)
+import Situation(Situation, base, (<~))
+import Topic(wrap, Situations)
 import Terminology(Direction, allDirections, Vulnerability, allVulnerabilities)
 
 
