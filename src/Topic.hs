@@ -2,6 +2,8 @@ module Topic(
   Situations  -- Note that constructors aren't public; use wrap instead.
 , choose
 , wrap
+, wrapVulDlr
+, stdWrap
 , Topic(..)
 ) where
 
@@ -10,7 +12,8 @@ import Data.Bifunctor(first)
 import System.Random(RandomGen, StdGen, next, split, mkStdGen)
 
 import Random(use, pickItem)
-import qualified Situation as S
+import Situation(Situation, base, (<~))
+import Terminology(Direction, allDirections, Vulnerability, allVulnerabilities)
 
 
 -- This is solely to get Haskell to figure out that the Situationable typeclass
@@ -23,7 +26,7 @@ instance Randomizer StdGen where
     make = first mkStdGen . next
 
 
-data Situations = RawSit S.Situation
+data Situations = RawSit Situation
                 | SitList [Situations]
                 | SitFun (StdGen -> Situations)
 
@@ -31,7 +34,7 @@ data Situations = RawSit S.Situation
 class Situationable s where
     wrap :: s -> Situations
 
-instance Situationable S.Situation where
+instance Situationable Situation where
     wrap = RawSit
 instance (Situationable s) => Situationable [s] where
     wrap = SitList . map wrap
@@ -43,12 +46,22 @@ instance Situationable Situations where
     wrap = id
 
 
+-- The most common Situation parameters are letting anyone be the dealer and
+-- letting anyone be vulnerable. Make some syntactic sugar for that.
+wrapVulDlr :: (StdGen -> Vulnerability -> Direction -> Situation) -> Situations
+wrapVulDlr sit = wrap $ sit <~ allVulnerabilities <~ allDirections
+-- and more syntactic sugar for a Situation that is _only_ parameterized on
+-- those features.
+stdWrap :: (Vulnerability -> Direction -> Situation) -> Situations
+stdWrap = wrapVulDlr . base
+
+
 data Topic = Topic {topicName :: String
                    , refName :: String
                    , topicSituations :: Situations}
 
 
-choose :: Topic -> State StdGen S.Situation
+choose :: Topic -> State StdGen Situation
 choose = choose' . topicSituations
   where
     choose' (RawSit s)   = return s

@@ -1,11 +1,10 @@
 module Topics.JacobyTransfers(topic) where
 
 import Output(output, Punct(NDash))
-import Topic(Topic(..), Situations, wrap)
+import Topic(Topic(..), Situations, wrap, stdWrap, wrapVulDlr)
 import Auction(forbid, makeCall, makePass, pointRange, suitLength,
                minSuitLength, Action, balancedHand, constrain)
 import Situation(situation, base, (<~))
-import SituationHelpers(stdWrap, wrapVulDlr)
 import qualified Terminology as T
 import qualified CommonBids as B
 
