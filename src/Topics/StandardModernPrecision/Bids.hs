@@ -7,13 +7,27 @@ module Topics.StandardModernPrecision.Bids(
   , b2C
   , b2D
   , b2N
+  , b1C1D
+  , b1C1H
+  , b1C1S
+  , b1C1N
+  , b1C2C
+  , b1C2D
+  , b1C2H
+  , b1C2S
+  , bP1C1H
+  , bP1C1S
+  , bP1C1N
+  , bP1C2C
+  , bP1C2D
+  , bP1C2S  -- Note that the auction P-1C-2H cannot occur!
   , smpWrapN
   , smpWrapS
 ) where
 
 import Topic(wrap, Situations)
-import Auction(forbid, pointRange, minSuitLength, Action, balancedHand,
-               constrain, makeCall)
+import Auction(forbid, pointRange, minSuitLength, maxSuitLength, Action,
+               balancedHand, constrain, makeCall)
 import Situation(Situation, base, (<~))
 import qualified Terminology as T
 
@@ -27,7 +41,9 @@ firstSeatOpener :: Action
 firstSeatOpener = do
     pointRange 11 40  -- Open any good 10 count, too. but that's hard to codify
 
-
+------------------
+-- Opening bids --
+------------------
 b1N :: Action
 b1N = do
     pointRange 14 16
@@ -90,8 +106,102 @@ b1D = do
     makeCall $ T.Bid 1 T.Diamonds
 
 
--- syntactic sugar: Always make opener be in first seat, until we figure out how
--- to open in other seats.
+---------------------
+-- Responses to 1C --
+---------------------
+b1C1D :: Action
+b1C1D = pointRange 0 7
+
+_gameForcing :: Action
+_gameForcing = pointRange 8 11
+
+_slamInterest :: Action
+_slamInterest = pointRange 12 40
+
+
+b1C1H :: Action
+b1C1H = _gameForcing
+
+
+b1C1S :: Action
+b1C1S = do
+    _slamInterest
+    minSuitLength T.Spades 5
+
+
+b1C2C :: Action
+b1C2C = do
+    _slamInterest
+    minSuitLength T.Clubs 5
+
+
+b1C2D :: Action
+b1C2D = do
+    _slamInterest
+    minSuitLength T.Diamonds 5
+
+
+b1C2H :: Action
+b1C2H = do
+    _slamInterest
+    minSuitLength T.Hearts 5
+
+
+b1C1N :: Action
+b1C1N = do
+    _slamInterest
+    balancedHand
+    sequence_ . map (\s -> maxSuitLength s 4) $ T.allSuits
+
+
+b1C2S :: Action
+b1C2S = do
+    _slamInterest
+    constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
+
+
+bP1C1H :: Action
+bP1C1H = do
+    _gameForcing
+    minSuitLength T.Hearts 5
+
+
+bP1C1S :: Action
+bP1C1S = do
+    _gameForcing
+    minSuitLength T.Spades 5
+
+
+bP1C2C :: Action
+bP1C2C = do
+    _gameForcing
+    minSuitLength T.Clubs 5
+
+
+bP1C2D :: Action
+bP1C2D = do
+    _gameForcing
+    minSuitLength T.Diamonds 5
+
+
+bP1C1N :: Action
+bP1C1N = do
+    _gameForcing
+    balancedHand
+    sequence_ . map (\s -> maxSuitLength s 4) $ T.allSuits
+
+
+bP1C2S :: Action
+bP1C2S = do
+    _gameForcing
+    constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
+
+
+-------------------------------
+-- Situation syntactic sugar --
+-------------------------------
+-- Always make opener be in first seat, until we figure out how to open in other
+-- seats.
 -- TODO: change this to let other folks be dealer, too
 smpWrapS :: (T.Vulnerability -> T.Direction -> Situation) -> Situations
 smpWrapS sit = wrap $ base sit <~ T.allVulnerabilities <~ [T.South]
