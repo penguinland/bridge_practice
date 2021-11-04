@@ -88,7 +88,7 @@ oneDiamond = let
         "With opening strength but not enough for a strong " ++
         output fmt (T.Bid 1 T.Clubs) ++ " and no 5-card major or 6-card\
       \ club suit, open a diamond. Partner will announce that it ``could\
-      \ be short.''"
+      \ be as short as 2.''"
   in
     stdWrap $ situation "1D" action (T.Bid 1 T.Diamonds) explanation
 
