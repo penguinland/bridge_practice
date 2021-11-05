@@ -2,8 +2,8 @@ module Topics.StandardModernPrecision.ResponsesToStrongClub(topic) where
 
 import Output(output)
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, makePass)
-import Situation(situation)--, base, (<~))
+import Auction(withholdBid, makePass, maxSuitLength)
+import Situation(situation, base, (<~))
 import CommonBids(cannotPreempt)
 import qualified Terminology as T
 import qualified Topics.StandardModernPrecision.Bids as B
@@ -19,8 +19,7 @@ oneDiamond = let
         withholdBid B.b1C1D
     explanation fmt =
         "When game might not be possible opposite a random 17 HCP, start\
-      \ with " ++ output fmt (T.Bid 1 T.Diamonds) ++ ". This is the start of\
-      \ MaFiA."
+      \ with " ++ output fmt (T.Bid 1 T.Diamonds) ++ ". This initiates MaFiA."
   in
     B.smpWrapN $ situation "1D" action (T.Bid 1 T.Diamonds) explanation
 
@@ -36,26 +35,10 @@ oneHeart = let
     explanation fmt =
         "You've got a game-forcing hand but slam is unlikely. With 8 to 11 HCP,\
       \ bid " ++ output fmt (T.Bid 1 T.Hearts) ++ " to show this kind of hand.\
-      \ Subsequent bids are natural 5-card suits, not MaFiA."
+      \ Subsequent bids are natural 5-card suits (and later 4-card suits), not\
+      \ MaFiA."
   in
     B.smpWrapN $ situation "1H" action (T.Bid 1 T.Hearts) explanation
-
-
-oneSpade :: Situations
-oneSpade = let
-    action = do
-        B.firstSeatOpener
-        B.b1C
-        cannotPreempt
-        makePass
-        withholdBid B.b1C1S
-    explanation fmt =
-        "You've got at least mild slam interest with 12+ HCP, and a 5+ card\
-      \ major. Bid a natural " ++ output fmt (T.Bid 1 T.Spades) ++ ", and we'll\
-      \ go from there. Once we find a trump fit, we'll start control bidding.\
-      \ Subsequent bids are natural 5-card suits, not MaFiA."
-  in
-    B.smpWrapN $ situation "1S" action (T.Bid 1 T.Spades) explanation
 
 
 oneNotrump :: Situations
@@ -75,6 +58,36 @@ oneNotrump = let
       \ it, at least until we're more practiced with SMP."
   in
     B.smpWrapN $ situation "1N" action (T.Bid 1 T.Notrump) explanation
+
+
+slamSingleSuit :: Situations
+slamSingleSuit = let
+    finalAction T.Clubs    = B.b1C2C
+    finalAction T.Diamonds = B.b1C2D
+    finalAction T.Hearts   = B.b1C2H
+    finalAction T.Spades   = B.b1C1S
+    finalAction _          = error "This should never happen"
+
+    sit strain = let
+        level = if strain == T.Spades then 1 else 2
+        action = do
+            B.firstSeatOpener
+            B.b1C
+            cannotPreempt
+            makePass
+            sequence_ . map (flip maxSuitLength 4) . filter (/= strain) $
+                T.allSuits
+            withholdBid . finalAction $ strain
+        explanation fmt =
+            "You've got at least mild slam interest with 12+ HCP, and a 5+ card\
+          \ suit. Bid a natural " ++ output fmt (T.Bid level strain) ++ ",\
+          \ and we'll go from there. Once we find a trump fit, we'll start\
+          \ control bidding. Subsequent bids are natural 5-card (and later\
+          \ 4-card) suits, not MaFiA."
+      in
+        situation "Slam" action (T.Bid level strain) explanation
+  in
+    wrap $ base sit <~ T.allSuits <~ T.allVulnerabilities <~ [T.North]
 
 
 twoSpades :: Situations
@@ -102,18 +115,12 @@ topic = Topic "SMP immediate responses to 1C" "SMP1C" situations
   where
     situations = wrap [ oneDiamond
                       , oneHeart
-                      , oneSpade
                       , oneNotrump
+                      , slamSingleSuit
                       , twoSpades
 {-
-                      , twoClubs
-                      , twoDiamonds
-                      , twoHearts
-                      , passOneHeart
-                      , passOneSpade
+                      , passSlamSingleSuit
                       , passOneNotrump
-                      , passTwoClubs
-                      , passTwoDiamonds
                       , passTwoSpades
 -}
                       ]
