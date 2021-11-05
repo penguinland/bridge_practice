@@ -35,8 +35,6 @@ import qualified Terminology as T
 -- Because we're not using the Rule of 20 and its ilk, we're going to skip the
 -- auctions that start with other folks passing for now, and maybe come back to
 -- those later.
--- TODO: figure out how to practice the auctions that start P-1C-1S (with 1S
--- being game forcing and natural 5-card spade suit, rather than slam forcing)
 firstSeatOpener :: Action
 firstSeatOpener = do
     pointRange 11 40  -- Open any good 10 count, too. but that's hard to codify
