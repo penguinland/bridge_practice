@@ -2,7 +2,7 @@ module Topics.StandardModernPrecision.ResponsesToStrongClub(topic) where
 
 import Output(output)
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, forbid, makePass, maxSuitLength)
+import Auction(withholdBid, forbid, maxSuitLength, makePass)
 import Situation(situation, base, (<~))
 import CommonBids(cannotPreempt)
 import qualified Terminology as T
@@ -14,8 +14,7 @@ oneDiamond = let
     action = do
         B.firstSeatOpener
         B.b1C
-        cannotPreempt
-        makePass
+        B.oppsPass
         withholdBid B.b1C1D
     explanation fmt =
         "When game might not be possible opposite a random 17 HCP, start\
@@ -29,8 +28,7 @@ oneHeart = let
     action = do
         B.firstSeatOpener
         B.b1C
-        cannotPreempt
-        makePass
+        B.oppsPass
         withholdBid B.b1C1H
     explanation fmt =
         "You've got a game-forcing hand but slam is unlikely. With 8 to 11 HCP,\
@@ -46,8 +44,7 @@ oneNotrump = let
     action = do
         B.firstSeatOpener
         B.b1C
-        cannotPreempt
-        makePass
+        B.oppsPass
         withholdBid B.b1C1N
     explanation fmt =
         "You've got at least mild slam interest with 12+ HCP, and a balanced\
@@ -73,8 +70,7 @@ slamSingleSuit = let
         action = do
             B.firstSeatOpener
             B.b1C
-            cannotPreempt
-            makePass
+            B.oppsPass
             sequence_ . map (flip maxSuitLength 4) . filter (/= strain) $
                 T.allSuits
             withholdBid . finalAction $ strain
@@ -95,8 +91,7 @@ twoSpades = let
     action = do
         B.firstSeatOpener
         B.b1C
-        cannotPreempt
-        makePass
+        B.oppsPass
         withholdBid B.b1C2S
     explanation fmt =
         "You've got at least mild slam interest with 12+ HCP, but an awkward\
@@ -122,14 +117,13 @@ passGameSingleSuit = let
         level = if any (== strain) T.majorSuits then 1 else 2
         action = do
             forbid B.firstSeatOpener
+            cannotPreempt
             makePass
             forbid B.firstSeatOpener
-            cannotPreempt
-            makePass
+            B.oppsPass
             B.firstSeatOpener
             B.b1C
-            cannotPreempt
-            makePass
+            B.oppsPass
             sequence_ . map (flip maxSuitLength 4) . filter (/= strain) $
                 T.allSuits
             withholdBid . finalAction $ strain
@@ -149,14 +143,13 @@ passOneNotrump :: Situations
 passOneNotrump = let
     action = do
         forbid B.firstSeatOpener
+        cannotPreempt
         makePass
         forbid B.firstSeatOpener
-        cannotPreempt
-        makePass
+        B.oppsPass
         B.firstSeatOpener
         B.b1C
-        cannotPreempt
-        makePass
+        B.oppsPass
         withholdBid B.bP1C1N
     explanation fmt =
         "You're a passed hand with game-forcing strength but no 5-card suit.\
@@ -174,14 +167,13 @@ passTwoSpades :: Situations
 passTwoSpades = let
     action = do
         forbid B.firstSeatOpener
+        cannotPreempt
         makePass
         forbid B.firstSeatOpener
-        cannotPreempt
-        makePass
+        B.oppsPass
         B.firstSeatOpener
         B.b1C
-        cannotPreempt
-        makePass
+        B.oppsPass
         withholdBid B.bP1C2S
     explanation fmt =
         "You're a passed hand with game-forcing strength, but an awkward\
