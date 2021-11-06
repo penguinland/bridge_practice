@@ -1,5 +1,6 @@
 module Topics.StandardModernPrecision.Bids(
     firstSeatOpener
+  , oppsPass
   , b1C
   , b1D
   , b1M
@@ -27,8 +28,9 @@ module Topics.StandardModernPrecision.Bids(
 
 import Topic(wrap, Situations)
 import Auction(forbid, pointRange, minSuitLength, maxSuitLength, Action,
-               balancedHand, constrain, makeCall)
+               balancedHand, constrain, makeCall, makePass)
 import Situation(Situation, base, (<~))
+import CommonBids(cannotPreempt)
 import qualified Terminology as T
 
 
@@ -38,6 +40,13 @@ import qualified Terminology as T
 firstSeatOpener :: Action
 firstSeatOpener = do
     pointRange 11 40  -- Open any good 10 count, too. but that's hard to codify
+
+
+oppsPass :: Action
+oppsPass = do
+    cannotPreempt
+    makePass
+
 
 ------------------
 -- Opening bids --
@@ -108,7 +117,9 @@ b1D = do
 -- Responses to 1C --
 ---------------------
 b1C1D :: Action
-b1C1D = pointRange 0 7
+b1C1D = do
+    pointRange 0 7
+    makeCall $ T.Bid 1 T.Diamonds
 
 _gameForcing :: Action
 _gameForcing = pointRange 8 11
@@ -118,31 +129,37 @@ _slamInterest = pointRange 12 40
 
 
 b1C1H :: Action
-b1C1H = _gameForcing
+b1C1H = do
+    _gameForcing
+    makeCall $ T.Bid 1 T.Hearts
 
 
 b1C1S :: Action
 b1C1S = do
     _slamInterest
     minSuitLength T.Spades 5
+    makeCall $ T.Bid 1 T.Spades
 
 
 b1C2C :: Action
 b1C2C = do
     _slamInterest
     minSuitLength T.Clubs 5
+    makeCall $ T.Bid 2 T.Clubs
 
 
 b1C2D :: Action
 b1C2D = do
     _slamInterest
     minSuitLength T.Diamonds 5
+    makeCall $ T.Bid 2 T.Diamonds
 
 
 b1C2H :: Action
 b1C2H = do
     _slamInterest
     minSuitLength T.Hearts 5
+    makeCall $ T.Bid 2 T.Hearts
 
 
 b1C1N :: Action
@@ -150,36 +167,42 @@ b1C1N = do
     _slamInterest
     balancedHand
     sequence_ . map (\s -> maxSuitLength s 4) $ T.allSuits
+    makeCall $ T.Bid 1 T.Notrump
 
 
 b1C2S :: Action
 b1C2S = do
     _slamInterest
     constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
+    makeCall $ T.Bid 2 T.Spades
 
 
 bP1C1H :: Action
 bP1C1H = do
     _gameForcing
     minSuitLength T.Hearts 5
+    makeCall $ T.Bid 1 T.Hearts
 
 
 bP1C1S :: Action
 bP1C1S = do
     _gameForcing
     minSuitLength T.Spades 5
+    makeCall $ T.Bid 1 T.Spades
 
 
 bP1C2C :: Action
 bP1C2C = do
     _gameForcing
     minSuitLength T.Clubs 5
+    makeCall $ T.Bid 2 T.Clubs
 
 
 bP1C2D :: Action
 bP1C2D = do
     _gameForcing
     minSuitLength T.Diamonds 5
+    makeCall $ T.Bid 2 T.Diamonds
 
 
 bP1C1N :: Action
@@ -187,12 +210,14 @@ bP1C1N = do
     _gameForcing
     balancedHand
     sequence_ . map (\s -> maxSuitLength s 4) $ T.allSuits
+    makeCall $ T.Bid 1 T.Notrump
 
 
 bP1C2S :: Action
 bP1C2S = do
     _gameForcing
     constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
+    makeCall $ T.Bid 2 T.Spades
 
 
 -------------------------------
