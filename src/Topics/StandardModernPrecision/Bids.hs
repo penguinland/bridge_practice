@@ -41,11 +41,13 @@ module Topics.StandardModernPrecision.Bids(
   , smpWrapS
 ) where
 
+import System.Random(StdGen)
+
 import Topic(wrap, Situations)
 import Auction(forbid, pointRange, minSuitLength, maxSuitLength, Action,
                balancedHand, constrain, makeCall, makePass, alternatives,
                SuitLengthComparator(..), compareSuitLength)
-import Situation(Situation, base, (<~))
+import Situation(Situation, (<~))
 import CommonBids(cannotPreempt)
 import qualified Terminology as T
 
@@ -378,8 +380,8 @@ b1C1D2D = do
 -- Always make opener be in first seat, until we figure out how to open in other
 -- seats.
 -- TODO: change this to let other folks be dealer, too
-smpWrapS :: (T.Vulnerability -> T.Direction -> Situation) -> Situations
-smpWrapS sit = wrap $ base sit <~ T.allVulnerabilities <~ [T.South]
+smpWrapS :: (StdGen -> T.Vulnerability -> T.Direction -> Situation) -> Situations
+smpWrapS sit = wrap $ sit <~ T.allVulnerabilities <~ [T.South]
 
-smpWrapN :: (T.Vulnerability -> T.Direction -> Situation) -> Situations
-smpWrapN sit = wrap $ base sit <~ T.allVulnerabilities <~ [T.North]
+smpWrapN :: (StdGen -> T.Vulnerability -> T.Direction -> Situation) -> Situations
+smpWrapN sit = wrap $ sit <~ T.allVulnerabilities <~ [T.North]
