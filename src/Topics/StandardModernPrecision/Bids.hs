@@ -9,6 +9,7 @@ module Topics.StandardModernPrecision.Bids(
   , b2C
   , b2D
   , b2N
+  , b3N
   -- Responses to 1C
   , b1C1D
   , b1C1H
@@ -83,11 +84,17 @@ b2N = do
     makeCall $ T.Bid 2 T.Notrump
 
 
+b3N :: Action
+b3N = do
+    pointRange 25 40  -- Technically only 25-27, but close enough
+    balancedHand
+    makeCall $ T.Bid 3 T.Notrump
+
+
 b1C :: Action
 b1C = do
     pointRange 16 40
-    forbid b1N
-    forbid b2N
+    sequence_ . map forbid $ [b1N, b2N, b3N]
     makeCall $ T.Bid 1 T.Clubs
 
 
@@ -258,58 +265,38 @@ b1C1D2N = do
     makeCall $ T.Bid 2 T.Notrump
 
 
-b1C1D2H :: Action
-b1C1D2H = do
+_makeJumpBid :: Int -> T.Suit -> Action
+_makeJumpBid level suit = do
     pointRange 22 40
     forbid b1C1D2N
-    minSuitLength T.Hearts 5
+    -- Forbidding balanced hands should be redundant: the 1C bid forbade a 2N or
+    -- 3N opener, the point range forbids a 1N rebid, and we've just forbidden a
+    -- 2N rebid. but it can't hurt to make this constraint explicit (for
+    -- instance, I had not noticed until adding it that we hadn't precluded a 3N
+    -- opener in the 1C bid).
+    forbid balancedHand
+    minSuitLength suit 5
     -- This should be your longest suit
     -- TODO: if you're 5-5, which suit do you bid first?
-    sequence_ . map (forbid . compareSuitLength T.Hearts Shorter) $
-        [T.Clubs, T.Diamonds, T.Spades]
-    makeCall $ T.Bid 2 T.Hearts
+    sequence_ . map (forbid . compareSuitLength suit Shorter) .
+                filter (/= suit) $ T.allSuits
+    makeCall $ T.Bid level suit
+
+
+b1C1D2H :: Action
+b1C1D2H = _makeJumpBid 2 T.Hearts
 
 
 b1C1D2S :: Action
-b1C1D2S = do
-    pointRange 22 40
-    forbid b1C1D2N
-    forbid b1C1D2H
-    minSuitLength T.Spades 5
-    -- This should be your longest suit
-    -- TODO: if you're 5-5, which suit do you bid first?
-    sequence_ . map (forbid . compareSuitLength T.Spades Shorter) $
-        [T.Clubs, T.Diamonds, T.Hearts]
-    makeCall $ T.Bid 2 T.Hearts
+b1C1D2S = _makeJumpBid 2 T.Spades
 
 
 b1C1D3C :: Action
-b1C1D3C = do
-    pointRange 22 40
-    forbid b1C1D2N
-    forbid b1C1D2H
-    forbid b1C1D2S
-    minSuitLength T.Clubs 5
-    -- This should be your longest suit
-    -- TODO: if you're 5-5, which suit do you bid first?
-    sequence_ . map (forbid . compareSuitLength T.Clubs Shorter) $
-        [T.Diamonds, T.Hearts, T.Spades]
-    makeCall $ T.Bid 3 T.Clubs
+b1C1D3C = _makeJumpBid 3 T.Clubs
 
 
 b1C1D3D :: Action
-b1C1D3D = do
-    pointRange 22 40
-    forbid b1C1D2N
-    forbid b1C1D2H
-    forbid b1C1D2S
-    forbid b1C1D3C
-    minSuitLength T.Diamonds 5
-    -- This should be your longest suit
-    -- TODO: if you're 5-5, which suit do you bid first?
-    sequence_ . map (forbid . compareSuitLength T.Diamonds Shorter) $
-        [T.Clubs, T.Hearts, T.Spades]
-    makeCall $ T.Bid 3 T.Diamonds
+b1C1D3D = _makeJumpBid 3 T.Diamonds
 
 
 _notGameForcing :: Action
