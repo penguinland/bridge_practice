@@ -3,7 +3,7 @@ module Topics.StandardModernPrecision.Mafia(topic) where
 import Output(output)
 import Topic(Topic(..), wrap, Situations)
 import Auction(withholdBid, forbid, {-makePass, maxSuitLength, -} minSuitLength, suitLength,
-               {-Action,-} balancedHand, pointRange)
+               {-Action,-} balancedHand, pointRange, SuitLengthComparator(..), compareSuitLength)
 import Situation(situation, base, (<~))
 --import CommonBids(cannotPreempt)
 import qualified Terminology as T
@@ -96,9 +96,46 @@ twoMinorMinors = let
            \ a 4-card major, rebid your long minor. Sometimes this minor is\
            \ only 5 cards, if you're 5-4 in the minors."
       in
-        situation "2m" action (T.Bid 2 minorSuit) explanation
+        situation "2mm" action (T.Bid 2 minorSuit) explanation
   in
     B.smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
+
+
+equalMinors :: Situations
+equalMinors = let
+    sit = let
+        action = do
+            B.startOfMafia
+            forbid balancedHand
+            compareSuitLength T.Clubs Equal T.Diamonds
+            withholdBid B.b1C1D2D
+        explanation _ =
+            "With an unbalanced hand that isn't game forcing and doesn't have\
+           \ a 4-card major, rebid your long minor. When the minors are the\
+           \ same length, bid diamonds first so that you can bid clubs later\
+           \ without reversing."
+      in
+        situation "2me" action (T.Bid 2 T.Diamonds) explanation
+  in
+    B.smpWrapS $ base sit
+
+
+bothMajorsLongSpades :: Situations
+bothMajorsLongSpades = let
+    sit = let
+        action = do
+            B.startOfMafia
+            forbid balancedHand
+            minSuitLength T.Hearts 4
+            compareSuitLength T.Spades Longer T.Hearts
+        explanation fmt =
+            "With both majors but longer spades, start by bidding " ++
+            output fmt (T.Bid 1 T.Spades) ++ ". You can then bid the hearts\
+           \ later without reversing."
+      in
+        situation "2BS" action (T.Bid 1 T.Spades) explanation
+  in
+    B.smpWrapS $ base sit
 
 
 topic :: Topic
@@ -107,9 +144,9 @@ topic = Topic "MaFiA" "MaFiA" situations
     situations = wrap [ notrump
                       , wrap [oneMajor, oneMajorMinor]
                       , wrap [twoMinorSingle, twoMinorMinors]
-{-
                       -- Unusual cases
                       , wrap [equalMinors, bothMajorsLongSpades]
+{-
                       , jumpBid
 -}
                       ]
