@@ -10,63 +10,69 @@ import qualified Terminology as T
 import qualified Topics.StandardModernPrecision.Bids as B
 
 
-oneNotrump :: Situations
-oneNotrump = let
-    action = do
-        B.startOfMafia
-        balancedHand
-        pointRange 17 18
-    explanation fmt =
-        "With 17-18 HCP and a balanced hand, rebid " ++
-        output fmt (T.Bid 1 T.Notrump) ++ ". Even if you have a 5-card major,\
-      \ the comfort of knowing that systems are on is preferable."
+notrump :: Situations
+notrump = let
+    sit (minHcp, maxHcp, level) = let
+        action = do
+            B.startOfMafia
+            balancedHand
+            pointRange minHcp maxHcp
+            -- NOTE: we're not using B.b1C1D1N or B.b1C1D2N here. Maybe we
+            -- should be? Not sure.
+        explanation fmt =
+            "With " ++ show minHcp ++ "--" ++ show maxHcp ++ " HCP and a\
+           \ balanced hand, rebid " ++ output fmt (T.Bid level T.Notrump) ++
+            ". Even if you have a 5-card major, the comfort of knowing that\
+           \ systems are on is preferable."
+      in
+        situation "xN" action (T.Bid level T.Notrump) explanation
   in
-    B.smpWrapS . base $ situation "1N" action (T.Bid 1 T.Notrump) explanation
+    B.smpWrapS $ base sit <~ [(17, 18, 1), (22, 24, 2)]
 
 
 oneHeart :: Situations
 oneHeart = let
-    sit = let
+    sit (majorSuit, bid) = let
         action = do
             B.startOfMafia
             forbid balancedHand
-            withholdBid B.b1C1D1H
+            withholdBid bid
         explanation _ =
             "With an unbalanced hand that isn't game forcing, bid a 4-card\
-           \ heart suit if you have one."
+           \ major if you have one."
       in
-        situation "1H" action (T.Bid 1 T.Hearts) explanation
+        situation "1M" action (T.Bid 1 majorSuit) explanation
   in
-    B.smpWrapS . base $ sit
+    B.smpWrapS $ base sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
 
 
-oneHeartMinor :: Situations
-oneHeartMinor = let
-    sit minorSuit = let
+oneMajorMinor :: Situations
+oneMajorMinor = let
+    sit (majorSuit, bid) minorSuit = let
         action = do
             B.startOfMafia
             forbid balancedHand
             minSuitLength minorSuit 5
-            suitLength T.Hearts 4
-            withholdBid B.b1C1D1H
+            suitLength majorSuit 4
+            withholdBid bid
         explanation _ =
             "With an unbalanced hand that isn't game forcing, bid a 4-card\
-           \ heart suit if you have one. This holds even if you've got a\
-           \ longer minor."
+           \ major if you have one. This holds even if you've got a longer\
+           \  minor (MAjors FIrst Always)."
       in
-        situation "1Hm" action (T.Bid 1 T.Hearts) explanation
+        situation "1Mm" action (T.Bid 1 majorSuit) explanation
   in
-    B.smpWrapS $ base sit <~ T.minorSuits
+    B.smpWrapS $ base sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
+                          <~ T.minorSuits
 
 
 topic :: Topic
 topic = Topic "SMP immediate responses to 1C" "SMP1C" situations
   where
-    situations = wrap [ oneNotrump
-                      , wrap [oneHeartMinor, oneHeart]--, oneSpadeMinor, oneSpade]
+    situations = wrap [ notrump
+                      , wrap [oneMajorMinor, oneHeart]
 {-
                       , wrap [twoMinorSingle, twoMinorMinors]
-                      , twoNotrump
                       , jumpBid
 -}
                       ]
