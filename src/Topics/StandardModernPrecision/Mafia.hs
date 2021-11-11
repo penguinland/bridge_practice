@@ -30,8 +30,8 @@ notrump = let
     B.smpWrapS $ base sit <~ [(17, 18, 1), (22, 24, 2)]
 
 
-oneHeart :: Situations
-oneHeart = let
+oneMajor :: Situations
+oneMajor = let
     sit (majorSuit, bid) = let
         action = do
             B.startOfMafia
@@ -58,7 +58,7 @@ oneMajorMinor = let
         explanation _ =
             "With an unbalanced hand that isn't game forcing, bid a 4-card\
            \ major if you have one. This holds even if you've got a longer\
-           \  minor (MAjors FIrst Always)."
+           \ minor (MAjors FIrst Always)."
       in
         situation "1Mm" action (T.Bid 1 majorSuit) explanation
   in
@@ -67,10 +67,10 @@ oneMajorMinor = let
 
 
 topic :: Topic
-topic = Topic "SMP immediate responses to 1C" "SMP1C" situations
+topic = Topic "MaFiA" "MaFiA" situations
   where
     situations = wrap [ notrump
-                      , wrap [oneMajorMinor, oneHeart]
+                      , wrap [oneMajor, oneMajorMinor]--, oneHeartLongSpades]
 {-
                       , wrap [twoMinorSingle, twoMinorMinors]
                       , jumpBid
