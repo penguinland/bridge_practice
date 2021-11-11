@@ -4,7 +4,7 @@ import Output(output)
 import Topic(Topic(..), wrap, Situations)
 import Auction(withholdBid, forbid, {-makePass, maxSuitLength, -} minSuitLength, suitLength,
                {-Action,-} balancedHand, pointRange)
-import Situation(situation)--, base, (<~))
+import Situation(situation, base, (<~))
 --import CommonBids(cannotPreempt)
 import qualified Terminology as T
 import qualified Topics.StandardModernPrecision.Bids as B
@@ -21,7 +21,7 @@ oneNotrump = let
         output fmt (T.Bid 1 T.Notrump) ++ ". Even if you have a 5-card major,\
       \ the comfort of knowing that systems are on is preferable."
   in
-    B.smpWrapS $ situation "1N" action (T.Bid 1 T.Notrump) explanation
+    B.smpWrapS . base $ situation "1N" action (T.Bid 1 T.Notrump) explanation
 
 
 oneHeart :: Situations
@@ -37,7 +37,7 @@ oneHeart = let
       in
         situation "1H" action (T.Bid 1 T.Hearts) explanation
   in
-    B.smpWrapS sit
+    B.smpWrapS . base $ sit
 
 
 oneHeartMinor :: Situations
@@ -47,7 +47,7 @@ oneHeartMinor = let
             B.startOfMafia
             forbid balancedHand
             minSuitLength minorSuit 5
-            suitLength T.Hearts 5
+            suitLength T.Hearts 4
             withholdBid B.b1C1D1H
         explanation _ =
             "With an unbalanced hand that isn't game forcing, bid a 4-card\
@@ -56,7 +56,7 @@ oneHeartMinor = let
       in
         situation "1Hm" action (T.Bid 1 T.Hearts) explanation
   in
-    B.smpWrapS $ sit T.Clubs
+    B.smpWrapS $ base sit <~ T.minorSuits
 
 
 topic :: Topic

@@ -20,7 +20,7 @@ oneDiamond = let
         "When game might not be possible opposite a random 17 HCP, start\
       \ with " ++ output fmt (T.Bid 1 T.Diamonds) ++ ". This initiates MaFiA."
   in
-    B.smpWrapN $ situation "1D" action (T.Bid 1 T.Diamonds) explanation
+    B.smpWrapN . base $ situation "1D" action (T.Bid 1 T.Diamonds) explanation
 
 
 oneHeart :: Situations
@@ -36,7 +36,7 @@ oneHeart = let
       \ Subsequent bids are natural 5-card suits (and later 4-card suits), not\
       \ MaFiA."
   in
-    B.smpWrapN $ situation "1H" action (T.Bid 1 T.Hearts) explanation
+    B.smpWrapN . base $ situation "1H" action (T.Bid 1 T.Hearts) explanation
 
 
 oneNotrump :: Situations
@@ -54,7 +54,7 @@ oneNotrump = let
       \ contract: better to be familiar and easy to remember than right-side\
       \ it, at least until we're more practiced with SMP."
   in
-    B.smpWrapN $ situation "1N" action (T.Bid 1 T.Notrump) explanation
+    B.smpWrapN . base $ situation "1N" action (T.Bid 1 T.Notrump) explanation
 
 
 slamSingleSuit :: Situations
@@ -83,7 +83,7 @@ slamSingleSuit = let
       in
         situation "Slam" action (T.Bid level strain) explanation
   in
-    wrap $ base sit <~ T.allSuits <~ T.allVulnerabilities <~ [T.North]
+    B.smpWrapN $ base sit <~ T.allSuits
 
 
 twoSpades :: Situations
@@ -102,7 +102,7 @@ twoSpades = let
         output fmt (T.Bid 4 T.Clubs) ++ "/" ++
         output fmt (T.Bid 4 T.Diamonds) ++ "/RKC."
   in
-    B.smpWrapN $ situation "2S" action (T.Bid 2 T.Spades) explanation
+    B.smpWrapN . base $ situation "2S" action (T.Bid 2 T.Spades) explanation
 
 
 passGameSingleSuit :: Situations
@@ -136,7 +136,7 @@ passGameSingleSuit = let
       in
         situation "PG" action (T.Bid level strain) explanation
   in
-    wrap $ base sit <~ T.allSuits <~ T.allVulnerabilities <~ [T.South]
+    B.smpWrapS $ base sit <~ T.allSuits
 
 
 passOneNotrump :: Situations
@@ -160,7 +160,7 @@ passOneNotrump = let
       \ contract: better to be familiar and easy to remember than right-side\
       \ it, at least until we're more practiced with SMP."
   in
-    B.smpWrapS $ situation "P1N" action (T.Bid 1 T.Notrump) explanation
+    B.smpWrapS . base $ situation "P1N" action (T.Bid 1 T.Notrump) explanation
 
 
 passTwoSpades :: Situations
@@ -186,7 +186,7 @@ passTwoSpades = let
         -- TODO: not sure this explanation is right; revisit it after you
         -- understand 4C/4D/RKC correctly
   in
-    B.smpWrapS $ situation "P2S" action (T.Bid 2 T.Spades) explanation
+    B.smpWrapS . base $ situation "P2S" action (T.Bid 2 T.Spades) explanation
 
 
 -- TODO: figure out how two-suited hands show slam interest. Which suit do you
