@@ -133,9 +133,31 @@ bothMajorsLongSpades = let
             output fmt (T.Bid 1 T.Spades) ++ ". You can then bid the hearts\
            \ later without reversing."
       in
-        situation "2BS" action (T.Bid 1 T.Spades) explanation
+        situation "2MS" action (T.Bid 1 T.Spades) explanation
   in
     B.smpWrapS $ base sit
+
+
+jumpBid :: Situations
+jumpBid = let
+    sit (rawBid, bid) = let
+        action = do
+            B.startOfMafia
+            withholdBid bid
+        explanation fmt =
+            "With an unbalanced, single-suited hand that is strong enough to\
+           \ force to game, jump in your suit. Responder can treat this like\
+           \ the 2/1 sequence " ++
+            output fmt (T.Bid 2 T.Clubs) ++ "--" ++
+            output fmt (T.Bid 2 T.Diamonds) ++ "--" ++
+            output fmt rawBid ++ "."
+      in
+        situation "J1" action rawBid explanation
+  in
+    B.smpWrapS $ base sit <~ [ (T.Bid 2 T.Hearts,   B.b1C1D2H)
+                             , (T.Bid 2 T.Spades,   B.b1C1D2S)
+                             , (T.Bid 3 T.Clubs,    B.b1C1D3C)
+                             , (T.Bid 3 T.Diamonds, B.b1C1D3D)]
 
 
 topic :: Topic
@@ -145,8 +167,5 @@ topic = Topic "MaFiA" "MaFiA" situations
                       , wrap [oneMajor, oneMajorMinor]
                       , wrap [twoMinorSingle, twoMinorMinors]
                       -- Unusual cases
-                      , wrap [equalMinors, bothMajorsLongSpades]
-{-
-                      , jumpBid
--}
+                      , wrap [equalMinors, bothMajorsLongSpades, jumpBid]
                       ]
