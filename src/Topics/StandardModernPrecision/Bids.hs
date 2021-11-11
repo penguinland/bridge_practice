@@ -1,6 +1,7 @@
 module Topics.StandardModernPrecision.Bids(
     firstSeatOpener
   , oppsPass
+  -- Opening bids
   , b1C
   , b1D
   , b1M
@@ -8,6 +9,7 @@ module Topics.StandardModernPrecision.Bids(
   , b2C
   , b2D
   , b2N
+  -- Responses to 1C
   , b1C1D
   , b1C1H
   , b1C1S
@@ -22,13 +24,27 @@ module Topics.StandardModernPrecision.Bids(
   , bP1C2C
   , bP1C2D
   , bP1C2S  -- Note that the auction P-1C-2H cannot occur!
+  -- rebids after 1C-1D
+  , startOfMafia
+  , b1C1D1H
+  , b1C1D1S
+  , b1C1D1N
+  , b1C1D2C
+  , b1C1D2D
+  , b1C1D2H
+  , b1C1D2S
+  , b1C1D2N
+  , b1C1D3C
+  , b1C1D3D
+  -- syntactic sugar
   , smpWrapN
   , smpWrapS
 ) where
 
 import Topic(wrap, Situations)
 import Auction(forbid, pointRange, minSuitLength, maxSuitLength, Action,
-               balancedHand, constrain, makeCall, makePass)
+               balancedHand, constrain, makeCall, makePass, alternatives,
+               SuitLengthComparator(..), compareSuitLength)
 import Situation(Situation, base, (<~))
 import CommonBids(cannotPreempt)
 import qualified Terminology as T
@@ -218,6 +234,142 @@ bP1C2S = do
     _gameForcing
     constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
     makeCall $ T.Bid 2 T.Spades
+
+
+-----------
+-- MaFiA --
+-----------
+startOfMafia :: Action
+startOfMafia = do
+    firstSeatOpener
+    b1C
+    oppsPass
+    b1C1D
+    oppsPass
+
+
+-- Do the game-forcing bids first
+b1C1D2N :: Action
+b1C1D2N = do
+    pointRange 22 24
+    balancedHand
+    makeCall $ T.Bid 2 T.Notrump
+
+
+b1C1D2H :: Action
+b1C1D2H = do
+    pointRange 22 40
+    forbid b1C1D2N
+    minSuitLength T.Hearts 5
+    -- This should be your longest suit
+    -- TODO: if you're 5-5, which suit do you bid first?
+    sequence_ . map (forbid . compareSuitLength T.Hearts Shorter) $
+        [T.Clubs, T.Diamonds, T.Spades]
+    makeCall $ T.Bid 2 T.Hearts
+
+
+b1C1D2S :: Action
+b1C1D2S = do
+    pointRange 22 40
+    forbid b1C1D2N
+    forbid b1C1D2H
+    minSuitLength T.Spades 5
+    -- This should be your longest suit
+    -- TODO: if you're 5-5, which suit do you bid first?
+    sequence_ . map (forbid . compareSuitLength T.Spades Shorter) $
+        [T.Clubs, T.Diamonds, T.Hearts]
+    makeCall $ T.Bid 2 T.Hearts
+
+
+b1C1D3C :: Action
+b1C1D3C = do
+    pointRange 22 40
+    forbid b1C1D2N
+    forbid b1C1D2H
+    forbid b1C1D2S
+    minSuitLength T.Clubs 5
+    -- This should be your longest suit
+    -- TODO: if you're 5-5, which suit do you bid first?
+    sequence_ . map (forbid . compareSuitLength T.Clubs Shorter) $
+        [T.Diamonds, T.Hearts, T.Spades]
+    makeCall $ T.Bid 3 T.Clubs
+
+
+b1C1D3D :: Action
+b1C1D3D = do
+    pointRange 22 40
+    forbid b1C1D2N
+    forbid b1C1D2H
+    forbid b1C1D2S
+    forbid b1C1D3C
+    minSuitLength T.Diamonds 5
+    -- This should be your longest suit
+    -- TODO: if you're 5-5, which suit do you bid first?
+    sequence_ . map (forbid . compareSuitLength T.Diamonds Shorter) $
+        [T.Clubs, T.Hearts, T.Spades]
+    makeCall $ T.Bid 3 T.Diamonds
+
+
+_notGameForcing :: Action
+_notGameForcing = do
+    forbid b1C1D2N
+    forbid b1C1D2H
+    forbid b1C1D2S
+    forbid b1C1D3C
+    forbid b1C1D3D
+
+
+b1C1D1N :: Action
+b1C1D1N = do
+    pointRange 18 19
+    balancedHand
+    makeCall $ T.Bid 1 T.Notrump
+
+
+b1C1D1H :: Action
+b1C1D1H = do
+    forbid b1C1D1N
+    _notGameForcing
+    minSuitLength T.Hearts 4
+    makeCall $ T.Bid 1 T.Hearts
+
+
+b1C1D1S :: Action
+b1C1D1S = do
+    forbid b1C1D1N
+    forbid b1C1D1H
+    _notGameForcing
+    minSuitLength T.Spades 4
+    makeCall $ T.Bid 1 T.Spades
+
+
+b1C1D2C :: Action
+b1C1D2C = do
+    forbid b1C1D1N
+    forbid b1C1D1H
+    forbid b1C1D1S
+    _notGameForcing
+    -- clubs are at least as long as diamonds
+    forbid $ compareSuitLength T.Clubs Shorter T.Diamonds
+    alternatives [ minSuitLength T.Clubs 6
+                 , minSuitLength T.Clubs 5 >> minSuitLength T.Diamonds 4
+                 ]
+    makeCall $ T.Bid 2 T.Clubs
+
+
+b1C1D2D :: Action
+b1C1D2D = do
+    forbid b1C1D1N
+    forbid b1C1D1H
+    forbid b1C1D1S
+    forbid b1C1D2C
+    _notGameForcing
+    -- Diamonds must be longer than clubs: with equal lengths, bid clubs.
+    compareSuitLength T.Diamonds Longer T.Clubs
+    alternatives [ minSuitLength T.Diamonds 6
+                 , minSuitLength T.Diamonds 5 >> minSuitLength T.Clubs 4
+                 ]
+    makeCall $ T.Bid 2 T.Diamonds
 
 
 -------------------------------
