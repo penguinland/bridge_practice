@@ -66,13 +66,50 @@ oneMajorMinor = let
                           <~ T.minorSuits
 
 
+twoMinorSingle :: Situations
+twoMinorSingle = let
+    sit (minorSuit, bid) = let
+        action = do
+            B.startOfMafia
+            forbid balancedHand
+            minSuitLength minorSuit 6
+            withholdBid bid
+        explanation _ =
+            "With an unbalanced hand that isn't game forcing and doesn't have\
+           \ a 4-card major, rebid your long minor."
+      in
+        situation "2m" action (T.Bid 2 minorSuit) explanation
+  in
+    B.smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
+
+
+twoMinorMinors :: Situations
+twoMinorMinors = let
+    sit (minorSuit, bid) = let
+        action = do
+            B.startOfMafia
+            forbid balancedHand
+            suitLength minorSuit 5
+            withholdBid bid
+        explanation _ =
+            "With an unbalanced hand that isn't game forcing and doesn't have\
+           \ a 4-card major, rebid your long minor. Sometimes this minor is\
+           \ only 5 cards, if you're 5-4 in the minors."
+      in
+        situation "2m" action (T.Bid 2 minorSuit) explanation
+  in
+    B.smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
+
+
 topic :: Topic
 topic = Topic "MaFiA" "MaFiA" situations
   where
     situations = wrap [ notrump
-                      , wrap [oneMajor, oneMajorMinor]--, oneHeartLongSpades]
-{-
+                      , wrap [oneMajor, oneMajorMinor]
                       , wrap [twoMinorSingle, twoMinorMinors]
+{-
+                      -- Unusual cases
+                      , wrap [equalMinors, bothMajorsLongSpades]
                       , jumpBid
 -}
                       ]
