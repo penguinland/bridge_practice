@@ -351,8 +351,8 @@ b1C1D2C = do
     forbid b1C1D1H
     forbid b1C1D1S
     _notGameForcing
-    -- clubs are at least as long as diamonds
-    forbid $ compareSuitLength T.Clubs Shorter T.Diamonds
+    -- Clubs must be longer than diamonds: with equal lengths, bid diamonds.
+    compareSuitLength T.Clubs Longer T.Diamonds
     alternatives [ minSuitLength T.Clubs 6
                  , minSuitLength T.Clubs 5 >> minSuitLength T.Diamonds 4
                  ]
@@ -366,8 +366,8 @@ b1C1D2D = do
     forbid b1C1D1S
     forbid b1C1D2C
     _notGameForcing
-    -- Diamonds must be longer than clubs: with equal lengths, bid clubs.
-    compareSuitLength T.Diamonds Longer T.Clubs
+    -- diamonds are at least as long as clubs
+    forbid $ compareSuitLength T.Diamonds Shorter T.Clubs
     alternatives [ minSuitLength T.Diamonds 6
                  , minSuitLength T.Diamonds 5 >> minSuitLength T.Clubs 4
                  ]
