@@ -57,9 +57,9 @@ module Topics.StandardModernPrecision.Bids(
 import System.Random(StdGen)
 
 import Topic(wrap, Situations)
-import Auction(forbid, pointRange, minSuitLength, maxSuitLength, Action,
-               balancedHand, constrain, makeCall, makePass, alternatives,
-               SuitLengthComparator(..), compareSuitLength)
+import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
+               Action, balancedHand, constrain, makeCall, makePass,
+               alternatives, SuitLengthComparator(..), compareSuitLength)
 import Situation(Situation, (<~))
 import CommonBids(cannotPreempt)
 import qualified Terminology as T
@@ -376,7 +376,10 @@ b1C1D2D = do
 -- MaFiA rebids by responder --
 -------------------------------
 b1C1D1H2H :: Action
-b1C1D1H2H = minSuitLength T.Hearts 4
+b1C1D1H2H = do
+    minSuitLength T.Hearts 4
+    maxSuitLength T.Hearts 5
+    pointRange 0 4
 
 
 b1C1D1H1S :: Action
@@ -408,12 +411,15 @@ b1C1D1H2C = do
     forbid b1C1D1H2H
     forbid b1C1D1H1S
     forbid b1C1D1H1N
-    forbid b1C1D1H1D
+    forbid b1C1D1H2D
     pointRange 6 7  -- Redundant with forbidding a 1N rebid, but explicit
 
 
 b1C1D1S2S :: Action
-b1C1D1S2S = minSuitLength T.Spades 4
+b1C1D1S2S = do
+    minSuitLength T.Spades 4
+    maxSuitLength T.Spades 5
+    pointRange 0 4
 
 
 b1C1D1S2H :: Action
@@ -448,7 +454,7 @@ b1C1D1S2C = do
     forbid b1C1D1S2S
     forbid b1C1D1S2H
     forbid b1C1D1S1N
-    forbid b1C1D1S1D
+    forbid b1C1D1S2D
     pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
 
 
