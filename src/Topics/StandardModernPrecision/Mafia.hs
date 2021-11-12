@@ -161,7 +161,7 @@ jumpBid = let
 
 
 topic :: Topic
-topic = Topic "MaFiA" "MaFiA" situations
+topic = Topic "MaFiA bids by opener" "MaFiA" situations
   where
     situations = wrap [ notrump
                       , wrap [oneMajor, oneMajorMinor]
