@@ -9,8 +9,8 @@ import qualified Terminology as T
 import qualified Topics.StandardModernPrecision.Bids as B
 
 
-minimumSupport :: Situations
-minimumSupport = let
+minSupport :: Situations
+minSupport = let
     -- The type signature is to convince the compiler that we're not throwing
     -- away values from openerBid
     sit :: (Action, Action, T.Suit) -> T.Vulnerability -> T.Direction -> Situation
@@ -165,10 +165,12 @@ jumpBid = let
 topic :: Topic
 topic = Topic "MaFiA responses" "MafResp" situations
   where
-    situations = wrap [ minimumSupport
+    situations = wrap [ minSupport
 {-
-                      , wrap [brakesHearts, brakesSpades]
-                      , wrap [otherMajorHearts, otherMajorSpades]
+                      , maxSupportBalanced
+                      , maxSupportUnbalanced
+                      , brakes
+                      , otherMajor
                       , threeCardSupport
                       , maxNoMajors
 -}
