@@ -37,6 +37,18 @@ module Topics.StandardModernPrecision.Bids(
   , b1C1D2N
   , b1C1D3C
   , b1C1D3D
+  -- rebids after 1C-1D-1M
+  , b1C1D1H1S
+  , b1C1D1H1N
+  , b1C1D1H2C
+  , b1C1D1H2D
+  , b1C1D1H2H
+  , b1C1D1S1N
+  , b1C1D1S2C
+  , b1C1D1S2D
+  , b1C1D1S2H
+  , b1C1D1S2S
+  -- TODO: jumps and double jumps in MaFiA
   -- syntactic sugar
   , smpWrapN
   , smpWrapS
@@ -360,6 +372,85 @@ b1C1D2D = do
                  ]
     makeCall $ T.Bid 2 T.Diamonds
 
+-------------------------------
+-- MaFiA rebids by responder --
+-------------------------------
+b1C1D1H2H :: Action
+b1C1D1H2H = minSuitLength T.Hearts 4
+
+
+b1C1D1H1S :: Action
+b1C1D1H1S = do
+    forbid b1C1D1H2H
+    minSuitLength T.Spades 4
+
+
+b1C1D1H1N :: Action
+b1C1D1H1N = do
+    forbid b1C1D1H2H
+    forbid b1C1D1H1S
+    pointRange 0 5
+
+
+b1C1D1H2D :: Action
+b1C1D1H2D = do
+    forbid b1C1D1H2H
+    forbid b1C1D1H1S
+    forbid b1C1D1H1N
+    suitLength T.Hearts 3
+    -- This next line is redundant with forbidding a 1N rebid, but it's nice to
+    -- be explicit about it.
+    pointRange 6 7
+
+
+b1C1D1H2C :: Action
+b1C1D1H2C = do
+    forbid b1C1D1H2H
+    forbid b1C1D1H1S
+    forbid b1C1D1H1N
+    forbid b1C1D1H1D
+    pointRange 6 7  -- Redundant with forbidding a 1N rebid, but explicit
+
+
+b1C1D1S2S :: Action
+b1C1D1S2S = minSuitLength T.Spades 4
+
+
+b1C1D1S2H :: Action
+b1C1D1S2H = do
+    forbid b1C1D1S2S
+    pointRange 6 7
+    -- We need at least 5 hearts, since opener has at most 3 (unless they're
+    -- two-suited with both majors and longer spades, but that's rare and we'll
+    -- figure it out next bid anyway).
+    minSuitLength T.Hearts 5
+
+
+b1C1D1S1N :: Action
+b1C1D1S1N = do
+    forbid b1C1D1S2S
+    forbid b1C1D1S2H
+    -- Note that we might have 5+ hearts, but are too weak to show it.
+    pointRange 0 5
+
+
+b1C1D1S2D :: Action
+b1C1D1S2D = do
+    forbid b1C1D1S2S
+    forbid b1C1D1S2H
+    forbid b1C1D1S1N
+    pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
+    suitLength T.Spades 3
+
+
+b1C1D1S2C :: Action
+b1C1D1S2C = do
+    forbid b1C1D1S2S
+    forbid b1C1D1S2H
+    forbid b1C1D1S1N
+    forbid b1C1D1S1D
+    pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
+
 
 -------------------------------
 -- Situation syntactic sugar --
@@ -367,8 +458,10 @@ b1C1D2D = do
 -- Always make opener be in first seat, until we figure out how to open in other
 -- seats.
 -- TODO: change this to let other folks be dealer, too
-smpWrapS :: (StdGen -> T.Vulnerability -> T.Direction -> Situation) -> Situations
+smpWrapS :: (StdGen -> T.Vulnerability -> T.Direction -> Situation) ->
+            Situations
 smpWrapS sit = wrap $ sit <~ T.allVulnerabilities <~ [T.South]
 
-smpWrapN :: (StdGen -> T.Vulnerability -> T.Direction -> Situation) -> Situations
+smpWrapN :: (StdGen -> T.Vulnerability -> T.Direction -> Situation) ->
+            Situations
 smpWrapN sit = wrap $ sit <~ T.allVulnerabilities <~ [T.North]
