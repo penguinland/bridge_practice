@@ -43,11 +43,15 @@ module Topics.StandardModernPrecision.Bids(
   , b1C1D1H2C
   , b1C1D1H2D
   , b1C1D1H2H
+  , b1C1D1H2N
+  , b1C1D1H3H
   , b1C1D1S1N
   , b1C1D1S2C
   , b1C1D1S2D
   , b1C1D1S2H
   , b1C1D1S2S
+  , b1C1D1S2N
+  , b1C1D1S3S
   -- TODO: jumps and double jumps in MaFiA
   -- syntactic sugar
   , smpWrapN
@@ -382,15 +386,33 @@ b1C1D1H2H = do
     pointRange 0 4
 
 
+b1C1D1H3H :: Action
+b1C1D1H3H = do
+    suitLength T.Hearts 4
+    pointRange 5 7
+    sequence_ . map (\s -> minSuitLength s 2) $ T.allSuits
+
+
+b1C1D1H2N :: Action
+b1C1D1H2N = do
+    suitLength T.Hearts 4
+    pointRange 5 7
+    -- The 2N bid is for hands with a singleton or void, so forbid the
+    -- semibalanced response.
+    forbid b1C1D1H3H
+
+
 b1C1D1H1S :: Action
 b1C1D1H1S = do
     forbid b1C1D1H2H
+    forbid b1C1D1H3H
     minSuitLength T.Spades 4
 
 
 b1C1D1H1N :: Action
 b1C1D1H1N = do
     forbid b1C1D1H2H
+    forbid b1C1D1H3H
     forbid b1C1D1H1S
     pointRange 0 5
 
@@ -398,6 +420,7 @@ b1C1D1H1N = do
 b1C1D1H2D :: Action
 b1C1D1H2D = do
     forbid b1C1D1H2H
+    forbid b1C1D1H3H
     forbid b1C1D1H1S
     forbid b1C1D1H1N
     suitLength T.Hearts 3
@@ -409,6 +432,7 @@ b1C1D1H2D = do
 b1C1D1H2C :: Action
 b1C1D1H2C = do
     forbid b1C1D1H2H
+    forbid b1C1D1H3H
     forbid b1C1D1H1S
     forbid b1C1D1H1N
     forbid b1C1D1H2D
@@ -422,20 +446,26 @@ b1C1D1S2S = do
     pointRange 0 4
 
 
-b1C1D1S2H :: Action
-b1C1D1S2H = do
-    forbid b1C1D1S2S
-    pointRange 6 7
-    -- We need at least 5 hearts, since opener has at most 3 (unless they're
-    -- two-suited with both majors and longer spades, but that's rare and we'll
-    -- figure it out next bid anyway).
-    minSuitLength T.Hearts 5
+b1C1D1S3S :: Action
+b1C1D1S3S = do
+    suitLength T.Spades 4
+    pointRange 5 7
+    sequence_ . map (\s -> minSuitLength s 2) $ T.allSuits
+
+
+b1C1D1S2N :: Action
+b1C1D1S2N = do
+    suitLength T.Spades 4
+    pointRange 5 7
+    -- The 2N bid is for hands with a singleton or void, so forbid the
+    -- semibalanced response.
+    forbid b1C1D1S3S
 
 
 b1C1D1S1N :: Action
 b1C1D1S1N = do
     forbid b1C1D1S2S
-    forbid b1C1D1S2H
+    forbid b1C1D1S3S
     -- Note that we might have 5+ hearts, but are too weak to show it.
     pointRange 0 5
 
@@ -443,15 +473,29 @@ b1C1D1S1N = do
 b1C1D1S2D :: Action
 b1C1D1S2D = do
     forbid b1C1D1S2S
-    forbid b1C1D1S2H
+    forbid b1C1D1S3S
     forbid b1C1D1S1N
     pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
     suitLength T.Spades 3
 
 
+b1C1D1S2H :: Action
+b1C1D1S2H = do
+    forbid b1C1D1S2S
+    forbid b1C1D1S3S
+    -- Prefer showing 3-card spade support over your own 5-card heart suit.
+    forbid b1C1D1S2D
+    pointRange 6 7
+    -- We need at least 5 hearts, since opener has at most 3 (unless they're
+    -- two-suited with both majors and longer spades, but that's rare and we'll
+    -- figure it out next bid anyway).
+    minSuitLength T.Hearts 5
+
+
 b1C1D1S2C :: Action
 b1C1D1S2C = do
     forbid b1C1D1S2S
+    forbid b1C1D1S3S
     forbid b1C1D1S2H
     forbid b1C1D1S1N
     forbid b1C1D1S2D

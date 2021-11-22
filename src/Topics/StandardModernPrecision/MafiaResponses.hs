@@ -1,8 +1,8 @@
 module Topics.StandardModernPrecision.MafiaResponses(topic) where
 
---import Output(output)
+import Output(output)
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, Action)--, forbid, minSuitLength, suitLength,
+import Auction(withholdBid, Action, suitLength, maxSuitLength)--, forbid,
 --               {-balancedHand, pointRange, SuitLengthComparator(..), compareSuitLength-})
 import Situation(Situation, situation, base, (<~))
 import qualified Terminology as T
@@ -30,149 +30,249 @@ minSupport = let
     B.smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2H, T.Hearts)
                              , (B.b1C1D1S, B.b1C1D1S2S, T.Spades) ]
 
-{-
-oneMajor :: Situations
-oneMajor = let
-    sit (majorSuit, bid) = let
+
+maxSupportSemibalanced :: Situations
+maxSupportSemibalanced = let
+    -- The type signature is to convince the compiler that we're not throwing
+    -- away values from openerBid
+    sit :: (Action, Action, T.Suit) -> T.Vulnerability -> T.Direction -> Situation
+    sit (openerBid, responderBid, suit) = let
         action = do
             B.startOfMafia
-            forbid balancedHand
-            withholdBid bid
-        explanation _ =
-            "With an unbalanced hand that isn't game forcing, bid a 4-card\
-           \ major if you have one."
+            openerBid
+            B.oppsPass
+            withholdBid responderBid
+        explanation fmt =
+            "With 4-card support and a maximum hand but no singleton, invite\
+           \ with a double raise. You've already shown that game might not be\
+           \ possible with your " ++ output fmt (T.Bid 1 T.Diamonds) ++ "bid,\
+           \ so partner won't get too excited."
       in
-        situation "1M" action (T.Bid 1 majorSuit) explanation
+        situation "3MB" action (T.Bid 3 suit) explanation
   in
-    B.smpWrapS $ base sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
+    B.smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H3H, T.Hearts)
+                             , (B.b1C1D1S, B.b1C1D1S3S, T.Spades) ]
 
 
-oneMajorMinor :: Situations
-oneMajorMinor = let
-    sit (majorSuit, bid) minorSuit = let
+maxSupportUnbalanced :: Situations
+maxSupportUnbalanced = let
+    -- The type signature is to convince the compiler that we're not throwing
+    -- away values from openerBid
+    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit (openerBid, responderBid) = let
         action = do
             B.startOfMafia
-            forbid balancedHand
-            minSuitLength minorSuit 5
-            suitLength majorSuit 4
-            withholdBid bid
-        explanation _ =
-            "With an unbalanced hand that isn't game forcing, bid a 4-card\
-           \ major if you have one. This holds even if you've got a longer\
-           \ minor (MAjors FIrst Always)."
+            openerBid
+            B.oppsPass
+            withholdBid responderBid
+        explanation fmt =
+            "With 4-card support, a maximum hand, and a singleton or void,\
+           \ make a mini-splinter bid with " ++
+             output fmt (T.Bid 2 T.Notrump) ++ ". Partner can\
+           \ either sign off in our major (in partscore or game), or bid " ++
+            output fmt (T.Bid 3 T.Clubs) ++ " to ask\
+           \ us to bid our singleton. Remember that you can bid the\
+           \ singleton/void ``naturally'' unless it's clubs, in which case bid\
+           \ our trump suit to show it!"
       in
-        situation "1Mm" action (T.Bid 1 majorSuit) explanation
+        situation "3MV" action (T.Bid 2 T.Notrump) explanation
   in
-    B.smpWrapS $ base sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
-                          <~ T.minorSuits
+    B.smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2N)
+                             , (B.b1C1D1S, B.b1C1D1S2N) ]
 
 
-twoMinorSingle :: Situations
-twoMinorSingle = let
-    sit (minorSuit, bid) = let
-        action = do
-            B.startOfMafia
-            forbid balancedHand
-            minSuitLength minorSuit 6
-            withholdBid bid
-        explanation _ =
-            "With an unbalanced hand that isn't game forcing and doesn't have\
-           \ a 4-card major, rebid your long minor."
-      in
-        situation "2m" action (T.Bid 2 minorSuit) explanation
-  in
-    B.smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
-
-
-twoMinorMinors :: Situations
-twoMinorMinors = let
-    sit (minorSuit, bid) = let
-        action = do
-            B.startOfMafia
-            forbid balancedHand
-            suitLength minorSuit 5
-            withholdBid bid
-        explanation _ =
-            "With an unbalanced hand that isn't game forcing and doesn't have\
-           \ a 4-card major, rebid your long minor. Sometimes this minor is\
-           \ only 5 cards, if you're 5-4 in the minors."
-      in
-        situation "2mm" action (T.Bid 2 minorSuit) explanation
-  in
-    B.smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
-
-
-equalMinors :: Situations
-equalMinors = let
+brakesHearts :: Situations
+brakesHearts = let
     sit = let
         action = do
             B.startOfMafia
-            forbid balancedHand
-            compareSuitLength T.Clubs Equal T.Diamonds
-            withholdBid B.b1C1D2D
-        explanation _ =
-            "With an unbalanced hand that isn't game forcing and doesn't have\
-           \ a 4-card major, rebid your long minor. When the minors are the\
-           \ same length, bid diamonds first so that you can bid clubs later\
-           \ without reversing."
+            B.b1C1D1H
+            B.oppsPass
+            withholdBid B.b1C1D1H1N
+        explanation fmt =
+            "With neither major and a non-maximum hand, bid " ++
+             output fmt (T.Bid 1 T.Notrump) ++ " as the ``double negative''\
+           \ brake bid. Unless partner makes a jump bid, seriously consider\
+           \ passing whatever they do next (if they do anything at all;\
+           \ perhaps they'll prefer playing in " ++
+             output fmt (T.Bid 1 T.Notrump) ++ " itself, since your bid is\
+           \ not forcing)."
       in
-        situation "2me" action (T.Bid 2 T.Diamonds) explanation
+        situation "1NH" action (T.Bid 1 T.Notrump) explanation
   in
-    B.smpWrapS $ base sit
+    B.smpWrapN $ base sit
 
 
-bothMajorsLongSpades :: Situations
-bothMajorsLongSpades = let
+brakesSpades :: Situations
+brakesSpades = let
     sit = let
         action = do
             B.startOfMafia
-            forbid balancedHand
-            minSuitLength T.Hearts 4
-            compareSuitLength T.Spades Longer T.Hearts
+            B.b1C1D1S
+            B.oppsPass
+            maxSuitLength T.Hearts 4
+            withholdBid B.b1C1D1S1N
         explanation fmt =
-            "With both majors but longer spades, start by bidding " ++
-            output fmt (T.Bid 1 T.Spades) ++ ". You can then bid the hearts\
-           \ later without reversing."
+            "With a minimum hand and no support for partner's spades, bid " ++
+             output fmt (T.Bid 1 T.Notrump) ++ " as the ``double negative''\
+           \ brake bid. Unless partner makes a jump bid, seriously consider\
+           \ passing whatever they do next (if they do anything at all;\
+           \ perhaps they'll prefer playing in " ++
+             output fmt (T.Bid 1 T.Notrump) ++ " itself, since your bid is\
+           \ not forcing)."
       in
-        situation "2MS" action (T.Bid 1 T.Spades) explanation
+        situation "1NS" action (T.Bid 1 T.Notrump) explanation
   in
-    B.smpWrapS $ base sit
+    B.smpWrapN $ base sit
 
 
-jumpBid :: Situations
-jumpBid = let
-    sit (rawBid, bid) = let
+brakesSpadesHearts :: Situations
+brakesSpadesHearts = let
+    sit = let
         action = do
             B.startOfMafia
-            withholdBid bid
+            B.b1C1D1S
+            B.oppsPass
+            suitLength T.Hearts 5
+            withholdBid B.b1C1D1S1N
         explanation fmt =
-            "With an unbalanced, single-suited hand that is strong enough to\
-           \ force to game, jump in your suit. Responder can treat this like\
-           \ the 2/1 sequence " ++
-            output fmt (T.Bid 2 T.Clubs) ++ "--" ++
-            output fmt (T.Bid 2 T.Diamonds) ++ "--" ++
-            output fmt rawBid ++ "."
+            "With a minimum hand and no support for partner's spades, bid " ++
+             output fmt (T.Bid 1 T.Notrump) ++ " as the ``double negative''\
+           \ brake bid. Do this even if you've got a heart suit! Partner's " ++
+             output fmt (T.Bid 1 T.Spades) ++ " bid has denied 4 hearts, and\
+           \ although we might have a 5-3 fit, you're too weak to risk getting\
+           \ stuck at the 3 level if we don't have such a fit. Unless partner\
+           \ makes a jump bid, seriously consider passing whatever they do\
+           \ next (if they do anything at all; perhaps they'll prefer playing\
+           \ in " ++ output fmt (T.Bid 1 T.Notrump) ++ " itself, since your\
+           \ bid is not forcing)."
       in
-        situation "J1" action rawBid explanation
+        situation "1NSH" action (T.Bid 1 T.Notrump) explanation
   in
-    B.smpWrapS $ base sit <~ [ (T.Bid 2 T.Hearts,   B.b1C1D2H)
-                             , (T.Bid 2 T.Spades,   B.b1C1D2S)
-                             , (T.Bid 3 T.Clubs,    B.b1C1D3C)
-                             , (T.Bid 3 T.Diamonds, B.b1C1D3D)]
--}
+    B.smpWrapN $ base sit
+
+
+otherMajorHearts :: Situations
+otherMajorHearts = let
+    sit = let
+        action = do
+            B.startOfMafia
+            B.b1C1D1H
+            B.oppsPass
+            withholdBid B.b1C1D1H1S
+        explanation fmt =
+            "With no support for partner's hearts but at least 4 spades,\
+           \ bid " ++ output fmt (T.Bid 1 T.Spades) ++ " to show that major.\
+           \ Because we're still at the 1 level, you can do this with any\
+           \ strength hand, even a 0 count!"
+      in
+        situation "1S" action (T.Bid 1 T.Spades) explanation
+  in
+    B.smpWrapN $ base sit
+
+
+otherMajorSpades :: Situations
+otherMajorSpades = let
+    sit = let
+        action = do
+            B.startOfMafia
+            B.b1C1D1S
+            B.oppsPass
+            withholdBid B.b1C1D1S2H
+        explanation _ =
+            "With a maximum hand, no support for partner's spades, but 5+\
+           \ hearts, show that suit in our quest to find a major fit. Partner\
+           \ has already denied 4 hearts (unless they're at least 5-4 in the\
+           \ majors, in which case we'll find out soon), so we need a 5-card\
+           \ suit to bid this. We also need a maximum, because if it turns out\
+           \ we don't have a fit, we're going to get pushed up to the 3 level\
+           \ at least."
+      in
+        situation "2H" action (T.Bid 2 T.Hearts) explanation
+  in
+    B.smpWrapN $ base sit
+
+
+threeCardSupport :: Situations
+threeCardSupport = let
+    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit (openerBid, responderBid) = let
+        action = do
+            B.startOfMafia
+            openerBid
+            B.oppsPass
+            withholdBid responderBid
+        explanation fmt =
+            "With 3-card support and a non-minimum hand (5-7 HCP), bid " ++
+            output fmt (T.Bid 2 T.Diamonds) ++ ". Partner can sign off at the\
+           \ 2 level with a 7-card fit, invite with an 8-card fit, or bid\
+           \ other suits naturally (minor suits must be 6 cards long). Note\
+           \ that partner's " ++ output fmt (T.Bid 2 T.Notrump) ++ " is an\
+           \ artificial game force."
+      in
+        situation "2D" action (T.Bid 2 T.Diamonds) explanation
+  in
+    B.smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2D)
+                             , (B.b1C1D1S, B.b1C1D1S2D) ]
+
+
+threeCardSupportHearts :: Situations
+threeCardSupportHearts = let
+    sit  = let
+        action = do
+            B.startOfMafia
+            B.b1C1D1S
+            B.oppsPass
+            suitLength T.Hearts 5
+            withholdBid B.b1C1D1S2D
+        explanation fmt =
+            "With 3-card spade support and a non-minimum hand (5-7 HCP),\
+           \ bid " ++ output fmt (T.Bid 2 T.Diamonds) ++ ". Do this even with\
+           \ a 5-card heart suit!"
+      in
+        situation "2D" action (T.Bid 2 T.Diamonds) explanation
+  in
+    B.smpWrapN $ base sit
+
+
+maxNoMajors :: Situations
+maxNoMajors = let
+    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit (openerBid, responderBid) = let
+        action = do
+            B.startOfMafia
+            openerBid
+            B.oppsPass
+            withholdBid responderBid
+        explanation fmt =
+            "With a maximum hand but no obvious major fit, respond " ++
+            output fmt (T.Bid 2 T.Clubs) ++ ". Opener might bid an\
+           \ artificial " ++ output fmt (T.Bid 2 T.Diamonds) ++ " to show a\
+           \ misfit where we're scrambling for partscore, or bid a natural\
+           \ suit (6-card minor, 4 cards in the other major), or " ++
+            output fmt (T.Bid 2 T.Notrump) ++ " as an artificial game\
+           \ force/waiting bid."
+      in
+        situation "2C" action (T.Bid 2 T.Clubs) explanation
+  in
+    B.smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2C)
+                             , (B.b1C1D1S, B.b1C1D1S2C) ]
 
 
 topic :: Topic
 topic = Topic "MaFiA responses" "MafResp" situations
   where
     situations = wrap [ minSupport
-{-
-                      , maxSupportBalanced
+                      , maxSupportSemibalanced
                       , maxSupportUnbalanced
-                      , brakes
-                      , otherMajor
-                      , threeCardSupport
+                      , wrap [brakesHearts, wrap [brakesSpades,
+                                                  brakesSpadesHearts]]
+                      , wrap [otherMajorHearts, otherMajorSpades]
+                      -- 3-card support in spades when you also have hearts is
+                      -- much rarer than any other 3-card support situation.
+                      , wrap [ threeCardSupport, threeCardSupport
+                             , threeCardSupport, threeCardSupport
+                             , threeCardSupportHearts ]
                       , maxNoMajors
--}
                       -- TODO: jump responses, splinters, etc.
                       ]
