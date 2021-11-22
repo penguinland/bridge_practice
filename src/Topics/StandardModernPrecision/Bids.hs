@@ -326,7 +326,7 @@ _notGameForcing = do
 
 b1C1D1N :: Action
 b1C1D1N = do
-    pointRange 18 19
+    pointRange 17 18
     balancedHand
     makeCall $ T.Bid 1 T.Notrump
 
