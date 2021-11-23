@@ -2,8 +2,7 @@ module Topics.StandardModernPrecision.MafiaResponses(topic) where
 
 import Output(output)
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, Action, suitLength, maxSuitLength)--, forbid,
---               {-balancedHand, pointRange, SuitLengthComparator(..), compareSuitLength-})
+import Auction(withholdBid, Action, suitLength, maxSuitLength)
 import Situation(Situation, situation, base, (<~))
 import qualified Terminology as T
 import qualified Topics.StandardModernPrecision.Bids as B

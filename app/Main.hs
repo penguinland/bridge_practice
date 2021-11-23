@@ -14,10 +14,10 @@ import ProblemSet(outputLatex)
 
 main :: IO ()
 main = let
-    topics = --[ SmpOpenings.topic
-             --, Smp1CResponses.topic
-             --, Mafia.topic
-             [ MafiaResponses.topic
+    topics = [ SmpOpenings.topic
+             , Smp1CResponses.topic
+             , Mafia.topic
+             , MafiaResponses.topic
              ]
   in do
     outputLatex 100 topics "test" (mkStdGen 0)
