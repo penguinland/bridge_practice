@@ -8,14 +8,16 @@ import System.Random(mkStdGen)
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
 import qualified Topics.StandardModernPrecision.ResponsesToStrongClub as Smp1CResponses
 import qualified Topics.StandardModernPrecision.Mafia as Mafia
+import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 import ProblemSet(outputLatex)
 
 
 main :: IO ()
 main = let
-    topics = [ Mafia.topic
-             , SmpOpenings.topic
+    topics = [ SmpOpenings.topic
              , Smp1CResponses.topic
+             , Mafia.topic
+             , MafiaResponses.topic
              ]
   in do
     outputLatex 100 topics "test" (mkStdGen 0)
