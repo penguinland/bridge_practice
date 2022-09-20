@@ -50,9 +50,7 @@ oneNotrump = let
         "You've got at least mild slam interest with 12+ HCP, and a balanced\
       \ hand with no 5-card suit. Bid a natural " ++
         output fmt (T.Bid 1 T.Notrump) ++ ", and we'll\
-      \ go from there. Systems are on, even though this might wrong-side the\
-      \ contract: better to be familiar and easy to remember than right-side\
-      \ it, at least until we're more practiced with SMP."
+      \ go from there. Stayman is on, but transfers are not."
   in
     B.smpWrapN . base $ situation "1N" action (T.Bid 1 T.Notrump) explanation
 
