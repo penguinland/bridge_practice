@@ -8,6 +8,7 @@ module Terminology (
 , majorSuits
 , Call(..)
 , CallExplanation(..)
+, alertFor
 , CompleteCall(..)
 , Vulnerability(..)
 , allVulnerabilities
@@ -99,6 +100,12 @@ instance Showable CallExplanation where
     toLatex (OppsAlerted e) = "\\footnote{" ++ e ++ "}"
     toLatex (WeAlerted e) =
          "\\ifdefined\\showsolutions" ++ toLatex (OppsAlerted e) ++ "\\fi"
+
+alertFor :: Direction -> String -> CallExplanation
+alertFor North = WeAlerted
+alertFor South = WeAlerted
+alertFor East = OppsAlerted
+alertFor West = OppsAlerted
 
 
 data CompleteCall = CompleteCall Call CallExplanation
