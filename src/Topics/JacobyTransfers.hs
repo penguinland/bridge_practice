@@ -2,7 +2,7 @@ module Topics.JacobyTransfers(topic) where
 
 import Output(output, Punct(NDash))
 import Topic(Topic(..), Situations, wrap, stdWrap, wrapVulDlr)
-import Auction(forbid, makeCall, makePass, pointRange, suitLength,
+import Auction(forbid, makeAlertableCall, makePass, pointRange, suitLength,
                minSuitLength, Action, balancedHand, constrain)
 import Situation(situation, base, (<~))
 import qualified Terminology as T
@@ -32,7 +32,8 @@ texasTransfer :: T.Suit -> Action
 texasTransfer suit = do
     minSuitLength suit 6
     pointRange 10 15
-    makeCall (T.Bid 4 $ transferSuit suit)
+    makeAlertableCall (T.Bid 4 $ transferSuit suit)
+                      ("Transfer to " ++ show suit)
 
 
 equalMajors :: Action
@@ -61,7 +62,8 @@ jacobyTransfer suit = do
     prepareJacobyTransfer suit
     -- Make this simple by leaving out 5-5 hands. They go in another situation.
     forbid equalMajors
-    makeCall (T.Bid 2 $ transferSuit suit)
+    makeAlertableCall (T.Bid 2 $ transferSuit suit)
+                      ("Transfer to " ++ show suit)
 
 -- TODO: Add separate commentary for 5-4 non-gf hands. Alternately, forbid 5-4
 -- non-gf hands, and add that situation into the Smolen topic.
