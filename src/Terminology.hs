@@ -7,6 +7,8 @@ module Terminology (
 , minorSuits
 , majorSuits
 , Call(..)
+, CallExplanation(..)
+, CompleteCall(..)
 , Vulnerability(..)
 , allVulnerabilities
 ) where
@@ -87,6 +89,23 @@ instance Showable Call where
     toHtml Double    = "Dbl"
     toHtml Redouble  = "Rdb"
     toHtml (Bid l s) = show l ++ toHtml s
+
+-- Calls might have alerted explanations. We always show an alert from the
+-- opponents, but only show alerts from our side in the solutions.
+data CallExplanation = Unalerted | OppsAlerted String | WeAlerted String
+
+instance Showable CallExplanation where
+    toLatex Unalerted = ""
+    toLatex (OppsAlerted e) = "\\footnote{" ++ e ++ "}"
+    toLatex (WeAlerted e) =
+         "\\ifdefined\\showsolutions" ++ toLatex (OppsAlerted e) ++ "\\fi"
+
+
+data CompleteCall = CompleteCall Call CallExplanation
+
+instance Showable CompleteCall where
+    toLatex (CompleteCall c e) = toLatex c ++ toLatex e
+    toHtml (CompleteCall c e) = toHtml c ++ toHtml e
 
 
 data Vulnerability = NS | EW | Both | None deriving Eq

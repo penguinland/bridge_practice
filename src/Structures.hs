@@ -25,7 +25,7 @@ instance Showable Hand where
 
 
 -- The direction is the next bidder
-data Bidding = Bidding T.Direction [[Maybe T.Call]]
+data Bidding = Bidding T.Direction [[Maybe T.CompleteCall]]
 
 instance Showable Bidding where
     toLatex (Bidding c b) =
