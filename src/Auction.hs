@@ -73,7 +73,7 @@ define = modifyDealerProg addDefn
 
 
 makeCall :: T.Call -> Action
-makeCall call = modify $ first (>- call)
+makeCall call = modify $ first (>- T.CompleteCall call T.Unalerted)
 
 
 makePass :: Action
