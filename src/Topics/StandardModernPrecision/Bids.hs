@@ -62,8 +62,9 @@ import System.Random(StdGen)
 
 import Topic(wrap, Situations)
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-               Action, balancedHand, constrain, makeCall, makePass,
-               alternatives, SuitLengthComparator(..), compareSuitLength)
+               Action, balancedHand, constrain, makeCall, makeAlertableCall,
+               makePass, alternatives, SuitLengthComparator(..),
+               compareSuitLength)
 import Situation(Situation, (<~))
 import CommonBids(cannotPreempt)
 import qualified Terminology as T
@@ -90,7 +91,7 @@ b1N :: Action
 b1N = do
     pointRange 14 16
     balancedHand
-    makeCall $ T.Bid 1 T.Notrump
+    makeAlertableCall (T.Bid 1 T.Notrump) "14-16"
 
 
 b2N :: Action
@@ -111,7 +112,7 @@ b1C :: Action
 b1C = do
     pointRange 16 40
     sequence_ . map forbid $ [b1N, b2N, b3N]
-    makeCall $ T.Bid 1 T.Clubs
+    makeAlertableCall (T.Bid 1 T.Clubs) "16+ HCP, 17+ if balanced"
 
 
 b1M :: T.Suit -> Action
@@ -128,14 +129,14 @@ b2C = do
     forbid (b1M T.Hearts)
     forbid (b1M T.Spades)
     minSuitLength T.Clubs 6
-    makeCall $ T.Bid 2 T.Clubs
+    makeAlertableCall (T.Bid 2 T.Clubs) "6+ clubs, a good 10 to 15 HCP"
 
 
 b2D :: Action
 b2D = do
     forbid b1C
     constrain "two_diamond_opener" ["shape(", ", 4414 + 4405 + 4315 + 3415)"]
-    makeCall $ T.Bid 2 T.Diamonds
+    makeAlertableCall (T.Bid 2 T.Diamonds) "4414, 4315, 3415, or 4405 shape"
 
 
 b1D :: Action
@@ -151,7 +152,7 @@ b1D = do
     -- have a bad day. Make sure that it's never violated in the results even if
     -- it's not explicitly required.
     --minSuitLength T.Diamonds 2
-    makeCall $ T.Bid 1 T.Diamonds
+    makeAlertableCall (T.Bid 1 T.Diamonds) "Could be as short as 2 diamonds"
 
 
 ---------------------
@@ -160,7 +161,7 @@ b1D = do
 b1C1D :: Action
 b1C1D = do
     pointRange 0 7
-    makeCall $ T.Bid 1 T.Diamonds
+    makeAlertableCall (T.Bid 1 T.Diamonds) "0-7 HCP, any shape"
 
 _gameForcing :: Action
 _gameForcing = pointRange 8 11
@@ -172,7 +173,7 @@ _slamInterest = pointRange 12 40
 b1C1H :: Action
 b1C1H = do
     _gameForcing
-    makeCall $ T.Bid 1 T.Hearts
+    makeAlertableCall (T.Bid 1 T.Hearts) "8-11 HCP, any shape"
 
 
 b1C1S :: Action
@@ -215,7 +216,7 @@ b1C2S :: Action
 b1C2S = do
     _slamInterest
     constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
-    makeCall $ T.Bid 2 T.Spades
+    makeAlertableCall (T.Bid 2 T.Spades) "12+ HCP, any 4441 shape"
 
 
 bP1C1H :: Action
@@ -258,7 +259,7 @@ bP1C2S :: Action
 bP1C2S = do
     _gameForcing
     constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
-    makeCall $ T.Bid 2 T.Spades
+    makeAlertableCall (T.Bid 2 T.Spades) "Game forcing, any 4441 shape"
 
 
 -----------
