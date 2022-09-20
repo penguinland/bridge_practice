@@ -96,9 +96,10 @@ twoSpades = let
       \ triple four one shape. Show this by bidding " ++
         output fmt (T.Bid 2 T.Spades) ++ ". Partner will relay to " ++
         output fmt (T.Bid 2 T.Notrump) ++ ", then bid your singleton. Partner\
-      \ will then either set trump for us to start control bidding, or use " ++
+      \ will then use " ++
         output fmt (T.Bid 4 T.Clubs) ++ "/" ++
-        output fmt (T.Bid 4 T.Diamonds) ++ "/RKC."
+        output fmt (T.Bid 4 T.Diamonds) ++ "/RKC to tell us what suit is trump\
+      \ and how high they think we should go."
   in
     B.smpWrapN . base $ situation "2S" action (T.Bid 2 T.Spades) explanation
 
