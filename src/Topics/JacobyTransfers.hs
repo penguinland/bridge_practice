@@ -213,8 +213,7 @@ majors55inv = let
       \ fit, bidding " ++ output fmt (T.Bid 3 T.Hearts) ++ " with a minimum\
       \ hand and no spade fit (in which case a heart fit is guaranteed), or\
       \ bidding one of the majors at the 4 level with a maximum. This\
-      \ wrong-sides the contract when the " ++ output fmt oneNT ++ " bidder\
-      \ has a doubleton heart."
+      \ wrong-sides the contract if we end up playing in spades."
     bid = T.Bid 2 T.Diamonds
   in
     stdWrap $ situation "55Inv" action bid explanation
@@ -237,8 +236,7 @@ majors55gf = let
             \ game-forcing strength, first make a Jacoby transfer into spades,\
             \ and then bid " ++ output fmt (T.Bid 3 T.Hearts) ++ " afterwards.\
             \ Partner will then have the options of which game to bid.\
-            \ This wrong-sides the contract when the " ++ output fmt oneNT ++ "\
-            \ bidder has a doubleton spade."
+            \ This wrong-sides the contract if we end up playing in hearts."
         bid = T.Bid 2 T.Hearts
       in
         situation "55GF" action bid explanation
