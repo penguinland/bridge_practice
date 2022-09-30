@@ -97,9 +97,8 @@ data CallExplanation = Unalerted | OppsAlerted String | WeAlerted String
 
 instance Showable CallExplanation where
     toLatex Unalerted = ""
-    toLatex (OppsAlerted e) = "\\footnote{" ++ e ++ "}"
-    toLatex (WeAlerted e) =
-         "\\ifdefined\\showsolutions" ++ toLatex (OppsAlerted e) ++ "\\fi"
+    toLatex (OppsAlerted e) = "\\oppsalert{" ++ e ++ "}"
+    toLatex (WeAlerted e) = "\\ouralert{" ++ e ++ "}"
 
 alertFor :: Direction -> String -> CallExplanation
 alertFor North = WeAlerted
