@@ -78,6 +78,14 @@
   \end{tabular}
 }
 
+\newcommand{\ouralert}[1]{% Only show the explanation in the solution.
+    \ifdefined\showsolutions\footnote{#1}\fi%
+}
+
+\newcommand{\oppsalert}[1]{% Always show the explanation
+    \footnote{#1}\fi%
+}
+
 \newenvironment{bidding}{
   \begin{minipage}[t]{1.9in}
     \begin{tabular}{llll}%
