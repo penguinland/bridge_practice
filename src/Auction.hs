@@ -74,13 +74,12 @@ define = modifyDealerProg addDefn
 
 
 makeCall :: T.Call -> Action
-makeCall call = modify $ first (>- T.CompleteCall call T.Unalerted)
+makeCall call = modify $ first (>- T.CompleteCall call Nothing)
 
 makeAlertableCall :: T.Call -> String -> Action
 makeAlertableCall call alert = do
-    (bidding, dealerProg) <- get
-    let bidder = currentBidder bidding
-    put (bidding >- T.CompleteCall call (T.alertFor bidder alert), dealerProg)
+makeAlertableCall call alert =
+    modify $ first (>- T.CompleteCall call (Just alert))
 
 
 makePass :: Action

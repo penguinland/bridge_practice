@@ -7,8 +7,6 @@ module Terminology (
 , minorSuits
 , majorSuits
 , Call(..)
-, CallExplanation(..)
-, alertFor
 , CompleteCall(..)
 , Vulnerability(..)
 , allVulnerabilities
@@ -91,27 +89,9 @@ instance Showable Call where
     toHtml Redouble  = "Rdb"
     toHtml (Bid l s) = show l ++ toHtml s
 
--- Calls might have alerted explanations. We always show an alert from the
--- opponents, but only show alerts from our side in the solutions.
-data CallExplanation = Unalerted | OppsAlerted String | WeAlerted String
 
-instance Showable CallExplanation where
-    toLatex Unalerted = ""
-    toLatex (OppsAlerted e) = "\\oppsalert{" ++ e ++ "}"
-    toLatex (WeAlerted e) = "\\ouralert{" ++ e ++ "}"
-
-alertFor :: Direction -> String -> CallExplanation
-alertFor North = WeAlerted
-alertFor South = WeAlerted
-alertFor East = OppsAlerted
-alertFor West = OppsAlerted
-
-
-data CompleteCall = CompleteCall Call CallExplanation
-
-instance Showable CompleteCall where
-    toLatex (CompleteCall c e) = toLatex c ++ toLatex e
-    toHtml (CompleteCall c e) = toHtml c ++ toHtml e
+-- A complete call is a call with an optional alerted explanation.
+data CompleteCall = CompleteCall Call (Maybe String)
 
 
 data Vulnerability = NS | EW | Both | None deriving Eq

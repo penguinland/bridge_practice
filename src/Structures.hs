@@ -28,13 +28,19 @@ instance Showable Hand where
 data Bidding = Bidding T.Direction [[Maybe T.CompleteCall]]
 
 instance Showable Bidding where
-    toLatex (Bidding c b) =
-         "  \\begin{bidding}\n    " ++ rows ++ finish c ++
+    toLatex (Bidding r b) =
+         "  \\begin{bidding}\n    " ++ rows ++ finish r ++
          "??\n  \\end{bidding}"
       where
         newRow = "\\\\\n    "  -- backslash, backslash, newline
         rows = join newRow . reverse . map formatRow $ b
-        formatRow = join "&" . reverse . map (maybe "" toLatex)
+        formatRow = join "&" .
+                    zipWith formatMaybeBid (cycle ["oppsalert", "ouralert"]) .
+                    reverse
+        formatMaybeBid alertMacro = maybe "" $ formatBid alertMacro
+        formatBid _          (T.CompleteCall c  Nothing) = toLatex c
+        formatBid alertMacro (T.CompleteCall c (Just a)) =
+            toLatex c ++ "\\" ++ alertMacro ++ "{" ++ a ++ "}"
         finish T.North = newRow
         finish _       = "&"
 
