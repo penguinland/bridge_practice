@@ -2,8 +2,9 @@ module Topics.MinorTransfersScott(topic) where
 
 import Output(output)
 import Topic(Topic(..), Situations, wrap)
-import Auction(forbid, makeCall, makePass, pointRange, hasTopN, constrain,
-               minSuitLength, maxSuitLength, Action, balancedHand, withholdBid)
+import Auction(forbid, makeAlertableCall, makePass, pointRange, hasTopN,
+               constrain, minSuitLength, maxSuitLength, Action, balancedHand,
+               withholdBid)
 import Situation(situation, base, (<~))
 import qualified Terminology as T
 import qualified CommonBids as B
@@ -39,7 +40,8 @@ minorTransfer suit = do
     -- If you've got minor-suit-game-going values, bid 3S to invoke minor-suit
     -- Smolen instead.
     pointRange 5 12
-    makeCall (T.Bid 2 $ transferSuit suit)
+    makeAlertableCall (T.Bid 2 $ transferSuit suit)
+                      ("Transfer to " ++ show suit)
 
 
 setUpTransfer :: T.Suit -> Action
@@ -74,7 +76,7 @@ setUpSuperacceptCompletion suit = do
     minorTransfer suit
     B.cannotPreempt >> makePass  -- TODO: Allow overcalls of lower suits
     canSuperaccept suit
-    makeCall (superacceptBid suit)
+    makeAlertableCall (superacceptBid suit) ("Super-accept in " ++ show suit)
     makePass  -- Still can't do anything just like the previous round
 
 

@@ -78,13 +78,23 @@
   \end{tabular}
 }
 
+\newcommand{\ouralert}[1]{% Only show the explanation in the solution.
+    \ifdefined\showsolutions\footnote{#1}\fi%
+}
+
+\newcommand{\oppsalert}[1]{% Always show the explanation
+    \footnote{#1}%
+}
+
 \newenvironment{bidding}{
-  \begin{tabular}{llll}%
-    \emph{West}&
-    \emph{North}&
-    \emph{East}&
-    \emph{South}\\}{
-  \end{tabular}
+  \begin{minipage}[t]{1.9in}
+    \begin{tabular}{llll}%
+      \emph{West}&
+      \emph{North}&
+      \emph{East}&
+      \emph{South}\\}{
+    \end{tabular}%
+  \end{minipage}%
 }
 
 % It might be simplest to just check if \showsolutions is defined once at the

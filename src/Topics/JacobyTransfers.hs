@@ -2,7 +2,7 @@ module Topics.JacobyTransfers(topic) where
 
 import Output(output, Punct(NDash))
 import Topic(Topic(..), Situations, wrap, stdWrap, wrapVulDlr)
-import Auction(forbid, makeCall, makePass, pointRange, suitLength,
+import Auction(forbid, makeAlertableCall, makePass, pointRange, suitLength,
                minSuitLength, Action, balancedHand, constrain)
 import Situation(situation, base, (<~))
 import qualified Terminology as T
@@ -32,7 +32,8 @@ texasTransfer :: T.Suit -> Action
 texasTransfer suit = do
     minSuitLength suit 6
     pointRange 10 15
-    makeCall (T.Bid 4 $ transferSuit suit)
+    makeAlertableCall (T.Bid 4 $ transferSuit suit)
+                      ("Transfer to " ++ show suit)
 
 
 equalMajors :: Action
@@ -61,7 +62,8 @@ jacobyTransfer suit = do
     prepareJacobyTransfer suit
     -- Make this simple by leaving out 5-5 hands. They go in another situation.
     forbid equalMajors
-    makeCall (T.Bid 2 $ transferSuit suit)
+    makeAlertableCall (T.Bid 2 $ transferSuit suit)
+                      ("Transfer to " ++ show suit)
 
 -- TODO: Add separate commentary for 5-4 non-gf hands. Alternately, forbid 5-4
 -- non-gf hands, and add that situation into the Smolen topic.
@@ -211,8 +213,7 @@ majors55inv = let
       \ fit, bidding " ++ output fmt (T.Bid 3 T.Hearts) ++ " with a minimum\
       \ hand and no spade fit (in which case a heart fit is guaranteed), or\
       \ bidding one of the majors at the 4 level with a maximum. This\
-      \ wrong-sides the contract when the " ++ output fmt oneNT ++ " bidder\
-      \ has a doubleton heart."
+      \ wrong-sides the contract if we end up playing in spades."
     bid = T.Bid 2 T.Diamonds
   in
     stdWrap $ situation "55Inv" action bid explanation
@@ -235,8 +236,7 @@ majors55gf = let
             \ game-forcing strength, first make a Jacoby transfer into spades,\
             \ and then bid " ++ output fmt (T.Bid 3 T.Hearts) ++ " afterwards.\
             \ Partner will then have the options of which game to bid.\
-            \ This wrong-sides the contract when the " ++ output fmt oneNT ++ "\
-            \ bidder has a doubleton spade."
+            \ This wrong-sides the contract if we end up playing in hearts."
         bid = T.Bid 2 T.Hearts
       in
         situation "55GF" action bid explanation

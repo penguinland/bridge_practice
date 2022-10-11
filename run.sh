@@ -36,4 +36,5 @@ esac;
 # Open the questions last so it's the topmost window. Suppress both stdout and
 # stderr so they don't gum up the command prompt.
 "$PDF_VIEWER" solutions.pdf &> /dev/null &
+sleep 0.1
 "$PDF_VIEWER" questions.pdf &> /dev/null &

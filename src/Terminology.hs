@@ -7,6 +7,7 @@ module Terminology (
 , minorSuits
 , majorSuits
 , Call(..)
+, CompleteCall(..)
 , Vulnerability(..)
 , allVulnerabilities
 ) where
@@ -87,6 +88,10 @@ instance Showable Call where
     toHtml Double    = "Dbl"
     toHtml Redouble  = "Rdb"
     toHtml (Bid l s) = show l ++ toHtml s
+
+
+-- A complete call is a call with an optional alerted explanation.
+data CompleteCall = CompleteCall Call (Maybe String)
 
 
 data Vulnerability = NS | EW | Both | None deriving Eq

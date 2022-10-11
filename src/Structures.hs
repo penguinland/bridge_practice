@@ -25,16 +25,22 @@ instance Showable Hand where
 
 
 -- The direction is the next bidder
-data Bidding = Bidding T.Direction [[Maybe T.Call]]
+data Bidding = Bidding T.Direction [[Maybe T.CompleteCall]]
 
 instance Showable Bidding where
-    toLatex (Bidding c b) =
-         "  \\begin{bidding}\n    " ++ rows ++ finish c ++
+    toLatex (Bidding r b) =
+         "  \\begin{bidding}\n    " ++ rows ++ finish r ++
          "??\n  \\end{bidding}"
       where
-        newRow = "\\\\\n    "
+        newRow = "\\\\\n    "  -- backslash, backslash, newline
         rows = join newRow . reverse . map formatRow $ b
-        formatRow = join "&" . reverse . map (maybe "" toLatex)
+        formatRow = join "&" .
+                    zipWith formatMaybeBid (cycle ["oppsalert", "ouralert"]) .
+                    reverse
+        formatMaybeBid alertMacro = maybe "" $ formatBid alertMacro
+        formatBid _          (T.CompleteCall c  Nothing) = toLatex c
+        formatBid alertMacro (T.CompleteCall c (Just a)) =
+            toLatex c ++ "\\" ++ alertMacro ++ "{" ++ a ++ "}"
         finish T.North = newRow
         finish _       = "&"
 
@@ -50,7 +56,7 @@ startBidding T.East  = Bidding T.East  [[Nothing, Nothing]]
 startBidding T.South = Bidding T.South [[Nothing, Nothing, Nothing]]
 
 
-(>-) :: Bidding -> T.Call -> Bidding
+(>-) :: Bidding -> T.CompleteCall -> Bidding
 (Bidding T.West    bs ) >- c = Bidding T.North    ([Just c]  :bs)
 (Bidding d      (b:bs)) >- c = Bidding (T.next d) ((Just c:b):bs)
 _                       >- _ = error "Missing bidding for current direction"

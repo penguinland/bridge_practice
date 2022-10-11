@@ -62,8 +62,9 @@ import System.Random(StdGen)
 
 import Topic(wrap, Situations)
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-               Action, balancedHand, constrain, makeCall, makePass,
-               alternatives, SuitLengthComparator(..), compareSuitLength)
+               Action, balancedHand, constrain, makeCall, makeAlertableCall,
+               makePass, alternatives, SuitLengthComparator(..),
+               compareSuitLength)
 import Situation(Situation, (<~))
 import CommonBids(cannotPreempt)
 import qualified Terminology as T
@@ -90,7 +91,7 @@ b1N :: Action
 b1N = do
     pointRange 14 16
     balancedHand
-    makeCall $ T.Bid 1 T.Notrump
+    makeAlertableCall (T.Bid 1 T.Notrump) "14-16"
 
 
 b2N :: Action
@@ -111,7 +112,7 @@ b1C :: Action
 b1C = do
     pointRange 16 40
     sequence_ . map forbid $ [b1N, b2N, b3N]
-    makeCall $ T.Bid 1 T.Clubs
+    makeAlertableCall (T.Bid 1 T.Clubs) "16+ HCP"
 
 
 b1M :: T.Suit -> Action
@@ -128,14 +129,14 @@ b2C = do
     forbid (b1M T.Hearts)
     forbid (b1M T.Spades)
     minSuitLength T.Clubs 6
-    makeCall $ T.Bid 2 T.Clubs
+    makeAlertableCall (T.Bid 2 T.Clubs) "6+ clubs"
 
 
 b2D :: Action
 b2D = do
     forbid b1C
     constrain "two_diamond_opener" ["shape(", ", 4414 + 4405 + 4315 + 3415)"]
-    makeCall $ T.Bid 2 T.Diamonds
+    makeAlertableCall (T.Bid 2 T.Diamonds) "4414, 4315, 3415, or 4405 shape"
 
 
 b1D :: Action
@@ -151,7 +152,7 @@ b1D = do
     -- have a bad day. Make sure that it's never violated in the results even if
     -- it's not explicitly required.
     --minSuitLength T.Diamonds 2
-    makeCall $ T.Bid 1 T.Diamonds
+    makeAlertableCall (T.Bid 1 T.Diamonds) "Could be as short as 2 diamonds"
 
 
 ---------------------
@@ -160,7 +161,7 @@ b1D = do
 b1C1D :: Action
 b1C1D = do
     pointRange 0 7
-    makeCall $ T.Bid 1 T.Diamonds
+    makeAlertableCall (T.Bid 1 T.Diamonds) "0-7 HCP, any shape"
 
 _gameForcing :: Action
 _gameForcing = pointRange 8 11
@@ -172,7 +173,7 @@ _slamInterest = pointRange 12 40
 b1C1H :: Action
 b1C1H = do
     _gameForcing
-    makeCall $ T.Bid 1 T.Hearts
+    makeAlertableCall (T.Bid 1 T.Hearts) "8-11 HCP, any shape"
 
 
 b1C1S :: Action
@@ -215,7 +216,7 @@ b1C2S :: Action
 b1C2S = do
     _slamInterest
     constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
-    makeCall $ T.Bid 2 T.Spades
+    makeAlertableCall (T.Bid 2 T.Spades) "12+ HCP, any 4441 shape"
 
 
 bP1C1H :: Action
@@ -258,7 +259,7 @@ bP1C2S :: Action
 bP1C2S = do
     _gameForcing
     constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
-    makeCall $ T.Bid 2 T.Spades
+    makeAlertableCall (T.Bid 2 T.Spades) "Game forcing, any 4441 shape"
 
 
 -----------
@@ -384,6 +385,7 @@ b1C1D1H2H = do
     minSuitLength T.Hearts 4
     maxSuitLength T.Hearts 5
     pointRange 0 4
+    makeCall $ T.Bid 2 T.Hearts
 
 
 b1C1D1H3H :: Action
@@ -391,6 +393,7 @@ b1C1D1H3H = do
     suitLength T.Hearts 4
     pointRange 5 7
     sequence_ . map (\s -> minSuitLength s 2) $ T.allSuits
+    makeCall $ T.Bid 3 T.Hearts
 
 
 b1C1D1H2N :: Action
@@ -400,6 +403,7 @@ b1C1D1H2N = do
     -- The 2N bid is for hands with a singleton or void, so forbid the
     -- semibalanced response.
     forbid b1C1D1H3H
+    makeCall $ T.Bid 2 T.Notrump
 
 
 b1C1D1H1S :: Action
@@ -407,6 +411,7 @@ b1C1D1H1S = do
     forbid b1C1D1H2H
     forbid b1C1D1H3H
     minSuitLength T.Spades 4
+    makeCall $ T.Bid 1 T.Spades
 
 
 b1C1D1H1N :: Action
@@ -415,6 +420,7 @@ b1C1D1H1N = do
     forbid b1C1D1H3H
     forbid b1C1D1H1S
     pointRange 0 5
+    makeAlertableCall (T.Bid 1 T.Notrump) "0-5 HCP, at most 3 hearts"
 
 
 b1C1D1H2D :: Action
@@ -427,6 +433,7 @@ b1C1D1H2D = do
     -- This next line is redundant with forbidding a 1N rebid, but it's nice to
     -- be explicit about it.
     pointRange 6 7
+    makeAlertableCall (T.Bid 2 T.Diamonds) "6-7 HCP, 3-card heart support"
 
 
 b1C1D1H2C :: Action
@@ -437,6 +444,7 @@ b1C1D1H2C = do
     forbid b1C1D1H1N
     forbid b1C1D1H2D
     pointRange 6 7  -- Redundant with forbidding a 1N rebid, but explicit
+    makeAlertableCall (T.Bid 2 T.Clubs) "6-7 HCP, at most 2 hearts and 3 spades"
 
 
 b1C1D1S2S :: Action
@@ -444,6 +452,7 @@ b1C1D1S2S = do
     minSuitLength T.Spades 4
     maxSuitLength T.Spades 5
     pointRange 0 4
+    makeCall $ T.Bid 2 T.Spades
 
 
 b1C1D1S3S :: Action
@@ -451,6 +460,7 @@ b1C1D1S3S = do
     suitLength T.Spades 4
     pointRange 5 7
     sequence_ . map (\s -> minSuitLength s 2) $ T.allSuits
+    makeCall $ T.Bid 3 T.Spades
 
 
 b1C1D1S2N :: Action
@@ -460,6 +470,7 @@ b1C1D1S2N = do
     -- The 2N bid is for hands with a singleton or void, so forbid the
     -- semibalanced response.
     forbid b1C1D1S3S
+    makeAlertableCall (T.Bid 2 T.Notrump) "5-7 HCP, undisclosed splinter"
 
 
 b1C1D1S1N :: Action
@@ -468,6 +479,7 @@ b1C1D1S1N = do
     forbid b1C1D1S3S
     -- Note that we might have 5+ hearts, but are too weak to show it.
     pointRange 0 5
+    makeAlertableCall (T.Bid 1 T.Notrump) "0-5 HCP, at most 3 spades"
 
 
 b1C1D1S2D :: Action
@@ -477,6 +489,7 @@ b1C1D1S2D = do
     forbid b1C1D1S1N
     pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
     suitLength T.Spades 3
+    makeAlertableCall (T.Bid 2 T.Diamonds) "6-7 HCP, 3-card spade support"
 
 
 b1C1D1S2H :: Action
@@ -490,6 +503,7 @@ b1C1D1S2H = do
     -- two-suited with both majors and longer spades, but that's rare and we'll
     -- figure it out next bid anyway).
     minSuitLength T.Hearts 5
+    makeCall $ T.Bid 2 T.Hearts
 
 
 b1C1D1S2C :: Action
@@ -500,6 +514,7 @@ b1C1D1S2C = do
     forbid b1C1D1S1N
     forbid b1C1D1S2D
     pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
+    makeAlertableCall (T.Bid 2 T.Clubs) "6-7 HCP, at most 2 spades"
 
 
 -------------------------------

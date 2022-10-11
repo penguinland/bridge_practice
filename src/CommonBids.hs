@@ -13,7 +13,9 @@ module CommonBids(
 , takeoutDouble
 ) where
 
-import Auction(Action, constrain, define, forbid, pointRange, balancedHand, makeCall, makePass, suitLength, minSuitLength, maxSuitLength)
+import Auction(Action, constrain, define, forbid, pointRange, balancedHand,
+               makeCall, makeAlertableCall, makePass, suitLength,
+               minSuitLength, maxSuitLength)
 import Structures(currentBidder)
 import Control.Monad.Trans.State.Strict(get)
 -- Not currently needed:
@@ -24,14 +26,14 @@ strong1NT :: Action
 strong1NT = do
     balancedHand
     pointRange 15 17
-    makeCall (T.Bid 1 T.Notrump)
+    makeAlertableCall (T.Bid 1 T.Notrump) "15-17"
 
 
 weak1NT :: Action
 weak1NT = do
     balancedHand
     pointRange 12 14
-    makeCall (T.Bid 1 T.Notrump)
+    makeAlertableCall (T.Bid 1 T.Notrump) "12-14"
 
 
 preempt4 :: T.Suit -> Action

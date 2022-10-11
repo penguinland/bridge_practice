@@ -3,7 +3,8 @@ module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 import Output(output)
 import Topic(Topic(..), wrap, stdWrap, wrapVulDlr, Situations)
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-               Action, alternatives, constrain, makePass, makeCall)
+               Action, alternatives, constrain, makePass,
+               makeAlertableCall, withholdBid)
 import Situation(situation, base, (<~))
 import qualified Terminology as T
 import qualified CommonBids as B
@@ -13,6 +14,7 @@ twoDiamondOpener :: Action
 twoDiamondOpener = do
     pointRange 11 15
     constrain "two_diamond_opener" ["shape(", ", 4414 + 4405 + 4315 + 3415)"]
+    makeAlertableCall (T.Bid 2 T.Diamonds) "4414, 4405, 4315, or 3415 shape"
 
 noDirectOvercall :: Action
 noDirectOvercall = do
@@ -55,7 +57,7 @@ open :: Situations
 open = let
     action = do
         B.setOpener T.South
-        twoDiamondOpener
+        withholdBid twoDiamondOpener
     explanation fmt =
         "With an opening hand too weak to bid " ++
         output fmt (T.Bid 1 T.Clubs) ++ ", open " ++
@@ -69,9 +71,8 @@ immediateSignoffSpades3 :: Situations
 immediateSignoffSpades3 = let
     action = do
         B.setOpener T.North
-        twoDiamondOpener
         suitLength T.Spades 3
-        makeCall (T.Bid 2 T.Diamonds)
+        twoDiamondOpener
         noDirectOvercall
         pointRange 0 9
         bestFitSpades
@@ -88,9 +89,8 @@ immediateSignoffSpades4 :: Situations
 immediateSignoffSpades4 = let
     action = do
         B.setOpener T.North
-        twoDiamondOpener
         suitLength T.Spades 4
-        makeCall (T.Bid 2 T.Diamonds)
+        twoDiamondOpener
         noDirectOvercall
         pointRange 0 9
         bestFitSpades
@@ -108,7 +108,6 @@ immediateSignoffSpades5 = let
         action = do
             B.setOpener T.North
             twoDiamondOpener
-            makeCall (T.Bid 2 T.Diamonds)
             noDirectOvercall
             pointRange 0 6  -- With 7-9 HCP, make a mixed raise!
             bestFitSpades
@@ -132,13 +131,12 @@ passSignoff2Spades = let
         action = do
             B.setOpener T.South
             twoDiamondOpener
-            makeCall (T.Bid 2 T.Diamonds)
             noDirectOvercall
             bestFitSpades
             alternatives [    suitLength T.Spades 4 >> pointRange 0 9
                          , minSuitLength T.Spades 5 >> pointRange 0 6
                          ]
-            makeCall (T.Bid 2 T.Spades)
+            makeAlertableCall (T.Bid 2 T.Spades) "signoff"
             forbid $ B.takeoutDouble T.Spades
             noDirectOvercall
             suitLength T.Spades spadeLength
@@ -158,7 +156,6 @@ immediateSignoffClubs = let
     action = do
         B.setOpener T.North
         twoDiamondOpener
-        makeCall (T.Bid 2 T.Diamonds)
         noDirectOvercall
         bestFitClubs
         pointRange 0 9
@@ -174,11 +171,10 @@ passSignoffClubs = let
     action = do
         B.setOpener T.South
         twoDiamondOpener
-        makeCall (T.Bid 2 T.Diamonds)
         noDirectOvercall
         bestFitClubs
         pointRange 0 9
-        makeCall (T.Bid 3 T.Clubs)
+        makeAlertableCall (T.Bid 3 T.Clubs) "signoff"
         forbid $ B.takeoutDouble T.Clubs
         noDirectOvercall
     explanation _ =
@@ -193,7 +189,6 @@ immediateSignoffHearts = let
     action = do
         B.setOpener T.North
         twoDiamondOpener
-        makeCall (T.Bid 2 T.Diamonds)
         noDirectOvercall
         fitHearts
         pointRange 0 9
@@ -211,11 +206,10 @@ passSignoffHearts = let
     action = do
         B.setOpener T.South
         twoDiamondOpener
-        makeCall (T.Bid 2 T.Diamonds)
         noDirectOvercall
         fitHearts
         pointRange 0 9
-        makeCall (T.Bid 2 T.Hearts)
+        makeAlertableCall (T.Bid 2 T.Hearts) "signoff"
         forbid $ B.takeoutDouble T.Clubs
         noDirectOvercall
         minSuitLength T.Hearts 4
@@ -232,14 +226,13 @@ correctSignoffHearts = let
         action = do
             B.setOpener T.South
             twoDiamondOpener
-            makeCall (T.Bid 2 T.Diamonds)
             noDirectOvercall
             fitHearts
             maxSuitLength T.Hearts heartLength
             -- With 7-9 HCP and 5+ hearts, make a mixed raise instead!
             alternatives [ pointRange 0 9 >> maxSuitLength T.Hearts 4
                          , pointRange 0 6]
-            makeCall (T.Bid 2 T.Hearts)
+            makeAlertableCall (T.Bid 2 T.Hearts) "signoff"
             forbid $ B.takeoutDouble T.Clubs
             noDirectOvercall
             maxSuitLength T.Hearts 3

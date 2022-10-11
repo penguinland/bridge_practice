@@ -50,9 +50,7 @@ oneNotrump = let
         "You've got at least mild slam interest with 12+ HCP, and a balanced\
       \ hand with no 5-card suit. Bid a natural " ++
         output fmt (T.Bid 1 T.Notrump) ++ ", and we'll\
-      \ go from there. Systems are on, even though this might wrong-side the\
-      \ contract: better to be familiar and easy to remember than right-side\
-      \ it, at least until we're more practiced with SMP."
+      \ go from there. Stayman is on, but transfers are not."
   in
     B.smpWrapN . base $ situation "1N" action (T.Bid 1 T.Notrump) explanation
 
@@ -98,9 +96,10 @@ twoSpades = let
       \ triple four one shape. Show this by bidding " ++
         output fmt (T.Bid 2 T.Spades) ++ ". Partner will relay to " ++
         output fmt (T.Bid 2 T.Notrump) ++ ", then bid your singleton. Partner\
-      \ will then either set trump for us to start control bidding, or use " ++
+      \ will then use " ++
         output fmt (T.Bid 4 T.Clubs) ++ "/" ++
-        output fmt (T.Bid 4 T.Diamonds) ++ "/RKC."
+        output fmt (T.Bid 4 T.Diamonds) ++ "/RKC to tell us what suit is trump\
+      \ and how high they think we should go."
   in
     B.smpWrapN . base $ situation "2S" action (T.Bid 2 T.Spades) explanation
 

@@ -8,6 +8,7 @@ module Auction (
 , constrain
 , define
 , makeCall
+, makeAlertableCall
 , makePass
 , pointRange
 , balancedHand
@@ -73,7 +74,12 @@ define = modifyDealerProg addDefn
 
 
 makeCall :: T.Call -> Action
-makeCall call = modify $ first (>- call)
+makeCall call = modify $ first (>- T.CompleteCall call Nothing)
+
+makeAlertableCall :: T.Call -> String -> Action
+makeAlertableCall call alert = do
+makeAlertableCall call alert =
+    modify $ first (>- T.CompleteCall call (Just alert))
 
 
 makePass :: Action
