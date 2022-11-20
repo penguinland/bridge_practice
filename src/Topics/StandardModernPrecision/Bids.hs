@@ -96,14 +96,14 @@ b1N = do
 
 b2N :: Action
 b2N = do
-    pointRange 19 21  -- A modification from Part 1: it's really 19 to a bad 21
+    pointRange 19 20  -- A modification from Part 1
     balancedHand
     makeCall $ T.Bid 2 T.Notrump
 
 
 b3N :: Action
 b3N = do
-    pointRange 25 40  -- Technically only 25-27, but close enough
+    pointRange 24 40  -- Technically only 24-27, but close enough
     balancedHand
     makeCall $ T.Bid 3 T.Notrump
 
@@ -277,7 +277,7 @@ startOfMafia = do
 -- Do the game-forcing bids first
 b1C1D2N :: Action
 b1C1D2N = do
-    pointRange 22 24
+    pointRange 21 23
     balancedHand
     makeCall $ T.Bid 2 T.Notrump
 

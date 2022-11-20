@@ -27,7 +27,7 @@ notrump = let
       in
         situation "xN" action (T.Bid level T.Notrump) explanation
   in
-    B.smpWrapS $ base sit <~ [(17, 18, 1), (22, 24, 2)]
+    B.smpWrapS $ base sit <~ [(17, 18, 1), (21, 23, 2)]
 
 
 oneMajor :: Situations
