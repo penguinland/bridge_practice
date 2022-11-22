@@ -73,6 +73,7 @@ b1C = do
 
 b1M :: T.Suit -> Action
 b1M suit = do
+    firstSeatOpener
     forbid b1C
     forbid b1N
     minSuitLength suit 5
@@ -81,6 +82,7 @@ b1M suit = do
 
 b2C :: Action
 b2C = do
+    firstSeatOpener
     forbid b1C
     forbid (b1M T.Hearts)
     forbid (b1M T.Spades)
@@ -90,6 +92,7 @@ b2C = do
 
 b2D :: Action
 b2D = do
+    firstSeatOpener
     forbid b1C
     constrain "two_diamond_opener" ["shape(", ", 4414 + 4405 + 4315 + 3415)"]
     makeAlertableCall (T.Bid 2 T.Diamonds) "4414, 4315, 3415, or 4405 shape"
@@ -97,6 +100,7 @@ b2D = do
 
 b1D :: Action
 b1D = do
+    firstSeatOpener
     sequence_ . map forbid $ [ b1C
                              , b1N
                              , b1M T.Hearts
