@@ -5,7 +5,8 @@ import Topic(Topic(..), wrap, Situations)
 import Auction(withholdBid, Action, suitLength, maxSuitLength)
 import Situation(Situation, situation, base, (<~))
 import qualified Terminology as T
-import qualified Topics.StandardModernPrecision.Bids as B
+import Topics.StandardModernPrecision.BasicBids(oppsPass, smpWrapN)
+import qualified Topics.StandardModernPrecision.Bids1C as B
 
 
 minSupport :: Situations
@@ -17,7 +18,7 @@ minSupport = let
         action = do
             B.startOfMafia
             openerBid
-            B.oppsPass
+            oppsPass
             withholdBid responderBid
         explanation _ =
             "With 4-card support and a minimum hand, raise partner's major.\
@@ -26,8 +27,8 @@ minSupport = let
       in
         situation "2M" action (T.Bid 2 suit) explanation
   in
-    B.smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2H, T.Hearts)
-                             , (B.b1C1D1S, B.b1C1D1S2S, T.Spades) ]
+    smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2H, T.Hearts)
+                           , (B.b1C1D1S, B.b1C1D1S2S, T.Spades) ]
 
 
 maxSupportSemibalanced :: Situations
@@ -39,7 +40,7 @@ maxSupportSemibalanced = let
         action = do
             B.startOfMafia
             openerBid
-            B.oppsPass
+            oppsPass
             withholdBid responderBid
         explanation fmt =
             "With 4-card support and a maximum hand but no singleton, invite\
@@ -49,8 +50,8 @@ maxSupportSemibalanced = let
       in
         situation "3MB" action (T.Bid 3 suit) explanation
   in
-    B.smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H3H, T.Hearts)
-                             , (B.b1C1D1S, B.b1C1D1S3S, T.Spades) ]
+    smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H3H, T.Hearts)
+                           , (B.b1C1D1S, B.b1C1D1S3S, T.Spades) ]
 
 
 maxSupportUnbalanced :: Situations
@@ -62,7 +63,7 @@ maxSupportUnbalanced = let
         action = do
             B.startOfMafia
             openerBid
-            B.oppsPass
+            oppsPass
             withholdBid responderBid
         explanation fmt =
             "With 4-card support, a maximum hand, and a singleton or void,\
@@ -76,8 +77,8 @@ maxSupportUnbalanced = let
       in
         situation "3MV" action (T.Bid 2 T.Notrump) explanation
   in
-    B.smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2N)
-                             , (B.b1C1D1S, B.b1C1D1S2N) ]
+    smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2N)
+                           , (B.b1C1D1S, B.b1C1D1S2N) ]
 
 
 brakesHearts :: Situations
@@ -86,7 +87,7 @@ brakesHearts = let
         action = do
             B.startOfMafia
             B.b1C1D1H
-            B.oppsPass
+            oppsPass
             withholdBid B.b1C1D1H1N
         explanation fmt =
             "With neither major and a non-maximum hand, bid " ++
@@ -99,7 +100,7 @@ brakesHearts = let
       in
         situation "1NH" action (T.Bid 1 T.Notrump) explanation
   in
-    B.smpWrapN $ base sit
+    smpWrapN $ base sit
 
 
 brakesSpades :: Situations
@@ -108,7 +109,7 @@ brakesSpades = let
         action = do
             B.startOfMafia
             B.b1C1D1S
-            B.oppsPass
+            oppsPass
             maxSuitLength T.Hearts 4
             withholdBid B.b1C1D1S1N
         explanation fmt =
@@ -122,7 +123,7 @@ brakesSpades = let
       in
         situation "1NS" action (T.Bid 1 T.Notrump) explanation
   in
-    B.smpWrapN $ base sit
+    smpWrapN $ base sit
 
 
 brakesSpadesHearts :: Situations
@@ -131,7 +132,7 @@ brakesSpadesHearts = let
         action = do
             B.startOfMafia
             B.b1C1D1S
-            B.oppsPass
+            oppsPass
             suitLength T.Hearts 5
             withholdBid B.b1C1D1S1N
         explanation fmt =
@@ -148,7 +149,7 @@ brakesSpadesHearts = let
       in
         situation "1NSH" action (T.Bid 1 T.Notrump) explanation
   in
-    B.smpWrapN $ base sit
+    smpWrapN $ base sit
 
 
 otherMajorHearts :: Situations
@@ -157,7 +158,7 @@ otherMajorHearts = let
         action = do
             B.startOfMafia
             B.b1C1D1H
-            B.oppsPass
+            oppsPass
             withholdBid B.b1C1D1H1S
         explanation fmt =
             "With no support for partner's hearts but at least 4 spades,\
@@ -167,7 +168,7 @@ otherMajorHearts = let
       in
         situation "1S" action (T.Bid 1 T.Spades) explanation
   in
-    B.smpWrapN $ base sit
+    smpWrapN $ base sit
 
 
 otherMajorSpades :: Situations
@@ -176,7 +177,7 @@ otherMajorSpades = let
         action = do
             B.startOfMafia
             B.b1C1D1S
-            B.oppsPass
+            oppsPass
             withholdBid B.b1C1D1S2H
         explanation _ =
             "With a maximum hand, no support for partner's spades, but 5+\
@@ -189,7 +190,7 @@ otherMajorSpades = let
       in
         situation "2H" action (T.Bid 2 T.Hearts) explanation
   in
-    B.smpWrapN $ base sit
+    smpWrapN $ base sit
 
 
 threeCardSupport :: Situations
@@ -199,7 +200,7 @@ threeCardSupport = let
         action = do
             B.startOfMafia
             openerBid
-            B.oppsPass
+            oppsPass
             withholdBid responderBid
         explanation fmt =
             "With 3-card support and a non-minimum hand (5-7 HCP), bid " ++
@@ -211,8 +212,8 @@ threeCardSupport = let
       in
         situation "2D" action (T.Bid 2 T.Diamonds) explanation
   in
-    B.smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2D)
-                             , (B.b1C1D1S, B.b1C1D1S2D) ]
+    smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2D)
+                           , (B.b1C1D1S, B.b1C1D1S2D) ]
 
 
 threeCardSupportHearts :: Situations
@@ -221,7 +222,7 @@ threeCardSupportHearts = let
         action = do
             B.startOfMafia
             B.b1C1D1S
-            B.oppsPass
+            oppsPass
             suitLength T.Hearts 5
             withholdBid B.b1C1D1S2D
         explanation fmt =
@@ -231,7 +232,7 @@ threeCardSupportHearts = let
       in
         situation "2D" action (T.Bid 2 T.Diamonds) explanation
   in
-    B.smpWrapN $ base sit
+    smpWrapN $ base sit
 
 
 maxNoMajors :: Situations
@@ -241,7 +242,7 @@ maxNoMajors = let
         action = do
             B.startOfMafia
             openerBid
-            B.oppsPass
+            oppsPass
             withholdBid responderBid
         explanation fmt =
             "With a maximum hand but no obvious major fit, respond " ++
@@ -254,8 +255,8 @@ maxNoMajors = let
       in
         situation "2C" action (T.Bid 2 T.Clubs) explanation
   in
-    B.smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2C)
-                             , (B.b1C1D1S, B.b1C1D1S2C) ]
+    smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2C)
+                           , (B.b1C1D1S, B.b1C1D1S2C) ]
 
 
 topic :: Topic

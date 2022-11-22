@@ -6,29 +6,30 @@ import Auction(withholdBid, forbid, maxSuitLength, makePass)
 import Situation(situation, base, (<~))
 import CommonBids(cannotPreempt)
 import qualified Terminology as T
-import qualified Topics.StandardModernPrecision.Bids as B
+import Topics.StandardModernPrecision.BasicBids(firstSeatOpener, oppsPass, b1C, smpWrapN, smpWrapS)
+import qualified Topics.StandardModernPrecision.Bids1C as B
 
 
 oneDiamond :: Situations
 oneDiamond = let
     action = do
-        B.firstSeatOpener
-        B.b1C
-        B.oppsPass
+        firstSeatOpener
+        b1C
+        oppsPass
         withholdBid B.b1C1D
     explanation fmt =
         "When game might not be possible opposite a random 17 HCP, start\
       \ with " ++ output fmt (T.Bid 1 T.Diamonds) ++ ". This initiates MaFiA."
   in
-    B.smpWrapN . base $ situation "1D" action (T.Bid 1 T.Diamonds) explanation
+    smpWrapN . base $ situation "1D" action (T.Bid 1 T.Diamonds) explanation
 
 
 oneHeart :: Situations
 oneHeart = let
     action = do
-        B.firstSeatOpener
-        B.b1C
-        B.oppsPass
+        firstSeatOpener
+        b1C
+        oppsPass
         withholdBid B.b1C1H
     explanation fmt =
         "You've got a game-forcing hand but slam is unlikely. With 8 to 11 HCP,\
@@ -36,15 +37,15 @@ oneHeart = let
       \ Subsequent bids are natural 5-card suits (and later 4-card suits), not\
       \ MaFiA."
   in
-    B.smpWrapN . base $ situation "1H" action (T.Bid 1 T.Hearts) explanation
+    smpWrapN . base $ situation "1H" action (T.Bid 1 T.Hearts) explanation
 
 
 oneNotrump :: Situations
 oneNotrump = let
     action = do
-        B.firstSeatOpener
-        B.b1C
-        B.oppsPass
+        firstSeatOpener
+        b1C
+        oppsPass
         withholdBid B.b1C1N
     explanation fmt =
         "You've got at least mild slam interest with 12+ HCP, and a balanced\
@@ -52,7 +53,7 @@ oneNotrump = let
         output fmt (T.Bid 1 T.Notrump) ++ ", and we'll\
       \ go from there. Stayman is on, but transfers are not."
   in
-    B.smpWrapN . base $ situation "1N" action (T.Bid 1 T.Notrump) explanation
+    smpWrapN . base $ situation "1N" action (T.Bid 1 T.Notrump) explanation
 
 
 slamSingleSuit :: Situations
@@ -66,9 +67,9 @@ slamSingleSuit = let
     sit strain = let
         level = if strain == T.Spades then 1 else 2
         action = do
-            B.firstSeatOpener
-            B.b1C
-            B.oppsPass
+            firstSeatOpener
+            b1C
+            oppsPass
             sequence_ . map (flip maxSuitLength 4) . filter (/= strain) $
                 T.allSuits
             withholdBid . finalAction $ strain
@@ -81,15 +82,15 @@ slamSingleSuit = let
       in
         situation "Slam" action (T.Bid level strain) explanation
   in
-    B.smpWrapN $ base sit <~ T.allSuits
+    smpWrapN $ base sit <~ T.allSuits
 
 
 twoSpades :: Situations
 twoSpades = let
     action = do
-        B.firstSeatOpener
-        B.b1C
-        B.oppsPass
+        firstSeatOpener
+        b1C
+        oppsPass
         withholdBid B.b1C2S
     explanation fmt =
         "You've got at least mild slam interest with 12+ HCP, but an awkward\
@@ -101,7 +102,7 @@ twoSpades = let
         output fmt (T.Bid 4 T.Diamonds) ++ "/RKC to tell us what suit is trump\
       \ and how high they think we should go."
   in
-    B.smpWrapN . base $ situation "2S" action (T.Bid 2 T.Spades) explanation
+    smpWrapN . base $ situation "2S" action (T.Bid 2 T.Spades) explanation
 
 
 passGameSingleSuit :: Situations
@@ -115,14 +116,14 @@ passGameSingleSuit = let
     sit strain = let
         level = if any (== strain) T.majorSuits then 1 else 2
         action = do
-            forbid B.firstSeatOpener
+            forbid firstSeatOpener
             cannotPreempt
             makePass
-            forbid B.firstSeatOpener
-            B.oppsPass
-            B.firstSeatOpener
-            B.b1C
-            B.oppsPass
+            forbid firstSeatOpener
+            oppsPass
+            firstSeatOpener
+            b1C
+            oppsPass
             sequence_ . map (flip maxSuitLength 4) . filter (/= strain) $
                 T.allSuits
             withholdBid . finalAction $ strain
@@ -135,20 +136,20 @@ passGameSingleSuit = let
       in
         situation "PG" action (T.Bid level strain) explanation
   in
-    B.smpWrapS $ base sit <~ T.allSuits
+    smpWrapS $ base sit <~ T.allSuits
 
 
 passOneNotrump :: Situations
 passOneNotrump = let
     action = do
-        forbid B.firstSeatOpener
+        forbid firstSeatOpener
         cannotPreempt
         makePass
-        forbid B.firstSeatOpener
-        B.oppsPass
-        B.firstSeatOpener
-        B.b1C
-        B.oppsPass
+        forbid firstSeatOpener
+        oppsPass
+        firstSeatOpener
+        b1C
+        oppsPass
         withholdBid B.bP1C1N
     explanation fmt =
         "You're a passed hand with game-forcing strength but no 5-card suit.\
@@ -159,20 +160,20 @@ passOneNotrump = let
       \ contract: better to be familiar and easy to remember than right-side\
       \ it, at least until we're more practiced with SMP."
   in
-    B.smpWrapS . base $ situation "P1N" action (T.Bid 1 T.Notrump) explanation
+    smpWrapS . base $ situation "P1N" action (T.Bid 1 T.Notrump) explanation
 
 
 passTwoSpades :: Situations
 passTwoSpades = let
     action = do
-        forbid B.firstSeatOpener
+        forbid firstSeatOpener
         cannotPreempt
         makePass
-        forbid B.firstSeatOpener
-        B.oppsPass
-        B.firstSeatOpener
-        B.b1C
-        B.oppsPass
+        forbid firstSeatOpener
+        oppsPass
+        firstSeatOpener
+        b1C
+        oppsPass
         withholdBid B.bP1C2S
     explanation fmt =
         "You're a passed hand with game-forcing strength, but an awkward\
@@ -185,7 +186,7 @@ passTwoSpades = let
         -- TODO: not sure this explanation is right; revisit it after you
         -- understand 4C/4D/RKC correctly
   in
-    B.smpWrapS . base $ situation "P2S" action (T.Bid 2 T.Spades) explanation
+    smpWrapS . base $ situation "P2S" action (T.Bid 2 T.Spades) explanation
 
 
 -- TODO: figure out how two-suited hands show slam interest. Which suit do you
