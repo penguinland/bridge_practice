@@ -7,7 +7,8 @@ import Auction(withholdBid, forbid, {-makePass, maxSuitLength, -} minSuitLength,
 import Situation(situation, base, (<~))
 --import CommonBids(cannotPreempt)
 import qualified Terminology as T
-import qualified Topics.StandardModernPrecision.Bids as B
+import Topics.StandardModernPrecision.BasicBids(smpWrapS)
+import qualified Topics.StandardModernPrecision.Bids1C as B
 
 
 notrump :: Situations
@@ -27,7 +28,7 @@ notrump = let
       in
         situation "xN" action (T.Bid level T.Notrump) explanation
   in
-    B.smpWrapS $ base sit <~ [(17, 18, 1), (21, 23, 2)]
+    smpWrapS $ base sit <~ [(17, 18, 1), (21, 23, 2)]
 
 
 oneMajor :: Situations
@@ -43,7 +44,7 @@ oneMajor = let
       in
         situation "1M" action (T.Bid 1 majorSuit) explanation
   in
-    B.smpWrapS $ base sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
+    smpWrapS $ base sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
 
 
 oneMajorMinor :: Situations
@@ -62,7 +63,7 @@ oneMajorMinor = let
       in
         situation "1Mm" action (T.Bid 1 majorSuit) explanation
   in
-    B.smpWrapS $ base sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
+    smpWrapS $ base sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
                           <~ T.minorSuits
 
 
@@ -80,7 +81,7 @@ twoMinorSingle = let
       in
         situation "2m" action (T.Bid 2 minorSuit) explanation
   in
-    B.smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
+    smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
 
 
 twoMinorMinors :: Situations
@@ -98,7 +99,7 @@ twoMinorMinors = let
       in
         situation "2mm" action (T.Bid 2 minorSuit) explanation
   in
-    B.smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
+    smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
 
 
 equalMinors :: Situations
@@ -117,7 +118,7 @@ equalMinors = let
       in
         situation "2me" action (T.Bid 2 T.Diamonds) explanation
   in
-    B.smpWrapS $ base sit
+    smpWrapS $ base sit
 
 
 bothMajorsLongSpades :: Situations
@@ -135,7 +136,7 @@ bothMajorsLongSpades = let
       in
         situation "2MS" action (T.Bid 1 T.Spades) explanation
   in
-    B.smpWrapS $ base sit
+    smpWrapS $ base sit
 
 
 jumpBid :: Situations
@@ -154,7 +155,7 @@ jumpBid = let
       in
         situation "J1" action rawBid explanation
   in
-    B.smpWrapS $ base sit <~ [ (T.Bid 2 T.Hearts,   B.b1C1D2H)
+    smpWrapS $ base sit <~ [ (T.Bid 2 T.Hearts,     B.b1C1D2H)
                              , (T.Bid 2 T.Spades,   B.b1C1D2S)
                              , (T.Bid 3 T.Clubs,    B.b1C1D3C)
                              , (T.Bid 3 T.Diamonds, B.b1C1D3D)]

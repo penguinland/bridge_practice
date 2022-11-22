@@ -5,7 +5,7 @@ import Topic(Topic(..), wrap, Situations)
 import Auction(withholdBid)
 import Situation(situation, base, (<~))
 import qualified Terminology as T
-import qualified Topics.StandardModernPrecision.Bids as B
+import qualified Topics.StandardModernPrecision.BasicBids as B
 
 
 oneClub :: Situations
