@@ -64,7 +64,7 @@ oneMajorMinor = let
         situation "1Mm" action (T.Bid 1 majorSuit) explanation
   in
     smpWrapS $ base sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
-                          <~ T.minorSuits
+                        <~ T.minorSuits
 
 
 twoMinorSingle :: Situations
@@ -155,10 +155,10 @@ jumpBid = let
       in
         situation "J1" action rawBid explanation
   in
-    smpWrapS $ base sit <~ [ (T.Bid 2 T.Hearts,     B.b1C1D2H)
-                             , (T.Bid 2 T.Spades,   B.b1C1D2S)
-                             , (T.Bid 3 T.Clubs,    B.b1C1D3C)
-                             , (T.Bid 3 T.Diamonds, B.b1C1D3D)]
+    smpWrapS $ base sit <~ [ (T.Bid 2 T.Hearts,   B.b1C1D2H)
+                           , (T.Bid 2 T.Spades,   B.b1C1D2S)
+                           , (T.Bid 3 T.Clubs,    B.b1C1D3C)
+                           , (T.Bid 3 T.Diamonds, B.b1C1D3D)]
 
 
 topic :: Topic
