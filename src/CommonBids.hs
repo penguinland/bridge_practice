@@ -26,14 +26,14 @@ strong1NT :: Action
 strong1NT = do
     balancedHand
     pointRange 15 17
-    makeAlertableCall (T.Bid 1 T.Notrump) "15-17"
+    makeAlertableCall (T.Bid 1 T.Notrump) "15-17 HCP"
 
 
 weak1NT :: Action
 weak1NT = do
     balancedHand
     pointRange 12 14
-    makeAlertableCall (T.Bid 1 T.Notrump) "12-14"
+    makeAlertableCall (T.Bid 1 T.Notrump) "12-14 HCP"
 
 
 preempt4 :: T.Suit -> Action

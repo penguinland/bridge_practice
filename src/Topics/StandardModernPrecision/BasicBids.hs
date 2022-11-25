@@ -47,16 +47,17 @@ b1N :: Action
 b1N = do
     pointRange 14 16
     balancedHand
-    makeAlertableCall (T.Bid 1 T.Notrump) "14-16"
+    makeAlertableCall (T.Bid 1 T.Notrump) "14-16 HCP"
 
 
 b2N :: Action
 b2N = do
     pointRange 19 20  -- A modification from Part 1
     balancedHand
-    makeCall $ T.Bid 2 T.Notrump
+    makeAlertableCall (T.Bid 2 T.Notrump) "19-20 HCP"
 
 
+-- TODO: switch to gambling 3N, and make this 1C-and-rebid-3N
 b3N :: Action
 b3N = do
     pointRange 24 40  -- Technically only 24-27, but close enough
