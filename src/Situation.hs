@@ -39,12 +39,14 @@ class Optionable o where
 instance Optionable Situation where
     (f <~ as) g = let
         -- We use Int, but StdGen uses Word64. Cast between them via Integer.
-        (i, g') = genWord64R (fromInteger . toInteger . length $ as) g
+        maxIndex = fromInteger . toInteger . subtract 1 . length $ as
+        (i, g') = genWord64R maxIndex g
       in
         f g' (as !! (fromInteger . toInteger $ i))
 
 instance (Optionable s) => Optionable (b -> s) where
     (f <~ as) g = let
-        (i, g') = genWord64R (fromInteger . toInteger . length $ as) g
+        maxIndex = fromInteger . toInteger . subtract 1 . length $ as
+        (i, g') = genWord64R maxIndex g
       in
         f g' (as !! (fromInteger . toInteger $ i))
