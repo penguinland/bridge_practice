@@ -29,6 +29,7 @@ import qualified Terminology as T
 type CondName = String
 type CondDefn = String
 
+
 data DealerProg = DealerProg (Map.Map CondName CondDefn) [CondName]
 
 newDeal :: DealerProg
@@ -44,6 +45,7 @@ instance Semigroup DealerProg where
 instance Monoid DealerProg where
     mempty = newDeal
 
+
 addDefn :: CondName -> CondDefn -> DealerProg -> DealerProg
 addDefn name defn (DealerProg m l) =
   case Map.lookup name m of
@@ -51,15 +53,19 @@ addDefn name defn (DealerProg m l) =
     Just defn' -> if defn == defn' then DealerProg m l
                                    else error $ "2 defintions for " ++ name
 
+
 addReq :: CondName -> DealerProg -> DealerProg
 addReq expr (DealerProg m l) = DealerProg m (expr:l)
+
 
 addNewReq :: CondName -> CondDefn -> DealerProg -> DealerProg
 addNewReq name defn = addReq name . addDefn name defn
 
+
 invert :: DealerProg -> DealerProg
 invert (DealerProg defns reqs) =
     DealerProg defns ["!(" ++ join " && " reqs ++ ")"]
+
 
 toProgram :: DealerProg -> String
 toProgram (DealerProg defns conds) = join "\n" $
