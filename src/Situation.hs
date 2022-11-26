@@ -13,14 +13,14 @@ import Auction(Action, finish)
 import DealerProg(DealerProg)
 import Output(Commentary)
 import Structures(Bidding)
-import Terminology(Call, Direction, Vulnerability)
+import Terminology(CompleteCall, Direction, Vulnerability)
 
 
-data Situation =
-    Situation String Bidding DealerProg Call Commentary Vulnerability Direction
+data Situation = Situation String Bidding DealerProg CompleteCall Commentary
+                           Vulnerability Direction
 
 
-situation :: String -> Action -> Call -> Commentary -> Vulnerability ->
+situation :: String -> Action -> CompleteCall -> Commentary -> Vulnerability ->
     Direction -> Situation
 situation r a c s v d = Situation r bidding deal c s v d
   where

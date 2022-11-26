@@ -15,10 +15,11 @@ import Output(Showable, toLatex, OutputType(..), Commentary)
 import Random(use)
 import Situation(Situation(..))
 import Structures(Bidding, Deal)
-import Terminology(Call)
+import Terminology(CompleteCall)
 
 
-data SituationInstance = SituationInstance Bidding Call Commentary Deal String
+data SituationInstance =
+    SituationInstance Bidding CompleteCall Commentary Deal String
 
 
 sitRef :: Situation -> String
