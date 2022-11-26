@@ -94,13 +94,14 @@ twoSpades = let
         withholdBid B.b1C2S
     explanation fmt =
         "You've got at least mild slam interest with 12+ HCP, but an awkward\
-      \ triple four one shape. Show this by bidding " ++
+      \ triple-four-one shape. Show this by bidding " ++
         output fmt (T.Bid 2 T.Spades) ++ ". Partner will relay to " ++
         output fmt (T.Bid 2 T.Notrump) ++ ", then bid your singleton. Partner\
-      \ will then use " ++
-        output fmt (T.Bid 4 T.Clubs) ++ "/" ++
-        output fmt (T.Bid 4 T.Diamonds) ++ "/RKC to tell us what suit is trump\
-      \ and how high they think we should go."
+      \ will then either bid " ++ output fmt (T.Bid 3 T.Notrump) ++ ",\
+      \ set trump at the 3 level (triggering a round of control bidding), or \
+      \ use " ++ output fmt (T.Bid 4 T.Clubs) ++ "/" ++
+        output fmt (T.Bid 4 T.Diamonds) ++ "/RKC to tell us how high to go and\
+      \ what suit is trump."
   in
     smpWrapN . base $ situation "2S" action (T.Bid 2 T.Spades) explanation
 
@@ -177,14 +178,14 @@ passTwoSpades = let
         withholdBid B.bP1C2S
     explanation fmt =
         "You're a passed hand with game-forcing strength, but an awkward\
-      \ triple four one shape. Show this by bidding " ++
+      \ triple-four-one shape. Show this by bidding " ++
         output fmt (T.Bid 2 T.Spades) ++ ". Partner will relay to " ++
         output fmt (T.Bid 2 T.Notrump) ++ ", then bid your singleton. Partner\
-      \ will then either set trump for us to start control bidding, or use " ++
-        output fmt (T.Bid 4 T.Clubs) ++ "/" ++
-        output fmt (T.Bid 4 T.Diamonds) ++ "/RKC."
-        -- TODO: not sure this explanation is right; revisit it after you
-        -- understand 4C/4D/RKC correctly
+      \ will then either sign off in " ++ output fmt (T.Bid 3 T.Notrump) ++ ",\
+      \ set trump at the 3 level (triggering a round of control bidding), or \
+      \ use " ++ output fmt (T.Bid 4 T.Clubs) ++ "/" ++
+        output fmt (T.Bid 4 T.Diamonds) ++ "/RKC to indicate how high to go\
+      \ and which suit is trump."
   in
     smpWrapS . base $ situation "P2S" action (T.Bid 2 T.Spades) explanation
 
