@@ -2,9 +2,9 @@ module Topics.MinorTransfersScott(topic) where
 
 import Output(output)
 import Topic(Topic(..), Situations, wrap)
-import Auction(forbid, makeAlertableCall, makePass, pointRange, hasTopN,
-               constrain, minSuitLength, maxSuitLength, Action, balancedHand,
-               withholdBid)
+import Auction(forbid, makeCall, makeAlertableCall, makePass, pointRange,
+               hasTopN, constrain, minSuitLength, maxSuitLength, Action,
+               balancedHand, withholdBid)
 import Situation(situation, base, (<~))
 import qualified Terminology as T
 import qualified CommonBids as B
@@ -90,7 +90,7 @@ initiateTransfer = let
            \ an unbalaned hand with a long minor. Bid 2 steps below your suit\
            \ to transfer into it and make your partner declarer so their\
            \ stronger hand stays hidden."
-        bid = T.Bid 2 $ transferSuit suit
+        bid = minorTransfer suit
       in
         situation "Init" action bid explanation
   in
@@ -109,7 +109,7 @@ completeTransfer = let
           \ at least 3-card support including 1 of the top 2 cards to\
           \ superaccept, so just accept the transfer regularly and bid the\
           \ suit."
-        bid = T.Bid 3 suit
+        bid = makeCall $ T.Bid 3 suit
       in
         situation "Complete" action bid explanation
   in
@@ -131,7 +131,7 @@ superacceptTransfer = let
           \ the option of bidding " ++ output fmt (T.Bid 3 T.Notrump) ++ " if\
           \ they think the suit will run, and wrong-siding the " ++
             output fmt (T.Bid 3 suit) ++ " contract if it won't."
-        bid = superacceptBid suit
+        bid = setUpSuperacceptCompletion suit
       in
         situation "SupAcc" action bid explanation
   in
@@ -153,7 +153,7 @@ completeSuperacceptAKQ = let
           \ a thin " ++ output fmt (T.Bid 3 T.Notrump) ++ ". If opener has a\
           \ stopper in every other suit, the game is likely be makable,\
           \ despite your lack of points."
-        bid = T.Bid 3 T.Notrump
+        bid = makeCall $ T.Bid 3 T.Notrump
       in
         situation "3NTAKQ" action bid explanation
   in
@@ -177,7 +177,7 @@ completeSuperacceptKQJ10 = let
           \ likely to run.  Bid a thin " ++ output fmt (T.Bid 3 T.Notrump) ++
             ". If opener has a stopper in every other suit, the game is likely\
           \ be makable, despite your lack of points."
-        bid = T.Bid 3 T.Notrump
+        bid = makeCall $ T.Bid 3 T.Notrump
       in
         situation "3NTKQJ" action bid explanation
   in
@@ -199,7 +199,7 @@ completeSuperaccept10CardFit = let
           \ either the ace or king of the suit. With your extra length and\
           \ both top honors, the suit should be running. Bid the notrump\
           \ game."
-        bid = T.Bid 3 T.Notrump
+        bid = makeCall $ T.Bid 3 T.Notrump
       in
         situation "3NT10Fit" action bid explanation
   in
@@ -222,7 +222,7 @@ failSuperaccept = let
           \ look like the suit is going to run, so a notrump game probably\
           \ won't make. Sign off in partscore, even though you're wrong-siding\
           \ the contract."
-        bid = T.Bid 3 suit
+        bid = makeCall $ T.Bid 3 suit
       in
         situation "SupFail" action bid explanation
   in
@@ -251,7 +251,7 @@ notrumpInvite = let
           \ The Stayman bid is not alertable. This frees up a direct " ++
             output fmt (T.Bid 2 T.Notrump) ++ " reply to be a minor suit\
           \ transfer."
-        bid = T.Bid 2 T.Clubs
+        bid = makeCall $ T.Bid 2 T.Clubs
       in
         situation "NTInv" action bid explanation
   in
