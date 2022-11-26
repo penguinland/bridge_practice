@@ -7,7 +7,8 @@ module SituationInstance (
 
 import Control.Monad.Trans.State.Strict(State)
 import Data.List.Utils(join)
-import System.Random(StdGen, next)
+import Data.Bifunctor(first)
+import System.Random(StdGen, genWord64)
 
 import DealerProg(eval)
 import Output(Showable, toLatex, OutputType(..), Commentary)
@@ -36,7 +37,7 @@ instance Showable SituationInstance where
 instantiate :: String -> Situation ->
         State StdGen (IO (Maybe SituationInstance))
 instantiate reference (Situation _ b dl c s v dn) = do
-    n <- use next
+    n <- use (first (fromInteger . toInteger) . genWord64)
     let instantiate' :: IO (Maybe SituationInstance)
         instantiate' = do
             maybeDeal <- eval dn v dl n

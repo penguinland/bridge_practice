@@ -6,7 +6,7 @@ module Situation (
 ) where
 
 
-import System.Random(StdGen, next)
+import System.Random(StdGen, genWord64R)
 
 import Auction(Action, finish)
 import DealerProg(DealerProg)
@@ -38,14 +38,13 @@ class Optionable o where
 
 instance Optionable Situation where
     (f <~ as) g = let
-        (n, g') = next g
-        i = n `mod` length as :: Int
+        -- We use Int, but StdGen uses Word64. Cast between them via Integer.
+        (i, g') = genWord64R (fromInteger . toInteger . length $ as) g
       in
-        f g' (as !! i)
+        f g' (as !! (fromInteger . toInteger $ i))
 
 instance (Optionable s) => Optionable (b -> s) where
     (f <~ as) g = let
-        (n, g') = next g
-        i = n `mod` length as :: Int
+        (i, g') = genWord64R (fromInteger . toInteger . length $ as) g
       in
-        f g' (as !! i)
+        f g' (as !! (fromInteger . toInteger $ i))
