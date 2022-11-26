@@ -25,7 +25,7 @@ import Control.Monad.Trans.State.Strict(State, execState, get, put, modify)
 import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
-import DealerProg(DealerProg, newDeal, addNewReq, addDefn, invert)
+import DealerProg(DealerProg, addNewReq, addDefn, invert)
 import Structures(Bidding, startBidding, (>-), currentBidder)
 import qualified Terminology as T
 
@@ -34,7 +34,7 @@ type Action = State Auction ()
 
 
 newAuction :: T.Direction -> Auction
-newAuction dealer = (startBidding dealer, newDeal)
+newAuction dealer = (startBidding dealer, mempty)
 
 
 finish :: T.Direction -> Action -> Auction

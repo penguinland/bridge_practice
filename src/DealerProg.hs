@@ -1,6 +1,5 @@
 module DealerProg(
   DealerProg
-, newDeal
 , addDefn
 , addReq   -- TODO: does this need to be public?
 , addNewReq
@@ -32,8 +31,6 @@ type CondDefn = String
 
 data DealerProg = DealerProg (Map.Map CondName CondDefn) [CondName]
 
-newDeal :: DealerProg
-newDeal = DealerProg Map.empty []
 
 instance Semigroup DealerProg where
     (DealerProg defnsA reqsA) <> (DealerProg defnsB reqsB) =
@@ -43,7 +40,7 @@ instance Semigroup DealerProg where
                       | otherwise = error $ "2 definitons for " ++ k
 
 instance Monoid DealerProg where
-    mempty = newDeal
+    mempty = DealerProg Map.empty []
 
 
 addDefn :: CondName -> CondDefn -> DealerProg -> DealerProg
