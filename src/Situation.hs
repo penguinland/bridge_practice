@@ -6,6 +6,7 @@ module Situation (
 ) where
 
 
+import Data.Bifunctor(first)
 import System.Random(StdGen, genWord64R)
 
 import Auction(Action, finish)
@@ -40,13 +41,13 @@ instance Optionable Situation where
     (f <~ as) g = let
         -- We use Int, but StdGen uses Word64. Cast between them via Integer.
         maxIndex = fromInteger . toInteger . subtract 1 . length $ as
-        (i, g') = genWord64R maxIndex g
+        (i, g') = first (fromInteger . toInteger) . genWord64R maxIndex $ g
       in
-        f g' (as !! (fromInteger . toInteger $ i))
+        f g' (as !! i)
 
 instance (Optionable s) => Optionable (b -> s) where
     (f <~ as) g = let
         maxIndex = fromInteger . toInteger . subtract 1 . length $ as
-        (i, g') = genWord64R maxIndex g
+        (i, g') = first (fromInteger . toInteger) . genWord64R maxIndex $ g
       in
-        f g' (as !! (fromInteger . toInteger $ i))
+        f g' (as !! i)
