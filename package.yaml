@@ -4,7 +4,7 @@ github:              "penguinland/bridge-practice"
 license:             BSD3
 author:              "Alan Davidson"
 maintainer:          "alan.davidson@gmail.com"
-copyright:           "2019 Alan Davidson"
+copyright:           "2019-2022 Alan Davidson"
 
 extra-source-files:
 - README.md
@@ -20,7 +20,7 @@ extra-source-files:
 description:         Please see the README on GitHub at <https://github.com/penguinland/bridge-practice#readme>
 
 dependencies:
-- base >= 4.7 && < 5
+- base >= 4.11 && < 5
 - containers
 - MissingH
 - process

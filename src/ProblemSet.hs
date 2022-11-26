@@ -6,7 +6,6 @@ module ProblemSet(
 import Control.Monad.Trans.State.Strict(runState, get)
 import Data.List(sort)
 import Data.List.Utils(join, replace)
-import System.IO(readFile, writeFile)
 import System.Random(StdGen)
 
 import Output(toLatex)

@@ -9,7 +9,7 @@ module Topic(
 
 import Control.Monad.Trans.State.Strict(State)
 import Data.Bifunctor(first)
-import System.Random(RandomGen, StdGen, next, split, mkStdGen)
+import System.Random(RandomGen, StdGen, genWord64, split, mkStdGen)
 
 import Random(use, pickItem)
 import Situation(Situation, base, (<~))
@@ -23,7 +23,7 @@ class Randomizer r where
     make :: RandomGen g => g -> (r, g)
 
 instance Randomizer StdGen where
-    make = first mkStdGen . next
+    make = first (mkStdGen . fromInteger . toInteger) . genWord64
 
 
 data Situations = RawSit Situation

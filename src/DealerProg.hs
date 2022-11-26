@@ -1,6 +1,5 @@
 module DealerProg(
   DealerProg
-, newDeal
 , addDefn
 , addReq   -- TODO: does this need to be public?
 , addNewReq
@@ -29,19 +28,20 @@ import qualified Terminology as T
 type CondName = String
 type CondDefn = String
 
+
 data DealerProg = DealerProg (Map.Map CondName CondDefn) [CondName]
 
-newDeal :: DealerProg
-newDeal = DealerProg Map.empty []
 
---instance Semigroup DealerProg where
-instance Monoid DealerProg where
-    mappend (DealerProg defnsA reqsA) (DealerProg defnsB reqsB) =
+instance Semigroup DealerProg where
+    (DealerProg defnsA reqsA) <> (DealerProg defnsB reqsB) =
         DealerProg (Map.unionWithKey noDupes defnsA defnsB) (reqsB ++ reqsA)
       where
         noDupes k a b | a == b    = a
                       | otherwise = error $ "2 definitons for " ++ k
-    mempty = newDeal
+
+instance Monoid DealerProg where
+    mempty = DealerProg Map.empty []
+
 
 addDefn :: CondName -> CondDefn -> DealerProg -> DealerProg
 addDefn name defn (DealerProg m l) =
@@ -50,15 +50,19 @@ addDefn name defn (DealerProg m l) =
     Just defn' -> if defn == defn' then DealerProg m l
                                    else error $ "2 defintions for " ++ name
 
+
 addReq :: CondName -> DealerProg -> DealerProg
 addReq expr (DealerProg m l) = DealerProg m (expr:l)
+
 
 addNewReq :: CondName -> CondDefn -> DealerProg -> DealerProg
 addNewReq name defn = addReq name . addDefn name defn
 
+
 invert :: DealerProg -> DealerProg
 invert (DealerProg defns reqs) =
     DealerProg defns ["!(" ++ join " && " reqs ++ ")"]
+
 
 toProgram :: DealerProg -> String
 toProgram (DealerProg defns conds) = join "\n" $
