@@ -6,8 +6,8 @@ module SituationInstance (
 
 
 import Control.Monad.Trans.State.Strict(State)
-import Data.List.Utils(join)
 import Data.Bifunctor(first)
+import Data.List.Utils(join)
 import System.Random(StdGen, genWord64)
 
 import DealerProg(eval)
