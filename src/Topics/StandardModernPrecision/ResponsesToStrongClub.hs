@@ -81,7 +81,7 @@ slamSingleSuit = let
           \ control bidding. Subsequent bids are natural 5-card (and later\
           \ 4-card) suits, not MaFiA."
       in
-        situation "Slam" action (bid) explanation
+        situation "Slam" action bid explanation
   in
     smpWrapN $ base sit <~ T.allSuits
 
