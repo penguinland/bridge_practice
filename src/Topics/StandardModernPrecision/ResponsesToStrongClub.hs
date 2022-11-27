@@ -21,7 +21,7 @@ oneDiamond = let
         "When game might not be possible opposite a random 17 HCP, start\
       \ with " ++ output fmt (T.Bid 1 T.Diamonds) ++ ". This initiates MaFiA."
   in
-    smpWrapN . base $ situation "1D" action (T.Bid 1 T.Diamonds) explanation
+    smpWrapN . base $ situation "1D" action B.b1C1D explanation
 
 
 oneHeart :: Situations
@@ -37,7 +37,7 @@ oneHeart = let
       \ Subsequent bids are natural 5-card suits (and later 4-card suits), not\
       \ MaFiA."
   in
-    smpWrapN . base $ situation "1H" action (T.Bid 1 T.Hearts) explanation
+    smpWrapN . base $ situation "1H" action B.b1C1H explanation
 
 
 oneNotrump :: Situations
@@ -53,7 +53,7 @@ oneNotrump = let
         output fmt (T.Bid 1 T.Notrump) ++ ", and we'll\
       \ go from there. Stayman is on, but transfers are not."
   in
-    smpWrapN . base $ situation "1N" action (T.Bid 1 T.Notrump) explanation
+    smpWrapN . base $ situation "1N" action B.b1C1N explanation
 
 
 slamSingleSuit :: Situations
@@ -66,13 +66,14 @@ slamSingleSuit = let
 
     sit strain = let
         level = if strain == T.Spades then 1 else 2
+        bid = finalAction strain
         action = do
             firstSeatOpener
             b1C
             oppsPass
             sequence_ . map (flip maxSuitLength 4) . filter (/= strain) $
                 T.allSuits
-            withholdBid . finalAction $ strain
+            withholdBid bid
         explanation fmt =
             "You've got at least mild slam interest with 12+ HCP, and a 5+ card\
           \ suit. Bid a natural " ++ output fmt (T.Bid level strain) ++ ",\
@@ -80,7 +81,7 @@ slamSingleSuit = let
           \ control bidding. Subsequent bids are natural 5-card (and later\
           \ 4-card) suits, not MaFiA."
       in
-        situation "Slam" action (T.Bid level strain) explanation
+        situation "Slam" action (bid) explanation
   in
     smpWrapN $ base sit <~ T.allSuits
 
@@ -103,7 +104,7 @@ twoSpades = let
         output fmt (T.Bid 4 T.Diamonds) ++ "/RKC to tell us how high to go and\
       \ what suit is trump."
   in
-    smpWrapN . base $ situation "2S" action (T.Bid 2 T.Spades) explanation
+    smpWrapN . base $ situation "2S" action B.b1C2S explanation
 
 
 passGameSingleSuit :: Situations
@@ -116,6 +117,7 @@ passGameSingleSuit = let
 
     sit strain = let
         level = if any (== strain) T.majorSuits then 1 else 2
+        bid = finalAction strain
         action = do
             forbid firstSeatOpener
             cannotPreempt
@@ -127,7 +129,7 @@ passGameSingleSuit = let
             oppsPass
             sequence_ . map (flip maxSuitLength 4) . filter (/= strain) $
                 T.allSuits
-            withholdBid . finalAction $ strain
+            withholdBid bid
         explanation fmt =
             "You're game-forcing with a 5+ card suit. but you're a passed hand,\
           \ so all the slam bids have turned into game bids instead. Bid a\
@@ -135,7 +137,7 @@ passGameSingleSuit = let
           \ and we'll look for a trump fit from there. Partner's next bid is\
           \ a 5-card suit, and bids after that are 4+ cards."
       in
-        situation "PG" action (T.Bid level strain) explanation
+        situation "PG" action bid explanation
   in
     smpWrapS $ base sit <~ T.allSuits
 
@@ -157,11 +159,10 @@ passOneNotrump = let
       \ Because you're a passed hand, the slam-interest bids are repurposed to\
       \ be merely game forcing. Bid a natural " ++
         output fmt (T.Bid 1 T.Notrump) ++ ", and we'll\
-      \ go from there. Systems are on, even though this will wrong-side the\
-      \ contract: better to be familiar and easy to remember than right-side\
-      \ it, at least until we're more practiced with SMP."
+      \ go from there. Stayman is on, but transfers are off (so the stronger\
+      \ hand will be declarer more often)."
   in
-    smpWrapS . base $ situation "P1N" action (T.Bid 1 T.Notrump) explanation
+    smpWrapS . base $ situation "P1N" action B.bP1C1N explanation
 
 
 passTwoSpades :: Situations
@@ -187,7 +188,7 @@ passTwoSpades = let
         output fmt (T.Bid 4 T.Diamonds) ++ "/RKC to indicate how high to go\
       \ and which suit is trump."
   in
-    smpWrapS . base $ situation "P2S" action (T.Bid 2 T.Spades) explanation
+    smpWrapS . base $ situation "P2S" action B.bP1C2S explanation
 
 
 -- TODO: figure out how two-suited hands show slam interest. Which suit do you
