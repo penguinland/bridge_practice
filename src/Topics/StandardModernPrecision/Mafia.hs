@@ -86,7 +86,7 @@ twoMinorMinors = let
             B.startOfMafia
             forbid balancedHand
             suitLength minorSuit 5
-            withholdBid bid  -- Ensures clubs are longer than diamonds
+            withholdBid bid  -- Ensures the bid minor is longer than the other
         explanation _ =
             "With an unbalanced hand that isn't game forcing and doesn't have\
            \ a 4-card major, rebid your long minor. Sometimes this minor is\
