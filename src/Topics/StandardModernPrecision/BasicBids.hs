@@ -69,7 +69,7 @@ b1C :: Action
 b1C = do
     pointRange 16 40
     sequence_ . map forbid $ [b1N, b2N, b3N]
-    makeAlertableCall (T.Bid 1 T.Clubs) "16+ HCP"
+    makeAlertableCall (T.Bid 1 T.Clubs) "16+ HCP, any shape"
 
 
 b1M :: T.Suit -> Action
@@ -88,7 +88,7 @@ b2C = do
     forbid (b1M T.Hearts)
     forbid (b1M T.Spades)
     minSuitLength T.Clubs 6
-    makeAlertableCall (T.Bid 2 T.Clubs) "6+ clubs"
+    makeAlertableCall (T.Bid 2 T.Clubs) "10-15 HCP, 6+ clubs"
 
 
 b2D :: Action
