@@ -24,7 +24,7 @@ oneNotrump = let
         output fmt (T.Bid 1 T.Notrump) ++ ". No need to plan a second bid;\
       \ partner is now captain of the auction and will take over for you."
   in
-    stdWrap $ situation "1N" action (T.Bid 1 T.Notrump) explanation
+    stdWrap $ situation "1N" action SO.b1n explanation
 
 
 twoNotrump :: Situations
@@ -37,7 +37,7 @@ twoNotrump = let
         output fmt (T.Bid 2 T.Notrump) ++ ". No need to plan a second bid;\
       \ partner is now captain of the auction and will take over for you."
   in
-    stdWrap $ situation "2N" action (T.Bid 2 T.Notrump) explanation
+    stdWrap $ situation "2N" action SO.b2n explanation
 
 
 oneSpade :: Situations
@@ -50,7 +50,7 @@ oneSpade = let
         "With a 5-card spade suit and a hand unsuitable for opening \
       \ notrump, open " ++ output fmt (T.Bid 1 T.Spades) ++ "."
   in
-    stdWrap $ situation "1S" action (T.Bid 1 T.Spades) explanation
+    stdWrap $ situation "1S" action SO.b1s explanation
 
 
 oneHeart :: Situations
@@ -63,7 +63,7 @@ oneHeart = let
         "With a 5-card heart suit and a hand unsuitable for opening \
       \ notrump, open " ++ output fmt (T.Bid 1 T.Hearts) ++ "."
   in
-    stdWrap $ situation "1H" action (T.Bid 1 T.Hearts) explanation
+    stdWrap $ situation "1H" action SO.b1h explanation
 
 
 bothMajorsReverse :: Situations
@@ -78,7 +78,7 @@ bothMajorsReverse = let
       \ open " ++ output fmt (T.Bid 1 T.Hearts) ++ ", planning to rebid " ++
         output fmt (T.Bid 2 T.Spades) ++ " next turn."
   in
-    stdWrap $ situation "MajRev" action (T.Bid 1 T.Hearts) explanation
+    stdWrap $ situation "MajRev" action SO.b1h explanation
 
 
 bothMajorsNoReverse :: Situations
@@ -93,7 +93,7 @@ bothMajorsNoReverse = let
       \ reverse, open " ++ output fmt (T.Bid 1 T.Spades) ++ ", planning\
       \ to rebid " ++ output fmt (T.Bid 2 T.Hearts) ++ " next turn."
   in
-    stdWrap $ situation "MajNoRev" action (T.Bid 1 T.Spades) explanation
+    stdWrap $ situation "MajNoRev" action SO.b1s explanation
 
 
 oneDiamond :: Situations
@@ -108,7 +108,7 @@ oneDiamond = let
       \ notrump, open " ++ output fmt (T.Bid 1 T.Diamonds) ++ " when \
       \ diamonds is your only minor."
   in
-    stdWrap $ situation "1D1Suit" action (T.Bid 1 T.Diamonds) explanation
+    stdWrap $ situation "1D1Suit" action SO.b1d explanation
 
 
 oneDiamond3Cards :: Situations
@@ -127,7 +127,7 @@ oneDiamond3Cards = let
       \ only time you'd open 1D with a 3-card suit in standard openings is \
       \ when your shape is exactly 4=4=3=2."
   in
-    stdWrap $ situation "1D4432" action (T.Bid 1 T.Diamonds) explanation
+    stdWrap $ situation "1D4432" action SO.b1d explanation
 
 
 oneClub :: Situations
@@ -142,7 +142,7 @@ oneClub = let
       \ notrump, open " ++ output fmt (T.Bid 1 T.Clubs) ++ " when \
       \ clubs is your only minor."
   in
-    stdWrap $ situation "1C1Suit" action (T.Bid 1 T.Clubs) explanation
+    stdWrap $ situation "1C1Suit" action SO.b1c explanation
 
 
 oneClubEqualMinors :: Situations
@@ -159,7 +159,7 @@ oneClubEqualMinors = let
           \ your minors are of equal, short length. As the saying goes, \
           \ ``up the line with 3s and 4s, from the top with 5s or mores.''"
       in
-        situation "1C1Suit" action (T.Bid 1 T.Clubs) explanation
+        situation "1C1Suit" action SO.b1c explanation
   in
     wrapVulDlr $ base sit <~ [3, 4]
 
@@ -176,7 +176,7 @@ bothMinorsNoReverse = let
         output fmt (T.Bid 1 T.Diamonds) ++ ", planning to rebid " ++
         output fmt (T.Bid 2 T.Clubs) ++ " next turn."
   in
-    stdWrap $ situation "MinNoRev" action (T.Bid 1 T.Diamonds) explanation
+    stdWrap $ situation "MinNoRev" action SO.b1d explanation
 
 
 bothMinorsNoReverseShortD :: Situations
@@ -196,7 +196,7 @@ bothMinorsNoReverseShortD = let
       \ enough strength to make a 3-level contract viable when partner has\
       \ a minimum."
   in
-    stdWrap $ situation "MinNoRv4D" action (T.Bid 1 T.Diamonds) explanation
+    stdWrap $ situation "MinNoRv4D" action SO.b1d explanation
 
 
 bothMinorsReverse :: Situations
@@ -211,7 +211,7 @@ bothMinorsReverse = let
         output fmt (T.Bid 1 T.Clubs) ++ ", planning to rebid " ++
         output fmt (T.Bid 2 T.Diamonds) ++ " next turn."
   in
-    stdWrap $ situation "MinRev55" action (T.Bid 1 T.Clubs) explanation
+    stdWrap $ situation "MinRev55" action SO.b1c explanation
 
 
 
