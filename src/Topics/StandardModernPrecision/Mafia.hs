@@ -2,10 +2,9 @@ module Topics.StandardModernPrecision.Mafia(topic) where
 
 import Output(output)
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, forbid, {-makePass, maxSuitLength, -} minSuitLength, suitLength,
-               {-Action,-} balancedHand, pointRange, SuitLengthComparator(..), compareSuitLength)
+import Auction(withholdBid, forbid, minSuitLength, suitLength, balancedHand,
+               SuitLengthComparator(..), compareSuitLength, extractLastCall)
 import Situation(situation, base, (<~))
---import CommonBids(cannotPreempt)
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(smpWrapS)
 import qualified Topics.StandardModernPrecision.Bids1C as B
@@ -13,27 +12,23 @@ import qualified Topics.StandardModernPrecision.Bids1C as B
 
 notrump :: Situations
 notrump = let
-    sit (minHcp, maxHcp, level) = let
+    sit bid = let
         action = do
             B.startOfMafia
-            balancedHand
-            pointRange minHcp maxHcp
-            -- NOTE: we're not using B.b1C1D1N or B.b1C1D2N here. Maybe we
-            -- should be? Not sure.
-        explanation fmt =
-            "With " ++ show minHcp ++ "--" ++ show maxHcp ++ " HCP and a\
-           \ balanced hand, rebid " ++ output fmt (T.Bid level T.Notrump) ++
-            ". Even if you have a 5-card major, the comfort of knowing that\
-           \ systems are on is preferable."
+            withholdBid bid
+        explanation _ =
+            "With a balanced hand, rebid notrump to show your point range.\
+           \ Even if you have a 5-card major, it's better to know that\
+           \ systems are on and partner knows your strength within 1 HCP."
       in
-        situation "xN" action (T.Bid level T.Notrump) explanation
+        situation "xN" action bid explanation
   in
-    smpWrapS $ base sit <~ [(17, 18, 1), (21, 23, 2)]
+    smpWrapS $ base sit <~ [B.b1C1D1N, B.b1C1D2N]
 
 
 oneMajor :: Situations
 oneMajor = let
-    sit (majorSuit, bid) = let
+    sit bid = let
         action = do
             B.startOfMafia
             forbid balancedHand
@@ -42,9 +37,9 @@ oneMajor = let
             "With an unbalanced hand that isn't game forcing, bid a 4-card\
            \ major if you have one."
       in
-        situation "1M" action (T.Bid 1 majorSuit) explanation
+        situation "1M" action bid explanation
   in
-    smpWrapS $ base sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
+    smpWrapS $ base sit <~ [B.b1C1D1H, B.b1C1D1S]
 
 
 oneMajorMinor :: Situations
@@ -61,7 +56,7 @@ oneMajorMinor = let
            \ major if you have one. This holds even if you've got a longer\
            \ minor (MAjors FIrst Always)."
       in
-        situation "1Mm" action (T.Bid 1 majorSuit) explanation
+        situation "1Mm" action bid explanation
   in
     smpWrapS $ base sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
                         <~ T.minorSuits
@@ -77,9 +72,9 @@ twoMinorSingle = let
             withholdBid bid
         explanation _ =
             "With an unbalanced hand that isn't game forcing and doesn't have\
-           \ a 4-card major, rebid your long minor."
+           \ a 4-card major, bid your long minor."
       in
-        situation "2m" action (T.Bid 2 minorSuit) explanation
+        situation "2m" action bid explanation
   in
     smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
 
@@ -91,13 +86,13 @@ twoMinorMinors = let
             B.startOfMafia
             forbid balancedHand
             suitLength minorSuit 5
-            withholdBid bid
+            withholdBid bid  -- Ensures the bid minor is longer than the other
         explanation _ =
             "With an unbalanced hand that isn't game forcing and doesn't have\
            \ a 4-card major, rebid your long minor. Sometimes this minor is\
            \ only 5 cards, if you're 5-4 in the minors."
       in
-        situation "2mm" action (T.Bid 2 minorSuit) explanation
+        situation "2mm" action bid explanation
   in
     smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
 
@@ -116,7 +111,7 @@ equalMinors = let
            \ same length, bid diamonds first so that you can bid clubs later\
            \ without reversing."
       in
-        situation "2me" action (T.Bid 2 T.Diamonds) explanation
+        situation "2me" action B.b1C1D2D explanation
   in
     smpWrapS $ base sit
 
@@ -134,31 +129,28 @@ bothMajorsLongSpades = let
             output fmt (T.Bid 1 T.Spades) ++ ". You can then bid the hearts\
            \ later without reversing."
       in
-        situation "2MS" action (T.Bid 1 T.Spades) explanation
+        situation "2MS" action B.b1C1D1S explanation
   in
     smpWrapS $ base sit
 
 
 jumpBid :: Situations
 jumpBid = let
-    sit (rawBid, bid) = let
+    sit bid = let
         action = do
             B.startOfMafia
             withholdBid bid
         explanation fmt =
-            "With an unbalanced, single-suited hand that is strong enough to\
+            "With an unbalanced hand that is strong enough to\
            \ force to game, jump in your suit. Responder can treat this like\
            \ the 2/1 sequence " ++
             output fmt (T.Bid 2 T.Clubs) ++ "--" ++
             output fmt (T.Bid 2 T.Diamonds) ++ "--" ++
-            output fmt rawBid ++ "."
+            output fmt (extractLastCall bid) ++ "."
       in
-        situation "J1" action rawBid explanation
+        situation "J1" action bid explanation
   in
-    smpWrapS $ base sit <~ [ (T.Bid 2 T.Hearts,   B.b1C1D2H)
-                           , (T.Bid 2 T.Spades,   B.b1C1D2S)
-                           , (T.Bid 3 T.Clubs,    B.b1C1D3C)
-                           , (T.Bid 3 T.Diamonds, B.b1C1D3D)]
+    smpWrapS $ base sit <~ [B.b1C1D2H, B.b1C1D2S, B.b1C1D3C, B.b1C1D3D]
 
 
 topic :: Topic

@@ -19,6 +19,7 @@ module Auction (
 , withholdBid
 , compareSuitLength
 , SuitLengthComparator(..)
+, extractLastCall
 ) where
 
 import Control.Monad.Trans.State.Strict(State, execState, get, put, modify)
@@ -26,7 +27,7 @@ import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
 import DealerProg(DealerProg, addNewReq, addDefn, invert)
-import Structures(Bidding, startBidding, (>-), currentBidder)
+import Structures(Bidding, startBidding, (>-), lastCall, currentBidder)
 import qualified Terminology as T
 
 type Auction = (Bidding, DealerProg)
@@ -143,5 +144,11 @@ compareSuitLength suitA op suitB = let
   in
     constrain name [show suitA ++ "(", ") " ++ show op ++ " " ++
                     show suitB ++ "(", ")"]
+
+extractLastCall :: Action -> T.CompleteCall
+extractLastCall =
+    -- It doesn't matter who was dealer: use North just to extract the bidding
+    -- from the action.
+    lastCall . fst . finish T.North
 
 -- TODO: hasCard

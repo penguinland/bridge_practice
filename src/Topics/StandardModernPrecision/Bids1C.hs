@@ -298,7 +298,8 @@ b1C1D1H2N = do
     -- The 2N bid is for hands with a singleton or void, so forbid the
     -- semibalanced response.
     forbid b1C1D1H3H
-    makeCall $ T.Bid 2 T.Notrump
+    makeAlertableCall (T.Bid 2 T.Notrump)
+                      "5-7 HCP, undisclosed splinter for hearts"
 
 
 b1C1D1H1S :: Action
@@ -338,6 +339,11 @@ b1C1D1H2C = do
     forbid b1C1D1H1S
     forbid b1C1D1H1N
     forbid b1C1D1H2D
+    -- There are other splinter bids that haven't been created yet let alone
+    -- forbidden here, so just explicitly point out the maximum lengths of the
+    -- majors.
+    maxSuitLength T.Hearts 2
+    maxSuitLength T.Spades 3
     pointRange 6 7  -- Redundant with forbidding a 1N rebid, but explicit
     makeAlertableCall (T.Bid 2 T.Clubs) "6-7 HCP, at most 2 hearts and 3 spades"
 
@@ -365,7 +371,8 @@ b1C1D1S2N = do
     -- The 2N bid is for hands with a singleton or void, so forbid the
     -- semibalanced response.
     forbid b1C1D1S3S
-    makeAlertableCall (T.Bid 2 T.Notrump) "5-7 HCP, undisclosed splinter"
+    makeAlertableCall (T.Bid 2 T.Notrump)
+                      "5-7 HCP, undisclosed splinter for spades"
 
 
 b1C1D1S1N :: Action
@@ -408,5 +415,10 @@ b1C1D1S2C = do
     forbid b1C1D1S2H
     forbid b1C1D1S1N
     forbid b1C1D1S2D
+    -- There are other splinter bids that haven't been created yet let alone
+    -- forbidden here, so just explicitly point out the maximum lengths of the
+    -- majors.
+    maxSuitLength T.Hearts 4
+    maxSuitLength T.Spades 2
     pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
     makeAlertableCall (T.Bid 2 T.Clubs) "6-7 HCP, at most 2 spades"

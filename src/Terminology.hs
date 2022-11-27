@@ -91,7 +91,16 @@ instance Showable Call where
 
 
 -- A complete call is a call with an optional alerted explanation.
+-- TODO: do we need to make the alert Showable to format the suits and things?
 data CompleteCall = CompleteCall Call (Maybe String)
+
+-- The Showable instance is for revealing what the correct answer is; during the
+-- auction we need to do different things for our alerts and our opponents'
+-- alerts, so that all gets packed into the Showable instance for the Bidding
+-- datatype in Structures.hs instead.
+instance Showable CompleteCall where
+    toLatex (CompleteCall c a) =
+        toLatex c ++ maybe "" (\x -> " (" ++ x ++ ")") a
 
 
 data Vulnerability = NS | EW | Both | None deriving Eq

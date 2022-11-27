@@ -9,22 +9,26 @@ module Situation (
 import Data.Bifunctor(first)
 import System.Random(StdGen, genWord64R)
 
-import Auction(Action, finish)
+import Auction(Action, finish, extractLastCall)
 import DealerProg(DealerProg)
 import Output(Commentary)
 import Structures(Bidding)
-import Terminology(Call, Direction, Vulnerability)
+import Terminology(CompleteCall, Direction, Vulnerability)
 
 
-data Situation =
-    Situation String Bidding DealerProg Call Commentary Vulnerability Direction
+data Situation = Situation String Bidding DealerProg CompleteCall Commentary
+                           Vulnerability Direction
 
-
-situation :: String -> Action -> Call -> Commentary -> Vulnerability ->
+-- The first action is the auction up until now. The second one is some snippet
+-- of auction whose last bid is the intended answer to the situation. We make
+-- this a convenience, so you can reuse Actions for both constructing the
+-- auction and describing the next action that should follow.
+situation :: String -> Action -> Action -> Commentary -> Vulnerability ->
     Direction -> Situation
-situation r a c s v d = Situation r bidding deal c s v d
+situation r a c s v d = Situation r bidding deal answer s v d
   where
     (bidding, deal) = finish d a
+    answer = extractLastCall c
 
 
 -- If you have a function that takes arguments and creates a Situation, call

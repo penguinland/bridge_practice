@@ -3,11 +3,15 @@ module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 import Output(output)
 import Topic(Topic(..), wrap, stdWrap, wrapVulDlr, Situations)
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-               Action, alternatives, constrain, makePass,
+               Action, alternatives, constrain, makePass, makeCall,
                makeAlertableCall, withholdBid)
 import Situation(situation, base, (<~))
 import qualified Terminology as T
 import qualified CommonBids as B
+
+
+-- TODO: Refactor into a proper list of alertable bids, so that the solutions to
+-- the situations can be self-alerted, too.
 
 
 twoDiamondOpener :: Action
@@ -64,7 +68,7 @@ open = let
         output fmt (T.Bid 2 T.Diamonds) ++ " with no 5-card major, " ++
         "no 6-card club suit, and at most 1 diamond."
   in
-    stdWrap $ situation "Open" action (T.Bid 2 T.Diamonds) explanation
+    stdWrap $ situation "Open" action twoDiamondOpener explanation
 
 
 immediateSignoffSpades3 :: Situations
@@ -82,7 +86,7 @@ immediateSignoffSpades3 = let
         output fmt (T.Bid 2 T.Spades) ++ " with a likely fit. If " ++
         "you're stuck playing a 4-3 fit, oh well."
   in
-    stdWrap $ situation "S43" action (T.Bid 2 T.Spades) explanation
+    stdWrap $ situation "S43" action (makeCall $ T.Bid 2 T.Spades) explanation
 
 
 immediateSignoffSpades4 :: Situations
@@ -99,7 +103,7 @@ immediateSignoffSpades4 = let
         "Without the strength for a game contract, sign off in " ++
         output fmt (T.Bid 2 T.Spades) ++ " with a likely fit."
   in
-    stdWrap $ situation "S44" action (T.Bid 2 T.Spades) explanation
+    stdWrap $ situation "S44" action (makeCall $ T.Bid 2 T.Spades) explanation
 
 
 immediateSignoffSpades5 :: Situations
@@ -116,7 +120,7 @@ immediateSignoffSpades5 = let
             "Without the strength for a game contract, sign off in " ++
             output fmt (T.Bid 2 T.Spades) ++ " with a guaranteed fit."
       in
-        situation "Sfit" action (T.Bid 2 T.Spades) explanation
+        situation "Sfit" action (makeCall $ T.Bid 2 T.Spades) explanation
   in
     -- Although this can happen when anyone is dealer, it is very rare when East
     -- deals, and generating those hands is difficult for dealer (often
@@ -146,7 +150,7 @@ passSignoff2Spades = let
             (if spadeLength == 4 then "." else
                 ", even though you might be in a 7-card fit.")
       in
-        situation "2SP" action (T.Pass) explanation
+        situation "2SP" action (makeCall T.Pass) explanation
   in
     wrapVulDlr $ base sit <~ [3, 4]
 
@@ -163,7 +167,7 @@ immediateSignoffClubs = let
         "Without the strength to invite to game, sign off in a club " ++
         "partial."
   in
-    stdWrap $ situation "3C" action (T.Bid 3 T.Clubs) explanation
+    stdWrap $ situation "3C" action (makeCall $ T.Bid 3 T.Clubs) explanation
 
 
 passSignoffClubs :: Situations
@@ -181,7 +185,7 @@ passSignoffClubs = let
         "Partner has less-than-invitational values and is signing off. " ++
         "Just pass."
   in
-    stdWrap $ situation "3CP" action (T.Pass) explanation
+    stdWrap $ situation "3CP" action (makeCall T.Pass) explanation
 
 
 immediateSignoffHearts :: Situations
@@ -198,7 +202,7 @@ immediateSignoffHearts = let
         "pull the bid to " ++ output fmt (T.Bid 2 T.Spades) ++ " with " ++
         "exactly 4315 shape."
   in
-    stdWrap $ situation "2H" action (T.Bid 2 T.Hearts) explanation
+    stdWrap $ situation "2H" action (makeCall $ T.Bid 2 T.Hearts) explanation
 
 
 passSignoffHearts :: Situations
@@ -217,7 +221,7 @@ passSignoffHearts = let
         "Partner has less-than-invitational values and is signing off. " ++
         "Given that you have 4 hearts, pass."
   in
-    stdWrap $ situation "2HP" action (T.Pass) explanation
+    stdWrap $ situation "2HP" action (makeCall T.Pass) explanation
 
 
 correctSignoffHearts :: Situations
@@ -242,7 +246,7 @@ correctSignoffHearts = let
             output fmt (T.Bid 2 T.Spades) ++ " in case partner only had 3 " ++
             "hearts (e.g., 3343 or 3352 shape)."
       in
-        situation "2H2S" action (T.Pass) explanation
+        situation "2H2S" action (makeCall $ T.Bid 2 T.Spades) explanation
   in
     -- We want to commonly show times when responder has just 3 hearts (and
     -- we're avoiding a 3-3 fit) and times when responder has a real heart suit.

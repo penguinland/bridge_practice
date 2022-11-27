@@ -13,8 +13,8 @@ minSupport :: Situations
 minSupport = let
     -- The type signature is to convince the compiler that we're not throwing
     -- away values from openerBid
-    sit :: (Action, Action, T.Suit) -> T.Vulnerability -> T.Direction -> Situation
-    sit (openerBid, responderBid, suit) = let
+    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit (openerBid, responderBid) = let
         action = do
             B.startOfMafia
             openerBid
@@ -25,18 +25,18 @@ minSupport = let
            \ You are neither strong enough nor shapely enough to invite to\
            \ game."
       in
-        situation "2M" action (T.Bid 2 suit) explanation
+        situation "2M" action responderBid explanation
   in
-    smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2H, T.Hearts)
-                           , (B.b1C1D1S, B.b1C1D1S2S, T.Spades) ]
+    smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2H)
+                           , (B.b1C1D1S, B.b1C1D1S2S) ]
 
 
 maxSupportSemibalanced :: Situations
 maxSupportSemibalanced = let
     -- The type signature is to convince the compiler that we're not throwing
     -- away values from openerBid
-    sit :: (Action, Action, T.Suit) -> T.Vulnerability -> T.Direction -> Situation
-    sit (openerBid, responderBid, suit) = let
+    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit (openerBid, responderBid) = let
         action = do
             B.startOfMafia
             openerBid
@@ -45,13 +45,13 @@ maxSupportSemibalanced = let
         explanation fmt =
             "With 4-card support and a maximum hand but no singleton, invite\
            \ with a double raise. You've already shown that game might not be\
-           \ possible with your " ++ output fmt (T.Bid 1 T.Diamonds) ++ "bid,\
+           \ possible with your " ++ output fmt (T.Bid 1 T.Diamonds) ++ " bid,\
            \ so partner won't get too excited."
       in
-        situation "3MB" action (T.Bid 3 suit) explanation
+        situation "3MB" action responderBid explanation
   in
-    smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H3H, T.Hearts)
-                           , (B.b1C1D1S, B.b1C1D1S3S, T.Spades) ]
+    smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H3H)
+                           , (B.b1C1D1S, B.b1C1D1S3S) ]
 
 
 maxSupportUnbalanced :: Situations
@@ -75,7 +75,7 @@ maxSupportUnbalanced = let
            \ singleton/void ``naturally'' unless it's clubs, in which case bid\
            \ our trump suit to show it!"
       in
-        situation "3MV" action (T.Bid 2 T.Notrump) explanation
+        situation "3MV" action responderBid explanation
   in
     smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2N)
                            , (B.b1C1D1S, B.b1C1D1S2N) ]
@@ -98,7 +98,7 @@ brakesHearts = let
              output fmt (T.Bid 1 T.Notrump) ++ " itself, since your bid is\
            \ not forcing)."
       in
-        situation "1NH" action (T.Bid 1 T.Notrump) explanation
+        situation "1NH" action B.b1C1D1H1N explanation
   in
     smpWrapN $ base sit
 
@@ -121,7 +121,7 @@ brakesSpades = let
              output fmt (T.Bid 1 T.Notrump) ++ " itself, since your bid is\
            \ not forcing)."
       in
-        situation "1NS" action (T.Bid 1 T.Notrump) explanation
+        situation "1NS" action B.b1C1D1S1N explanation
   in
     smpWrapN $ base sit
 
@@ -147,7 +147,7 @@ brakesSpadesHearts = let
            \ in " ++ output fmt (T.Bid 1 T.Notrump) ++ " itself, since your\
            \ bid is not forcing)."
       in
-        situation "1NSH" action (T.Bid 1 T.Notrump) explanation
+        situation "1NSH" action B.b1C1D1S1N explanation
   in
     smpWrapN $ base sit
 
@@ -166,7 +166,7 @@ otherMajorHearts = let
            \ Because we're still at the 1 level, you can do this with any\
            \ strength hand, even a 0 count!"
       in
-        situation "1S" action (T.Bid 1 T.Spades) explanation
+        situation "1S" action B.b1C1D1H1S explanation
   in
     smpWrapN $ base sit
 
@@ -188,7 +188,7 @@ otherMajorSpades = let
            \ we don't have a fit, we're going to get pushed up to the 3 level\
            \ at least."
       in
-        situation "2H" action (T.Bid 2 T.Hearts) explanation
+        situation "2H" action B.b1C1D1S2H explanation
   in
     smpWrapN $ base sit
 
@@ -210,7 +210,7 @@ threeCardSupport = let
            \ that partner's " ++ output fmt (T.Bid 2 T.Notrump) ++ " is an\
            \ artificial game force."
       in
-        situation "2D" action (T.Bid 2 T.Diamonds) explanation
+        situation "2D" action responderBid explanation
   in
     smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2D)
                            , (B.b1C1D1S, B.b1C1D1S2D) ]
@@ -230,7 +230,7 @@ threeCardSupportHearts = let
            \ bid " ++ output fmt (T.Bid 2 T.Diamonds) ++ ". Do this even with\
            \ a 5-card heart suit!"
       in
-        situation "2D" action (T.Bid 2 T.Diamonds) explanation
+        situation "2D" action B.b1C1D1S2D explanation
   in
     smpWrapN $ base sit
 
@@ -253,7 +253,7 @@ maxNoMajors = let
             output fmt (T.Bid 2 T.Notrump) ++ " as an artificial game\
            \ force/waiting bid."
       in
-        situation "2C" action (T.Bid 2 T.Clubs) explanation
+        situation "2C" action responderBid explanation
   in
     smpWrapN $ base sit <~ [ (B.b1C1D1H, B.b1C1D1H2C)
                            , (B.b1C1D1S, B.b1C1D1S2C) ]

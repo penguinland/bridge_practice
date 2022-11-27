@@ -4,11 +4,14 @@ module Structures (
 , currentBidder
 , startBidding
 , (>-)
+, lastCall
 , Deal(..)
 ) where
 
 import Data.Char(toUpper)
 import Data.List.Utils(join, replace)
+import Data.Maybe(fromMaybe)
+import Data.Semigroup(First(..), getFirst)
 
 import Output(Showable, toLatex)
 import qualified Terminology as T
@@ -60,6 +63,18 @@ startBidding T.South = Bidding T.South [[Nothing, Nothing, Nothing]]
 (Bidding T.West    bs ) >- c = Bidding T.North    ([Just c]  :bs)
 (Bidding d      (b:bs)) >- c = Bidding (T.next d) ((Just c:b):bs)
 _                       >- _ = error "Missing bidding for current direction"
+
+
+lastCall :: Bidding -> T.CompleteCall
+lastCall (Bidding _ calls) =
+    -- Surely there's a better way to do this, but I couldn't figure it out.
+    -- concat flattens the bidding to one long list (most recent bids first!).
+    -- We then map the calls to First of these values, and use sequence to turn
+    -- a (First Maybe CompleteCall) into a (Maybe First CompleteCall). Then
+    -- mconcat bunches them all into a single (Maybe First CompleteCall), which
+    -- we unwrap.
+    getFirst . fromMaybe (error "Unable to get last call from empty bidding") .
+        mconcat . map (sequence . First) . concat $ calls
 
 
 --                                           N    E    S    W

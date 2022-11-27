@@ -2,14 +2,14 @@ module Topics.JacobyTransfers(topic) where
 
 import Output(output, Punct(NDash))
 import Topic(Topic(..), Situations, wrap, stdWrap, wrapVulDlr)
-import Auction(forbid, makeAlertableCall, makePass, pointRange, suitLength,
-               minSuitLength, Action, balancedHand, constrain)
+import Auction(forbid, makeCall, makeAlertableCall, makePass, pointRange,
+               suitLength, minSuitLength, Action, balancedHand, constrain)
 import Situation(situation, base, (<~))
 import qualified Terminology as T
 import qualified CommonBids as B
 
 
--- syntactic sugar
+-- syntactic sugar for writing descriptions of solutions
 oneNT :: T.Call
 oneNT = T.Bid 1 T.Notrump
 
@@ -42,12 +42,16 @@ equalMajors = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
 smolen :: T.Suit -> Action  -- The suit is the longer major.
 smolen suit = do
+    let otherSuit = otherMajor suit
     minSuitLength suit 5
-    minSuitLength (otherMajor suit) 4
+    minSuitLength otherSuit 4
     pointRange 10 40
     -- With 5-5 in the majors, make a Jacoby transfer then bid the other suit.
     -- With 6-6, I guess you do the same? but it never comes up.
     forbid equalMajors
+    makeAlertableCall
+        (T.Bid 3 otherSuit)
+        ("5+ " ++ show suit ++ ", 4+ " ++ show otherSuit ++ ", game forcing")
 
 
 prepareJacobyTransfer :: T.Suit -> Action
@@ -99,7 +103,7 @@ initiateTransferWeak = let
            \ a 5-card major. Playing in it, even if it's a 5-2 fit, is more\
            \ likely to succeed than playing in notrump. Make a Jacoby transfer\
            \ into the suit, then pass and leave partner at the 2 level."
-        bid = T.Bid 2 $ transferSuit suit
+        bid = jacobyTransfer suit
       in
         situation "InitWeak" action bid explanation
   in
@@ -122,7 +126,7 @@ initiateTransferBInv = let
            \ options of playing in notrump with 2-card " ++ init (show suit) ++
              " support or in " ++ show suit ++ " with a fit, and the option of\
            \ playing in partscore with a minimum hand and game with a maximum."
-        bid = T.Bid 2 $ transferSuit suit
+        bid = jacobyTransfer suit
       in
         situation "InitBInv" action bid explanation
   in
@@ -146,7 +150,7 @@ initiateTransferBGf = let
              init (show suit) ++ " support or correcting to " ++
              output fmt (T.Bid 4 suit) ++ " with a fit, knowing that you\
            \ belong in game but not slam."
-        bid = T.Bid 2 $ transferSuit suit
+        bid = jacobyTransfer suit
       in
         situation "InitBGF" action bid explanation
   in
@@ -164,7 +168,7 @@ completeTransfer = let
           \ has made a Jacoby transfer. Complete the transfer by bidding the\
           \ next higher suit. Partner promises at least 5 cards in that major,\
           \ but wants you to be declarer so your stronger hand stays hidden."
-        bid = T.Bid 2 suit
+        bid = makeCall $ T.Bid 2 suit
       in
         situation "Complete" action bid explanation
   in
@@ -187,7 +191,7 @@ completeTransferShort = let
           \ and you want to be declarer so that your strong hand stays hidden.\
           \ If partner has at least invitational strength, he will make\
           \ another bid to give you options of where to play."
-        bid = T.Bid 2 suit
+        bid = makeCall $ T.Bid 2 suit
       in
         situation "Short" action bid explanation
   in
@@ -214,7 +218,7 @@ majors55inv = let
       \ hand and no spade fit (in which case a heart fit is guaranteed), or\
       \ bidding one of the majors at the 4 level with a maximum. This\
       \ wrong-sides the contract if we end up playing in spades."
-    bid = T.Bid 2 T.Diamonds
+    bid = jacobyTransfer T.Hearts
   in
     stdWrap $ situation "55Inv" action bid explanation
 
@@ -237,7 +241,7 @@ majors55gf = let
             \ and then bid " ++ output fmt (T.Bid 3 T.Hearts) ++ " afterwards.\
             \ Partner will then have the options of which game to bid.\
             \ This wrong-sides the contract if we end up playing in hearts."
-        bid = T.Bid 2 T.Hearts
+        bid = jacobyTransfer T.Spades
       in
         situation "55GF" action bid explanation
   in
