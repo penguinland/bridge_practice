@@ -9,6 +9,7 @@ import qualified Topics.StandardModernPrecision.ResponsesToStrongClub as Smp1CRe
 import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as TwoDOpen
+
 import ProblemSet(outputLatex)
 
 

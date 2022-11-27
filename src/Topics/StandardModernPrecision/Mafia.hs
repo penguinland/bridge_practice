@@ -2,10 +2,9 @@ module Topics.StandardModernPrecision.Mafia(topic) where
 
 import Output(output)
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, forbid, {-makePass, maxSuitLength, -} minSuitLength, suitLength,
-               {-Action,-} balancedHand, pointRange, SuitLengthComparator(..), compareSuitLength, extractLastCall)
+import Auction(withholdBid, forbid, minSuitLength, suitLength, balancedHand,
+               SuitLengthComparator(..), compareSuitLength, extractLastCall)
 import Situation(situation, base, (<~))
---import CommonBids(cannotPreempt)
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(smpWrapS)
 import qualified Topics.StandardModernPrecision.Bids1C as B
@@ -13,22 +12,18 @@ import qualified Topics.StandardModernPrecision.Bids1C as B
 
 notrump :: Situations
 notrump = let
-    sit (minHcp, maxHcp, bid) = let
+    sit bid = let
         action = do
             B.startOfMafia
-            balancedHand
-            pointRange minHcp maxHcp
-            -- NOTE: we're not using B.b1C1D1N or B.b1C1D2N here. Maybe we
-            -- should be? Not sure.
-        explanation fmt =
-            "With " ++ show minHcp ++ "--" ++ show maxHcp ++ " HCP and a\
-           \ balanced hand, rebid " ++ output fmt (extractLastCall bid) ++
-            ". Even if you have a 5-card major, the comfort of knowing that\
-           \ systems are on is preferable."
+            withholdBid bid
+        explanation _ =
+            "With a balanced hand, rebid notrump to show your point range.\
+           \ Even if you have a 5-card major, it's better to know that\
+           \ systems are on and partner knows your strength within 1 HCP."
       in
         situation "xN" action bid explanation
   in
-    smpWrapS $ base sit <~ [(17, 18, B.b1C1D1N), (21, 23, B.b1C1D2N)]
+    smpWrapS $ base sit <~ [B.b1C1D1N, B.b1C1D2N]
 
 
 oneMajor :: Situations
