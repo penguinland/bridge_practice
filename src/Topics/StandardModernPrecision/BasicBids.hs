@@ -18,7 +18,7 @@ module Topics.StandardModernPrecision.BasicBids(
 import System.Random(StdGen)
 
 import Topic(wrap, Situations)
-import Auction(forbid, pointRange, minSuitLength,
+import Auction(forbid, pointRange, suitLength, minSuitLength,
                Action, balancedHand, constrain, makeCall, makeAlertableCall,
                makePass)
 import Situation(Situation, (<~))
@@ -78,6 +78,9 @@ b1M suit = do
     forbid b1C
     forbid b1N
     minSuitLength suit 5
+    -- If you're a maximum with a 6-card minor and 5-card major, open the minor.
+    sequence_ . map forbid . flip map T.minorSuits $ (\minor ->
+        pointRange 14 15 >> minSuitLength minor 6 >> suitLength suit 5)
     makeCall $ T.Bid 1 suit
 
 
@@ -85,8 +88,7 @@ b2C :: Action
 b2C = do
     firstSeatOpener
     forbid b1C
-    forbid (b1M T.Hearts)
-    forbid (b1M T.Spades)
+    sequence_ . map (forbid . b1M) $ T.majorSuits
     minSuitLength T.Clubs 6
     makeAlertableCall (T.Bid 2 T.Clubs) "10-15 HCP, 6+ clubs"
 
