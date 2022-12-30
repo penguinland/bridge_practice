@@ -4,7 +4,7 @@ import Output(output, Punct(NDash))
 import Topic(Topic(..), Situations, wrap, stdWrap, wrapVulDlr)
 import Auction(forbid, makeCall, makeAlertableCall, makePass, pointRange,
                suitLength, minSuitLength, Action, balancedHand, constrain)
-import Situation(situation, base, (<~))
+import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified CommonBids as B
 
@@ -107,7 +107,7 @@ initiateTransferWeak = let
       in
         situation "InitWeak" action bid explanation
   in
-    wrapVulDlr $ base sit <~ T.majorSuits
+    wrapVulDlr $ return sit <~ T.majorSuits
 
 
 initiateTransferBInv :: Situations
@@ -130,7 +130,7 @@ initiateTransferBInv = let
       in
         situation "InitBInv" action bid explanation
   in
-    wrapVulDlr $ base sit <~ T.majorSuits
+    wrapVulDlr $ return sit <~ T.majorSuits
 
 
 initiateTransferBGf :: Situations
@@ -154,7 +154,7 @@ initiateTransferBGf = let
       in
         situation "InitBGF" action bid explanation
   in
-    wrapVulDlr $ base sit <~ T.majorSuits
+    wrapVulDlr $ return sit <~ T.majorSuits
 
 
 completeTransfer :: Situations
@@ -172,7 +172,7 @@ completeTransfer = let
       in
         situation "Complete" action bid explanation
   in
-    wrapVulDlr $ base sit <~ T.majorSuits
+    wrapVulDlr $ return sit <~ T.majorSuits
 
 
 completeTransferShort :: Situations
@@ -195,7 +195,7 @@ completeTransferShort = let
       in
         situation "Short" action bid explanation
   in
-    wrapVulDlr $ base sit <~ T.majorSuits
+    wrapVulDlr $ return sit <~ T.majorSuits
 
 
 majors55inv :: Situations
@@ -248,7 +248,7 @@ majors55gf = let
     -- Note that with 5-5 and game-going strength, you would have opened the
     -- bidding if you had a chance. So, you must not have had a chance to bid
     -- before your partner.
-    wrap $ base sit <~ T.allVulnerabilities <~ [T.West, T.North]
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North]
 
 
 topic :: Topic

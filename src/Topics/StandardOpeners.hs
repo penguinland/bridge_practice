@@ -3,7 +3,7 @@ module Topics.StandardOpeners(topic) where
 import Output(output)
 import Topic(Topic(..), wrap, stdWrap, wrapVulDlr, Situations)
 import Auction(forbid, suitLength, minSuitLength, maxSuitLength, withholdBid)
-import Situation(situation, base, (<~))
+import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified CommonBids as B
 import qualified StandardOpenings as SO
@@ -161,7 +161,7 @@ oneClubEqualMinors = let
       in
         situation "1C1Suit" action SO.b1c explanation
   in
-    wrapVulDlr $ base sit <~ [3, 4]
+    wrapVulDlr $ return sit <~ [3, 4]
 
 
 bothMinorsNoReverse :: Situations

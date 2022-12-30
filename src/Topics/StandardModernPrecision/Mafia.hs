@@ -4,7 +4,7 @@ import Output(output)
 import Topic(Topic(..), wrap, Situations)
 import Auction(withholdBid, forbid, minSuitLength, suitLength, balancedHand,
                SuitLengthComparator(..), compareSuitLength, extractLastCall)
-import Situation(situation, base, (<~))
+import Situation(situation, (<~))
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(smpWrapS)
 import qualified Topics.StandardModernPrecision.Bids1C as B
@@ -23,7 +23,7 @@ notrump = let
       in
         situation "xN" action bid explanation
   in
-    smpWrapS $ base sit <~ [B.b1C1D1N, B.b1C1D2N]
+    smpWrapS $ return sit <~ [B.b1C1D1N, B.b1C1D2N]
 
 
 oneMajor :: Situations
@@ -39,7 +39,7 @@ oneMajor = let
       in
         situation "1M" action bid explanation
   in
-    smpWrapS $ base sit <~ [B.b1C1D1H, B.b1C1D1S]
+    smpWrapS $ return sit <~ [B.b1C1D1H, B.b1C1D1S]
 
 
 oneMajorMinor :: Situations
@@ -58,8 +58,8 @@ oneMajorMinor = let
       in
         situation "1Mm" action bid explanation
   in
-    smpWrapS $ base sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
-                        <~ T.minorSuits
+    smpWrapS $ return sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
+                          <~ T.minorSuits
 
 
 twoMinorSingle :: Situations
@@ -76,7 +76,7 @@ twoMinorSingle = let
       in
         situation "2m" action bid explanation
   in
-    smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
+    smpWrapS $ return sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
 
 
 twoMinorMinors :: Situations
@@ -94,7 +94,7 @@ twoMinorMinors = let
       in
         situation "2mm" action bid explanation
   in
-    smpWrapS $ base sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
+    smpWrapS $ return sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
 
 
 equalMinors :: Situations
@@ -113,7 +113,7 @@ equalMinors = let
       in
         situation "2me" action B.b1C1D2D explanation
   in
-    smpWrapS $ base sit
+    smpWrapS $ return sit
 
 
 bothMajorsLongSpades :: Situations
@@ -131,7 +131,7 @@ bothMajorsLongSpades = let
       in
         situation "2MS" action B.b1C1D1S explanation
   in
-    smpWrapS $ base sit
+    smpWrapS $ return sit
 
 
 jumpBid :: Situations
@@ -150,7 +150,7 @@ jumpBid = let
       in
         situation "J1" action bid explanation
   in
-    smpWrapS $ base sit <~ [B.b1C1D2H, B.b1C1D2S, B.b1C1D3C, B.b1C1D3D]
+    smpWrapS $ return sit <~ [B.b1C1D2H, B.b1C1D2S, B.b1C1D3C, B.b1C1D3D]
 
 
 topic :: Topic

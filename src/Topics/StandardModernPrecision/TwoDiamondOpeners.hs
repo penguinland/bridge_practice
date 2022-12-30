@@ -5,7 +5,7 @@ import Topic(Topic(..), wrap, stdWrap, wrapVulDlr, Situations)
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, alternatives, constrain, makePass, makeCall,
                makeAlertableCall, withholdBid)
-import Situation(situation, base, (<~))
+import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified CommonBids as B
 
@@ -126,7 +126,7 @@ immediateSignoffSpades5 = let
     -- deals, and generating those hands is difficult for dealer (often
     -- requiring over 1,000,000 hands to be generated). Consequently, we limit
     -- these situations to times when East isn't dealer.
-    wrap $ base sit <~ T.allVulnerabilities <~ [T.North, T.South, T.West]
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.North, T.South, T.West]
 
 
 passSignoff2Spades :: Situations
@@ -152,7 +152,7 @@ passSignoff2Spades = let
       in
         situation "2SP" action (makeCall T.Pass) explanation
   in
-    wrapVulDlr $ base sit <~ [3, 4]
+    wrapVulDlr $ return sit <~ [3, 4]
 
 
 immediateSignoffClubs :: Situations
@@ -250,7 +250,7 @@ correctSignoffHearts = let
   in
     -- We want to commonly show times when responder has just 3 hearts (and
     -- we're avoiding a 3-3 fit) and times when responder has a real heart suit.
-    wrapVulDlr $ base sit <~ [3, 6]
+    wrapVulDlr $ return sit <~ [3, 6]
 
 
 topic :: Topic

@@ -3,7 +3,7 @@ module Topics.StandardModernPrecision.ResponsesToStrongClub(topic) where
 import Output(output)
 import Topic(Topic(..), wrap, Situations)
 import Auction(withholdBid, forbid, maxSuitLength, makePass)
-import Situation(situation, base, (<~))
+import Situation(situation, (<~))
 import CommonBids(cannotPreempt)
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(firstSeatOpener, oppsPass, b1C, smpWrapN, smpWrapS)
@@ -21,7 +21,7 @@ oneDiamond = let
         "When game might not be possible opposite a random 17 HCP, start\
       \ with " ++ output fmt (T.Bid 1 T.Diamonds) ++ ". This initiates MaFiA."
   in
-    smpWrapN . base $ situation "1D" action B.b1C1D explanation
+    smpWrapN . return $ situation "1D" action B.b1C1D explanation
 
 
 oneHeart :: Situations
@@ -37,7 +37,7 @@ oneHeart = let
       \ Subsequent bids are natural 5-card suits (and later 4-card suits), not\
       \ MaFiA."
   in
-    smpWrapN . base $ situation "1H" action B.b1C1H explanation
+    smpWrapN . return $ situation "1H" action B.b1C1H explanation
 
 
 oneNotrump :: Situations
@@ -53,7 +53,7 @@ oneNotrump = let
         output fmt (T.Bid 1 T.Notrump) ++ ", and we'll\
       \ go from there. Stayman is on, but transfers are not."
   in
-    smpWrapN . base $ situation "1N" action B.b1C1N explanation
+    smpWrapN . return $ situation "1N" action B.b1C1N explanation
 
 
 slamSingleSuit :: Situations
@@ -83,7 +83,7 @@ slamSingleSuit = let
       in
         situation "Slam" action bid explanation
   in
-    smpWrapN $ base sit <~ T.allSuits
+    smpWrapN $ return sit <~ T.allSuits
 
 
 twoSpades :: Situations
@@ -104,7 +104,7 @@ twoSpades = let
         output fmt (T.Bid 4 T.Diamonds) ++ "/RKC to tell us how high to go and\
       \ what suit is trump."
   in
-    smpWrapN . base $ situation "2S" action B.b1C2S explanation
+    smpWrapN . return $ situation "2S" action B.b1C2S explanation
 
 
 passGameSingleSuit :: Situations
@@ -139,7 +139,7 @@ passGameSingleSuit = let
       in
         situation "PG" action bid explanation
   in
-    smpWrapS $ base sit <~ T.allSuits
+    smpWrapS $ return sit <~ T.allSuits
 
 
 passOneNotrump :: Situations
@@ -162,7 +162,7 @@ passOneNotrump = let
       \ go from there. Stayman is on, but transfers are off (so the stronger\
       \ hand will be declarer more often)."
   in
-    smpWrapS . base $ situation "P1N" action B.bP1C1N explanation
+    smpWrapS . return $ situation "P1N" action B.bP1C1N explanation
 
 
 passTwoSpades :: Situations
@@ -188,7 +188,7 @@ passTwoSpades = let
         output fmt (T.Bid 4 T.Diamonds) ++ "/RKC to indicate how high to go\
       \ and which suit is trump."
   in
-    smpWrapS . base $ situation "P2S" action B.bP1C2S explanation
+    smpWrapS . return $ situation "P2S" action B.bP1C2S explanation
 
 
 -- TODO: figure out how two-suited hands show slam interest. Which suit do you
