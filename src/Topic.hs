@@ -18,7 +18,7 @@ import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
 import Random(pickItem)
-import Situation(Situation, base, (<~))
+import Situation(Situation, (<~))
 import Terminology(Direction, allDirections, Vulnerability, allVulnerabilities)
 
 
@@ -47,7 +47,7 @@ wrapVulDlr sit = wrap $ sit <~ allVulnerabilities <~ allDirections
 -- and more syntactic sugar for a Situation that is _only_ parameterized on
 -- those features.
 stdWrap :: (Vulnerability -> Direction -> Situation) -> Situations
-stdWrap = wrapVulDlr . base
+stdWrap = wrapVulDlr . return
 
 
 data Topic = Topic {topicName :: String

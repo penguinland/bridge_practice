@@ -1,7 +1,6 @@
 module Situation (
   Situation(..)
 , situation
-, base
 , (<~)
 ) where
 
@@ -34,7 +33,3 @@ situation r a c s v d = Situation r bidding deal answer s v d
 
 (<~) :: (State StdGen (a -> b)) -> [a] -> State StdGen b
 sf <~ as = sf <*> (pickItem as)
-
-
-base :: a -> State StdGen a
-base = return

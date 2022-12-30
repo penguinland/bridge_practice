@@ -5,7 +5,7 @@ import Topic(Topic(..), Situations, wrap)
 import Auction(forbid, makeCall, makeAlertableCall, makePass, pointRange,
                hasTopN, constrain, minSuitLength, maxSuitLength, Action,
                balancedHand, withholdBid)
-import Situation(situation, base, (<~))
+import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified CommonBids as B
 
@@ -94,7 +94,8 @@ initiateTransfer = let
       in
         situation "Init" action bid explanation
   in
-    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.West, T.North]
+    wrap $ return sit
+        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.West, T.North]
 
 
 completeTransfer :: Situations
@@ -113,7 +114,8 @@ completeTransfer = let
       in
         situation "Complete" action bid explanation
   in
-    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.East, T.South]
+    wrap $ return sit
+        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.East, T.South]
 
 
 superacceptTransfer :: Situations
@@ -135,7 +137,8 @@ superacceptTransfer = let
       in
         situation "SupAcc" action bid explanation
   in
-    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.East, T.South]
+    wrap $ return sit
+        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.East, T.South]
 
 
 completeSuperacceptAKQ :: Situations
@@ -157,7 +160,8 @@ completeSuperacceptAKQ = let
       in
         situation "3NTAKQ" action bid explanation
   in
-    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
+    wrap $ return sit
+        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
 completeSuperacceptKQJ10 :: Situations
@@ -181,7 +185,8 @@ completeSuperacceptKQJ10 = let
       in
         situation "3NTKQJ" action bid explanation
   in
-    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
+    wrap $ return sit
+        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
 completeSuperaccept10CardFit :: Situations
@@ -203,7 +208,8 @@ completeSuperaccept10CardFit = let
       in
         situation "3NT10Fit" action bid explanation
   in
-    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
+    wrap $ return sit
+        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
 failSuperaccept :: Situations
@@ -226,7 +232,8 @@ failSuperaccept = let
       in
         situation "SupFail" action bid explanation
   in
-    wrap $ base sit <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
+    wrap $ return sit
+        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
 notrumpInvite :: Situations
@@ -255,7 +262,7 @@ notrumpInvite = let
       in
         situation "NTInv" action bid explanation
   in
-    wrap $ base sit <~ T.allVulnerabilities <~ [T.North, T.West]
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
 topic :: Topic
