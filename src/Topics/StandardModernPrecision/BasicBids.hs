@@ -15,6 +15,7 @@ module Topics.StandardModernPrecision.BasicBids(
   , smpWrapS
 ) where
 
+import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
 import Topic(wrap, Situations)
@@ -124,10 +125,10 @@ b1D = do
 -- Always make opener be in first seat, until we figure out how to open in other
 -- seats.
 -- TODO: change this to let other folks be dealer, too
-smpWrapS :: (StdGen -> T.Vulnerability -> T.Direction -> Situation) ->
+smpWrapS :: (State StdGen (T.Vulnerability -> T.Direction -> Situation)) ->
             Situations
 smpWrapS sit = wrap $ sit <~ T.allVulnerabilities <~ [T.South]
 
-smpWrapN :: (StdGen -> T.Vulnerability -> T.Direction -> Situation) ->
+smpWrapN :: (State StdGen (T.Vulnerability -> T.Direction -> Situation)) ->
             Situations
 smpWrapN sit = wrap $ sit <~ T.allVulnerabilities <~ [T.North]

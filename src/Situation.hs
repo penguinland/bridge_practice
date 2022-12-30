@@ -6,12 +6,13 @@ module Situation (
 ) where
 
 
-import Data.Bifunctor(first)
-import System.Random(StdGen, genWord64R)
+import Control.Monad.Trans.State.Strict(State)
+import System.Random(StdGen)
 
 import Auction(Action, finish, extractLastCall)
 import DealerProg(DealerProg)
 import Output(Commentary)
+import Random(pickItem)
 import Structures(Bidding)
 import Terminology(CompleteCall, Direction, Vulnerability)
 
@@ -31,27 +32,9 @@ situation r a c s v d = Situation r bidding deal answer s v d
     answer = extractLastCall c
 
 
--- If you have a function that takes arguments and creates a Situation, call
--- base with it to pass in options via (<~). Example syntax:
--- sits :: Topic.Situations
--- sits = wrap $ base makeSits <~ [opt1A, opt1B] <~ [opt2A, opt2B, opt2C]
-base :: Optionable o => (a -> o) -> (StdGen -> a -> o)
-base = const
+(<~) :: (State StdGen (a -> b)) -> [a] -> State StdGen b
+sf <~ as = sf <*> (pickItem as)
 
-class Optionable o where
-    (<~) :: (StdGen -> a -> o) -> [a] -> (StdGen -> o)
 
-instance Optionable Situation where
-    (f <~ as) g = let
-        -- We use Int, but StdGen uses Word64. Cast between them via Integer.
-        maxIndex = fromInteger . toInteger . subtract 1 . length $ as
-        (i, g') = first (fromInteger . toInteger) . genWord64R maxIndex $ g
-      in
-        f g' (as !! i)
-
-instance (Optionable s) => Optionable (b -> s) where
-    (f <~ as) g = let
-        maxIndex = fromInteger . toInteger . subtract 1 . length $ as
-        (i, g') = first (fromInteger . toInteger) . genWord64R maxIndex $ g
-      in
-        f g' (as !! i)
+base :: a -> State StdGen a
+base = return

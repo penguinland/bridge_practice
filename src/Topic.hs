@@ -45,7 +45,7 @@ instance Situationable Situations where
 
 -- The most common Situation parameters are letting anyone be the dealer and
 -- letting anyone be vulnerable. Make some syntactic sugar for that.
-wrapVulDlr :: (StdGen -> Vulnerability -> Direction -> Situation) -> Situations
+wrapVulDlr :: (State StdGen (Vulnerability -> Direction -> Situation)) -> Situations
 wrapVulDlr sit = wrap $ sit <~ allVulnerabilities <~ allDirections
 -- and more syntactic sugar for a Situation that is _only_ parameterized on
 -- those features.
