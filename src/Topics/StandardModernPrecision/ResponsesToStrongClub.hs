@@ -116,7 +116,7 @@ passGameSingleSuit = let
     finalAction _          = error "This should never happen"
 
     sit strain = let
-        level = if any (== strain) T.majorSuits then 1 else 2
+        level = if strain `elem` T.majorSuits then 1 else 2
         bid = finalAction strain
         action = do
             forbid firstSeatOpener

@@ -31,5 +31,5 @@ situation r a c s v d = Situation r bidding deal answer s v d
     answer = extractLastCall c
 
 
-(<~) :: (State StdGen (a -> b)) -> [a] -> State StdGen b
-sf <~ as = sf <*> (pickItem as)
+(<~) :: State StdGen (a -> b) -> [a] -> State StdGen b
+sf <~ as = sf <*> pickItem as

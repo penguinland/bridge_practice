@@ -15,7 +15,7 @@ import Topic(Topic, topicName, refName, choose)
 
 
 reference :: String -> String -> StdGen -> String
-reference topic sit g = topic ++ "." ++ sit ++ " " ++ (show g)
+reference topic sit g = topic ++ "." ++ sit ++ " " ++ show g
 
 
 generate :: Int -> [Topic] -> StdGen -> IO [SituationInstance]
