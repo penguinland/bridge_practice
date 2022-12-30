@@ -1,3 +1,9 @@
+-- In order to add the State monad to the Situationable typeclass, we need this
+-- pragma. State is an alias for a trivial version of a more complicated monad,
+-- and the default compiler doesn't let that be in a type class because not all
+-- its arguments are type variables.
+{-# LANGUAGE FlexibleInstances #-}
+
 module Topic(
   Situations  -- Note that constructors aren't public; use wrap instead.
 , choose
@@ -7,6 +13,7 @@ module Topic(
 , Topic(..)
 ) where
 
+import Control.Monad(liftM)
 import Control.Monad.Trans.State.Strict(State)
 import Data.Bifunctor(first)
 import System.Random(RandomGen, StdGen, genWord64, split, mkStdGen)
@@ -29,6 +36,7 @@ instance Randomizer StdGen where
 data Situations = RawSit Situation
                 | SitList [Situations]
                 | SitFun (StdGen -> Situations)
+                | SitState (State StdGen Situations)
 
 
 class Situationable s where
@@ -42,6 +50,8 @@ instance (Situationable s) => Situationable [s] where
 instance (Situationable s, Randomizer r, RandomGen r) =>
         Situationable (r -> s) where
     wrap f = SitFun (\g -> let (g', _) = make g in wrap (f g'))
+instance (Situationable s) => Situationable (State StdGen s) where
+    wrap = SitState . liftM wrap
 instance Situationable Situations where
     wrap = id
 
@@ -67,3 +77,4 @@ choose = choose' . topicSituations
     choose' (RawSit s)   = return s
     choose' (SitList ss) = pickItem ss >>= choose'
     choose' (SitFun f)   = use split >>= (choose' . f)
+    choose' (SitState f) = f >>= choose'
