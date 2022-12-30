@@ -15,16 +15,15 @@ module Topic(
 
 import Control.Monad(liftM)
 import Control.Monad.Trans.State.Strict(State)
-import System.Random(StdGen, split)
+import System.Random(StdGen)
 
-import Random(use, pickItem)
+import Random(pickItem)
 import Situation(Situation, base, (<~))
 import Terminology(Direction, allDirections, Vulnerability, allVulnerabilities)
 
 
 data Situations = RawSit Situation
                 | SitList [Situations]
-                | SitFun (StdGen -> Situations)
                 | SitState (State StdGen Situations)
 
 
@@ -35,8 +34,6 @@ instance Situationable Situation where
     wrap = RawSit
 instance (Situationable s) => Situationable [s] where
     wrap = SitList . map wrap
-instance (Situationable s) => Situationable (StdGen -> s) where
-    wrap f = SitFun (\g -> wrap $ f g)
 instance (Situationable s) => Situationable (State StdGen s) where
     wrap = SitState . liftM wrap
 instance Situationable Situations where
@@ -63,5 +60,4 @@ choose = choose' . topicSituations
   where
     choose' (RawSit s)   = return s
     choose' (SitList ss) = pickItem ss >>= choose'
-    choose' (SitFun f)   = use split >>= (choose' . f)
     choose' (SitState f) = f >>= choose'
