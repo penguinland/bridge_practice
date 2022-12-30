@@ -15,22 +15,11 @@ module Topic(
 
 import Control.Monad(liftM)
 import Control.Monad.Trans.State.Strict(State)
-import Data.Bifunctor(first)
-import System.Random(RandomGen, StdGen, genWord64, split, mkStdGen)
+import System.Random(StdGen, split)
 
 import Random(use, pickItem)
 import Situation(Situation, base, (<~))
 import Terminology(Direction, allDirections, Vulnerability, allVulnerabilities)
-
-
--- This is solely to get Haskell to figure out that the Situationable typeclass
--- can apply to functions that take in random number generators. It would be
--- nice to get rid of this.
-class Randomizer r where
-    make :: RandomGen g => g -> (r, g)
-
-instance Randomizer StdGen where
-    make = first (mkStdGen . fromInteger . toInteger) . genWord64
 
 
 data Situations = RawSit Situation
@@ -46,10 +35,8 @@ instance Situationable Situation where
     wrap = RawSit
 instance (Situationable s) => Situationable [s] where
     wrap = SitList . map wrap
--- TODO: figure out how to do this next line without using Randomizer.
-instance (Situationable s, Randomizer r, RandomGen r) =>
-        Situationable (r -> s) where
-    wrap f = SitFun (\g -> let (g', _) = make g in wrap (f g'))
+instance (Situationable s) => Situationable (StdGen -> s) where
+    wrap f = SitFun (\g -> wrap $ f g)
 instance (Situationable s) => Situationable (State StdGen s) where
     wrap = SitState . liftM wrap
 instance Situationable Situations where
