@@ -13,7 +13,6 @@ module Topic(
 , Topic(..)
 ) where
 
-import Control.Monad(liftM)
 import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
@@ -35,14 +34,15 @@ instance Situationable Situation where
 instance (Situationable s) => Situationable [s] where
     wrap = SitList . map wrap
 instance (Situationable s) => Situationable (State StdGen s) where
-    wrap = SitState . liftM wrap
+    wrap = SitState . fmap wrap
 instance Situationable Situations where
     wrap = id
 
 
 -- The most common Situation parameters are letting anyone be the dealer and
 -- letting anyone be vulnerable. Make some syntactic sugar for that.
-wrapVulDlr :: (State StdGen (Vulnerability -> Direction -> Situation)) -> Situations
+wrapVulDlr :: State StdGen (Vulnerability -> Direction -> Situation) ->
+    Situations
 wrapVulDlr sit = wrap $ sit <~ allVulnerabilities <~ allDirections
 -- and more syntactic sugar for a Situation that is _only_ parameterized on
 -- those features.

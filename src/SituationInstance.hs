@@ -44,5 +44,5 @@ instantiate reference (Situation _ b dl c s v dn) = do
             maybeDeal <- eval dn v dl n
             -- This do notation takes care of the IO monad, and the binds take
             -- care of the Maybe monad.
-            return (SituationInstance b c s <$> maybeDeal <*> Just (reference))
+            return (SituationInstance b c s <$> maybeDeal <*> Just reference)
     return instantiate'

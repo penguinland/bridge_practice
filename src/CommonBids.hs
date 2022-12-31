@@ -70,9 +70,9 @@ weak2 suit = do
 
 cannotPreempt :: Action
 cannotPreempt = do
-    sequence_ $ map (\s -> forbid (weak2 s)) [T.Diamonds, T.Hearts, T.Spades]
-    sequence_ $ map (\s -> forbid (preempt3 s)) T.allSuits
-    sequence_ $ map (\s -> forbid (preempt4 s)) T.allSuits
+    mapM_ (forbid . weak2) [T.Diamonds, T.Hearts, T.Spades]
+    mapM_ (forbid . preempt3) T.allSuits
+    mapM_ (forbid . preempt4) T.allSuits
 
 
 get2LongestSuits :: Action
@@ -144,7 +144,7 @@ setOpener opener = do
 takeoutDouble :: T.Suit -> Action
 takeoutDouble shortSuit = do
     pointRange 11 40
-    sequence_ $ map setSuitLength T.allSuits
+    mapM_ setSuitLength T.allSuits
   where
     setSuitLength suit =
         if suit == shortSuit

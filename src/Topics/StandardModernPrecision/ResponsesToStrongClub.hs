@@ -71,8 +71,7 @@ slamSingleSuit = let
             firstSeatOpener
             b1C
             oppsPass
-            sequence_ . map (flip maxSuitLength 4) . filter (/= strain) $
-                T.allSuits
+            mapM_ (`maxSuitLength` 4) . filter (/= strain) $ T.allSuits
             withholdBid bid
         explanation fmt =
             "You've got at least mild slam interest with 12+ HCP, and a 5+ card\
@@ -116,7 +115,7 @@ passGameSingleSuit = let
     finalAction _          = error "This should never happen"
 
     sit strain = let
-        level = if any (== strain) T.majorSuits then 1 else 2
+        level = if strain `elem` T.majorSuits then 1 else 2
         bid = finalAction strain
         action = do
             forbid firstSeatOpener
@@ -127,8 +126,7 @@ passGameSingleSuit = let
             firstSeatOpener
             b1C
             oppsPass
-            sequence_ . map (flip maxSuitLength 4) . filter (/= strain) $
-                T.allSuits
+            mapM_ (`maxSuitLength` 4) . filter (/= strain) $ T.allSuits
             withholdBid bid
         explanation fmt =
             "You're game-forcing with a 5+ card suit. but you're a passed hand,\

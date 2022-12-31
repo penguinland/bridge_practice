@@ -23,7 +23,7 @@ twoDiamondOpener = do
 noDirectOvercall :: Action
 noDirectOvercall = do
     B.cannotPreempt
-    alternatives $ [
+    alternatives [
         pointRange 0 10  -- Not enough to overcall
       , pointRange 11 16 >>  -- Enough to overcall, but no suit
             constrain "no_suit" ["shape(", ", any 4333 + any 4432)"]]

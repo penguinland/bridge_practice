@@ -52,7 +52,7 @@ forbid action = do
 
 alternatives :: [Action] -> Action
 -- We use deMorgan's laws. (A || B || C) becomes !(!A && !B && !C)
-alternatives = forbid . sequence_ . map forbid
+alternatives = forbid . mapM_ forbid
 
 
 -- modifyDealerProg takes the name of a constraint and pieces of a definition

@@ -64,7 +64,7 @@ setUpCompletion suit = do
 canSuperaccept :: T.Suit -> Action
 canSuperaccept suit = do
     minSuitLength suit 3
-    constrain ("has_control_" ++ (show suit))
+    constrain ("has_control_" ++ show suit)
         ["top2(", ", " ++ show suit ++ ") >= 1"]
 
 
