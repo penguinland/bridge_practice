@@ -70,9 +70,9 @@ weak2 suit = do
 
 cannotPreempt :: Action
 cannotPreempt = do
-    mapM_ (\s -> forbid (weak2 s)) [T.Diamonds, T.Hearts, T.Spades]
-    mapM_ (\s -> forbid (preempt3 s)) T.allSuits
-    mapM_ (\s -> forbid (preempt4 s)) T.allSuits
+    mapM_ (forbid . weak2) [T.Diamonds, T.Hearts, T.Spades]
+    mapM_ (forbid . preempt3) T.allSuits
+    mapM_ (forbid . preempt4) T.allSuits
 
 
 get2LongestSuits :: Action
