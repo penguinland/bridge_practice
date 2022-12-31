@@ -103,7 +103,7 @@ b1C1N :: Action
 b1C1N = do
     _slamInterest
     balancedHand
-    mapM_ (\s -> maxSuitLength s 4) T.allSuits
+    mapM_ (`maxSuitLength` 4) T.allSuits
     makeCall $ T.Bid 1 T.Notrump
 
 
@@ -146,7 +146,7 @@ bP1C1N :: Action
 bP1C1N = do
     _gameForcing
     balancedHand
-    mapM_ (\s -> maxSuitLength s 4) T.allSuits
+    mapM_ (`maxSuitLength` 4) T.allSuits
     makeCall $ T.Bid 1 T.Notrump
 
 
@@ -287,7 +287,7 @@ b1C1D1H3H :: Action
 b1C1D1H3H = do
     suitLength T.Hearts 4
     pointRange 5 7
-    mapM_ (\s -> minSuitLength s 2) T.allSuits
+    mapM_ (`minSuitLength` 2) T.allSuits
     makeCall $ T.Bid 3 T.Hearts
 
 
@@ -360,7 +360,7 @@ b1C1D1S3S :: Action
 b1C1D1S3S = do
     suitLength T.Spades 4
     pointRange 5 7
-    mapM_ (\s -> minSuitLength s 2) T.allSuits
+    mapM_ (`minSuitLength` 2) T.allSuits
     makeCall $ T.Bid 3 T.Spades
 
 
