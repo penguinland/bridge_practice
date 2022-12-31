@@ -2,9 +2,11 @@ module Topics.StandardModernPrecision.Bids1D(
     b1D
   , b1D2C
   , b1D2D
+  , b1D2H
+  , b1D2S
 ) where
 
-import Auction(forbid, pointRange, {-suitLength,-} minSuitLength, maxSuitLength,
+import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, balancedHand, makeCall, makeAlertableCall,
                {-makePass,-} alternatives)
 --import CommonBids(cannotPreempt)
@@ -41,3 +43,25 @@ b1D2D = do
     alternatives [ minSuitLength T.Diamonds 6
                  , mapM_ (`maxSuitLength` 3) T.majorSuits ]
     makeAlertableCall (T.Bid 2 T.Diamonds) "invitational or better"
+
+
+b1D2H :: Action
+b1D2H = do
+    suitLength T.Spades 5
+    minSuitLength T.Hearts 4
+    maxSuitLength T.Hearts 5
+    pointRange 6 10
+    makeAlertableCall (T.Bid 2 T.Hearts)
+        "Reverse Flannery: 5 spades, 4-5 hearts, 6-10 HCP"
+
+
+b1D2S :: Action
+b1D2S = do
+    suitLength T.Spades 5
+    minSuitLength T.Hearts 4
+    maxSuitLength T.Hearts 5
+    pointRange 11 13
+    makeAlertableCall (T.Bid 2 T.Spades)
+        "Reverse Flannery: 5 spades, 4-5 hearts, invitational strength"
+
+
