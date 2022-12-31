@@ -69,7 +69,7 @@ b3N = do
 b1C :: Action
 b1C = do
     pointRange 16 40
-    sequence_ . map forbid $ [b1N, b2N, b3N]
+    mapM_ forbid [b1N, b2N, b3N]
     makeAlertableCall (T.Bid 1 T.Clubs) "16+ HCP, any shape"
 
 
@@ -80,7 +80,7 @@ b1M suit = do
     forbid b1N
     minSuitLength suit 5
     -- If you're a maximum with a 6-card minor and 5-card major, open the minor.
-    sequence_ . map forbid . flip map T.minorSuits $ (\minor ->
+    mapM_ forbid . flip map T.minorSuits $ (\minor ->
         pointRange 14 15 >> minSuitLength minor 6 >> suitLength suit 5)
     makeCall $ T.Bid 1 suit
 
@@ -89,7 +89,7 @@ b2C :: Action
 b2C = do
     firstSeatOpener
     forbid b1C
-    sequence_ . map (forbid . b1M) $ T.majorSuits
+    mapM_ (forbid . b1M) T.majorSuits
     minSuitLength T.Clubs 6
     makeAlertableCall (T.Bid 2 T.Clubs) "10-15 HCP, 6+ clubs"
 
@@ -105,13 +105,7 @@ b2D = do
 b1D :: Action
 b1D = do
     firstSeatOpener
-    sequence_ . map forbid $ [ b1C
-                             , b1N
-                             , b1M T.Hearts
-                             , b1M T.Spades
-                             , b2C
-                             , b2D
-                             ]
+    mapM_ forbid [b1C, b1N, b1M T.Hearts, b1M T.Spades, b2C, b2D]
     -- The next line is commented out because if it can be violated, we're gonna
     -- have a bad day. Make sure that it's never violated in the results even if
     -- it's not explicitly required.

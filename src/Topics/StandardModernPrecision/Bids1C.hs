@@ -103,7 +103,7 @@ b1C1N :: Action
 b1C1N = do
     _slamInterest
     balancedHand
-    sequence_ . map (\s -> maxSuitLength s 4) $ T.allSuits
+    mapM_ (\s -> maxSuitLength s 4) T.allSuits
     makeCall $ T.Bid 1 T.Notrump
 
 
@@ -146,7 +146,7 @@ bP1C1N :: Action
 bP1C1N = do
     _gameForcing
     balancedHand
-    sequence_ . map (\s -> maxSuitLength s 4) $ T.allSuits
+    mapM_ (\s -> maxSuitLength s 4) T.allSuits
     makeCall $ T.Bid 1 T.Notrump
 
 
@@ -190,8 +190,8 @@ _makeJumpBid level suit = do
     minSuitLength suit 5
     -- This should be your longest suit
     -- TODO: if you're 5-5, which suit do you bid first?
-    sequence_ . map (forbid . compareSuitLength suit Shorter) .
-                filter (/= suit) $ T.allSuits
+    mapM_ (forbid . compareSuitLength suit Shorter) . filter (/= suit) $
+        T.allSuits
     makeCall $ T.Bid level suit
 
 
@@ -287,7 +287,7 @@ b1C1D1H3H :: Action
 b1C1D1H3H = do
     suitLength T.Hearts 4
     pointRange 5 7
-    sequence_ . map (\s -> minSuitLength s 2) $ T.allSuits
+    mapM_ (\s -> minSuitLength s 2) T.allSuits
     makeCall $ T.Bid 3 T.Hearts
 
 
@@ -360,7 +360,7 @@ b1C1D1S3S :: Action
 b1C1D1S3S = do
     suitLength T.Spades 4
     pointRange 5 7
-    sequence_ . map (\s -> minSuitLength s 2) $ T.allSuits
+    mapM_ (\s -> minSuitLength s 2) T.allSuits
     makeCall $ T.Bid 3 T.Spades
 
 
