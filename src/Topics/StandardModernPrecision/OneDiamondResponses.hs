@@ -116,7 +116,6 @@ notrump1 :: Situations
 notrump1 = let
     sit = let
         action = do
-            minSuitLength T.Hearts 5
             b1D
             oppsPass
             withholdBid B.b1D1N
@@ -126,7 +125,7 @@ notrump1 = let
            \ will likely pass, but could bid 2 of a major with 6-5 and a\
            \ maximum, which you can pass or correct."
       in
-        situation "1nt" action B.b1D1N explanation
+        situation "1N" action B.b1D1N explanation
   in
     smpWrapN $ return sit
 
@@ -135,7 +134,6 @@ notrump2 :: Situations
 notrump2 = let
     sit = let
         action = do
-            minSuitLength T.Hearts 5
             b1D
             oppsPass
             withholdBid B.b1D2N
@@ -154,7 +152,7 @@ notrump2 = let
            \ or 4 of a major with 6-5 and a maximum, which you can pass or\
            \ correct."
       in
-        situation "2nt" action B.b1D2N explanation
+        situation "2N" action B.b1D2N explanation
   in
     smpWrapN $ return sit
 
@@ -163,7 +161,6 @@ notrump3 :: Situations
 notrump3 = let
     sit = let
         action = do
-            minSuitLength T.Hearts 5
             b1D
             oppsPass
             withholdBid B.b1D3N
@@ -176,7 +173,7 @@ notrump3 = let
              output fmt (T.Bid 4 T.Notrump) ++ " or " ++
              output fmt (T.Bid 5 T.Diamonds) ++ "."
       in
-        situation "3nt" action B.b1D3N explanation
+        situation "3N" action B.b1D3N explanation
   in
     smpWrapN $ return sit
 
