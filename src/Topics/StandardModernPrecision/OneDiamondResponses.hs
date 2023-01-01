@@ -1,6 +1,6 @@
 module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
---import Output(output)
+import Output(output)
 import Topic(Topic(..), wrap, Situations)
 import Auction(withholdBid, {-forbid, makePass,-} maxSuitLength, minSuitLength, {-suitLength,-}
                {-Action, balancedHand,-} pointRange{-, SuitLengthComparator(..), compareSuitLength-})
@@ -9,6 +9,22 @@ import Situation(situation, (<~))
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
 import qualified Topics.StandardModernPrecision.Bids1D as B
+
+
+oneMajor :: Situations
+oneMajor = let
+    sit (suit, bid) = let
+        action = do
+            b1D
+            oppsPass
+            withholdBid bid
+        explanation fmt =
+            "Let's start with a natural " ++ output fmt (T.Bid 1 suit) ++ "\
+           \ bid, and see where things go from there."
+      in
+        situation "1M" action bid explanation
+  in
+    smpWrapN $ return sit <~ [(T.Hearts, B.b1D1H), (T.Spades, B.b1D1S)]
 
 
 twoMinor6M :: Situations
@@ -37,4 +53,5 @@ topic :: Topic
 topic = Topic "responses to SMP 1D openings" "smp1d" situations
   where
     situations = wrap [ twoMinor6M
+                      , oneMajor
                       ]
