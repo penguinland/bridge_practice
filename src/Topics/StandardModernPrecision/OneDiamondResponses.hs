@@ -72,10 +72,51 @@ reverseFlannery = let
     smpWrapN $ return sit <~ [(B.b1D2H, False), (B.b1D2S, True)]
 
 
+weakMinors54 :: Situations
+weakMinors54 = let
+    sit = let
+        action = do
+            b1D
+            oppsPass
+            withholdBid B.b1D3C
+        explanation fmt =
+            "With 5-4 in the minors, no 4-card major, and less than\
+           \ invitational strength, bid a pre-emptive-like " ++
+             output fmt (T.Bid 3 T.Clubs) ++ ". Partner can pass or correct, or\
+           \ even continue the pre-empt if relevant. We might get unlucky and\
+           \ end up in a 7-card fit, but most of the time we'll have a decent\
+           \ fit in opener's favorite minor."
+      in
+        situation "54min" action B.b1D3C explanation
+  in
+    smpWrapN $ return sit
+
+
+weakMinors55 :: Situations
+weakMinors55 = let
+    sit = let
+        action = do
+            b1D
+            oppsPass
+            withholdBid B.b1D4C
+        explanation fmt =
+            "With at least 5-5 in the minors and less than invitational\
+           \ strength,\
+           \ bid a pre-emptive-like " ++ output fmt (T.Bid 4 T.Clubs) ++ ".\
+           \ Partner can pass or correct, or even continue the pre-empt if\
+           \ relevant. We're guaranteed at least an 8-card fit in opener's\
+           \ favorite minor."
+      in
+        situation "55min" action B.b1D4C explanation
+  in
+    smpWrapN $ return sit
+
+
 topic :: Topic
 topic = Topic "responses to SMP 1D openings" "smp1d" situations
   where
     situations = wrap [ twoMinor6M
                       , oneMajor
                       , reverseFlannery
+                      , wrap [weakMinors54, weakMinors55]
                       ]

@@ -8,6 +8,12 @@ module Topics.StandardModernPrecision.Bids1D(
   , b1D2H
   , b1D2S
 --  , b1D2N
+  , b1D3C
+--  , b1D3D
+--  , b1D3H
+--  , b1D3S
+--  , b1D3N
+  , b1D4C
 ) where
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
@@ -92,5 +98,24 @@ b1D2S = do
     pointRange 11 13
     makeAlertableCall (T.Bid 2 T.Spades)
         "5 spades, 4-5 hearts, invitational strength"
+
+
+b1D3C :: Action
+b1D3C = do
+    pointRange 6 10
+    alternatives [ suitLength T.Clubs 4 >> minSuitLength T.Diamonds 5
+                 , suitLength T.Diamonds 4 >> minSuitLength T.Clubs 5 ]
+    mapM_ (`maxSuitLength` 3) T.majorSuits
+    makeAlertableCall (T.Bid 3 T.Clubs)
+        "5-4 or 4-5 in the minors, less than invitational strength"
+
+
+b1D4C :: Action
+b1D4C = do
+    pointRange 6 10
+    minSuitLength T.Clubs 5
+    minSuitLength T.Diamonds 5
+    makeAlertableCall (T.Bid 4 T.Clubs)
+        "at least 5-5 in the minors, less than invitational strength"
 
 
