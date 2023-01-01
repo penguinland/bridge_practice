@@ -178,6 +178,24 @@ notrump3 = let
     smpWrapN $ return sit
 
 
+invertedMinors :: Situations
+invertedMinors = let
+    sit = let
+        action = do
+            b1D
+            oppsPass
+            withholdBid B.b1D3D
+        explanation fmt =
+            "With less than invitational strength, no 4-card major, but a long\
+           \ diamond suit, jump to " ++ displayLastCall fmt B.b1D3D ++ ", like\
+           \ an inverted minor. Note that you need 6+ cards in the suit to do\
+           \ this, since opener might only have a doubleton."
+      in
+        situation "3d" action B.b1D3D explanation
+  in
+    smpWrapN $ return sit
+
+
 topic :: Topic
 topic = Topic "responses to SMP 1D openings" "smp1d" situations
   where
@@ -186,4 +204,5 @@ topic = Topic "responses to SMP 1D openings" "smp1d" situations
                       , reverseFlannery
                       , wrap [weakMinors54, weakMinors55]
                       , wrap [notrump1, notrump2, notrump3]
+                      , invertedMinors
                       ]

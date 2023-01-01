@@ -9,11 +9,14 @@ module Topics.StandardModernPrecision.Bids1D(
   , b1D2S
   , b1D2N
   , b1D3C
---  , b1D3D
+  , b1D3D
 --  , b1D3H
 --  , b1D3S
   , b1D3N
   , b1D4C
+--  , b1D4D
+--  , b1D4H
+--  , b1D4S
 ) where
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
@@ -126,6 +129,16 @@ b1D3C = do
     mapM_ (`maxSuitLength` 3) T.majorSuits
     makeAlertableCall (T.Bid 3 T.Clubs)
         "5-4 or 4-5 in the minors, less than invitational strength"
+
+
+b1D3D :: Action
+b1D3D = do
+    pointRange 6 10
+    minSuitLength T.Diamonds 6
+    -- With 8+ diamonds, bid 4D (the book says 7+, but that's anti-LoTT).
+    maxSuitLength T.Diamonds 7
+    mapM_ (`maxSuitLength` 3) T.majorSuits
+    makeAlertableCall (T.Bid 3 T.Diamonds) "weak"
 
 
 b1D3N :: Action
