@@ -13,18 +13,18 @@ import qualified Topics.StandardModernPrecision.Bids1D as B
 
 oneMajor :: Situations
 oneMajor = let
-    sit (suit, bid) = let
+    sit bid = let
         action = do
             b1D
             oppsPass
             withholdBid bid
         explanation fmt =
-            "Let's start with a natural " ++ output fmt (T.Bid 1 suit) ++ "\
+            "Let's start with a natural " ++ displayLastCall fmt bid ++ "\
            \ bid, and see where things go from there."
       in
         situation "1M" action bid explanation
   in
-    smpWrapN $ return sit <~ [(T.Hearts, B.b1D1H), (T.Spades, B.b1D1S)]
+    smpWrapN $ return sit <~ [B.b1D1H, B.b1D1S]
 
 
 twoMinor6M :: Situations
