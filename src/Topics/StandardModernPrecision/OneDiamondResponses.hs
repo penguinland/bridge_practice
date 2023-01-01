@@ -3,7 +3,7 @@ module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 import Output(output)
 import Topic(Topic(..), wrap, Situations)
 import Auction(withholdBid, {-forbid, makePass,-} maxSuitLength, minSuitLength, {-suitLength,-}
-               {-Action, balancedHand,-} pointRange{-, SuitLengthComparator(..), compareSuitLength-})
+               {-Action, balancedHand,-} pointRange{-, SuitLengthComparator(..), compareSuitLength-}, displayLastCall)
 import Situation(situation, (<~))
 --import CommonBids(cannotPreempt)
 import qualified Terminology as T
@@ -49,9 +49,33 @@ twoMinor6M = let
                           <~ [T.Hearts, T.Spades]
 
 
+reverseFlannery :: Situations
+reverseFlannery = let
+    sit (bid, isInvite) = let
+        action = do
+            b1D
+            oppsPass
+            withholdBid bid
+        explanation fmt =
+            "With 5 spades, 4 or 5 hearts, and " ++
+            if isInvite then "" else "less than " ++
+            "invitational strength, bid a Reverse Flannery " ++
+            displayLastCall fmt bid ++ ". Partner can then place the final\
+          \ contract, bid " ++ output fmt (T.Bid 3 T.Clubs) ++ " (pass or\
+          \ correct) with both minors, or bid " ++
+            output fmt (T.Bid 2 T.Notrump) ++ " to ask for\
+          \ more information. Note that if you were game forcing, you would\
+          \ have started at the 1 level instead."
+      in
+        situation "RevFl" action bid explanation
+  in
+    smpWrapN $ return sit <~ [(B.b1D2H, False), (B.b1D2S, True)]
+
+
 topic :: Topic
 topic = Topic "responses to SMP 1D openings" "smp1d" situations
   where
     situations = wrap [ twoMinor6M
                       , oneMajor
+                      , reverseFlannery
                       ]

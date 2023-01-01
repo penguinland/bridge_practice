@@ -1,9 +1,9 @@
 module Topics.StandardModernPrecision.Mafia(topic) where
 
-import Output(output)
+import Output(output, Punct(..))
 import Topic(Topic(..), wrap, Situations)
 import Auction(withholdBid, forbid, minSuitLength, suitLength, balancedHand,
-               SuitLengthComparator(..), compareSuitLength, extractLastCall)
+               SuitLengthComparator(..), compareSuitLength, displayLastCall)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(smpWrapS)
@@ -144,9 +144,9 @@ jumpBid = let
             "With an unbalanced hand that is strong enough to\
            \ force to game, jump in your suit. Responder can treat this like\
            \ the 2/1 sequence " ++
-            output fmt (T.Bid 2 T.Clubs) ++ "--" ++
-            output fmt (T.Bid 2 T.Diamonds) ++ "--" ++
-            output fmt (extractLastCall bid) ++ "."
+            output fmt (T.Bid 2 T.Clubs) ++ output fmt NDash ++
+            output fmt (T.Bid 2 T.Diamonds) ++ output fmt NDash ++
+            displayLastCall fmt bid ++ "."
       in
         situation "J1" action bid explanation
   in

@@ -81,7 +81,7 @@ b1D2H = do
     maxSuitLength T.Hearts 5
     pointRange 6 10
     makeAlertableCall (T.Bid 2 T.Hearts)
-        "Reverse Flannery: 5 spades, 4-5 hearts, 6-10 HCP"
+        "5 spades, 4-5 hearts, 6-10 HCP"
 
 
 b1D2S :: Action
@@ -91,6 +91,6 @@ b1D2S = do
     maxSuitLength T.Hearts 5
     pointRange 11 13
     makeAlertableCall (T.Bid 2 T.Spades)
-        "Reverse Flannery: 5 spades, 4-5 hearts, invitational strength"
+        "5 spades, 4-5 hearts, invitational strength"
 
 

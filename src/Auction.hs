@@ -20,6 +20,7 @@ module Auction (
 , compareSuitLength
 , SuitLengthComparator(..)
 , extractLastCall
+, displayLastCall
 ) where
 
 import Control.Monad.Trans.State.Strict(State, execState, get, put, modify)
@@ -27,6 +28,7 @@ import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
 import DealerProg(DealerProg, addNewReq, addDefn, invert)
+import Output(output, OutputType)
 import Structures(Bidding, startBidding, (>-), lastCall, currentBidder)
 import qualified Terminology as T
 
@@ -150,5 +152,10 @@ extractLastCall =
     -- It doesn't matter who was dealer: use North just to extract the bidding
     -- from the action.
     lastCall . fst . finish T.North
+
+-- displayLastCall is for use in explanations: it formats the most recent call
+-- from an action while stripping out any alerts it might have
+displayLastCall :: OutputType -> Action -> String
+displayLastCall fmt = output fmt . T.extractCall . extractLastCall
 
 -- TODO: hasCard
