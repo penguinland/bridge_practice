@@ -66,7 +66,15 @@ invert (DealerProg defns reqs) =
 
 toProgram :: DealerProg -> String
 toProgram (DealerProg defns conds) = join "\n" $
-    ["generate 1000000", "produce 1", ""] ++
+    -- This used to generate 1 million boards, but some situations are extremely
+    -- rare (e.g., North opens a Precision 1D with 5 hearts and South responds
+    -- 2N: occurs less than twice in a million deals), and if you run the dealer
+    -- program many times, it'll fail at least once. So, this was bumped up to
+    -- 10 million so that it should really only fail if the constraints are
+    -- impossible, rather than just a really rare situation. If 10 million still
+    -- isn't enough, consider removing those situations from practice entirely,
+    -- since they'll probably never come up.
+    ["generate 10000000", "produce 1", ""] ++
     Map.foldMapWithKey formatDefinition defns
     ++ ["", "condition",
         "    " ++ (join " && " . map conditionToString . reverse $ conds),

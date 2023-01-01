@@ -1,6 +1,6 @@
 module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
-import Output(output)
+import Output(output, Punct(..))
 import Topic(Topic(..), wrap, Situations)
 import Auction(withholdBid, {-forbid, makePass,-} maxSuitLength, minSuitLength, {-suitLength,-}
                {-Action, balancedHand,-} pointRange{-, SuitLengthComparator(..), compareSuitLength-}, displayLastCall)
@@ -112,6 +112,75 @@ weakMinors55 = let
     smpWrapN $ return sit
 
 
+notrump1 :: Situations
+notrump1 = let
+    sit = let
+        action = do
+            minSuitLength T.Hearts 5
+            b1D
+            oppsPass
+            withholdBid B.b1D1N
+        explanation fmt =
+            "With a balanced hand, no 4-card major, and less than invitational\
+           \ strength, bid " ++ output fmt (T.Bid 1 T.Notrump) ++ ". Partner\
+           \ will likely pass, but could bid 2 of a major with 6-5 and a\
+           \ maximum, which you can pass or correct."
+      in
+        situation "1nt" action B.b1D1N explanation
+  in
+    smpWrapN $ return sit
+
+
+notrump2 :: Situations
+notrump2 = let
+    sit = let
+        action = do
+            minSuitLength T.Hearts 5
+            b1D
+            oppsPass
+            withholdBid B.b1D2N
+        explanation fmt =
+            "With a balanced hand, no 4-card major, and 11" ++
+             output fmt NDash ++ "12 HCP, bid " ++
+             output fmt (T.Bid 2 T.Notrump) ++ ". Note that 13 HCP hands should\
+           \ bid game even though they're usually considered invitational!\
+           \ Partner can pass, bid " ++ output fmt (T.Bid 3 T.Clubs) ++ "\
+           \ (pass or correct) with both minors and a minimum (with a maximum,\
+           \ prefer playing in " ++ output fmt (T.Bid 2 T.Notrump) ++ "), " ++
+             output fmt (T.Bid 3 T.Diamonds) ++ " with a long suit and minimum\
+           \ strength, 3 of a major with 4 cards in that major and shortness in\
+           \ the other one (angling for " ++ output fmt (T.Bid 3 T.Notrump) ++
+            " or 4 of a minor if you don't have a stopper in the other major),\
+           \ or 4 of a major with 6-5 and a maximum, which you can pass or\
+           \ correct."
+      in
+        situation "2nt" action B.b1D2N explanation
+  in
+    smpWrapN $ return sit
+
+
+notrump3 :: Situations
+notrump3 = let
+    sit = let
+        action = do
+            minSuitLength T.Hearts 5
+            b1D
+            oppsPass
+            withholdBid B.b1D3N
+        explanation fmt =
+            "With a balanced hand, no 4-card major, and 13" ++
+            output fmt NDash ++ "16 HCP, bid " ++
+            output fmt (T.Bid 3 T.Notrump) ++ ". Partner\
+           \ will likely pass, but could bid game in a major with 6-5 shape,\
+           \ which you can pass or correct to " ++
+             output fmt (T.Bid 4 T.Notrump) ++ " or " ++
+             output fmt (T.Bid 5 T.Diamonds) ++ "."
+      in
+        situation "3nt" action B.b1D3N explanation
+  in
+    smpWrapN $ return sit
+
+
 topic :: Topic
 topic = Topic "responses to SMP 1D openings" "smp1d" situations
   where
@@ -119,4 +188,5 @@ topic = Topic "responses to SMP 1D openings" "smp1d" situations
                       , oneMajor
                       , reverseFlannery
                       , wrap [weakMinors54, weakMinors55]
+                      , wrap [notrump1, notrump2, notrump3]
                       ]

@@ -2,17 +2,17 @@ module Topics.StandardModernPrecision.Bids1D(
     b1D
   , b1D1H
   , b1D1S
---  , b1D1N
+  , b1D1N
   , b1D2C
   , b1D2D
   , b1D2H
   , b1D2S
---  , b1D2N
+  , b1D2N
   , b1D3C
 --  , b1D3D
 --  , b1D3H
 --  , b1D3S
---  , b1D3N
+  , b1D3N
   , b1D4C
 ) where
 
@@ -48,6 +48,15 @@ b1D1S = do
     -- long, start with 1H instead.
     compareSuitLength T.Spades Longer T.Hearts
     makeCall $ T.Bid 1 T.Spades
+
+
+b1D1N :: Action
+b1D1N = do
+    pointRange 6 10
+    balancedHand
+    maxSuitLength T.Hearts 3
+    maxSuitLength T.Spades 3
+    makeCall $ T.Bid 1 T.Notrump
 
 
 b1D2C :: Action
@@ -100,6 +109,15 @@ b1D2S = do
         "5 spades, 4-5 hearts, invitational strength"
 
 
+b1D2N :: Action
+b1D2N = do
+    pointRange 11 12
+    balancedHand
+    maxSuitLength T.Hearts 3
+    maxSuitLength T.Spades 3
+    makeCall $ T.Bid 2 T.Notrump
+
+
 b1D3C :: Action
 b1D3C = do
     pointRange 6 10
@@ -108,6 +126,15 @@ b1D3C = do
     mapM_ (`maxSuitLength` 3) T.majorSuits
     makeAlertableCall (T.Bid 3 T.Clubs)
         "5-4 or 4-5 in the minors, less than invitational strength"
+
+
+b1D3N :: Action
+b1D3N = do
+    pointRange 13 16
+    balancedHand
+    maxSuitLength T.Hearts 3
+    maxSuitLength T.Spades 3
+    makeCall $ T.Bid 3 T.Notrump
 
 
 b1D4C :: Action
