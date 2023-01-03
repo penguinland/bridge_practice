@@ -58,7 +58,7 @@ reverseFlannery = let
             withholdBid bid
         explanation fmt =
             "With 5 spades, 4 or 5 hearts, and " ++
-            if isInvite then "" else "less than " ++
+            (if isInvite then "" else "less than ") ++
             "invitational strength, bid a Reverse Flannery " ++
             displayLastCall fmt bid ++ ". Partner can then place the final\
           \ contract, bid " ++ output fmt (T.Bid 3 T.Clubs) ++ " (pass or\
@@ -196,6 +196,68 @@ invertedMinors = let
     smpWrapN $ return sit
 
 
+preempt3M :: Situations
+preempt3M = let
+    sit bid = let
+        action = do
+            b1D
+            oppsPass
+            withholdBid bid
+        explanation _ =
+            "With a weak hand and a 7-card major, jump to 3 of that suit.\
+           \ Opener should pretend that you opened with a pre-empt: they will\
+           \ likely pass, even if we don't have a great fit, but can continue\
+           \ the pre-empt with a fit if the opponents try to enter the auction."
+      in
+        situation "3M" action bid explanation
+  in
+    smpWrapN $ return sit <~ [B.b1D3H, B.b1D3S]
+
+
+-- TODO: uncomment this and get it right when you're more confident of the
+-- definition of a 4D response.
+{-
+preempt4D :: Situations
+preempt4D = let
+    sit = let
+        action = do
+            b1D
+            oppsPass
+            withholdBid B.b1D4D
+        explanation _ =
+            "With a weak hand and 8-card support for partner's diamonds, jump\
+           \ to 4 of that suit. Opener has at least a doubleton, so on the LoTT\
+           \ you're probably safe to the 4 level."
+        -- TODO: not sure that's right. What if you've got a running diamond
+        -- suit between the two of you and you belong in a gambling-like 3N?
+      in
+        situation "4D" action bid explanation
+  in
+    smpWrapN $ return sit
+-}
+
+
+majorGame :: Situations
+majorGame = let
+    sit bid = let
+        action = do
+            b1D
+            oppsPass
+            withholdBid bid
+        explanation _ =
+            "With an 8-card major, jump to game. This bid has a very wide\
+           \ point range, which makes it difficult for the opponents because\
+           \ maybe you're pre-empting and maybe you're game forcing with no\
+           \ interest in slam. Regardless, game in your major is the right\
+           \ place to stop, so bid it immediately without giving the opponents\
+           \ a chance to jump into the auction."
+      in
+        situation "4M" action bid explanation
+  in
+    smpWrapN $ return sit <~ [B.b1D4H, B.b1D4S]
+
+
+
 topic :: Topic
 topic = Topic "responses to SMP 1D openings" "smp1d" situations
   where
@@ -204,5 +266,6 @@ topic = Topic "responses to SMP 1D openings" "smp1d" situations
                       , reverseFlannery
                       , wrap [weakMinors54, weakMinors55]
                       , wrap [notrump1, notrump2, notrump3]
-                      , invertedMinors
+                      -- TODO: Add preempt4D to this line when it's implemented.
+                      , wrap [invertedMinors, preempt3M, majorGame]
                       ]

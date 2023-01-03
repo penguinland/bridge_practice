@@ -10,13 +10,13 @@ module Topics.StandardModernPrecision.Bids1D(
   , b1D2N
   , b1D3C
   , b1D3D
---  , b1D3H
---  , b1D3S
+  , b1D3H
+  , b1D3S
   , b1D3N
   , b1D4C
---  , b1D4D
---  , b1D4H
---  , b1D4S
+--  , b1D4D  -- Not sure of definition, so skipped for now
+  , b1D4H
+  , b1D4S
 ) where
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
@@ -89,7 +89,7 @@ b1D2D = do
     -- If you've got a major, you must have a 6-card minor.
     alternatives [ minSuitLength T.Diamonds 6
                  , mapM_ (`maxSuitLength` 3) T.majorSuits ]
-    makeAlertableCall (T.Bid 2 T.Diamonds) "invitational or better"
+    makeAlertableCall (T.Bid 2 T.Diamonds) "Invitational or better"
 
 
 b1D2H :: Action
@@ -138,7 +138,22 @@ b1D3D = do
     -- With 8+ diamonds, bid 4D (the book says 7+, but that's anti-LoTT).
     maxSuitLength T.Diamonds 7
     mapM_ (`maxSuitLength` 3) T.majorSuits
-    makeAlertableCall (T.Bid 3 T.Diamonds) "weak"
+    makeAlertableCall (T.Bid 3 T.Diamonds) "Weak"
+
+
+b1D3M :: T.Suit -> Action  -- unexported helper function, used below
+b1D3M suit = do
+    -- The book says this range is 6 to 9 HCP. With 10, maybe consider treating
+    -- your hand as invitational, due to the extra shape?
+    pointRange 6 9
+    suitLength suit 7
+    makeAlertableCall (T.Bid 3 suit) "Weak, 7-card suit"
+
+b1D3H :: Action
+b1D3H = b1D3M T.Hearts
+
+b1D3S :: Action
+b1D3S = b1D3M T.Spades
 
 
 b1D3N :: Action
@@ -156,6 +171,31 @@ b1D4C = do
     minSuitLength T.Clubs 5
     minSuitLength T.Diamonds 5
     makeAlertableCall (T.Bid 4 T.Clubs)
-        "at least 5-5 in the minors, less than invitational strength"
+        "At least 5-5 in the minors, less than invitational strength"
 
 
+-- TODO: The book's definitions for b1D3D contains its definition for b1D4D. Why
+-- would you ever respond 4D, thus preventing opener from bidding a
+-- gambling-like 3N?
+{-
+b1D4D :: Action
+b1D4D = do
+    pointRange 6 9
+    minSuitLength T.Diamonds 8
+    makeAlertableCall (T.Bid 4 T.Diamonds) "Weak, 8-card suit"
+-}
+
+
+b1D4M :: T.Suit -> Action  -- unexported helper function, used below
+b1D4M suit = do
+    pointRange 6 16
+    minSuitLength suit 8
+    makeAlertableCall (T.Bid 4 suit)
+        "Signoff with a very wide range: could be weak and pre-emptive, or\
+       \ game-forcing with no interest in slam"
+
+b1D4H :: Action
+b1D4H = b1D4M T.Hearts
+
+b1D4S :: Action
+b1D4S = b1D4M T.Spades
