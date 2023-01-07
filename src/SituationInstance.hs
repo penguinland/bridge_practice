@@ -38,7 +38,7 @@ instance Showable SituationInstance where
 instantiate :: String -> Situation ->
         State StdGen (IO (Maybe SituationInstance))
 instantiate reference (Situation _ b dl c s v dn) = do
-    n <- use (first (fromInteger . toInteger) . genWord64)
+    n <- use (first fromIntegral . genWord64)
     let instantiate' :: IO (Maybe SituationInstance)
         instantiate' = do
             maybeDeal <- eval dn v dl n
