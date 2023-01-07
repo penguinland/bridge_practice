@@ -2,8 +2,8 @@ module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
 import Output(output, Punct(..))
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, {-forbid,-} maxSuitLength, minSuitLength, {-suitLength,-}
-               {-Action,-} pointRange, displayLastCall, alternatives)
+import Auction(withholdBid, maxSuitLength, minSuitLength, pointRange,
+               displayLastCall, alternatives)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
