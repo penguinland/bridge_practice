@@ -259,7 +259,7 @@ majorGame = let
 
 
 topic :: Topic
-topic = Topic "responses to SMP 1D openings" "smp1d" situations
+topic = Topic "SMP immediate responses to 1D openings" "smp1d" situations
   where
     situations = wrap [ twoMinor6M
                       , oneMajor

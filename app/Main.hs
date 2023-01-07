@@ -5,7 +5,7 @@ import System.Random(mkStdGen)
 --import qualified Topics.StandardOpeners as StandardOpeners
 
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
-import qualified Topics.StandardModernPrecision.ResponsesToStrongClub as Smp1CResponses
+import qualified Topics.StandardModernPrecision.OneClubResponses as Smp1CResponses
 import qualified Topics.StandardModernPrecision.OneDiamondResponses as Smp1DResponses
 import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
