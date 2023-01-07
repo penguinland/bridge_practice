@@ -156,6 +156,6 @@ extractLastCall =
 -- displayLastCall is for use in explanations: it formats the most recent call
 -- from an action while stripping out any alerts it might have
 displayLastCall :: OutputType -> Action -> String
-displayLastCall fmt = output fmt . T.extractCall . extractLastCall
+displayLastCall fmt = output fmt . T.removeAlert . extractLastCall
 
 -- TODO: hasCard
