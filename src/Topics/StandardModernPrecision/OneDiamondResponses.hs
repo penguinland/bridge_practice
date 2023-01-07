@@ -2,10 +2,9 @@ module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
 import Output(output, Punct(..))
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, {-forbid, makePass,-} maxSuitLength, minSuitLength, {-suitLength,-}
-               {-Action, balancedHand,-} pointRange{-, SuitLengthComparator(..), compareSuitLength-}, displayLastCall)
+import Auction(withholdBid, {-forbid,-} maxSuitLength, minSuitLength, {-suitLength,-}
+               {-Action,-} pointRange, displayLastCall, alternatives)
 import Situation(situation, (<~))
---import CommonBids(cannotPreempt)
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
 import qualified Topics.StandardModernPrecision.Bids1D as B
@@ -43,10 +42,57 @@ twoMinor6M = let
            \ minor, start by bidding 2 of the minor. There will be time to\
            \ show the major afterward."
       in
-        situation "6m" action bid explanation
+        situation "6m4M" action bid explanation
   in
     smpWrapN $ return sit <~ [(T.Clubs, B.b1D2C), (T.Diamonds, B.b1D2D)]
                           <~ [T.Hearts, T.Spades]
+
+
+twoMinorLongInv :: Situations
+twoMinorLongInv = let
+    sit (minor, bid) = let
+        action = do
+            b1D
+            oppsPass
+            minSuitLength minor 6
+            maxSuitLength T.Hearts 3
+            maxSuitLength T.Spades 3
+            pointRange 11 13
+            withholdBid bid
+        explanation _ =
+            "With invitational strength and a 6-card minor, bid naturally,\
+           \ planning to rebid your suit at the 3 level if partner doesn't\
+           \ show a maximum hand."
+      in
+        situation "6mw" action bid explanation
+  in
+    smpWrapN $ return sit <~ [(T.Clubs, B.b1D2C), (T.Diamonds, B.b1D2D)]
+
+
+twoMinorBothInv :: Situations
+twoMinorBothInv = let
+    sit = let
+        action = do
+            b1D
+            oppsPass
+            minSuitLength T.Clubs 4
+            minSuitLength T.Diamonds 4
+            alternatives . map (`minSuitLength` 5) $ T.minorSuits
+            maxSuitLength T.Hearts 3
+            maxSuitLength T.Spades 3
+            pointRange 11 13
+            withholdBid B.b1D2D
+        explanation fmt =
+            "With invitational strength and both minors, start with " ++
+            output fmt (T.Bid 2 T.Diamonds) ++ ", planning to rebid " ++
+            output fmt (T.Bid 3 T.Clubs) ++ " to give partner a choice of\
+           \ minors. Be prepared to go to game if partner shows a maximum, but\
+           \ they're more likely to have a minimum which will pass or correct\
+           \ at the 3 level."
+      in
+        situation "9m" action B.b1D2D explanation
+  in
+    smpWrapN $ return sit
 
 
 reverseFlannery :: Situations
@@ -261,7 +307,7 @@ majorGame = let
 topic :: Topic
 topic = Topic "SMP immediate responses to 1D openings" "smp1d" situations
   where
-    situations = wrap [ twoMinor6M
+    situations = wrap [ wrap [twoMinor6M, twoMinorLongInv, twoMinorBothInv]
                       , oneMajor
                       , reverseFlannery
                       , wrap [weakMinors54, weakMinors55]
