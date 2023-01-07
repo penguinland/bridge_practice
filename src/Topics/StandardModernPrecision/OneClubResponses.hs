@@ -1,4 +1,4 @@
-module Topics.StandardModernPrecision.ResponsesToStrongClub(topic) where
+module Topics.StandardModernPrecision.OneClubResponses(topic) where
 
 import Output(output)
 import Topic(Topic(..), wrap, Situations)
@@ -194,7 +194,7 @@ passTwoSpades = let
 
 
 topic :: Topic
-topic = Topic "SMP immediate responses to 1C" "SMP1C" situations
+topic = Topic "SMP immediate responses to 1C openings" "SMP1C" situations
   where
     situations = wrap [ oneDiamond
                       , oneHeart

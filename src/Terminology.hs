@@ -8,6 +8,7 @@ module Terminology (
 , majorSuits
 , Call(..)
 , CompleteCall(..)
+, removeAlert
 , Vulnerability(..)
 , allVulnerabilities
 ) where
@@ -101,6 +102,10 @@ data CompleteCall = CompleteCall Call (Maybe String)
 instance Showable CompleteCall where
     toLatex (CompleteCall c a) =
         toLatex c ++ maybe "" (\x -> " (" ++ x ++ ")") a
+
+
+removeAlert :: CompleteCall -> Call
+removeAlert (CompleteCall c _) = c
 
 
 data Vulnerability = NS | EW | Both | None deriving Eq

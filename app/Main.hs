@@ -5,10 +5,11 @@ import System.Random(mkStdGen)
 --import qualified Topics.StandardOpeners as StandardOpeners
 
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
-import qualified Topics.StandardModernPrecision.ResponsesToStrongClub as Smp1CResponses
+import qualified Topics.StandardModernPrecision.OneClubResponses as Smp1CResponses
+import qualified Topics.StandardModernPrecision.OneDiamondResponses as Smp1DResponses
 import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
-import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as TwoDOpen
+import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 
 import ProblemSet(outputLatex)
 
@@ -19,7 +20,8 @@ main = let
              , Smp1CResponses.topic
              , Mafia.topic
              , MafiaResponses.topic
-             , TwoDOpen.topic
+             , Smp1DResponses.topic
+             , Smp2DOpen.topic
              ]
   in do
     outputLatex 100 topics "test" (mkStdGen 0)
