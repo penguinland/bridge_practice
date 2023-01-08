@@ -46,7 +46,7 @@ b1D1S = do
     pointRange 6 40
     minSuitLength T.Spades 4
     -- If you've got a more specific bid, do that instead
-    mapM_ forbid [b1D2C, b1D2D, b1D2H, b1D2S]
+    mapM_ forbid [b1D2C, b1D2D, b1D2H, b1D2S, b1D3S]
     -- Your spades should be your longest major. If your hearts are at least as
     -- long, start with 1H instead.
     compareSuitLength T.Spades Longer T.Hearts
