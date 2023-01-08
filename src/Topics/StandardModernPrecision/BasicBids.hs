@@ -19,9 +19,9 @@ import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
 import Topic(wrap, Situations)
-import Auction(forbid, pointRange, suitLength, minSuitLength,
+import Auction(forbid, pointRange, suitLength, minSuitLength, hasTopN,
                Action, balancedHand, constrain, makeCall, makeAlertableCall,
-               makePass)
+               makePass, alternatives)
 import Situation(Situation, (<~))
 import CommonBids(cannotPreempt)
 import qualified Terminology as T
@@ -58,18 +58,17 @@ b2N = do
     makeAlertableCall (T.Bid 2 T.Notrump) "19-20 HCP"
 
 
--- TODO: switch to gambling 3N, and make this 1C-and-rebid-3N
 b3N :: Action
 b3N = do
-    pointRange 24 40  -- Technically only 24-27, but close enough
-    balancedHand
-    makeCall $ T.Bid 3 T.Notrump
+    alternatives . map (\suit -> minSuitLength suit 7 >> hasTopN suit 5 4) $
+        T.minorSuits
+    makeAlertableCall (T.Bid 3 T.Notrump) "Gambling: long running minor"
 
 
 b1C :: Action
 b1C = do
     pointRange 16 40
-    mapM_ forbid [b1N, b2N, b3N]
+    mapM_ forbid [b1N, b2N]
     makeAlertableCall (T.Bid 1 T.Clubs) "16+ HCP, any shape"
 
 

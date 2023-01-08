@@ -400,6 +400,7 @@ b1C1D1S2H = do
     forbid b1C1D1S3S
     -- Prefer showing 3-card spade support over your own 5-card heart suit.
     forbid b1C1D1S2D
+    forbid b1C1D1S2N
     pointRange 6 7
     -- We need at least 5 hearts, since opener has at most 3 (unless they're
     -- two-suited with both majors and longer spades, but that's rare and we'll
