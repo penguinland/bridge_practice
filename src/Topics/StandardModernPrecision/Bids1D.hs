@@ -20,8 +20,8 @@ module Topics.StandardModernPrecision.Bids1D(
 ) where
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-               Action, balancedHand, makeCall, makeAlertableCall,
-               alternatives, SuitLengthComparator(..), compareSuitLength)
+               Action, balancedHand, makeCall, makeAlertableCall, alternatives,
+               longerThan, atMostAsLong)
 import qualified Terminology as T
 
 import Topics.StandardModernPrecision.BasicBids(b1D)
@@ -37,7 +37,7 @@ b1D1H = do
     -- you're 4-4 and you should probably bid the hearts first, or you're 5-5
     -- and either you're going to bid Reverse Flannery or you're game forcing
     -- and can reverse later, so bid the hearts first.
-    forbid $ compareSuitLength T.Spades Longer T.Hearts
+    T.Spades `atMostAsLong` T.Hearts
     makeCall $ T.Bid 1 T.Hearts
 
 
@@ -49,7 +49,7 @@ b1D1S = do
     mapM_ forbid [b1D2C, b1D2D, b1D2H, b1D2S, b1D3S]
     -- Your spades should be your longest major. If your hearts are at least as
     -- long, start with 1H instead.
-    compareSuitLength T.Spades Longer T.Hearts
+    T.Spades `longerThan` T.Hearts
     makeCall $ T.Bid 1 T.Spades
 
 

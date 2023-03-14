@@ -3,7 +3,7 @@ module Topics.StandardModernPrecision.Mafia(topic) where
 import Output(output, Punct(..))
 import Topic(Topic(..), wrap, Situations)
 import Auction(withholdBid, forbid, minSuitLength, suitLength, balancedHand,
-               SuitLengthComparator(..), compareSuitLength, displayLastCall)
+               equalLength, longerThan, displayLastCall)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(smpWrapS)
@@ -103,7 +103,7 @@ equalMinors = let
         action = do
             B.startOfMafia
             forbid balancedHand
-            compareSuitLength T.Clubs Equal T.Diamonds
+            T.Clubs `equalLength` T.Diamonds
             withholdBid B.b1C1D2D
         explanation _ =
             "With an unbalanced hand that isn't game forcing and doesn't have\
@@ -123,7 +123,7 @@ bothMajorsLongSpades = let
             B.startOfMafia
             forbid balancedHand
             minSuitLength T.Hearts 4
-            compareSuitLength T.Spades Longer T.Hearts
+            T.Spades `longerThan` T.Hearts
         explanation fmt =
             "With both majors but longer spades, start by bidding " ++
             output fmt (T.Bid 1 T.Spades) ++ ". You can then bid the hearts\

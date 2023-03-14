@@ -13,8 +13,7 @@ module StandardOpenings(
 -- must specify strength yourself before using them.
 
 import Auction(Action, suitLength, minSuitLength, maxSuitLength, makeCall,
-               forbid, compareSuitLength, SuitLengthComparator(..), pointRange,
-               balancedHand, alternatives)
+               forbid, longerThan, pointRange, balancedHand, alternatives)
 import qualified CommonBids as B
 import qualified Terminology as T
 
@@ -103,8 +102,7 @@ b1d = let
     noMajor
     minSuitLength T.Diamonds 3
     alternatives [ bothMinors >> forbid reverseStrength
-                 , forbid bothMinors >>
-                       compareSuitLength T.Diamonds Longer T.Clubs ]
+                 , forbid bothMinors >> T.Diamonds `longerThan` T.Clubs ]
     makeCall (T.Bid 1 T.Diamonds)
 
 
@@ -114,8 +112,7 @@ b1c = do
     noMajor
     minSuitLength T.Clubs 3
     alternatives [ reverseStrength >> bothMinors
-                 , forbid bothMinors >>
-                       compareSuitLength T.Clubs Longer T.Diamonds
+                 , forbid bothMinors >> T.Clubs `longerThan` T.Diamonds
                  , equalMinors 3
                  , equalMinors 4
                  ]

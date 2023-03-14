@@ -47,7 +47,7 @@ module Topics.StandardModernPrecision.Bids1C(
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, balancedHand, constrain, makeCall, makeAlertableCall,
-               alternatives, SuitLengthComparator(..), compareSuitLength)
+               alternatives, longerThan, atLeastAsLong)
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
 
@@ -190,8 +190,7 @@ _makeJumpBid level suit = do
     minSuitLength suit 5
     -- This should be your longest suit
     -- TODO: if you're 5-5, which suit do you bid first?
-    mapM_ (forbid . compareSuitLength suit Shorter) . filter (/= suit) $
-        T.allSuits
+    mapM_ (suit `longerThan`) . filter (/= suit) $ T.allSuits
     makeCall $ T.Bid level suit
 
 
@@ -251,7 +250,7 @@ b1C1D2C = do
     forbid b1C1D1S
     _notGameForcing
     -- Clubs must be longer than diamonds: with equal lengths, bid diamonds.
-    compareSuitLength T.Clubs Longer T.Diamonds
+    T.Clubs `longerThan` T.Diamonds
     alternatives [ minSuitLength T.Clubs 6
                  , minSuitLength T.Clubs 5 >> minSuitLength T.Diamonds 4
                  ]
@@ -265,8 +264,7 @@ b1C1D2D = do
     forbid b1C1D1S
     forbid b1C1D2C
     _notGameForcing
-    -- diamonds are at least as long as clubs
-    forbid $ compareSuitLength T.Diamonds Shorter T.Clubs
+    T.Diamonds `atLeastAsLong` T.Clubs
     alternatives [ minSuitLength T.Diamonds 6
                  , minSuitLength T.Diamonds 5 >> minSuitLength T.Clubs 4
                  ]
