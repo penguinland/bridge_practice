@@ -17,8 +17,11 @@ module Auction (
 , maxSuitLength
 , hasTopN
 , withholdBid
-, compareSuitLength
-, SuitLengthComparator(..)
+, longerThan
+, shorterThan
+, equalLength
+, atLeastAsLong
+, atMostAsLong
 , extractLastCall
 , displayLastCall
 ) where
@@ -130,22 +133,27 @@ withholdBid action = do
         (_, dealerToWithhold) = execState action freshAuction
     put (bidding, dealerProg `mappend` dealerToWithhold)
 
-
-data SuitLengthComparator = Longer | Equal | Shorter
-instance Show SuitLengthComparator where
-    show Longer = ">"
-    show Equal = "=="
-    show Shorter = "<"
-
-compareSuitLength :: T.Suit -> SuitLengthComparator -> T.Suit -> Action
-compareSuitLength suitA op suitB = let
-    toWord Longer = "longer"
-    toWord Equal = "equal"
-    toWord Shorter = "shorter"
-    name = join "_" [show suitA, toWord op, show suitB, "length"]
+_compareSuitLength :: String -> String -> T.Suit -> T.Suit -> Action
+_compareSuitLength name op suitA suitB = let
+    fullName = join "_" [show suitA, name, show suitB, "length"]
   in
-    constrain name [show suitA ++ "(", ") " ++ show op ++ " " ++
-                    show suitB ++ "(", ")"]
+    constrain fullName [show suitA ++ "(", ") " ++ op ++ " " ++
+                        show suitB ++ "(", ")"]
+
+longerThan :: T.Suit -> T.Suit -> Action
+longerThan = _compareSuitLength "longer" ">"
+
+shorterThan :: T.Suit -> T.Suit -> Action
+shorterThan = _compareSuitLength "shorter" "<"
+
+equalLength :: T.Suit -> T.Suit -> Action
+equalLength = _compareSuitLength "equal" "=="
+
+atLeastAsLong :: T.Suit -> T.Suit -> Action
+atLeastAsLong = _compareSuitLength "ge" ">="
+
+atMostAsLong :: T.Suit -> T.Suit -> Action
+atMostAsLong = _compareSuitLength "le" "<="
 
 extractLastCall :: Action -> T.CompleteCall
 extractLastCall =

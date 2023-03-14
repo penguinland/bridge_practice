@@ -75,8 +75,7 @@ b1C = do
 b1M :: T.Suit -> Action
 b1M suit = do
     firstSeatOpener
-    forbid b1C
-    forbid b1N
+    mapM_ forbid [b1C, b1N, b2N]
     minSuitLength suit 5
     -- If you're a maximum with a 6-card minor and 5-card major, open the minor.
     mapM_ forbid . flip map T.minorSuits $ (\minor ->
