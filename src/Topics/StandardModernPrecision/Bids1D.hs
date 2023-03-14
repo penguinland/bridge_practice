@@ -32,7 +32,7 @@ b1D1H = do
     pointRange 6 40
     minSuitLength T.Hearts 4
     -- If you've got a more specific bid, do that instead
-    mapM_ forbid [b1D2C, b1D2D, b1D2H, b1D2S]
+    mapM_ forbid [b1D2C, b1D2D, b1D2H, b1D2S, b1D3H]
     -- With longer spades, bid those first. With equal-length spades, either
     -- you're 4-4 and you should probably bid the hearts first, or you're 5-5
     -- and either you're going to bid Reverse Flannery or you're game forcing
