@@ -7,9 +7,11 @@ module Topics.StandardModernPrecision.Bids1C(
   , b1C1S
   , b1C1Sgf
   , b1C1N
+  , b1C1Nalt
   , b1C2C
   , b1C2D
   , b1C2H
+  , b1C2Halt
   , b1C2S
   , bP1C1H
   , bP1C1S
@@ -115,12 +117,27 @@ b1C2H = do
     makeCall $ T.Bid 2 T.Hearts
 
 
+b1C2Halt :: Action  -- Alternative choice: swap the meanings of b1C1N and b1C2H
+b1C2Halt = do
+    _slamInterest
+    balancedHand
+    mapM_ (`maxSuitLength` 4) T.allSuits
+    makeAlertableCall (T.Bid 2 T.Hearts) "12+ HCP, any 4333 or 4432 shape"
+
+
 b1C1N :: Action
 b1C1N = do
     _slamInterest
     balancedHand
     mapM_ (`maxSuitLength` 4) T.allSuits
     makeCall $ T.Bid 1 T.Notrump
+
+
+b1C1Nalt :: Action  -- Alternative choice: swap the meanings of b1C1N and b1C2H
+b1C1Nalt = do
+    _slamInterest
+    minSuitLength T.Hearts 5
+    makeAlertableCall (T.Bid 1 T.Notrump) "12+ HCP, 5+ hearts"
 
 
 b1C2S :: Action

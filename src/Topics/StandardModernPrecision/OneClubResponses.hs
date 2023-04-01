@@ -74,6 +74,25 @@ oneNotrump = let
     smpWrapN . return $ situation "1N" action B.b1C1N explanation
 
 
+oneNotrumpAlt :: Situations
+oneNotrumpAlt = let
+    action = do
+        firstSeatOpener
+        b1C
+        oppsPass
+        withholdBid B.b1C1Nalt
+    explanation fmt =
+        "You've got at least mild slam interest with 12+ HCP, and a 5-card\
+      \ heart suit. Bid " ++ output fmt (T.Bid 1 T.Notrump) ++ " to show this.\
+      \ Partner's bids are natural: " ++ output fmt (T.Bid 2 T.Hearts) ++ " is\
+      \ a heart raise, other suits are 5 cards long, and " ++
+        output fmt (T.Bid 2 T.Notrump) ++ " shows a notrump response.\
+      \ Compared to the naive approach, this never wastes extra bidding room\
+      \ and often saves some for control bids after we've found a fit."
+  in
+    smpWrapN . return $ situation "1Nalt" action B.b1C1Nalt explanation
+
+
 slamSingleSuit :: Situations
 slamSingleSuitModified :: Situations
 (slamSingleSuit, slamSingleSuitModified) = let
@@ -102,7 +121,28 @@ slamSingleSuitModified :: Situations
         situation "Slam" action bid explanation
   in
     ( smpWrapN $ return sit <~ T.allSuits
-    , smpWrapN $ return sit <~ [T.Clubs, T.Diamonds, T.Hearts])
+    , smpWrapN $ return sit <~ [T.Clubs, T.Diamonds])
+
+
+twoHeartsBalanced :: Situations
+twoHeartsBalanced = let
+    action = do
+        firstSeatOpener
+        b1C
+        oppsPass
+        withholdBid B.b1C2Halt
+    explanation fmt =
+        "You've got at least mild slam interest with 12+ HCP, but a balanced\
+      \ hand with no 5-card suit. Bid " ++ output fmt (T.Bid 2 T.Hearts) ++ "\
+      \ to show this. Partner can try " ++ output fmt (T.Bid 2 T.Notrump) ++ "\
+      \ to show hearts, " ++ output fmt (T.Bid 3 T.Clubs) ++ " as Stayman\
+      \ (regular-type! Puppet is not needed because you've already denied a\
+      \ 5-card major), or otherwise bid naturally. If partner has clubs,\
+      \ they're likely to prefer notrump, but could also try a jump to " ++
+        output fmt (T.Bid 3 T.Spades) ++ " to show that (which should be\
+      \ surprising enough for you to recognize/remember)."
+  in
+    smpWrapN . return $ situation "2HAlt" action B.b1C2Halt explanation
 
 
 oneSpadeGF :: Situations
@@ -247,7 +287,7 @@ topic = Topic "SMP immediate responses to 1C openings" "SMP1C" situations
   where
     situations = wrap [ oneDiamond
                       , oneHeart  -- Differs from topicExtras, below
-                      , oneNotrump
+                      , oneNotrump  -- Differs from topicExtras, below
                       , slamSingleSuit  -- Differs from topicExtras, below
                       , twoSpades
                       , passGameSingleSuit
@@ -262,8 +302,9 @@ topicExtras = Topic "SMP modified immediate responses to 1C openings"
     situations = wrap [ oneDiamond
                       , oneHeartNoSpades  -- Differs from topic, above
                       , oneSpadeGF  -- Differs from topic, above
-                      , oneNotrump
+                      , oneNotrumpAlt  -- Differs from topic, above
                       , slamSingleSuitModified  -- Differs from topic, above
+                      , twoHeartsBalanced  -- Differs from topic, above
                       , twoSpades
                       , passGameSingleSuit
                       , passOneNotrump
