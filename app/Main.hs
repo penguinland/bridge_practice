@@ -16,12 +16,12 @@ import ProblemSet(outputLatex)
 
 main :: IO ()
 main = let
-    topics = [ SmpOpenings.topic
-             , Smp1CResponses.topic
-             , Mafia.topic
-             , MafiaResponses.topic
-             , Smp1DResponses.topic
-             , Smp2DOpen.topic
+    topics = [ --SmpOpenings.topic
+              Smp1CResponses.topicExtras
+             --, Mafia.topic
+             --, MafiaResponses.topic
+             --, Smp1DResponses.topic
+             --, Smp2DOpen.topic
              ]
   in do
     outputLatex 100 topics "test" (mkStdGen 0)

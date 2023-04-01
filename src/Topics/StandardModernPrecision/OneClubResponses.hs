@@ -1,8 +1,10 @@
-module Topics.StandardModernPrecision.OneClubResponses(topic) where
+module Topics.StandardModernPrecision.OneClubResponses(
+  topic
+, topicExtras) where
 
 import Output(output)
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, forbid, maxSuitLength, makePass)
+import Auction(withholdBid, forbid, maxSuitLength, makePass, pointRange)
 import Situation(situation, (<~))
 import CommonBids(cannotPreempt)
 import qualified Terminology as T
@@ -40,6 +42,22 @@ oneHeart = let
     smpWrapN . return $ situation "1H" action B.b1C1H explanation
 
 
+oneHeartNoSpades :: Situations
+oneHeartNoSpades = let
+    action = do
+        firstSeatOpener
+        b1C
+        oppsPass
+        withholdBid B.b1C1Hnos
+    explanation fmt =
+        "You've got a game-forcing hand but slam is unlikely. With 8 to 11 HCP\
+      \ and no spade suit, bid " ++ output fmt (T.Bid 1 T.Hearts) ++ " to show\
+      \ this kind of hand. Partner's rebid will be a natural 5-card suit, not\
+      \ MaFiA."
+  in
+    smpWrapN . return $ situation "1Hns" action B.b1C1Hnos explanation
+
+
 oneNotrump :: Situations
 oneNotrump = let
     action = do
@@ -57,7 +75,8 @@ oneNotrump = let
 
 
 slamSingleSuit :: Situations
-slamSingleSuit = let
+slamSingleSuitModified :: Situations
+(slamSingleSuit, slamSingleSuitModified) = let
     finalAction T.Clubs    = B.b1C2C
     finalAction T.Diamonds = B.b1C2D
     finalAction T.Hearts   = B.b1C2H
@@ -76,14 +95,44 @@ slamSingleSuit = let
         explanation fmt =
             "You've got at least mild slam interest with 12+ HCP, and a 5+ card\
           \ suit. Bid a natural " ++ output fmt (T.Bid level strain) ++ ",\
-          \ and we'll go from there. Once we find a trump fit, we'll start\
-          \ control bidding. Subsequent bids are natural 5-card (and later\
-          \ 4-card) suits, not MaFiA."
+          \ and we'll go from there. Subsequent bids are natural 5-card (and\
+          \ later 4-card) suits, not MaFiA. Once we find a trump fit, we'll\
+          \ start control bidding."
       in
         situation "Slam" action bid explanation
   in
-    smpWrapN $ return sit <~ T.allSuits
+    ( smpWrapN $ return sit <~ T.allSuits
+    , smpWrapN $ return sit <~ [T.Clubs, T.Diamonds, T.Hearts])
 
+
+oneSpadeGF :: Situations
+oneSpadeGF = let
+    explanationMin fmt =
+        "You've got game-forcing strength and a 5-card spade suit. Start with\
+      \ bidding " ++ output fmt (T.Bid 1 T.Spades) ++ " to describe this type\
+      \ of hand. Partner will bid naturally, and when we find a fit, you'll\
+      \ sign off in game to show no interest in going further (though partner\
+      \ can always push on if they've got a monster)."
+    explanationMax fmt =
+        "You've got a 5-card spade suit and at least mild slam interest. Start\
+      \ with " ++ output fmt (T.Bid 1 T.Spades) ++ " to show partner we'e at\
+      \ least game forcing. When you find a fit, start control bidding to show\
+      \ partner you're interested in slam, too."
+    sit (explanation, givenPoints) = let
+        action = do
+            firstSeatOpener
+            b1C
+            oppsPass
+            -- The compiler is concerned that we're discarding a result value on
+            -- this next line, but suggests that if it's on purpose, we can use
+            -- `_` to suppress it. The result we're discarding is the () unit.
+            _ <- givenPoints
+            withholdBid B.b1C1Sgf
+      in
+        situation "Slam" action B.b1C1Sgf explanation
+  in
+    smpWrapN $ return sit <~ [(explanationMin, pointRange 8 11),
+                              (explanationMax, pointRange 12 40)]
 
 twoSpades :: Situations
 twoSpades = let
@@ -197,9 +246,24 @@ topic :: Topic
 topic = Topic "SMP immediate responses to 1C openings" "SMP1C" situations
   where
     situations = wrap [ oneDiamond
-                      , oneHeart
+                      , oneHeart  -- Differs from topicExtras, below
                       , oneNotrump
-                      , slamSingleSuit
+                      , slamSingleSuit  -- Differs from topicExtras, below
+                      , twoSpades
+                      , passGameSingleSuit
+                      , passOneNotrump
+                      , passTwoSpades
+                      ]
+
+topicExtras :: Topic
+topicExtras = Topic "SMP modified immediate responses to 1C openings"
+                    "SMP1CM" situations
+  where
+    situations = wrap [ oneDiamond
+                      , oneHeartNoSpades  -- Differs from topic, above
+                      , oneSpadeGF  -- Differs from topic, above
+                      , oneNotrump
+                      , slamSingleSuitModified  -- Differs from topic, above
                       , twoSpades
                       , passGameSingleSuit
                       , passOneNotrump

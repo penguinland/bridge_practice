@@ -3,7 +3,9 @@ module Topics.StandardModernPrecision.Bids1C(
   -- Responses to 1C
   , b1C1D
   , b1C1H
+  , b1C1Hnos
   , b1C1S
+  , b1C1Sgf
   , b1C1N
   , b1C2C
   , b1C2D
@@ -71,9 +73,23 @@ b1C1H = do
     makeAlertableCall (T.Bid 1 T.Hearts) "8-11 HCP, any shape"
 
 
+b1C1Hnos :: Action
+b1C1Hnos = do
+    _gameForcing
+    maxSuitLength T.Spades 4
+    makeAlertableCall (T.Bid 1 T.Hearts) "8-11 HCP, any shape without 5+ spades"
+
+
 b1C1S :: Action
 b1C1S = do
     _slamInterest
+    minSuitLength T.Spades 5
+    makeCall $ T.Bid 1 T.Spades
+
+
+b1C1Sgf :: Action
+b1C1Sgf = do
+    pointRange 8 40
     minSuitLength T.Spades 5
     makeCall $ T.Bid 1 T.Spades
 
