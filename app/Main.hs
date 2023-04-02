@@ -17,6 +17,7 @@ import ProblemSet(outputLatex)
 main :: IO ()
 main = let
     topics = [ --SmpOpenings.topic
+             --, Smp1CResponses.topic
               Smp1CResponses.topicExtras
              --, Mafia.topic
              --, MafiaResponses.topic
