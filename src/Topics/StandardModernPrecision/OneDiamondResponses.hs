@@ -2,8 +2,8 @@ module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
 import Output(output, Punct(..))
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, maxSuitLength, minSuitLength, pointRange,
-               displayLastCall, alternatives)
+import Auction(maxSuitLength, minSuitLength, pointRange, displayLastCall,
+               alternatives)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
@@ -16,7 +16,6 @@ oneMajor = let
         action = do
             b1D
             oppsPass
-            withholdBid bid
         explanation fmt =
             "Let's start with a natural " ++ displayLastCall fmt bid ++ "\
            \ bid, and see where things go from there."
@@ -36,7 +35,6 @@ twoMinor6M = let
             minSuitLength major 4
             maxSuitLength major 5
             pointRange 14 40
-            withholdBid bid
         explanation _ =
             "With game-forcing strength, a 4- or 5-card major, but a 6+ card\
            \ minor, start by bidding 2 of the minor. There will be time to\
@@ -58,7 +56,6 @@ twoMinorLongInv = let
             maxSuitLength T.Hearts 3
             maxSuitLength T.Spades 3
             pointRange 11 13
-            withholdBid bid
         explanation _ =
             "With invitational strength and a 6-card minor, bid naturally,\
            \ planning to rebid your suit at the 3 level if partner doesn't\
@@ -81,7 +78,6 @@ twoMinorBothInv = let
             maxSuitLength T.Hearts 3
             maxSuitLength T.Spades 3
             pointRange 11 13
-            withholdBid B.b1D2D
         explanation fmt =
             "With invitational strength and both minors, start with " ++
             output fmt (T.Bid 2 T.Diamonds) ++ ", planning to rebid " ++
@@ -101,7 +97,6 @@ reverseFlannery = let
         action = do
             b1D
             oppsPass
-            withholdBid bid
         explanation fmt =
             "With 5 spades, 4 or 5 hearts, and " ++
             (if isInvite then "" else "less than ") ++
@@ -124,7 +119,6 @@ weakMinors54 = let
         action = do
             b1D
             oppsPass
-            withholdBid B.b1D3C
         explanation fmt =
             "With 5-4 in the minors, no 4-card major, and less than\
            \ invitational strength, bid a pre-emptive-like " ++
@@ -144,7 +138,6 @@ weakMinors55 = let
         action = do
             b1D
             oppsPass
-            withholdBid B.b1D4C
         explanation fmt =
             "With at least 5-5 in the minors and less than invitational\
            \ strength,\
@@ -164,7 +157,6 @@ notrump1 = let
         action = do
             b1D
             oppsPass
-            withholdBid B.b1D1N
         explanation fmt =
             "With a balanced hand, no 4-card major, and less than invitational\
            \ strength, bid " ++ output fmt (T.Bid 1 T.Notrump) ++ ". Partner\
@@ -182,7 +174,6 @@ notrump2 = let
         action = do
             b1D
             oppsPass
-            withholdBid B.b1D2N
         explanation fmt =
             "With a balanced hand, no 4-card major, and 11" ++
              output fmt NDash ++ "12 HCP, bid " ++
@@ -209,7 +200,6 @@ notrump3 = let
         action = do
             b1D
             oppsPass
-            withholdBid B.b1D3N
         explanation fmt =
             "With a balanced hand, no 4-card major, and 13" ++
             output fmt NDash ++ "16 HCP, bid " ++
@@ -230,7 +220,6 @@ invertedMinors = let
         action = do
             b1D
             oppsPass
-            withholdBid B.b1D3D
         explanation fmt =
             "With less than invitational strength, no 4-card major, but a long\
            \ diamond suit, jump to " ++ displayLastCall fmt B.b1D3D ++ ", like\
@@ -248,7 +237,6 @@ preempt3M = let
         action = do
             b1D
             oppsPass
-            withholdBid bid
         explanation _ =
             "With a weak hand and a 7-card major, jump to 3 of that suit.\
            \ Opener should pretend that you opened with a pre-empt: they will\
@@ -269,7 +257,6 @@ preempt4D = let
         action = do
             b1D
             oppsPass
-            withholdBid B.b1D4D
         explanation _ =
             "With a weak hand and 8-card support for partner's diamonds, jump\
            \ to 4 of that suit. Opener has at least a doubleton, so on the LoTT\
@@ -277,7 +264,7 @@ preempt4D = let
         -- TODO: not sure that's right. What if you've got a running diamond
         -- suit between the two of you and you belong in a gambling-like 3N?
       in
-        situation "4D" action bid explanation
+        situation "4D" action B.b1D4D explanation
   in
     smpWrapN $ return sit
 -}
@@ -289,7 +276,6 @@ majorGame = let
         action = do
             b1D
             oppsPass
-            withholdBid bid
         explanation _ =
             "With an 8-card major, jump to game. This bid has a very wide\
            \ point range, which makes it difficult for the opponents because\

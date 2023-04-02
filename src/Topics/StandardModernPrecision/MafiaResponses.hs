@@ -2,7 +2,7 @@ module Topics.StandardModernPrecision.MafiaResponses(topic) where
 
 import Output(output)
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, Action, suitLength, maxSuitLength)
+import Auction(Action, suitLength, maxSuitLength)
 import Situation(Situation, situation, (<~))
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(oppsPass, smpWrapN)
@@ -19,7 +19,6 @@ minSupport = let
             B.startOfMafia
             openerBid
             oppsPass
-            withholdBid responderBid
         explanation _ =
             "With 4-card support and a minimum hand, raise partner's major.\
            \ You are neither strong enough nor shapely enough to invite to\
@@ -41,7 +40,6 @@ maxSupportSemibalanced = let
             B.startOfMafia
             openerBid
             oppsPass
-            withholdBid responderBid
         explanation fmt =
             "With 4-card support and a maximum hand but no singleton, invite\
            \ with a double raise. You've already shown that game might not be\
@@ -64,7 +62,6 @@ maxSupportUnbalanced = let
             B.startOfMafia
             openerBid
             oppsPass
-            withholdBid responderBid
         explanation fmt =
             "With 4-card support, a maximum hand, and a singleton or void,\
            \ make a mini-splinter bid with " ++
@@ -88,7 +85,6 @@ brakesHearts = let
             B.startOfMafia
             B.b1C1D1H
             oppsPass
-            withholdBid B.b1C1D1H1N
         explanation fmt =
             "With neither major and a non-maximum hand, bid " ++
              output fmt (T.Bid 1 T.Notrump) ++ " as the ``double negative''\
@@ -111,7 +107,6 @@ brakesSpades = let
             B.b1C1D1S
             oppsPass
             maxSuitLength T.Hearts 4
-            withholdBid B.b1C1D1S1N
         explanation fmt =
             "With a minimum hand and no support for partner's spades, bid " ++
              output fmt (T.Bid 1 T.Notrump) ++ " as the ``double negative''\
@@ -134,7 +129,6 @@ brakesSpadesHearts = let
             B.b1C1D1S
             oppsPass
             suitLength T.Hearts 5
-            withholdBid B.b1C1D1S1N
         explanation fmt =
             "With a minimum hand and no support for partner's spades, bid " ++
              output fmt (T.Bid 1 T.Notrump) ++ " as the ``double negative''\
@@ -159,7 +153,6 @@ otherMajorHearts = let
             B.startOfMafia
             B.b1C1D1H
             oppsPass
-            withholdBid B.b1C1D1H1S
         explanation fmt =
             "With no support for partner's hearts but at least 4 spades,\
            \ bid " ++ output fmt (T.Bid 1 T.Spades) ++ " to show that major.\
@@ -178,7 +171,6 @@ otherMajorSpades = let
             B.startOfMafia
             B.b1C1D1S
             oppsPass
-            withholdBid B.b1C1D1S2H
         explanation _ =
             "With a maximum hand, no support for partner's spades, but 5+\
            \ hearts, show that suit in our quest to find a major fit. Partner\
@@ -201,7 +193,6 @@ threeCardSupport = let
             B.startOfMafia
             openerBid
             oppsPass
-            withholdBid responderBid
         explanation fmt =
             "With 3-card support and a non-minimum hand (5-7 HCP), bid " ++
             output fmt (T.Bid 2 T.Diamonds) ++ ". Partner can sign off at the\
@@ -224,7 +215,6 @@ threeCardSupportHearts = let
             B.b1C1D1S
             oppsPass
             suitLength T.Hearts 5
-            withholdBid B.b1C1D1S2D
         explanation fmt =
             "With 3-card spade support and a non-minimum hand (5-7 HCP),\
            \ bid " ++ output fmt (T.Bid 2 T.Diamonds) ++ ". Do this even with\
@@ -243,7 +233,6 @@ maxNoMajors = let
             B.startOfMafia
             openerBid
             oppsPass
-            withholdBid responderBid
         explanation fmt =
             "With a maximum hand but no obvious major fit, respond " ++
             output fmt (T.Bid 2 T.Clubs) ++ ". Opener might bid an\

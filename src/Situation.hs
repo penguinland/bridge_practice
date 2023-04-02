@@ -8,7 +8,7 @@ module Situation (
 import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
-import Auction(Action, finish, extractLastCall)
+import Auction(Action, finish, extractLastCall, withholdBid)
 import DealerProg(DealerProg)
 import Output(Commentary)
 import Random(pickItem)
@@ -27,7 +27,7 @@ situation :: String -> Action -> Action -> Commentary -> Vulnerability ->
     Direction -> Situation
 situation r a c s v d = Situation r bidding deal answer s v d
   where
-    (bidding, deal) = finish d a
+    (bidding, deal) = finish d (a >> withholdBid c)
     answer = extractLastCall c
 
 
