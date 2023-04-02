@@ -4,7 +4,7 @@ import Output(output)
 import Topic(Topic(..), wrap, stdWrap, wrapVulDlr, Situations)
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, alternatives, constrain, makePass, makeCall,
-               makeAlertableCall, withholdBid)
+               makeAlertableCall)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified CommonBids as B
@@ -61,7 +61,6 @@ open :: Situations
 open = let
     action = do
         B.setOpener T.South
-        withholdBid twoDiamondOpener
     explanation fmt =
         "With an opening hand too weak to bid " ++
         output fmt (T.Bid 1 T.Clubs) ++ ", open " ++

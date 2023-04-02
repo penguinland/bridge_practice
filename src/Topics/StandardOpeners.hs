@@ -2,7 +2,7 @@ module Topics.StandardOpeners(topic) where
 
 import Output(output)
 import Topic(Topic(..), wrap, stdWrap, wrapVulDlr, Situations)
-import Auction(forbid, suitLength, minSuitLength, maxSuitLength, withholdBid)
+import Auction(forbid, suitLength, minSuitLength, maxSuitLength)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified CommonBids as B
@@ -18,7 +18,6 @@ oneNotrump :: Situations
 oneNotrump = let
     action = do
         B.setOpener T.South
-        withholdBid SO.b1n
     explanation fmt =
         "With 15 to 17 HCP and a balanced hand, open a strong " ++
         output fmt (T.Bid 1 T.Notrump) ++ ". No need to plan a second bid;\
@@ -31,7 +30,6 @@ twoNotrump :: Situations
 twoNotrump = let
     action = do
         B.setOpener T.South
-        withholdBid SO.b2n
     explanation fmt =
         "With 20 to 21 HCP and a balanced hand, open " ++
         output fmt (T.Bid 2 T.Notrump) ++ ". No need to plan a second bid;\
@@ -45,7 +43,6 @@ oneSpade = let
     action = do
         B.setOpener T.South
         forbid $ minSuitLength T.Spades 5 >> minSuitLength T.Hearts 5
-        withholdBid SO.b1s
     explanation fmt =
         "With a 5-card spade suit and a hand unsuitable for opening \
       \ notrump, open " ++ output fmt (T.Bid 1 T.Spades) ++ "."
@@ -58,7 +55,6 @@ oneHeart = let
     action = do
         B.setOpener T.South
         forbid $ minSuitLength T.Spades 5 >> minSuitLength T.Hearts 5
-        withholdBid SO.b1h
     explanation fmt =
         "With a 5-card heart suit and a hand unsuitable for opening \
       \ notrump, open " ++ output fmt (T.Bid 1 T.Hearts) ++ "."
@@ -72,7 +68,6 @@ bothMajorsReverse = let
         B.setOpener T.South
         minSuitLength T.Spades 5
         minSuitLength T.Hearts 5
-        withholdBid SO.b1h
     explanation fmt =
         "With at least 5-5 in the majors and enough strength to reverse,\
       \ open " ++ output fmt (T.Bid 1 T.Hearts) ++ ", planning to rebid " ++
@@ -87,7 +82,6 @@ bothMajorsNoReverse = let
         B.setOpener T.South
         minSuitLength T.Spades 5
         minSuitLength T.Hearts 5
-        withholdBid SO.b1s
     explanation fmt =
         "With at least 5-5 in the majors and not enough strength to\
       \ reverse, open " ++ output fmt (T.Bid 1 T.Spades) ++ ", planning\
@@ -102,7 +96,6 @@ oneDiamond = let
         B.setOpener T.South
         maxSuitLength T.Clubs 3
         minSuitLength T.Diamonds 4
-        withholdBid SO.b1d
     explanation fmt =
         "With no 5-card major and a hand unsuitable for opening \
       \ notrump, open " ++ output fmt (T.Bid 1 T.Diamonds) ++ " when \
@@ -119,7 +112,6 @@ oneDiamond3Cards = let
         suitLength T.Hearts   4
         suitLength T.Diamonds 3
         suitLength T.Clubs    2
-        withholdBid SO.b1d
     explanation fmt =
         "With no 5-card major and a hand unsuitable for opening \
       \ notrump, open " ++ output fmt (T.Bid 1 T.Diamonds) ++ " when \
@@ -136,7 +128,6 @@ oneClub = let
         B.setOpener T.South
         maxSuitLength T.Diamonds 3
         minSuitLength T.Clubs 4
-        withholdBid SO.b1c
     explanation fmt =
         "With no 5-card major and a hand unsuitable for opening \
       \ notrump, open " ++ output fmt (T.Bid 1 T.Clubs) ++ " when \
@@ -152,7 +143,6 @@ oneClubEqualMinors = let
             B.setOpener T.South
             suitLength T.Diamonds len
             suitLength T.Clubs len
-            withholdBid SO.b1c
         explanation fmt =
             "With no 5-card major and a hand unsuitable for opening \
           \ notrump, open " ++ output fmt (T.Bid 1 T.Clubs) ++ " when \
@@ -170,7 +160,6 @@ bothMinorsNoReverse = let
         B.setOpener T.South
         minSuitLength T.Diamonds 5
         minSuitLength T.Clubs 5
-        withholdBid SO.b1d
     explanation fmt =
         "With both minors but not enough strength to reverse, open, " ++
         output fmt (T.Bid 1 T.Diamonds) ++ ", planning to rebid " ++
@@ -185,7 +174,6 @@ bothMinorsNoReverseShortD = let
         B.setOpener T.South
         suitLength T.Diamonds 4
         suitLength T.Clubs 5
-        withholdBid SO.b1d
     explanation fmt =
         "With both minors but not enough strength to reverse, open " ++
         output fmt (T.Bid 1 T.Diamonds) ++ ", planning to rebid " ++
@@ -205,7 +193,6 @@ bothMinorsReverse = let
         B.setOpener T.South
         minSuitLength T.Diamonds 5
         minSuitLength T.Clubs 5
-        withholdBid SO.b1c
     explanation fmt =
         "With both minors and enough strength to reverse, open, " ++
         output fmt (T.Bid 1 T.Clubs) ++ ", planning to rebid " ++

@@ -2,8 +2,8 @@ module Topics.StandardModernPrecision.Mafia(topic) where
 
 import Output(output, Punct(..))
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, forbid, minSuitLength, suitLength, balancedHand,
-               equalLength, longerThan, displayLastCall)
+import Auction(forbid, minSuitLength, suitLength, balancedHand, equalLength,
+               longerThan, displayLastCall)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(smpWrapS)
@@ -15,7 +15,6 @@ notrump = let
     sit bid = let
         action = do
             B.startOfMafia
-            withholdBid bid
         explanation _ =
             "With a balanced hand, rebid notrump to show your point range.\
            \ Even if you have a 5-card major, it's better to know that\
@@ -32,7 +31,6 @@ oneMajor = let
         action = do
             B.startOfMafia
             forbid balancedHand
-            withholdBid bid
         explanation _ =
             "With an unbalanced hand that isn't game forcing, bid a 4-card\
            \ major if you have one."
@@ -50,7 +48,6 @@ oneMajorMinor = let
             forbid balancedHand
             minSuitLength minorSuit 5
             suitLength majorSuit 4
-            withholdBid bid
         explanation _ =
             "With an unbalanced hand that isn't game forcing, bid a 4-card\
            \ major if you have one. This holds even if you've got a longer\
@@ -69,7 +66,6 @@ twoMinorSingle = let
             B.startOfMafia
             forbid balancedHand
             minSuitLength minorSuit 6
-            withholdBid bid
         explanation _ =
             "With an unbalanced hand that isn't game forcing and doesn't have\
            \ a 4-card major, bid your long minor."
@@ -86,7 +82,8 @@ twoMinorMinors = let
             B.startOfMafia
             forbid balancedHand
             suitLength minorSuit 5
-            withholdBid bid  -- Ensures the bid minor is longer than the other
+            -- The answer Action also ensures that the minor we bid is longer
+            -- than the minor we don't bid.
         explanation _ =
             "With an unbalanced hand that isn't game forcing and doesn't have\
            \ a 4-card major, rebid your long minor. Sometimes this minor is\
@@ -104,7 +101,6 @@ equalMinors = let
             B.startOfMafia
             forbid balancedHand
             T.Clubs `equalLength` T.Diamonds
-            withholdBid B.b1C1D2D
         explanation _ =
             "With an unbalanced hand that isn't game forcing and doesn't have\
            \ a 4-card major, rebid your long minor. When the minors are the\
@@ -139,7 +135,6 @@ jumpBid = let
     sit bid = let
         action = do
             B.startOfMafia
-            withholdBid bid
         explanation fmt =
             "With an unbalanced hand that is strong enough to\
            \ force to game, jump in your suit. Responder can treat this like\

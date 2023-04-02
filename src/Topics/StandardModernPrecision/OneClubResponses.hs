@@ -4,7 +4,7 @@ module Topics.StandardModernPrecision.OneClubResponses(
 
 import Output(output)
 import Topic(Topic(..), wrap, Situations)
-import Auction(withholdBid, forbid, maxSuitLength, makePass, pointRange)
+import Auction(forbid, maxSuitLength, makePass, pointRange)
 import Situation(situation, (<~))
 import CommonBids(cannotPreempt)
 import qualified Terminology as T
@@ -18,7 +18,6 @@ oneDiamond = let
         firstSeatOpener
         b1C
         oppsPass
-        withholdBid B.b1C1D
     explanation fmt =
         "When game might not be possible opposite a random 17 HCP, start\
       \ with " ++ output fmt (T.Bid 1 T.Diamonds) ++ ". This initiates MaFiA."
@@ -32,7 +31,6 @@ oneHeart = let
         firstSeatOpener
         b1C
         oppsPass
-        withholdBid B.b1C1H
     explanation fmt =
         "You've got a game-forcing hand but slam is unlikely. With 8 to 11 HCP,\
       \ bid " ++ output fmt (T.Bid 1 T.Hearts) ++ " to show this kind of hand.\
@@ -48,7 +46,6 @@ oneHeartNoSpades = let
         firstSeatOpener
         b1C
         oppsPass
-        withholdBid B.b1C1Hnos
     explanation fmt =
         "You've got a game-forcing hand but slam is unlikely. With 8 to 11 HCP\
       \ and no spade suit, bid " ++ output fmt (T.Bid 1 T.Hearts) ++ " to show\
@@ -64,7 +61,6 @@ oneNotrump = let
         firstSeatOpener
         b1C
         oppsPass
-        withholdBid B.b1C1N
     explanation fmt =
         "You've got at least mild slam interest with 12+ HCP, and a balanced\
       \ hand with no 5-card suit. Bid a natural " ++
@@ -80,7 +76,6 @@ oneNotrumpAlt = let
         firstSeatOpener
         b1C
         oppsPass
-        withholdBid B.b1C1Nalt
     explanation fmt =
         "You've got at least mild slam interest with 12+ HCP, and a 5-card\
       \ heart suit. Bid " ++ output fmt (T.Bid 1 T.Notrump) ++ " to show this.\
@@ -110,7 +105,6 @@ slamSingleSuitModified :: Situations
             b1C
             oppsPass
             mapM_ (`maxSuitLength` 4) . filter (/= strain) $ T.allSuits
-            withholdBid bid
         explanation fmt =
             "You've got at least mild slam interest with 12+ HCP, and a 5+ card\
           \ suit. Bid a natural " ++ output fmt (T.Bid level strain) ++ ",\
@@ -130,7 +124,6 @@ twoHeartsBalanced = let
         firstSeatOpener
         b1C
         oppsPass
-        withholdBid B.b1C2Halt
     explanation fmt =
         "You've got at least mild slam interest with 12+ HCP, but a balanced\
       \ hand with no 5-card suit. Bid " ++ output fmt (T.Bid 2 T.Hearts) ++ "\
@@ -164,7 +157,6 @@ oneSpadeGF = let
             b1C
             oppsPass
             pointRange minHcp maxHcp
-            withholdBid B.b1C1Sgf
       in
         situation "1Sgf" action B.b1C1Sgf explanation
   in
@@ -176,7 +168,6 @@ twoSpades = let
         firstSeatOpener
         b1C
         oppsPass
-        withholdBid B.b1C2S
     explanation fmt =
         "You've got at least mild slam interest with 12+ HCP, but an awkward\
       \ triple-four-one shape. Show this by bidding " ++
@@ -212,7 +203,6 @@ passGameSingleSuit = let
             b1C
             oppsPass
             mapM_ (`maxSuitLength` 4) . filter (/= strain) $ T.allSuits
-            withholdBid bid
         explanation fmt =
             "You're game-forcing with a 5+ card suit. but you're a passed hand,\
           \ so all the slam bids have turned into game bids instead. Bid a\
@@ -236,7 +226,6 @@ passOneNotrump = let
         firstSeatOpener
         b1C
         oppsPass
-        withholdBid B.bP1C1N
     explanation fmt =
         "You're a passed hand with game-forcing strength but no 5-card suit.\
       \ Because you're a passed hand, the slam-interest bids are repurposed to\
@@ -259,7 +248,6 @@ passTwoSpades = let
         firstSeatOpener
         b1C
         oppsPass
-        withholdBid B.bP1C2S
     explanation fmt =
         "You're a passed hand with game-forcing strength, but an awkward\
       \ triple-four-one shape. Show this by bidding " ++
