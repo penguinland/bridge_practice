@@ -158,21 +158,17 @@ oneSpadeGF = let
       \ with " ++ output fmt (T.Bid 1 T.Spades) ++ " to show partner we'e at\
       \ least game forcing. When you find a fit, start control bidding to show\
       \ partner you're interested in slam, too."
-    sit (explanation, givenPoints) = let
+    sit (explanation, minHcp, maxHcp) = let
         action = do
             firstSeatOpener
             b1C
             oppsPass
-            -- The compiler is concerned that we're discarding a result value on
-            -- this next line, but suggests that if it's on purpose, we can use
-            -- `_` to suppress it. The result we're discarding is the () unit.
-            _ <- givenPoints
+            pointRange minHcp maxHcp
             withholdBid B.b1C1Sgf
       in
-        situation "Slam" action B.b1C1Sgf explanation
+        situation "1Sgf" action B.b1C1Sgf explanation
   in
-    smpWrapN $ return sit <~ [(explanationMin, pointRange 8 11),
-                              (explanationMax, pointRange 12 40)]
+    smpWrapN $ return sit <~ [(explanationMin, 8, 11), (explanationMax, 12, 40)]
 
 twoSpades :: Situations
 twoSpades = let
