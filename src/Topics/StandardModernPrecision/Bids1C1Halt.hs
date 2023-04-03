@@ -50,7 +50,6 @@ b1C1H :: Action
 b1C1H = b1C1Hnos
 
 
-
 b1C1H1S1N :: Action
 b1C1H1S1N = do
     maxSuitLength T.Spades 2
