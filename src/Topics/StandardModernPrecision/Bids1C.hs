@@ -47,6 +47,12 @@ module Topics.StandardModernPrecision.Bids1C(
   , b1C1D1S2N
   , b1C1D1S3S
   -- TODO: jumps and double jumps in MaFiA
+  , b1C1H1S
+  , b1C1H1N
+  , b1C1H2C
+  , b1C1H2D
+  , b1C1H2H
+  , b1C1H2S
 ) where
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
@@ -454,3 +460,61 @@ b1C1D1S2C = do
     maxSuitLength T.Spades 2
     pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
     makeAlertableCall (T.Bid 2 T.Clubs) "6-7 HCP, at most 2 spades"
+
+
+---------------------
+-- Rebids after 1H --
+---------------------
+b1C1H1S :: Action
+b1C1H1S = do
+    forbid b1C1D1H1N
+    minSuitLength T.Spades 5
+    T.Spades `atLeastAsLong` T.Clubs
+    T.Spades `atLeastAsLong` T.Diamonds
+    T.Spades `atLeastAsLong` T.Hearts
+    makeCall (T.Bid 1 T.Spades)
+
+
+b1C1H1N :: Action
+b1C1H1N = do
+    balancedHand
+    pointRange 17 18
+    makeCall (T.Bid 1 T.Notrump)
+
+
+b1C1H2C :: Action
+b1C1H2C = do
+    forbid b1C1D1H1N
+    minSuitLength T.Clubs 5
+    T.Clubs `longerThan` T.Spades
+    T.Clubs `atLeastAsLong` T.Diamonds
+    T.Clubs `longerThan` T.Hearts
+    makeCall (T.Bid 2 T.Clubs)
+
+
+b1C1H2D :: Action
+b1C1H2D = do
+    forbid b1C1D1H1N
+    minSuitLength T.Spades 5
+    T.Spades `atLeastAsLong` T.Clubs
+    T.Spades `atLeastAsLong` T.Diamonds
+    T.Spades `atLeastAsLong` T.Hearts
+    makeCall (T.Bid 2 T.Diamonds)
+
+
+b1C1H2H :: Action
+b1C1H2H = do
+    forbid b1C1D1H1N
+    minSuitLength T.Spades 5
+    T.Spades `atLeastAsLong` T.Clubs
+    T.Spades `atLeastAsLong` T.Diamonds
+    T.Spades `atLeastAsLong` T.Hearts
+    makeCall (T.Bid 2 T.Hearts)
+
+
+b1C1H2S :: Action
+b1C1H2S = do
+    alternatives . map (\suit -> do
+        suitLength suit 1
+        mapM_ (`suitLength` 4) . filter (/= suit) $ T.allSuits) $ T.allSuits
+    makeAlertableCall (T.Bid 2 T.Spades) "any 4441 hand"
