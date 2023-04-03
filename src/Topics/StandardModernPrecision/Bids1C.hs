@@ -504,7 +504,8 @@ b1C1H2C :: Action
 b1C1H2C = do
     mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
     minSuitLength T.Clubs 5
-    T.Clubs `atLeastAsLong` T.Diamonds
+    -- Given 5-5 in the minors, start with diamonds, and bid clubs later.
+    T.Clubs `longerThan` T.Diamonds
     T.Clubs `longerThan` T.Spades
     T.Clubs `longerThan` T.Hearts
     makeCall (T.Bid 2 T.Clubs)
