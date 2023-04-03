@@ -53,6 +53,8 @@ module Topics.StandardModernPrecision.Bids1C(
   , b1C1H2D
   , b1C1H2H
   , b1C1H2S
+  , b1C1H2N
+  , b1C1H3N
 ) where
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
@@ -467,7 +469,7 @@ b1C1D1S2C = do
 ---------------------
 b1C1H1S :: Action
 b1C1H1S = do
-    forbid b1C1D1H1N
+    mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
     minSuitLength T.Spades 5
     T.Spades `atLeastAsLong` T.Clubs
     T.Spades `atLeastAsLong` T.Diamonds
@@ -482,33 +484,49 @@ b1C1H1N = do
     makeCall (T.Bid 1 T.Notrump)
 
 
+b1C1H2N :: Action
+b1C1H2N = do
+    balancedHand
+    pointRange 21 23
+    makeCall (T.Bid 2 T.Notrump)
+
+
+-- TODO: is this right? Maybe this shouldn't exist at all and be rolled into the
+-- 2N rebid. We're already in a game-forcing auction, after all.
+b1C1H3N :: Action
+b1C1H3N = do
+    balancedHand
+    pointRange 24 40
+    makeCall (T.Bid 3 T.Notrump)
+
+
 b1C1H2C :: Action
 b1C1H2C = do
-    forbid b1C1D1H1N
+    mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
     minSuitLength T.Clubs 5
-    T.Clubs `longerThan` T.Spades
     T.Clubs `atLeastAsLong` T.Diamonds
+    T.Clubs `longerThan` T.Spades
     T.Clubs `longerThan` T.Hearts
     makeCall (T.Bid 2 T.Clubs)
 
 
 b1C1H2D :: Action
 b1C1H2D = do
-    forbid b1C1D1H1N
-    minSuitLength T.Spades 5
-    T.Spades `atLeastAsLong` T.Clubs
-    T.Spades `atLeastAsLong` T.Diamonds
-    T.Spades `atLeastAsLong` T.Hearts
+    mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
+    minSuitLength T.Diamonds 5
+    T.Diamonds `atLeastAsLong` T.Clubs
+    T.Diamonds `longerThan` T.Hearts
+    T.Diamonds `longerThan` T.Spades
     makeCall (T.Bid 2 T.Diamonds)
 
 
 b1C1H2H :: Action
 b1C1H2H = do
-    forbid b1C1D1H1N
-    minSuitLength T.Spades 5
-    T.Spades `atLeastAsLong` T.Clubs
-    T.Spades `atLeastAsLong` T.Diamonds
-    T.Spades `atLeastAsLong` T.Hearts
+    mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
+    minSuitLength T.Hearts 5
+    T.Hearts `atLeastAsLong` T.Clubs
+    T.Hearts `atLeastAsLong` T.Diamonds
+    T.Hearts `longerThan` T.Spades
     makeCall (T.Bid 2 T.Hearts)
 
 
