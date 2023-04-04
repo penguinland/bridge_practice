@@ -52,14 +52,14 @@ b1C1H = b1C1Hnos
 
 b1C1H1S1N :: Action
 b1C1H1S1N = do
-    maxSuitLength T.Spades 2
+    forbid b1C1H1S2S
     mapM_ (`maxSuitLength` 4) T.allSuits
     makeCall (T.Bid 1 T.Notrump)
 
 
 b1C1H1S2C :: Action
 b1C1H1S2C = do
-    maxSuitLength T.Spades 2
+    forbid b1C1H1S2S
     minSuitLength T.Clubs 5
     T.Clubs `longerThan` T.Diamonds
     T.Clubs `longerThan` T.Hearts
@@ -68,7 +68,7 @@ b1C1H1S2C = do
 
 b1C1H1S2D :: Action
 b1C1H1S2D = do
-    maxSuitLength T.Spades 2
+    forbid b1C1H1S2S
     minSuitLength T.Diamonds 5
     T.Diamonds `longerThan` T.Hearts
     T.Diamonds `atLeastAsLong` T.Clubs
@@ -77,7 +77,7 @@ b1C1H1S2D = do
 
 b1C1H1S2H :: Action
 b1C1H1S2H = do
-    maxSuitLength T.Spades 2
+    forbid b1C1H1S2S
     minSuitLength T.Hearts 5
     T.Hearts `atLeastAsLong` T.Clubs
     T.Hearts `atLeastAsLong` T.Diamonds
@@ -116,6 +116,7 @@ b1C1H2C2H = do
 
 b1C1H2C2S :: Action
 b1C1H2C2S = do
+    forbid b1C1H2C3C
     minSuitLength T.Diamonds 5
     makeAlertableCall (T.Bid 2 T.Diamonds) "5+ diamonds"
 
@@ -131,7 +132,7 @@ b1C1H2C2N = do
 
 b1C1H2C3C :: Action
 b1C1H2C3C = do
-    mapM_ forbid [balancedHand, b1C1H2C2D, b1C1H2C2H]
+    mapM_ forbid [balancedHand, b1C1H2C2D, b1C1H2C2H, b1C1H2C2N]
     minSuitLength T.Clubs 3
     makeCall (T.Bid 3 T.Clubs)
 
@@ -170,8 +171,8 @@ b1C1H2D2N = do
 b1C1H2D3C :: Action
 b1C1H2D3C = do
     minSuitLength T.Clubs 5
-    maxSuitLength T.Diamonds 2
     forbid b1C1H2D2S
+    forbid b1C1H2D3D
     makeCall (T.Bid 3 T.Clubs)
 
 
@@ -212,7 +213,7 @@ b1C1H2H2N = do
 
 b1C1H2H3C :: Action
 b1C1H2H3C = do
-    maxSuitLength T.Hearts 2
+    forbid b1C1H2H3H
     mapM_ forbid [b1C1H2H2S, b1C1H2H2N, b1C1H2H3H]
     minSuitLength T.Clubs 5
     T.Clubs `longerThan` T.Diamonds
@@ -221,7 +222,7 @@ b1C1H2H3C = do
 
 b1C1H2H3D :: Action
 b1C1H2H3D = do
-    maxSuitLength T.Hearts 2
+    forbid b1C1H2H3H
     mapM_ forbid [b1C1H2H2S, b1C1H2H2N, b1C1H2H3H]
     minSuitLength T.Diamonds 5
     T.Diamonds `atLeastAsLong` T.Clubs
