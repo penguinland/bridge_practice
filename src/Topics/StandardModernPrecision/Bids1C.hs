@@ -13,6 +13,7 @@ module Topics.StandardModernPrecision.Bids1C(
   , b1C2H
   , b1C2Halt
   , b1C2S
+  , b1C2Nalt
   , bP1C1H
   , bP1C1S
   , bP1C1N
@@ -119,10 +120,10 @@ b1C2H = do
 
 b1C2Halt :: Action  -- Alternative choice: swap the meanings of b1C1N and b1C2H
 b1C2Halt = do
-    _slamInterest
+    pointRange 14 40
     balancedHand
     mapM_ (`maxSuitLength` 4) T.allSuits
-    makeAlertableCall (T.Bid 2 T.Hearts) "12+ HCP, any 4333 or 4432 shape"
+    makeAlertableCall (T.Bid 2 T.Hearts) "14+ HCP, any 4333 or 4432 shape"
 
 
 b1C1N :: Action
@@ -145,6 +146,15 @@ b1C2S = do
     _slamInterest
     constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
     makeAlertableCall (T.Bid 2 T.Spades) "12+ HCP, any 4441 shape"
+
+
+b1C2Nalt :: Action
+b1C2Nalt = do
+    pointRange 12 13
+    balancedHand
+    mapM_ (`maxSuitLength` 4) T.allSuits
+    -- TODO: Make the en-dash renderable in HTML as well as LaTeX
+    makeAlertableCall (T.Bid 2 T.Notrump) "12--13 HCP, any 4333 or 4432 shape"
 
 
 bP1C1H :: Action
