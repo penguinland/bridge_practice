@@ -52,6 +52,7 @@ b1C1H = b1C1Hnos
 
 b1C1H1S1N :: Action
 b1C1H1S1N = do
+    balancedHand
     forbid b1C1H1S2S
     mapM_ (`maxSuitLength` 4) T.allSuits
     makeCall (T.Bid 1 T.Notrump)
