@@ -2,7 +2,7 @@ module Topics.StandardModernPrecision.OneClubResponses(
   topic
 , topicExtras) where
 
-import Output(output)
+import Output(output, Punct(..))
 import Topic(Topic(..), wrap, Situations)
 import Auction(forbid, maxSuitLength, makePass, pointRange)
 import Situation(situation, (<~))
@@ -125,7 +125,7 @@ twoHeartsBalanced = let
         b1C
         oppsPass
     explanation fmt =
-        "You've got at least mild slam interest with 12+ HCP, but a balanced\
+        "You've got decent slam interest with 14+ HCP, but a balanced\
       \ hand with no 5-card suit. Bid " ++ output fmt (T.Bid 2 T.Hearts) ++ "\
       \ to show this. Partner can try " ++ output fmt (T.Bid 2 T.Notrump) ++ "\
       \ to show hearts, " ++ output fmt (T.Bid 3 T.Clubs) ++ " as Stayman\
@@ -136,6 +136,24 @@ twoHeartsBalanced = let
       \ surprising enough for you to recognize/remember)."
   in
     smpWrapN . return $ situation "2HAlt" action B.b1C2Halt explanation
+
+
+twoNotrumpBalanced :: Situations
+twoNotrumpBalanced = let
+    action = do
+        firstSeatOpener
+        b1C
+        oppsPass
+    explanation fmt =
+        "You've got very mild slam interest with 12" ++ output fmt NDash ++
+        "13 HCP, but a balanced hand with no 5-card suit. Bid " ++
+        output fmt (T.Bid 2 T.Notrump) ++ " to show this. Partner can try " ++
+        output fmt (T.Bid 3 T.Clubs) ++ " as Stayman (regular-type! Puppet is\
+      \ not needed because you've already denied a 5-card major), or otherwise\
+      \ bid naturally. They're captain of the auction: they'll know whether to\
+      \ sign off in game or investigate slam."
+  in
+    smpWrapN . return $ situation "2NAlt" action B.b1C2Nalt explanation
 
 
 oneSpadeGF :: Situations
@@ -288,7 +306,7 @@ topicExtras = Topic "SMP modified immediate responses to 1C openings"
                       , oneSpadeGF  -- Differs from topic, above
                       , oneNotrumpAlt  -- Differs from topic, above
                       , slamSingleSuitModified  -- Differs from topic, above
-                      , twoHeartsBalanced  -- Differs from topic, above
+                      , wrap [twoHeartsBalanced, twoNotrumpBalanced]  -- Differs
                       , twoSpades
                       , passGameSingleSuit
                       , passOneNotrump
