@@ -110,6 +110,8 @@ b1C1H2C2D = do
 b1C1H2C2H :: Action
 b1C1H2C2H = do
     minSuitLength T.Hearts 5
+    T.Hearts `atLeastAsLong` T.Diamonds
+    T.Hearts `longerThan` T.Clubs
     -- TODO: Do we need extra restrictions here on not having a club fit, or
     -- having longer hearts than diamonds or anything?
     makeCall (T.Bid 2 T.Hearts)
@@ -118,13 +120,14 @@ b1C1H2C2H = do
 b1C1H2C2S :: Action
 b1C1H2C2S = do
     forbid b1C1H2C3C
+    forbid b1C1H2C2H
     minSuitLength T.Diamonds 5
     makeAlertableCall (T.Bid 2 T.Diamonds) "5+ diamonds"
 
 
 b1C1H2C2N :: Action
 b1C1H2C2N = do
-    maxSuitLength T.Clubs 3  -- TODO: is the max club length actually 2?
+    maxSuitLength T.Clubs 3  -- TODO: should the max club length be only 2?
     mapM_ (`maxSuitLength` 4) T.allSuits
     balancedHand
     forbid b1C1H2C2D
@@ -150,12 +153,15 @@ b1C1H2C3D = do
 b1C1H2D2H :: Action
 b1C1H2D2H = do
     minSuitLength T.Hearts 5
+    maxSuitLength T.Diamonds 4
+    T.Hearts `atLeastAsLong` T.Clubs
     makeCall (T.Bid 2 T.Hearts)
 
 
 b1C1H2D2S :: Action
 b1C1H2D2S = do
     alternatives . map (`suitLength` 4) $ T.majorSuits
+    forbid b1C1H2D2H
     balancedHand
     makeAlertableCall (T.Bid 2 T.Spades) "waiting bid"
 
