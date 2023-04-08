@@ -45,9 +45,9 @@
 \newcounter{dealno}
 
 \newcommand{\deal}{
-  % For an explanation of the use of \expandafter, see the definition of
-  % \problem below.
   \ifdefined\showsolutions
+    % We use \expandafter to get rid of the \else...\fi before passing
+    % arguments to the \fulldeal.
     \expandafter\fulldeal
   \else
     \expandafter\isolatedhand
@@ -98,14 +98,12 @@
 }
 
 % It might be simplest to just check if \showsolutions is defined once at the
-% very beginning and change the difinition of \problem in response to that. but
+% very beginning and change the definition of \problem in response to that. but
 % this way, we can define it and undefine it in the middle of the document and
 % get interesting results. This is particularly useful during testing and
 % debugging.
 \newcommand{\problem}{%
   \ifdefined\showsolutions
-    % We use \expandafter to get rid of the \else...\fi before passing
-    % arguments to the \problemwithsolution.
     \expandafter\problemwithsolution
   \else
     \expandafter\problemwithoutsolution
