@@ -48,11 +48,20 @@ module Topics.StandardModernPrecision.Bids1C(
   , b1C1D1S2N
   , b1C1D1S3S
   -- TODO: jumps and double jumps in MaFiA
+  , b1C1H1S
+  , b1C1H1N
+  , b1C1H2C
+  , b1C1H2D
+  , b1C1H2H
+  , b1C1H2S
+  , b1C1H2N
+  , b1C1H3N
+  , tripleFourOneShape  -- For use when defining other bids
 ) where
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, balancedHand, constrain, makeCall, makeAlertableCall,
-               alternatives, longerThan, atLeastAsLong)
+               alternatives, longerThan, atLeastAsLong, constrain)
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
 
@@ -68,6 +77,10 @@ _gameForcing = pointRange 8 11
 
 _slamInterest :: Action
 _slamInterest = pointRange 12 40
+
+
+tripleFourOneShape :: Action
+tripleFourOneShape = constrain "any4441" ["shape(", ", any 4441)"]
 
 
 b1C1H :: Action
@@ -464,3 +477,76 @@ b1C1D1S2C = do
     maxSuitLength T.Spades 2
     pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
     makeAlertableCall (T.Bid 2 T.Clubs) "6-7 HCP, at most 2 spades"
+
+
+---------------------
+-- Rebids after 1H --
+---------------------
+b1C1H1S :: Action
+b1C1H1S = do
+    mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
+    minSuitLength T.Spades 5
+    T.Spades `atLeastAsLong` T.Clubs
+    T.Spades `atLeastAsLong` T.Diamonds
+    T.Spades `atLeastAsLong` T.Hearts
+    makeCall (T.Bid 1 T.Spades)
+
+
+b1C1H1N :: Action
+b1C1H1N = do
+    balancedHand
+    pointRange 17 18
+    makeCall (T.Bid 1 T.Notrump)
+
+
+b1C1H2N :: Action
+b1C1H2N = do
+    balancedHand
+    pointRange 21 23
+    makeCall (T.Bid 2 T.Notrump)
+
+
+-- TODO: is this right? Maybe this shouldn't exist at all and be rolled into the
+-- 2N rebid. We're already in a game-forcing auction, after all.
+b1C1H3N :: Action
+b1C1H3N = do
+    balancedHand
+    pointRange 24 40
+    makeCall (T.Bid 3 T.Notrump)
+
+
+b1C1H2C :: Action
+b1C1H2C = do
+    mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
+    minSuitLength T.Clubs 5
+    -- Given 5-5 in the minors, start with diamonds, and bid clubs later.
+    T.Clubs `longerThan` T.Diamonds
+    T.Clubs `longerThan` T.Spades
+    T.Clubs `longerThan` T.Hearts
+    makeCall (T.Bid 2 T.Clubs)
+
+
+b1C1H2D :: Action
+b1C1H2D = do
+    mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
+    minSuitLength T.Diamonds 5
+    T.Diamonds `atLeastAsLong` T.Clubs
+    T.Diamonds `longerThan` T.Hearts
+    T.Diamonds `longerThan` T.Spades
+    makeCall (T.Bid 2 T.Diamonds)
+
+
+b1C1H2H :: Action
+b1C1H2H = do
+    mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
+    minSuitLength T.Hearts 5
+    T.Hearts `atLeastAsLong` T.Clubs
+    T.Hearts `atLeastAsLong` T.Diamonds
+    T.Hearts `longerThan` T.Spades
+    makeCall (T.Bid 2 T.Hearts)
+
+
+b1C1H2S :: Action
+b1C1H2S = do
+    tripleFourOneShape
+    makeAlertableCall (T.Bid 2 T.Spades) "any 4441 hand"
