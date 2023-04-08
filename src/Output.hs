@@ -17,22 +17,10 @@ class Showable a where
 data OutputType = LaTeX
                 | Html
 
-class Outputtable a where
-    outputWrap :: OutputType -> a -> String
-
-
--- typeclass instances need to be a specific type constructor with arbitrary
--- type variables passed in. This is such a type.
-newtype Wrap a = Wrap {unwrap :: a}
-
-
-instance Showable a => Outputtable (Wrap a) where
-    outputWrap LaTeX = toLatex . unwrap
-    outputWrap Html = toHtml . unwrap
-
 
 output :: (Showable a) => OutputType -> a -> String
-output t = outputWrap t . Wrap
+output LaTeX = toLatex
+output Html = toHtml
 
 
 data Punct = NDash
