@@ -43,7 +43,8 @@ import Auction(forbid, suitLength, minSuitLength, maxSuitLength, Action,
                longerThan, atLeastAsLong)
 import qualified Terminology as T
 import Topics.StandardModernPrecision.Bids1C(
-    b1C, b1C1Hnos, b1C1H1S, b1C1H1N, b1C1H2C, b1C1H2D, b1C1H2H, b1C1H2S)
+    b1C, b1C1Hnos, b1C1H1S, b1C1H1N, b1C1H2C, b1C1H2D, b1C1H2H, b1C1H2S,
+    tripleFourOneShape)
 
 -- Alias the bid properly to re-export from here.
 b1C1H :: Action
@@ -93,9 +94,7 @@ b1C1H1S2S = do
 
 b1C1H1S2N :: Action
 b1C1H1S2N = do
-    suitLength T.Clubs 4
-    suitLength T.Diamonds 4
-    suitLength T.Hearts 4
+    tripleFourOneShape
     suitLength T.Spades 1
     makeAlertableCall (T.Bid 2 T.Notrump) "1444 shape, singleton spade"
 
@@ -143,10 +142,8 @@ b1C1H2C3C = do
 
 b1C1H2C3D :: Action
 b1C1H2C3D = do
+    tripleFourOneShape
     suitLength T.Clubs 1
-    suitLength T.Diamonds 4
-    suitLength T.Hearts 4
-    suitLength T.Spades 4
     makeAlertableCall (T.Bid 3 T.Diamonds) "4441 shape, singleton club"
 
 
@@ -192,10 +189,8 @@ b1C1H2D3D = do
 
 b1C1H2D3H :: Action
 b1C1H2D3H = do
-    suitLength T.Clubs 4
+    tripleFourOneShape
     suitLength T.Diamonds 1
-    suitLength T.Hearts 4
-    suitLength T.Spades 4
     makeAlertableCall (T.Bid 3 T.Hearts) "4414 shape, singleton diamond"
 
 
@@ -244,8 +239,6 @@ b1C1H2H3H = do
 
 b1C1H2H3S :: Action
 b1C1H2H3S = do
-    suitLength T.Clubs 4
-    suitLength T.Diamonds 4
+    tripleFourOneShape
     suitLength T.Hearts 1
-    suitLength T.Spades 4
     makeAlertableCall (T.Bid 3 T.Spades) "4144 shape, singleton heart"

@@ -55,11 +55,12 @@ module Topics.StandardModernPrecision.Bids1C(
   , b1C1H2S
   , b1C1H2N
   , b1C1H3N
+  , tripleFourOneShape  -- For use when defining other bids
 ) where
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, balancedHand, constrain, makeCall, makeAlertableCall,
-               alternatives, longerThan, atLeastAsLong)
+               alternatives, longerThan, atLeastAsLong, constrain)
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
 
@@ -75,6 +76,10 @@ _gameForcing = pointRange 8 11
 
 _slamInterest :: Action
 _slamInterest = pointRange 12 40
+
+
+tripleFourOneShape :: Action
+tripleFourOneShape = constrain "any4441" ["shape(", ", any 4441)"]
 
 
 b1C1H :: Action
@@ -533,7 +538,5 @@ b1C1H2H = do
 
 b1C1H2S :: Action
 b1C1H2S = do
-    alternatives . map (\suit -> do
-        suitLength suit 1
-        mapM_ (`suitLength` 4) . filter (/= suit) $ T.allSuits) $ T.allSuits
+    tripleFourOneShape
     makeAlertableCall (T.Bid 2 T.Spades) "any 4441 hand"
