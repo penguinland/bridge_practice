@@ -1,18 +1,16 @@
 module SituationInstance (
-  sitRef
-, SituationInstance(..)
+  SituationInstance(..)
 , instantiate
 ) where
 
 
-import Control.Monad.Trans.State.Strict(State)
+import Control.Monad.Trans.State.Strict(State, state)
 import Data.Bifunctor(first)
 import Data.List.Utils(join)
 import System.Random(StdGen, genWord64)
 
 import DealerProg(eval)
 import Output(Showable, toLatex, OutputType(..), Commentary)
-import Random(use)
 import Situation(Situation(..))
 import Structures(Bidding, Deal)
 import Terminology(CompleteCall)
@@ -20,10 +18,6 @@ import Terminology(CompleteCall)
 
 data SituationInstance =
     SituationInstance Bidding CompleteCall Commentary Deal String
-
-
-sitRef :: Situation -> String
-sitRef (Situation r _ _ _ _ _ _) = r
 
 
 instance Showable SituationInstance where
@@ -38,7 +32,7 @@ instance Showable SituationInstance where
 instantiate :: String -> Situation ->
         State StdGen (IO (Maybe SituationInstance))
 instantiate reference (Situation _ b dl c s v dn) = do
-    n <- use (first fromIntegral . genWord64)
+    n <- state (first fromIntegral . genWord64)
     let instantiate' :: IO (Maybe SituationInstance)
         instantiate' = do
             maybeDeal <- eval dn v dl n

@@ -1,6 +1,7 @@
 module Situation (
   Situation(..)
 , situation
+, sitRef
 , (<~)
 ) where
 
@@ -29,6 +30,10 @@ situation r a c s v d = Situation r bidding deal answer s v d
   where
     (bidding, deal) = finish d (a >> withholdBid c)
     answer = extractLastCall c
+
+
+sitRef :: Situation -> String
+sitRef (Situation r _ _ _ _ _ _) = r
 
 
 (<~) :: State StdGen (a -> b) -> [a] -> State StdGen b
