@@ -1,6 +1,5 @@
 module SituationInstance (
-  sitRef
-, SituationInstance(..)
+  SituationInstance(..)
 , instantiate
 ) where
 
@@ -20,10 +19,6 @@ import Terminology(CompleteCall)
 
 data SituationInstance =
     SituationInstance Bidding CompleteCall Commentary Deal String
-
-
-sitRef :: Situation -> String
-sitRef (Situation r _ _ _ _ _ _) = r
 
 
 instance Showable SituationInstance where

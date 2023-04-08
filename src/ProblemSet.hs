@@ -10,7 +10,8 @@ import System.Random(StdGen)
 
 import Output(toLatex)
 import Random(pickItem)
-import SituationInstance(instantiate, sitRef, SituationInstance)
+import Situation(sitRef)
+import SituationInstance(instantiate, SituationInstance)
 import Topic(Topic, topicName, refName, choose)
 
 
