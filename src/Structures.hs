@@ -23,7 +23,9 @@ data Hand = Hand String String String String
 instance Showable Hand where
     toLatex (Hand s h d c) =
         "\\hand{" ++
-        join "}{" (map (replace "T" "10" . replace " " "\\,") [s, h, d, c])
+        join "}{" (map (replace "-" "--" .
+                        replace "T" "10" .
+                        replace " " "\\,") [s, h, d, c])
         ++ "}"
 
 
