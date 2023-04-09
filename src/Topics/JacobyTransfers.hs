@@ -1,6 +1,6 @@
 module Topics.JacobyTransfers(topic) where
 
-import Output(output, Punct(NDash))
+import Output(Punct(NDash), (.+))
 import Topic(Topic(..), Situations, wrap, stdWrap, wrapVulDlr)
 import Auction(forbid, makeCall, makeAlertableCall, makePass, pointRange,
                suitLength, minSuitLength, Action, balancedHand, constrain)
@@ -97,12 +97,13 @@ initiateTransferWeak = let
             setUpTransfer suit
             pointRange 0 7
             forbid equalMajors  -- With 5-5 in the majors, pick the better one.
-        explanation fmt =
-            "Partner has opened a strong " ++ output fmt oneNT ++ ". You have\
-           \ such a weak hand that you have no interest in game, but you do have\
-           \ a 5-card major. Playing in it, even if it's a 5-2 fit, is more\
-           \ likely to succeed than playing in notrump. Make a Jacoby transfer\
-           \ into the suit, then pass and leave partner at the 2 level."
+        explanation =
+            "Partner has opened a strong " .+ oneNT .+ ". You have\
+           \ such a weak hand that you have no interest in game, but you do\
+           \ have a 5-card major. Playing in it, even if it's a 5-2 fit, is\
+           \ more likely to succeed than playing in notrump. Make a Jacoby\
+           \ transfer into the suit, then pass and leave partner at the 2\
+           \ level."
         bid = jacobyTransfer suit
       in
         situation "InitWeak" action bid explanation
@@ -118,13 +119,13 @@ initiateTransferBInv = let
             pointRange 8 9
             forbid equalMajors
             balancedHand
-        explanation fmt =
-            "Partner has opened a strong " ++ output fmt oneNT ++ ". You have\
+        explanation =
+            "Partner has opened a strong " .+ oneNT .+ ". You have\
            \ a balanced hand with invitational strength, and a 5-card major.\
-           \ Make a Jacoby transfer into the suit, then bid " ++
-             output fmt (T.Bid 2 T.Notrump) ++ ". This gives partner the\
-           \ options of playing in notrump with 2-card " ++ init (show suit) ++
-             " support or in " ++ show suit ++ " with a fit, and the option of\
+           \ Make a Jacoby transfer into the suit, then bid " .+
+             T.Bid 2 T.Notrump .+ ". This gives partner the\
+           \ options of playing in notrump with 2-card " .+ init (show suit) .+
+             " support or in " .+ show suit .+ " with a fit, and the option of\
            \ playing in partscore with a minimum hand and game with a maximum."
         bid = jacobyTransfer suit
       in
@@ -141,14 +142,14 @@ initiateTransferBGf = let
             pointRange 10 14
             forbid equalMajors
             balancedHand
-        explanation fmt =
-            "Partner has opened a strong " ++ output fmt oneNT ++ ". You have\
+        explanation =
+            "Partner has opened a strong " .+ oneNT .+ ". You have\
            \ a balanced hand with game-going but not slam-going strength, and a\
-           \ 5-card major. Make a Jacoby transfer into the suit, then bid " ++
-             output fmt (T.Bid 3 T.Notrump) ++ ". This gives partner the\
-           \ options of passing and playing in notrump with 2-card " ++
-             init (show suit) ++ " support or correcting to " ++
-             output fmt (T.Bid 4 suit) ++ " with a fit, knowing that you\
+           \ 5-card major. Make a Jacoby transfer into the suit, then bid " .+
+             T.Bid 3 T.Notrump .+ ". This gives partner the\
+           \ options of passing and playing in notrump with 2-card " .+
+             init (show suit) .+ " support or correcting to " .+
+             T.Bid 4 suit .+ " with a fit, knowing that you\
            \ belong in game but not slam."
         bid = jacobyTransfer suit
       in
@@ -163,8 +164,8 @@ completeTransfer = let
         action = do
             setUpCompletion suit
             minSuitLength suit 3
-        explanation fmt =
-            "You have opened a strong " ++ output fmt oneNT ++ ", and partner\
+        explanation =
+            "You have opened a strong " .+ oneNT .+ ", and partner\
           \ has made a Jacoby transfer. Complete the transfer by bidding the\
           \ next higher suit. Partner promises at least 5 cards in that major,\
           \ but wants you to be declarer so your stronger hand stays hidden."
@@ -181,13 +182,13 @@ completeTransferShort = let
         action = do
             setUpCompletion suit
             suitLength suit 2
-        explanation fmt =
-            "You have opened a strong " ++ output fmt oneNT ++ ", and partner\
-          \ has made a Jacoby transfer, indicating they have at least 5 " ++
-            show suit ++ ". Even though you only have 2-card support, complete\
+        explanation =
+            "You have opened a strong " .+ oneNT .+ ", and partner\
+          \ has made a Jacoby transfer, indicating they have at least 5 " .+
+            suit .+ ". Even though you only have 2-card support, complete\
           \ the transfer by bidding the next higher suit. You have at least a\
-          \ 7-card fit. If partner is very weak, " ++
-            output fmt (T.Bid 2 suit) ++ " rates to play better than notrump,\
+          \ 7-card fit. If partner is very weak, " .+
+            T.Bid 2 suit .+ " rates to play better than notrump,\
           \ and you want to be declarer so that your strong hand stays hidden.\
           \ If partner has at least invitational strength, he will make\
           \ another bid to give you options of where to play."
@@ -207,14 +208,13 @@ majors55inv = let
         suitLength T.Hearts 5
         suitLength T.Spades 5
         pointRange 7 9
-    explanation fmt =
-        "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5" ++
-        output fmt NDash ++ "5 in\
+    explanation =
+        "Partner has opened a strong " .+ oneNT .+ ". With 5" .+ NDash .+ "5 in\
       \ the majors and invitational strength, first make a Jacoby transfer\
-      \ into hearts, and then bid " ++ output fmt (T.Bid 2 T.Spades) ++ "\
-      \ afterwards. Partner will then have the options of passing " ++
-        output fmt (T.Bid 2 T.Spades) ++ " with a minimum hand and a spade\
-      \ fit, bidding " ++ output fmt (T.Bid 3 T.Hearts) ++ " with a minimum\
+      \ into hearts, and then bid " .+ T.Bid 2 T.Spades .+ "\
+      \ afterwards. Partner will then have the options of passing " .+
+        T.Bid 2 T.Spades .+ " with a minimum hand and a spade\
+      \ fit, bidding " .+ T.Bid 3 T.Hearts .+ " with a minimum\
       \ hand and no spade fit (in which case a heart fit is guaranteed), or\
       \ bidding one of the majors at the 4 level with a maximum. This\
       \ wrong-sides the contract if we end up playing in spades."
@@ -233,12 +233,11 @@ majors55gf = let
             suitLength T.Hearts 5
             suitLength T.Spades 5
             pointRange 10 14
-        explanation fmt =
-            "Partner has opened a strong " ++ output fmt oneNT ++ ". With 5" ++
-            output fmt NDash ++ "5 in\
-            \ the majors and\
+        explanation =
+            "Partner has opened a strong " .+ oneNT .+ ". With 5" .+
+            NDash .+ "5 in the majors and\
             \ game-forcing strength, first make a Jacoby transfer into spades,\
-            \ and then bid " ++ output fmt (T.Bid 3 T.Hearts) ++ " afterwards.\
+            \ and then bid " .+ T.Bid 3 T.Hearts .+ " afterwards.\
             \ Partner will then have the options of which game to bid.\
             \ This wrong-sides the contract if we end up playing in hearts."
         bid = jacobyTransfer T.Spades
