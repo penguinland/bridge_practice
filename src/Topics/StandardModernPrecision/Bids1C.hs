@@ -62,6 +62,7 @@ module Topics.StandardModernPrecision.Bids1C(
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, balancedHand, constrain, makeCall, makeAlertableCall,
                alternatives, longerThan, atLeastAsLong, constrain)
+import Output((.+), Punct(..))
 import qualified Terminology as T
 import Topics.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
 
@@ -167,7 +168,8 @@ b1C2Nalt = do
     balancedHand
     mapM_ (`maxSuitLength` 4) T.allSuits
     -- TODO: Make the en-dash renderable in HTML as well as LaTeX
-    makeAlertableCall (T.Bid 2 T.Notrump) "12--13 HCP, any 4333 or 4432 shape"
+    makeAlertableCall (T.Bid 2 T.Notrump)
+                      ("12" .+ NDash .+ "13 HCP, any 4333 or 4432 shape")
 
 
 bP1C1H :: Action
