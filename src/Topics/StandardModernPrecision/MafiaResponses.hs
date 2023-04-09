@@ -1,6 +1,6 @@
 module Topics.StandardModernPrecision.MafiaResponses(topic) where
 
-import Output(output)
+import Output((.+))
 import Topic(Topic(..), wrap, Situations)
 import Auction(Action, suitLength, maxSuitLength)
 import Situation(Situation, situation, (<~))
@@ -40,10 +40,10 @@ maxSupportSemibalanced = let
             B.startOfMafia
             openerBid
             oppsPass
-        explanation fmt =
+        explanation =
             "With 4-card support and a maximum hand but no singleton, invite\
            \ with a double raise. You've already shown that game might not be\
-           \ possible with your " ++ output fmt (T.Bid 1 T.Diamonds) ++ " bid,\
+           \ possible with your " .+ T.Bid 1 T.Diamonds .+ " bid,\
            \ so partner won't get too excited."
       in
         situation "3MB" action responderBid explanation
@@ -62,12 +62,12 @@ maxSupportUnbalanced = let
             B.startOfMafia
             openerBid
             oppsPass
-        explanation fmt =
+        explanation =
             "With 4-card support, a maximum hand, and a singleton or void,\
-           \ make a mini-splinter bid with " ++
-             output fmt (T.Bid 2 T.Notrump) ++ ". Partner can\
-           \ either sign off in our major (in partscore or game), or bid " ++
-            output fmt (T.Bid 3 T.Clubs) ++ " to ask\
+           \ make a mini-splinter bid with " .+
+             T.Bid 2 T.Notrump .+ ". Partner can\
+           \ either sign off in our major (in partscore or game), or bid " .+
+             T.Bid 3 T.Clubs .+ " to ask\
            \ us to bid our singleton. Remember that you can bid the\
            \ singleton/void ``naturally'' unless it's clubs, in which case bid\
            \ our trump suit to show it!"
@@ -85,13 +85,13 @@ brakesHearts = let
             B.startOfMafia
             B.b1C1D1H
             oppsPass
-        explanation fmt =
-            "With neither major and a non-maximum hand, bid " ++
-             output fmt (T.Bid 1 T.Notrump) ++ " as the ``double negative''\
+        explanation =
+            "With neither major and a non-maximum hand, bid " .+
+             T.Bid 1 T.Notrump .+ " as the ``double negative''\
            \ brake bid. Unless partner makes a jump bid, seriously consider\
            \ passing whatever they do next (if they do anything at all;\
-           \ perhaps they'll prefer playing in " ++
-             output fmt (T.Bid 1 T.Notrump) ++ " itself, since your bid is\
+           \ perhaps they'll prefer playing in " .+
+             T.Bid 1 T.Notrump .+ " itself, since your bid is\
            \ not forcing)."
       in
         situation "1NH" action B.b1C1D1H1N explanation
@@ -107,13 +107,13 @@ brakesSpades = let
             B.b1C1D1S
             oppsPass
             maxSuitLength T.Hearts 4
-        explanation fmt =
-            "With a minimum hand and no support for partner's spades, bid " ++
-             output fmt (T.Bid 1 T.Notrump) ++ " as the ``double negative''\
+        explanation =
+            "With a minimum hand and no support for partner's spades, bid " .+
+             T.Bid 1 T.Notrump .+ " as the ``double negative''\
            \ brake bid. Unless partner makes a jump bid, seriously consider\
            \ passing whatever they do next (if they do anything at all;\
-           \ perhaps they'll prefer playing in " ++
-             output fmt (T.Bid 1 T.Notrump) ++ " itself, since your bid is\
+           \ perhaps they'll prefer playing in " .+
+             T.Bid 1 T.Notrump .+ " itself, since your bid is\
            \ not forcing)."
       in
         situation "1NS" action B.b1C1D1S1N explanation
@@ -129,16 +129,16 @@ brakesSpadesHearts = let
             B.b1C1D1S
             oppsPass
             suitLength T.Hearts 5
-        explanation fmt =
-            "With a minimum hand and no support for partner's spades, bid " ++
-             output fmt (T.Bid 1 T.Notrump) ++ " as the ``double negative''\
-           \ brake bid. Do this even if you've got a heart suit! Partner's " ++
-             output fmt (T.Bid 1 T.Spades) ++ " bid has denied 4 hearts, and\
+        explanation =
+            "With a minimum hand and no support for partner's spades, bid " .+
+             T.Bid 1 T.Notrump .+ " as the ``double negative''\
+           \ brake bid. Do this even if you've got a heart suit! Partner's " .+
+             T.Bid 1 T.Spades .+ " bid has denied 4 hearts, and\
            \ although we might have a 5-3 fit, you're too weak to risk getting\
            \ stuck at the 3 level if we don't have such a fit. Unless partner\
            \ makes a jump bid, seriously consider passing whatever they do\
            \ next (if they do anything at all; perhaps they'll prefer playing\
-           \ in " ++ output fmt (T.Bid 1 T.Notrump) ++ " itself, since your\
+           \ in " .+ T.Bid 1 T.Notrump .+ " itself, since your\
            \ bid is not forcing)."
       in
         situation "1NSH" action B.b1C1D1S1N explanation
@@ -153,9 +153,9 @@ otherMajorHearts = let
             B.startOfMafia
             B.b1C1D1H
             oppsPass
-        explanation fmt =
+        explanation =
             "With no support for partner's hearts but at least 4 spades,\
-           \ bid " ++ output fmt (T.Bid 1 T.Spades) ++ " to show that major.\
+           \ bid " .+ T.Bid 1 T.Spades .+ " to show that major.\
            \ Because we're still at the 1 level, you can do this with any\
            \ strength hand, even a 0 count!"
       in
@@ -193,12 +193,12 @@ threeCardSupport = let
             B.startOfMafia
             openerBid
             oppsPass
-        explanation fmt =
-            "With 3-card support and a non-minimum hand (5-7 HCP), bid " ++
-            output fmt (T.Bid 2 T.Diamonds) ++ ". Partner can sign off at the\
+        explanation =
+            "With 3-card support and a non-minimum hand (5-7 HCP), bid " .+
+            T.Bid 2 T.Diamonds .+ ". Partner can sign off at the\
            \ 2 level with a 7-card fit, invite with an 8-card fit, or bid\
            \ other suits naturally (minor suits must be 6 cards long). Note\
-           \ that partner's " ++ output fmt (T.Bid 2 T.Notrump) ++ " is an\
+           \ that partner's " .+ T.Bid 2 T.Notrump .+ " is an\
            \ artificial game force."
       in
         situation "2D" action responderBid explanation
@@ -215,10 +215,10 @@ threeCardSupportHearts = let
             B.b1C1D1S
             oppsPass
             suitLength T.Hearts 5
-        explanation fmt =
+        explanation =
             "With 3-card spade support and a non-minimum hand (5-7 HCP),\
-           \ bid " ++ output fmt (T.Bid 2 T.Diamonds) ++ ". Do this even with\
-           \ a 5-card heart suit!"
+           \ bid " .+ T.Bid 2 T.Diamonds .+ ". Do this even with a 5-card\
+           \ heart suit!"
       in
         situation "2D" action B.b1C1D1S2D explanation
   in
@@ -233,13 +233,13 @@ maxNoMajors = let
             B.startOfMafia
             openerBid
             oppsPass
-        explanation fmt =
-            "With a maximum hand but no obvious major fit, respond " ++
-            output fmt (T.Bid 2 T.Clubs) ++ ". Opener might bid an\
-           \ artificial " ++ output fmt (T.Bid 2 T.Diamonds) ++ " to show a\
+        explanation =
+            "With a maximum hand but no obvious major fit, respond " .+
+            T.Bid 2 T.Clubs .+ ". Opener might bid an\
+           \ artificial " .+ T.Bid 2 T.Diamonds .+ " to show a\
            \ misfit where we're scrambling for partscore, or bid a natural\
-           \ suit (6-card minor, 4 cards in the other major), or " ++
-            output fmt (T.Bid 2 T.Notrump) ++ " as an artificial game\
+           \ suit (6-card minor, 4 cards in the other major), or " .+
+            T.Bid 2 T.Notrump .+ " as an artificial game\
            \ force/waiting bid."
       in
         situation "2C" action responderBid explanation
