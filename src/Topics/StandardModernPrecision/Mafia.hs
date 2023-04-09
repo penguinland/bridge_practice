@@ -1,6 +1,6 @@
 module Topics.StandardModernPrecision.Mafia(topic) where
 
-import Output(output, Punct(..), (.+))
+import Output(Punct(..), (.+))
 import Topic(Topic(..), wrap, Situations)
 import Auction(forbid, minSuitLength, suitLength, balancedHand, equalLength,
                longerThan, displayLastCall)
@@ -120,10 +120,10 @@ bothMajorsLongSpades = let
             forbid balancedHand
             minSuitLength T.Hearts 4
             T.Spades `longerThan` T.Hearts
-        explanation fmt =
-            "With both majors but longer spades, start by bidding " ++
-            output fmt (T.Bid 1 T.Spades) ++ ". You can then bid the hearts\
-           \ later without reversing."
+        explanation =
+            "With both majors but longer spades, start by bidding " .+
+            T.Bid 1 T.Spades .+ ". You can then bid the hearts later without\
+          \ reversing."
       in
         situation "2MS" action B.b1C1D1S explanation
   in
