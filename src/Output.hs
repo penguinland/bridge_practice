@@ -6,6 +6,7 @@ module Output (
 , output
 , Punct(..)
 , Commentary(..)
+, toCommentary
 ) where
 
 import Data.Function((&))
@@ -47,3 +48,7 @@ instance Semigroup Commentary where
 
 instance Monoid Commentary where
     mempty = Commentary [const ""]
+
+
+toCommentary :: Showable a => a -> Commentary
+toCommentary a = Commentary [flip output a]
