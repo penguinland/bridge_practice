@@ -11,7 +11,7 @@ import System.Random(StdGen)
 
 import Auction(Action, finish, extractLastCall, withholdBid)
 import DealerProg(DealerProg)
-import Output(Showable, Commentary(..), (.+))
+import Output(Showable, Commentary, (.+))
 import Random(pickItem)
 import Structures(Bidding)
 import Terminology(CompleteCall, Direction, Vulnerability)
