@@ -13,7 +13,6 @@ module Output (
 ) where
 
 import Data.Function((&))
-import Data.List.Utils(join)
 
 
 data OutputType = LaTeX
@@ -45,7 +44,7 @@ instance Showable String where
     output = flip const
 
 instance Showable Commentary where
-    output o (Commentary c) = join "" . map (o &) $ c
+    output o (Commentary c) = concatMap (o &) $ c
     toCommentary = id
 
 
