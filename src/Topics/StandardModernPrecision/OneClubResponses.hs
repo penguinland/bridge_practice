@@ -2,7 +2,7 @@ module Topics.StandardModernPrecision.OneClubResponses(
   topic
 , topicExtras) where
 
-import Output(output, Punct(..))
+import Output(Punct(..), (.+))
 import Topic(Topic(..), wrap, Situations)
 import Auction(forbid, maxSuitLength, makePass, pointRange)
 import Situation(situation, (<~))
@@ -18,9 +18,9 @@ oneDiamond = let
         firstSeatOpener
         b1C
         oppsPass
-    explanation fmt =
+    explanation =
         "When game might not be possible opposite a random 17 HCP, start\
-      \ with " ++ output fmt (T.Bid 1 T.Diamonds) ++ ". This initiates MaFiA."
+      \ with " .+ T.Bid 1 T.Diamonds .+ ". This initiates MaFiA."
   in
     smpWrapN . return $ situation "1D" action B.b1C1D explanation
 
@@ -31,9 +31,9 @@ oneHeart = let
         firstSeatOpener
         b1C
         oppsPass
-    explanation fmt =
+    explanation =
         "You've got a game-forcing hand but slam is unlikely. With 8 to 11 HCP,\
-      \ bid " ++ output fmt (T.Bid 1 T.Hearts) ++ " to show this kind of hand.\
+      \ bid " .+ T.Bid 1 T.Hearts .+ " to show this kind of hand.\
       \ Subsequent bids are natural 5-card suits (and later 4-card suits), not\
       \ MaFiA."
   in
@@ -46,9 +46,9 @@ oneHeartNoSpades = let
         firstSeatOpener
         b1C
         oppsPass
-    explanation fmt =
+    explanation =
         "You've got a game-forcing hand but slam is unlikely. With 8 to 11 HCP\
-      \ and no spade suit, bid " ++ output fmt (T.Bid 1 T.Hearts) ++ " to show\
+      \ and no spade suit, bid " .+ T.Bid 1 T.Hearts .+ " to show\
       \ this kind of hand. Partner's rebid will be a natural 5-card suit, not\
       \ MaFiA."
   in
@@ -61,11 +61,10 @@ oneNotrump = let
         firstSeatOpener
         b1C
         oppsPass
-    explanation fmt =
+    explanation =
         "You've got at least mild slam interest with 12+ HCP, and a balanced\
-      \ hand with no 5-card suit. Bid a natural " ++
-        output fmt (T.Bid 1 T.Notrump) ++ ", and we'll\
-      \ go from there. Stayman is on, but transfers are not."
+      \ hand with no 5-card suit. Bid a natural " .+ T.Bid 1 T.Notrump .+ ",\
+      \ and we'll go from there. Stayman is on, but transfers are not."
   in
     smpWrapN . return $ situation "1N" action B.b1C1N explanation
 
@@ -76,12 +75,12 @@ oneNotrumpAlt = let
         firstSeatOpener
         b1C
         oppsPass
-    explanation fmt =
+    explanation =
         "You've got at least mild slam interest with 12+ HCP, and a 5-card\
-      \ heart suit. Bid " ++ output fmt (T.Bid 1 T.Notrump) ++ " to show this.\
-      \ Partner's bids are natural: " ++ output fmt (T.Bid 2 T.Hearts) ++ " is\
-      \ a heart raise, other suits are 5 cards long, and " ++
-        output fmt (T.Bid 2 T.Notrump) ++ " shows a notrump response.\
+      \ heart suit. Bid " .+ T.Bid 1 T.Notrump .+ " to show this.\
+      \ Partner's bids are natural: " .+ T.Bid 2 T.Hearts .+ " is\
+      \ a heart raise, other suits are 5 cards long, and " .+
+        T.Bid 2 T.Notrump .+ " shows a notrump response.\
       \ Compared to the naive approach, this never wastes extra bidding room\
       \ and often saves some for control bids after we've found a fit."
   in
@@ -105,9 +104,9 @@ slamSingleSuitModified :: Situations
             b1C
             oppsPass
             mapM_ (`maxSuitLength` 4) . filter (/= strain) $ T.allSuits
-        explanation fmt =
+        explanation =
             "You've got at least mild slam interest with 12+ HCP, and a 5+ card\
-          \ suit. Bid a natural " ++ output fmt (T.Bid level strain) ++ ",\
+          \ suit. Bid a natural " .+ T.Bid level strain .+ ",\
           \ and we'll go from there. Subsequent bids are natural 5-card (and\
           \ later 4-card) suits, not MaFiA. Once we find a trump fit, we'll\
           \ start control bidding."
@@ -124,15 +123,15 @@ twoHeartsBalanced = let
         firstSeatOpener
         b1C
         oppsPass
-    explanation fmt =
+    explanation =
         "You've got decent slam interest with 14+ HCP, but a balanced\
-      \ hand with no 5-card suit. Bid " ++ output fmt (T.Bid 2 T.Hearts) ++ "\
-      \ to show this. Partner can try " ++ output fmt (T.Bid 2 T.Notrump) ++ "\
-      \ to show hearts, " ++ output fmt (T.Bid 3 T.Clubs) ++ " as Stayman\
+      \ hand with no 5-card suit. Bid " .+ T.Bid 2 T.Hearts .+ "\
+      \ to show this. Partner can try " .+ T.Bid 2 T.Notrump .+ "\
+      \ to show hearts, " .+ T.Bid 3 T.Clubs .+ " as Stayman\
       \ (regular-type! Puppet is not needed because you've already denied a\
       \ 5-card major), or otherwise bid naturally. If partner has clubs,\
-      \ they're likely to prefer notrump, but could also try a jump to " ++
-        output fmt (T.Bid 3 T.Spades) ++ " to show that (which should be\
+      \ they're likely to prefer notrump, but could also try a jump to " .+
+        T.Bid 3 T.Spades .+ " to show that (which should be\
       \ surprising enough for you to recognize/remember)."
   in
     smpWrapN . return $ situation "2HAlt" action B.b1C2Halt explanation
@@ -144,11 +143,11 @@ twoNotrumpBalanced = let
         firstSeatOpener
         b1C
         oppsPass
-    explanation fmt =
-        "You've got very mild slam interest with 12" ++ output fmt NDash ++
-        "13 HCP, but a balanced hand with no 5-card suit. Bid " ++
-        output fmt (T.Bid 2 T.Notrump) ++ " to show this. Partner can try " ++
-        output fmt (T.Bid 3 T.Clubs) ++ " as Stayman (regular-type! Puppet is\
+    explanation =
+        "You've got very mild slam interest with 12" .+ NDash .+
+        "13 HCP, but a balanced hand with no 5-card suit. Bid " .+
+        T.Bid 2 T.Notrump .+ " to show this. Partner can try " .+
+        T.Bid 3 T.Clubs .+ " as Stayman (regular-type! Puppet is\
       \ not needed because you've already denied a 5-card major), or otherwise\
       \ bid naturally. They're captain of the auction: they'll know whether to\
       \ sign off in game or investigate slam."
@@ -158,15 +157,15 @@ twoNotrumpBalanced = let
 
 oneSpadeGF :: Situations
 oneSpadeGF = let
-    explanationMin fmt =
+    explanationMin =
         "You've got game-forcing strength and a 5-card spade suit. Start with\
-      \ bidding " ++ output fmt (T.Bid 1 T.Spades) ++ " to describe this type\
+      \ bidding " .+ T.Bid 1 T.Spades .+ " to describe this type\
       \ of hand. Partner will bid naturally, and when we find a fit, you'll\
       \ sign off in game to show no interest in going further (though partner\
       \ can always push on if they've got a monster)."
-    explanationMax fmt =
+    explanationMax =
         "You've got a 5-card spade suit and at least mild slam interest. Start\
-      \ with " ++ output fmt (T.Bid 1 T.Spades) ++ " to show partner we'e at\
+      \ with " .+ T.Bid 1 T.Spades .+ " to show partner we'e at\
       \ least game forcing. When you find a fit, start control bidding to show\
       \ partner you're interested in slam, too."
     sit (explanation, minHcp, maxHcp) = let
@@ -186,15 +185,14 @@ twoSpades = let
         firstSeatOpener
         b1C
         oppsPass
-    explanation fmt =
+    explanation =
         "You've got at least mild slam interest with 12+ HCP, but an awkward\
-      \ triple-four-one shape. Show this by bidding " ++
-        output fmt (T.Bid 2 T.Spades) ++ ". Partner will relay to " ++
-        output fmt (T.Bid 2 T.Notrump) ++ ", then bid your singleton. Partner\
-      \ will then either bid " ++ output fmt (T.Bid 3 T.Notrump) ++ ",\
-      \ set trump at the 3 level (triggering a round of control bidding), or \
-      \ use " ++ output fmt (T.Bid 4 T.Clubs) ++ "/" ++
-        output fmt (T.Bid 4 T.Diamonds) ++ "/RKC to tell us how high to go and\
+      \ triple-four-one shape. Show this by bidding " .+
+        T.Bid 2 T.Spades .+ ". Partner will relay to " .+ T.Bid 2 T.Notrump .+
+       ", then bid your singleton. Partner will then either bid " .+
+        T.Bid 3 T.Notrump .+ ", set trump at the 3 level (triggering a round\
+      \ of control bidding), or  use " .+ T.Bid 4 T.Clubs .+ "/" .+
+        T.Bid 4 T.Diamonds .+ "/RKC to tell us how high to go and\
       \ what suit is trump."
   in
     smpWrapN . return $ situation "2S" action B.b1C2S explanation
@@ -221,10 +219,10 @@ passGameSingleSuit = let
             b1C
             oppsPass
             mapM_ (`maxSuitLength` 4) . filter (/= strain) $ T.allSuits
-        explanation fmt =
+        explanation =
             "You're game-forcing with a 5+ card suit. but you're a passed hand,\
           \ so all the slam bids have turned into game bids instead. Bid a\
-          \ natural " ++ output fmt (T.Bid level strain) ++ ",\
+          \ natural " .+ T.Bid level strain .+ ",\
           \ and we'll look for a trump fit from there. Partner's next bid is\
           \ a 5-card suit, and bids after that are 4+ cards."
       in
@@ -244,13 +242,12 @@ passOneNotrump = let
         firstSeatOpener
         b1C
         oppsPass
-    explanation fmt =
+    explanation =
         "You're a passed hand with game-forcing strength but no 5-card suit.\
       \ Because you're a passed hand, the slam-interest bids are repurposed to\
-      \ be merely game forcing. Bid a natural " ++
-        output fmt (T.Bid 1 T.Notrump) ++ ", and we'll\
-      \ go from there. Stayman is on, but transfers are off (so the stronger\
-      \ hand will be declarer more often)."
+      \ be merely game forcing. Bid a natural " .+ T.Bid 1 T.Notrump .+ ", and\
+      \ we'll go from there. Stayman is on, but transfers are off (so the\
+      \ stronger hand will be declarer more often)."
   in
     smpWrapS . return $ situation "P1N" action B.bP1C1N explanation
 
@@ -266,15 +263,15 @@ passTwoSpades = let
         firstSeatOpener
         b1C
         oppsPass
-    explanation fmt =
+    explanation =
         "You're a passed hand with game-forcing strength, but an awkward\
-      \ triple-four-one shape. Show this by bidding " ++
-        output fmt (T.Bid 2 T.Spades) ++ ". Partner will relay to " ++
-        output fmt (T.Bid 2 T.Notrump) ++ ", then bid your singleton. Partner\
-      \ will then either sign off in " ++ output fmt (T.Bid 3 T.Notrump) ++ ",\
+      \ triple-four-one shape. Show this by bidding " .+
+        T.Bid 2 T.Spades .+ ". Partner will relay to " .+
+        T.Bid 2 T.Notrump .+ ", then bid your singleton. Partner\
+      \ will then either sign off in " .+ T.Bid 3 T.Notrump .+ ",\
       \ set trump at the 3 level (triggering a round of control bidding), or \
-      \ use " ++ output fmt (T.Bid 4 T.Clubs) ++ "/" ++
-        output fmt (T.Bid 4 T.Diamonds) ++ "/RKC to indicate how high to go\
+      \ use " .+ T.Bid 4 T.Clubs .+ "/" .+
+        T.Bid 4 T.Diamonds .+ "/RKC to indicate how high to go\
       \ and which suit is trump."
   in
     smpWrapS . return $ situation "P2S" action B.bP1C2S explanation
