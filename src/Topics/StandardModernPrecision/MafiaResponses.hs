@@ -19,7 +19,7 @@ minSupport = let
             B.startOfMafia
             openerBid
             oppsPass
-        explanation _ =
+        explanation =
             "With 4-card support and a minimum hand, raise partner's major.\
            \ You are neither strong enough nor shapely enough to invite to\
            \ game."
@@ -171,7 +171,7 @@ otherMajorSpades = let
             B.startOfMafia
             B.b1C1D1S
             oppsPass
-        explanation _ =
+        explanation =
             "With a maximum hand, no support for partner's spades, but 5+\
            \ hearts, show that suit in our quest to find a major fit. Partner\
            \ has already denied 4 hearts (unless they're at least 5-4 in the\

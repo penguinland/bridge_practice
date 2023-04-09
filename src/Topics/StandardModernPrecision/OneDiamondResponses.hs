@@ -35,7 +35,7 @@ twoMinor6M = let
             minSuitLength major 4
             maxSuitLength major 5
             pointRange 14 40
-        explanation _ =
+        explanation =
             "With game-forcing strength, a 4- or 5-card major, but a 6+ card\
            \ minor, start by bidding 2 of the minor. There will be time to\
            \ show the major afterward."
@@ -56,7 +56,7 @@ twoMinorLongInv = let
             maxSuitLength T.Hearts 3
             maxSuitLength T.Spades 3
             pointRange 11 13
-        explanation _ =
+        explanation =
             "With invitational strength and a 6-card minor, bid naturally,\
            \ planning to rebid your suit at the 3 level if partner doesn't\
            \ show a maximum hand."
@@ -237,7 +237,7 @@ preempt3M = let
         action = do
             b1D
             oppsPass
-        explanation _ =
+        explanation =
             "With a weak hand and a 7-card major, jump to 3 of that suit.\
            \ Opener should pretend that you opened with a pre-empt: they will\
            \ likely pass, even if we don't have a great fit, but can continue\
@@ -257,7 +257,7 @@ preempt4D = let
         action = do
             b1D
             oppsPass
-        explanation _ =
+        explanation =
             "With a weak hand and 8-card support for partner's diamonds, jump\
            \ to 4 of that suit. Opener has at least a doubleton, so on the LoTT\
            \ you're probably safe to the 4 level."
@@ -276,7 +276,7 @@ majorGame = let
         action = do
             b1D
             oppsPass
-        explanation _ =
+        explanation =
             "With an 8-card major, jump to game. This bid has a very wide\
            \ point range, which makes it difficult for the opponents because\
            \ maybe you're pre-empting and maybe you're game forcing with no\

@@ -143,7 +143,7 @@ passSignoff2Spades = let
             forbid $ B.takeoutDouble T.Spades
             noDirectOvercall
             suitLength T.Spades spadeLength
-        explanation _ =
+        explanation =
             "Partner has less-than-invitational values and is signing off. " ++
             "Just pass" ++
             (if spadeLength == 4 then "." else
@@ -162,7 +162,7 @@ immediateSignoffClubs = let
         noDirectOvercall
         bestFitClubs
         pointRange 0 9
-    explanation _ =
+    explanation =
         "Without the strength to invite to game, sign off in a club " ++
         "partial."
   in
@@ -180,7 +180,7 @@ passSignoffClubs = let
         makeAlertableCall (T.Bid 3 T.Clubs) "signoff"
         forbid $ B.takeoutDouble T.Clubs
         noDirectOvercall
-    explanation _ =
+    explanation =
         "Partner has less-than-invitational values and is signing off. " ++
         "Just pass."
   in
@@ -216,7 +216,7 @@ passSignoffHearts = let
         forbid $ B.takeoutDouble T.Clubs
         noDirectOvercall
         minSuitLength T.Hearts 4
-    explanation _ =
+    explanation =
         "Partner has less-than-invitational values and is signing off. " ++
         "Given that you have 4 hearts, pass."
   in
