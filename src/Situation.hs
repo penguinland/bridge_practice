@@ -11,7 +11,7 @@ import System.Random(StdGen)
 
 import Auction(Action, finish, extractLastCall, withholdBid)
 import DealerProg(DealerProg)
-import Output(Showable, Commentary, (.+))
+import Output(Showable, Commentary, toCommentary)
 import Random(pickItem)
 import Structures(Bidding)
 import Terminology(CompleteCall, Direction, Vulnerability)
@@ -26,7 +26,7 @@ data Situation = Situation String Bidding DealerProg CompleteCall Commentary
 -- auction and describing the next action that should follow.
 situation :: Showable s => String -> Action -> Action -> s -> Vulnerability ->
     Direction -> Situation
-situation r a c s v d = Situation r bidding deal answer ("" .+ s) v d
+situation r a c s v d = Situation r bidding deal answer (toCommentary s) v d
   where
     (bidding, deal) = finish d (a >> withholdBid c)
     answer = extractLastCall c
