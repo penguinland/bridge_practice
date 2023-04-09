@@ -1,6 +1,6 @@
 module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 
-import Output(output)
+import Output((.+))
 import Topic(Topic(..), wrap, stdWrap, wrapVulDlr, Situations)
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, alternatives, constrain, makePass, makeCall,
@@ -61,10 +61,9 @@ open :: Situations
 open = let
     action = do
         B.setOpener T.South
-    explanation fmt =
-        "With an opening hand too weak to bid " ++
-        output fmt (T.Bid 1 T.Clubs) ++ ", open " ++
-        output fmt (T.Bid 2 T.Diamonds) ++ " with no 5-card major, " ++
+    explanation =
+        "With an opening hand too weak to bid " .+ T.Bid 1 T.Clubs .+ ", " .+
+        "open " .+ T.Bid 2 T.Diamonds .+ " with no 5-card major, " .+
         "no 6-card club suit, and at most 1 diamond."
   in
     stdWrap $ situation "Open" action twoDiamondOpener explanation
@@ -80,10 +79,10 @@ immediateSignoffSpades3 = let
         pointRange 0 9
         bestFitSpades
         suitLength T.Spades 4
-    explanation fmt =
-        "Without the strength for a game contract, sign off in " ++
-        output fmt (T.Bid 2 T.Spades) ++ " with a likely fit. If " ++
-        "you're stuck playing a 4-3 fit, oh well."
+    explanation =
+        "Without the strength for a game contract, sign off in " .+
+        T.Bid 2 T.Spades .+ " with a likely fit. If you're stuck playing a " .+
+        "4-3 fit, oh well."
   in
     stdWrap $ situation "S43" action (makeCall $ T.Bid 2 T.Spades) explanation
 
@@ -98,9 +97,9 @@ immediateSignoffSpades4 = let
         pointRange 0 9
         bestFitSpades
         suitLength T.Spades 4
-    explanation fmt =
-        "Without the strength for a game contract, sign off in " ++
-        output fmt (T.Bid 2 T.Spades) ++ " with a likely fit."
+    explanation =
+        "Without the strength for a game contract, sign off in " .+
+        T.Bid 2 T.Spades .+ " with a likely fit."
   in
     stdWrap $ situation "S44" action (makeCall $ T.Bid 2 T.Spades) explanation
 
@@ -115,9 +114,9 @@ immediateSignoffSpades5 = let
             pointRange 0 6  -- With 7-9 HCP, make a mixed raise!
             bestFitSpades
             minSuitLength T.Spades 5
-        explanation fmt =
-            "Without the strength for a game contract, sign off in " ++
-            output fmt (T.Bid 2 T.Spades) ++ " with a guaranteed fit."
+        explanation =
+            "Without the strength for a game contract, sign off in " .+
+            T.Bid 2 T.Spades .+ " with a guaranteed fit."
       in
         situation "Sfit" action (makeCall $ T.Bid 2 T.Spades) explanation
   in
@@ -143,9 +142,9 @@ passSignoff2Spades = let
             forbid $ B.takeoutDouble T.Spades
             noDirectOvercall
             suitLength T.Spades spadeLength
-        explanation _ =
-            "Partner has less-than-invitational values and is signing off. " ++
-            "Just pass" ++
+        explanation =
+            "Partner has less-than-invitational values and is signing off. " .+
+            "Just pass" .+
             (if spadeLength == 4 then "." else
                 ", even though you might be in a 7-card fit.")
       in
@@ -162,8 +161,8 @@ immediateSignoffClubs = let
         noDirectOvercall
         bestFitClubs
         pointRange 0 9
-    explanation _ =
-        "Without the strength to invite to game, sign off in a club " ++
+    explanation =
+        "Without the strength to invite to game, sign off in a club " .+
         "partial."
   in
     stdWrap $ situation "3C" action (makeCall $ T.Bid 3 T.Clubs) explanation
@@ -180,8 +179,8 @@ passSignoffClubs = let
         makeAlertableCall (T.Bid 3 T.Clubs) "signoff"
         forbid $ B.takeoutDouble T.Clubs
         noDirectOvercall
-    explanation _ =
-        "Partner has less-than-invitational values and is signing off. " ++
+    explanation =
+        "Partner has less-than-invitational values and is signing off. " .+
         "Just pass."
   in
     stdWrap $ situation "3CP" action (makeCall T.Pass) explanation
@@ -195,10 +194,10 @@ immediateSignoffHearts = let
         noDirectOvercall
         fitHearts
         pointRange 0 9
-    explanation fmt =
-        "Without the strength to invite to game, sign off in " ++
-        output fmt (T.Bid 2 T.Hearts) ++ ". Remember that opener might " ++
-        "pull the bid to " ++ output fmt (T.Bid 2 T.Spades) ++ " with " ++
+    explanation =
+        "Without the strength to invite to game, sign off in " .+
+        T.Bid 2 T.Hearts .+ ". Remember that opener might " .+
+        "pull the bid to " .+ T.Bid 2 T.Spades .+ " with " .+
         "exactly 4315 shape."
   in
     stdWrap $ situation "2H" action (makeCall $ T.Bid 2 T.Hearts) explanation
@@ -216,8 +215,8 @@ passSignoffHearts = let
         forbid $ B.takeoutDouble T.Clubs
         noDirectOvercall
         minSuitLength T.Hearts 4
-    explanation _ =
-        "Partner has less-than-invitational values and is signing off. " ++
+    explanation =
+        "Partner has less-than-invitational values and is signing off. " .+
         "Given that you have 4 hearts, pass."
   in
     stdWrap $ situation "2HP" action (makeCall T.Pass) explanation
@@ -239,10 +238,10 @@ correctSignoffHearts = let
             forbid $ B.takeoutDouble T.Clubs
             noDirectOvercall
             maxSuitLength T.Hearts 3
-        explanation fmt =
-            "Partner has less-than-invitational values and is signing off. " ++
-            "With 4315 shape, though, pull this to " ++
-            output fmt (T.Bid 2 T.Spades) ++ " in case partner only had 3 " ++
+        explanation =
+            "Partner has less-than-invitational values and is signing off. " .+
+            "With 4315 shape, though, pull this to " .+
+            T.Bid 2 T.Spades .+ " in case partner only had 3 " .+
             "hearts (e.g., 3343 or 3352 shape)."
       in
         situation "2H2S" action (makeCall $ T.Bid 2 T.Spades) explanation

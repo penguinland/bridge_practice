@@ -1,6 +1,6 @@
 module Topics.StandardModernPrecision.Mafia(topic) where
 
-import Output(output, Punct(..))
+import Output(Punct(..), (.+))
 import Topic(Topic(..), wrap, Situations)
 import Auction(forbid, minSuitLength, suitLength, balancedHand, equalLength,
                longerThan, displayLastCall)
@@ -15,7 +15,7 @@ notrump = let
     sit bid = let
         action = do
             B.startOfMafia
-        explanation _ =
+        explanation =
             "With a balanced hand, rebid notrump to show your point range.\
            \ Even if you have a 5-card major, it's better to know that\
            \ systems are on and partner knows your strength within 1 HCP."
@@ -31,7 +31,7 @@ oneMajor = let
         action = do
             B.startOfMafia
             forbid balancedHand
-        explanation _ =
+        explanation =
             "With an unbalanced hand that isn't game forcing, bid a 4-card\
            \ major if you have one."
       in
@@ -48,7 +48,7 @@ oneMajorMinor = let
             forbid balancedHand
             minSuitLength minorSuit 5
             suitLength majorSuit 4
-        explanation _ =
+        explanation =
             "With an unbalanced hand that isn't game forcing, bid a 4-card\
            \ major if you have one. This holds even if you've got a longer\
            \ minor (MAjors FIrst Always)."
@@ -66,7 +66,7 @@ twoMinorSingle = let
             B.startOfMafia
             forbid balancedHand
             minSuitLength minorSuit 6
-        explanation _ =
+        explanation =
             "With an unbalanced hand that isn't game forcing and doesn't have\
            \ a 4-card major, bid your long minor."
       in
@@ -84,7 +84,7 @@ twoMinorMinors = let
             suitLength minorSuit 5
             -- The answer Action also ensures that the minor we bid is longer
             -- than the minor we don't bid.
-        explanation _ =
+        explanation =
             "With an unbalanced hand that isn't game forcing and doesn't have\
            \ a 4-card major, rebid your long minor. Sometimes this minor is\
            \ only 5 cards, if you're 5-4 in the minors."
@@ -101,7 +101,7 @@ equalMinors = let
             B.startOfMafia
             forbid balancedHand
             T.Clubs `equalLength` T.Diamonds
-        explanation _ =
+        explanation =
             "With an unbalanced hand that isn't game forcing and doesn't have\
            \ a 4-card major, rebid your long minor. When the minors are the\
            \ same length, bid diamonds first so that you can bid clubs later\
@@ -120,10 +120,10 @@ bothMajorsLongSpades = let
             forbid balancedHand
             minSuitLength T.Hearts 4
             T.Spades `longerThan` T.Hearts
-        explanation fmt =
-            "With both majors but longer spades, start by bidding " ++
-            output fmt (T.Bid 1 T.Spades) ++ ". You can then bid the hearts\
-           \ later without reversing."
+        explanation =
+            "With both majors but longer spades, start by bidding " .+
+            T.Bid 1 T.Spades .+ ". You can then bid the hearts later without\
+          \ reversing."
       in
         situation "2MS" action B.b1C1D1S explanation
   in
@@ -135,13 +135,11 @@ jumpBid = let
     sit bid = let
         action = do
             B.startOfMafia
-        explanation fmt =
+        explanation =
             "With an unbalanced hand that is strong enough to\
            \ force to game, jump in your suit. Responder can treat this like\
-           \ the 2/1 sequence " ++
-            output fmt (T.Bid 2 T.Clubs) ++ output fmt NDash ++
-            output fmt (T.Bid 2 T.Diamonds) ++ output fmt NDash ++
-            displayLastCall fmt bid ++ "."
+           \ the 2/1 sequence " .+ T.Bid 2 T.Clubs .+ NDash .+
+            T.Bid 2 T.Diamonds .+ NDash .+ displayLastCall bid .+ "."
       in
         situation "J1" action bid explanation
   in

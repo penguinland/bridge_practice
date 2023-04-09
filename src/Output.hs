@@ -1,38 +1,55 @@
+-- In order to add the String type to the Showable typeclass, we need this
+-- pragma. String is an alias for a list of characters, and the default compiler
+-- doesn't let that be in a typeclass because not all its arguments are type
+-- variables.
+{-# LANGUAGE FlexibleInstances #-}
+
 module Output (
-  Showable
-, toLatex
-, toHtml
-, OutputType(..)
-, output
+  OutputType(..)
+, Commentary(..)
+, Showable(..)
+, (.+)
 , Punct(..)
-, Commentary
 ) where
 
-class Showable a where
-    toLatex :: a -> String
-    toHtml :: a -> String
-    toHtml = undefined -- TODO: remove this later
+import Data.Function((&))
 
 
 data OutputType = LaTeX
                 | Html
 
-class Outputtable a where
-    outputWrap :: OutputType -> a -> String
+
+newtype Commentary = Commentary [OutputType -> String]
+
+instance Semigroup Commentary where
+    (Commentary as) <> (Commentary bs) = Commentary (as ++ bs)
+
+instance Monoid Commentary where
+    mempty = Commentary [const ""]
 
 
--- typeclass instances need to be a specific type constructor with arbitrary
--- type variables passed in. This is such a type.
-newtype Wrap a = Wrap {unwrap :: a}
+class Showable a where
+    -- The minimal definition is either `output` or both `toLatex` and `toHtml`.
+    toLatex :: a -> String
+    toLatex = output LaTeX
+    toHtml :: a -> String
+    toHtml = undefined -- TODO: change this to `output Html` later
+    output :: OutputType -> a -> String
+    output LaTeX = toLatex
+    output Html = toHtml
+    toCommentary :: a -> Commentary
+    toCommentary a = Commentary [flip output a]
+
+instance Showable String where
+    output = flip const
+
+instance Showable Commentary where
+    output o (Commentary c) = concatMap (o &) $ c
+    toCommentary = id
 
 
-instance Showable a => Outputtable (Wrap a) where
-    outputWrap LaTeX = toLatex . unwrap
-    outputWrap Html = toHtml . unwrap
-
-
-output :: (Showable a) => OutputType -> a -> String
-output t = outputWrap t . Wrap
+(.+) :: (Showable a, Showable b) => a -> b -> Commentary
+a .+ b = toCommentary a <> toCommentary b
 
 
 data Punct = NDash
@@ -43,5 +60,3 @@ instance Showable Punct where
     toLatex MDash = "---"
     toHtml NDash = "&ndash;"
     toHtml MDash = "&mdash;"
-
-type Commentary = OutputType -> String

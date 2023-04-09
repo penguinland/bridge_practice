@@ -1,6 +1,6 @@
 module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
-import Output(output, Punct(..))
+import Output(Punct(..), (.+))
 import Topic(Topic(..), wrap, Situations)
 import Auction(maxSuitLength, minSuitLength, pointRange, displayLastCall,
                alternatives)
@@ -16,8 +16,8 @@ oneMajor = let
         action = do
             b1D
             oppsPass
-        explanation fmt =
-            "Let's start with a natural " ++ displayLastCall fmt bid ++ "\
+        explanation =
+            "Let's start with a natural " .+ displayLastCall bid .+ "\
            \ bid, and see where things go from there."
       in
         situation "1M" action bid explanation
@@ -35,7 +35,7 @@ twoMinor6M = let
             minSuitLength major 4
             maxSuitLength major 5
             pointRange 14 40
-        explanation _ =
+        explanation =
             "With game-forcing strength, a 4- or 5-card major, but a 6+ card\
            \ minor, start by bidding 2 of the minor. There will be time to\
            \ show the major afterward."
@@ -56,7 +56,7 @@ twoMinorLongInv = let
             maxSuitLength T.Hearts 3
             maxSuitLength T.Spades 3
             pointRange 11 13
-        explanation _ =
+        explanation =
             "With invitational strength and a 6-card minor, bid naturally,\
            \ planning to rebid your suit at the 3 level if partner doesn't\
            \ show a maximum hand."
@@ -78,10 +78,10 @@ twoMinorBothInv = let
             maxSuitLength T.Hearts 3
             maxSuitLength T.Spades 3
             pointRange 11 13
-        explanation fmt =
-            "With invitational strength and both minors, start with " ++
-            output fmt (T.Bid 2 T.Diamonds) ++ ", planning to rebid " ++
-            output fmt (T.Bid 3 T.Clubs) ++ " to give partner a choice of\
+        explanation =
+            "With invitational strength and both minors, start with " .+
+            T.Bid 2 T.Diamonds .+ ", planning to rebid " .+
+            T.Bid 3 T.Clubs .+ " to give partner a choice of\
            \ minors. Be prepared to go to game if partner shows a maximum, but\
            \ they're more likely to have a minimum which will pass or correct\
            \ at the 3 level."
@@ -97,14 +97,14 @@ reverseFlannery = let
         action = do
             b1D
             oppsPass
-        explanation fmt =
-            "With 5 spades, 4 or 5 hearts, and " ++
-            (if isInvite then "" else "less than ") ++
-            "invitational strength, bid a Reverse Flannery " ++
-            displayLastCall fmt bid ++ ". Partner can then place the final\
-          \ contract, bid " ++ output fmt (T.Bid 3 T.Clubs) ++ " (pass or\
-          \ correct) with both minors, or bid " ++
-            output fmt (T.Bid 2 T.Notrump) ++ " to ask for\
+        explanation =
+            "With 5 spades, 4 or 5 hearts, and " .+
+            (if isInvite then "" else "less than ") .+
+            "invitational strength, bid a Reverse Flannery " .+
+            displayLastCall bid .+ ". Partner can then place the final\
+          \ contract, bid " .+ T.Bid 3 T.Clubs .+ " (pass or\
+          \ correct) with both minors, or bid " .+
+            T.Bid 2 T.Notrump .+ " to ask for\
           \ more information. Note that if you were game forcing, you would\
           \ have started at the 1 level instead."
       in
@@ -119,10 +119,10 @@ weakMinors54 = let
         action = do
             b1D
             oppsPass
-        explanation fmt =
+        explanation =
             "With 5-4 in the minors, no 4-card major, and less than\
-           \ invitational strength, bid a pre-emptive-like " ++
-             output fmt (T.Bid 3 T.Clubs) ++ ". Partner can pass or correct, or\
+           \ invitational strength, bid a pre-emptive-like " .+
+             T.Bid 3 T.Clubs .+ ". Partner can pass or correct, or\
            \ even continue the pre-empt if relevant. We might get unlucky and\
            \ end up in a 7-card fit, but most of the time we'll have a decent\
            \ fit in opener's favorite minor."
@@ -138,10 +138,9 @@ weakMinors55 = let
         action = do
             b1D
             oppsPass
-        explanation fmt =
+        explanation =
             "With at least 5-5 in the minors and less than invitational\
-           \ strength,\
-           \ bid a pre-emptive-like " ++ output fmt (T.Bid 4 T.Clubs) ++ ".\
+           \ strength, bid a pre-emptive-like " .+ T.Bid 4 T.Clubs .+ ".\
            \ Partner can pass or correct, or even continue the pre-empt if\
            \ relevant. We're guaranteed at least an 8-card fit in opener's\
            \ favorite minor."
@@ -157,9 +156,9 @@ notrump1 = let
         action = do
             b1D
             oppsPass
-        explanation fmt =
+        explanation =
             "With a balanced hand, no 4-card major, and less than invitational\
-           \ strength, bid " ++ output fmt (T.Bid 1 T.Notrump) ++ ". Partner\
+           \ strength, bid " .+ T.Bid 1 T.Notrump .+ ". Partner\
            \ will likely pass, but could bid 2 of a major with 6-5 and a\
            \ maximum, which you can pass or correct."
       in
@@ -174,17 +173,17 @@ notrump2 = let
         action = do
             b1D
             oppsPass
-        explanation fmt =
-            "With a balanced hand, no 4-card major, and 11" ++
-             output fmt NDash ++ "12 HCP, bid " ++
-             output fmt (T.Bid 2 T.Notrump) ++ ". Note that 13 HCP hands should\
+        explanation =
+            "With a balanced hand, no 4-card major, and 11" .+
+             NDash .+ "12 HCP, bid " .+
+             T.Bid 2 T.Notrump .+ ". Note that 13 HCP hands should\
            \ bid game even though they're usually considered invitational!\
-           \ Partner can pass, bid " ++ output fmt (T.Bid 3 T.Clubs) ++ "\
+           \ Partner can pass, bid " .+ T.Bid 3 T.Clubs .+ "\
            \ (pass or correct) with both minors and a minimum (with a maximum,\
-           \ prefer playing in " ++ output fmt (T.Bid 2 T.Notrump) ++ "), " ++
-             output fmt (T.Bid 3 T.Diamonds) ++ " with a long suit and minimum\
+           \ prefer playing in " .+ T.Bid 2 T.Notrump .+ "), " .+
+             T.Bid 3 T.Diamonds .+ " with a long suit and minimum\
            \ strength, 3 of a major with 4 cards in that major and shortness in\
-           \ the other one (angling for " ++ output fmt (T.Bid 3 T.Notrump) ++
+           \ the other one (angling for " .+ T.Bid 3 T.Notrump .+
             " or 4 of a minor if you don't have a stopper in the other major),\
            \ or 4 of a major with 6-5 and a maximum, which you can pass or\
            \ correct."
@@ -200,14 +199,12 @@ notrump3 = let
         action = do
             b1D
             oppsPass
-        explanation fmt =
-            "With a balanced hand, no 4-card major, and 13" ++
-            output fmt NDash ++ "16 HCP, bid " ++
-            output fmt (T.Bid 3 T.Notrump) ++ ". Partner\
+        explanation =
+            "With a balanced hand, no 4-card major, and 13" .+ NDash .+ "16\
+           \ HCP, bid " .+ T.Bid 3 T.Notrump .+ ". Partner\
            \ will likely pass, but could bid game in a major with 6-5 shape,\
-           \ which you can pass or correct to " ++
-             output fmt (T.Bid 4 T.Notrump) ++ " or " ++
-             output fmt (T.Bid 5 T.Diamonds) ++ "."
+           \ which you can pass or correct to " .+
+             T.Bid 4 T.Notrump .+ " or " .+ T.Bid 5 T.Diamonds .+ "."
       in
         situation "3N" action B.b1D3N explanation
   in
@@ -220,9 +217,9 @@ invertedMinors = let
         action = do
             b1D
             oppsPass
-        explanation fmt =
+        explanation =
             "With less than invitational strength, no 4-card major, but a long\
-           \ diamond suit, jump to " ++ displayLastCall fmt B.b1D3D ++ ", like\
+           \ diamond suit, jump to " .+ displayLastCall B.b1D3D .+ ", like\
            \ an inverted minor. Note that you need 6+ cards in the suit to do\
            \ this, since opener might only have a doubleton."
       in
@@ -237,7 +234,7 @@ preempt3M = let
         action = do
             b1D
             oppsPass
-        explanation _ =
+        explanation =
             "With a weak hand and a 7-card major, jump to 3 of that suit.\
            \ Opener should pretend that you opened with a pre-empt: they will\
            \ likely pass, even if we don't have a great fit, but can continue\
@@ -257,7 +254,7 @@ preempt4D = let
         action = do
             b1D
             oppsPass
-        explanation _ =
+        explanation =
             "With a weak hand and 8-card support for partner's diamonds, jump\
            \ to 4 of that suit. Opener has at least a doubleton, so on the LoTT\
            \ you're probably safe to the 4 level."
@@ -276,7 +273,7 @@ majorGame = let
         action = do
             b1D
             oppsPass
-        explanation _ =
+        explanation =
             "With an 8-card major, jump to game. This bid has a very wide\
            \ point range, which makes it difficult for the opponents because\
            \ maybe you're pre-empting and maybe you're game forcing with no\

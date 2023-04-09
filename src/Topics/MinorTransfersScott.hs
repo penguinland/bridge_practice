@@ -1,6 +1,6 @@
 module Topics.MinorTransfersScott(topic) where
 
-import Output(output)
+import Output((.+))
 import Topic(Topic(..), Situations, wrap)
 import Auction(forbid, makeCall, makeAlertableCall, makePass, pointRange,
                hasTopN, constrain, minSuitLength, maxSuitLength, Action,
@@ -85,8 +85,8 @@ initiateTransfer = let
     sit suit = let
         action = do
             setUpTransfer suit
-        explanation fmt =
-            "Partner has opened a strong " ++ output fmt oneNT ++ ". You have\
+        explanation =
+            "Partner has opened a strong " .+ oneNT .+ ". You have\
            \ an unbalaned hand with a long minor. Bid 2 steps below your suit\
            \ to transfer into it and make your partner declarer so their\
            \ stronger hand stays hidden."
@@ -104,9 +104,9 @@ completeTransfer = let
         action = do
             setUpCompletion suit
             forbid (canSuperaccept suit)
-        explanation fmt =
-            "You have opened a strong " ++ output fmt oneNT ++ ", and partner\
-          \ has made a minor suit transfer into " ++ show suit ++ ". You need\
+        explanation =
+            "You have opened a strong " .+ oneNT .+ ", and partner\
+          \ has made a minor suit transfer into " .+ suit .+ ". You need\
           \ at least 3-card support including 1 of the top 2 cards to\
           \ superaccept, so just accept the transfer regularly and bid the\
           \ suit."
@@ -124,15 +124,15 @@ superacceptTransfer = let
         action = do
             setUpCompletion suit
             canSuperaccept suit
-        explanation fmt =
-            "You have opened a strong " ++ output fmt oneNT ++ ", and partner\
-          \ has made a minor suit transfer into " ++ show suit ++ ". You have\
+        explanation =
+            "You have opened a strong " .+ oneNT .+ ", and partner\
+          \ has made a minor suit transfer into " .+ suit .+ ". You have\
           \ at least 3-card support including 1 of the top 2 honors,\
           \ so superaccept the transfer by bidding 1 step up from\
           \ the transfer (1 step under the intended suit). This gives partner\
-          \ the option of bidding " ++ output fmt (T.Bid 3 T.Notrump) ++ " if\
-          \ they think the suit will run, and wrong-siding the " ++
-            output fmt (T.Bid 3 suit) ++ " contract if it won't."
+          \ the option of bidding " .+ T.Bid 3 T.Notrump .+ " if\
+          \ they think the suit will run, and wrong-siding the " .+
+            T.Bid 3 suit .+ " contract if it won't."
         bid = setUpSuperacceptCompletion suit
       in
         situation "SupAcc" action bid explanation
@@ -148,12 +148,12 @@ completeSuperacceptAKQ = let
             setUpSuperacceptCompletion suit
             hasTopN suit 3 2
             pointRange 0 7  -- Not a situation where you'd naively bid 3N!
-        explanation fmt =
-            "Partner has opened a strong " ++ output fmt oneNT ++ ", you have\
-          \ made a minor suit transfer in " ++ show suit ++ ", and partner has\
+        explanation =
+            "Partner has opened a strong " .+ oneNT .+ ", you have\
+          \ made a minor suit transfer in " .+ suit .+ ", and partner has\
           \ superaccepted the transfer, showing at least 3-card support and\
           \ either the ace or king of the suit. The suit is running, so bid\
-          \ a thin " ++ output fmt (T.Bid 3 T.Notrump) ++ ". If opener has a\
+          \ a thin " .+ T.Bid 3 T.Notrump .+ ". If opener has a\
           \ stopper in every other suit, the game is likely be makable,\
           \ despite your lack of points."
         bid = makeCall $ T.Bid 3 T.Notrump
@@ -172,13 +172,13 @@ completeSuperacceptKQJ10 = let
             forbid (hasTopN suit 3 2)
             hasTopN suit 5 3
             pointRange 0 7  -- Not a situation where you'd naively bid 3N!
-        explanation fmt =
-            "Partner has opened a strong " ++ output fmt oneNT ++ ", you have\
-          \ made a minor suit transfer in " ++ show suit ++ ", and partner has\
+        explanation =
+            "Partner has opened a strong " .+ oneNT .+ ", you have\
+          \ made a minor suit transfer in " .+ suit .+ ", and partner has\
           \ superaccepted the transfer, showing at least 3-card support and\
           \ either the ace or king of the suit. Although you don't have all\
           \ three top honors, you've got 4 of the top 5, so the suit is very\
-          \ likely to run.  Bid a thin " ++ output fmt (T.Bid 3 T.Notrump) ++
+          \ likely to run.  Bid a thin " .+ T.Bid 3 T.Notrump .+
             ". If opener has a stopper in every other suit, the game is likely\
           \ be makable, despite your lack of points."
         bid = makeCall $ T.Bid 3 T.Notrump
@@ -197,9 +197,9 @@ completeSuperaccept10CardFit = let
             hasTopN suit 2 1
             pointRange 0 7  -- Not a situation where you'd normally bid 3N!
             minSuitLength suit 7
-        explanation fmt =
-            "Partner has opened a strong " ++ output fmt oneNT ++ ", you have\
-          \ made a minor suit transfer in " ++ show suit ++ ", and partner has\
+        explanation =
+            "Partner has opened a strong " .+ oneNT .+ ", you have\
+          \ made a minor suit transfer in " .+ suit .+ ", and partner has\
           \ superaccepted the transfer, showing at least 3-card support and\
           \ either the ace or king of the suit. With your extra length and\
           \ both top honors, the suit should be running. Bid the notrump\
@@ -220,9 +220,9 @@ failSuperaccept = let
             forbid (hasTopN suit 2 1)
             forbid (hasTopN suit 5 3)
             pointRange 0 7  -- SKip invitational hands; there's too much nuance
-        explanation fmt =
-            "Partner has opened a strong " ++ output fmt oneNT ++ ", you have\
-          \ made a minor suit transfer in " ++ show suit ++ ", and partner has\
+        explanation =
+            "Partner has opened a strong " .+ oneNT .+ ", you have\
+          \ made a minor suit transfer in " .+ suit .+ ", and partner has\
           \ superaccepted the transfer, showing at least 3-card support and\
           \ either the ace or king of the suit. Despite the fit, it doesn't\
           \ look like the suit is going to run, so a notrump game probably\
@@ -247,16 +247,16 @@ notrumpInvite = let
             maxSuitLength T.Spades 3
             maxSuitLength T.Hearts 3
             pointRange 8 9
-        explanation fmt =
-            "Partner has opened a strong " ++ output fmt oneNT ++ ". You have\
+        explanation =
+            "Partner has opened a strong " .+ oneNT .+ ". You have\
           \ a balanced hand with invitational strength. Even though you don't\
-          \ have a 4-card major, bid " ++ output fmt (T.Bid 2 T.Clubs) ++ "\
-          \ as Stayman, intending to rebid " ++ output fmt (T.Bid 2 T.Notrump)
-            ++ " regardless of the reply. Note that the " ++
-            output fmt (T.Bid 2 T.Notrump) ++ " bid is alertable and should\
+          \ have a 4-card major, bid " .+ T.Bid 2 T.Clubs .+ "\
+          \ as Stayman, intending to rebid " .+ T.Bid 2 T.Notrump
+            .+ " regardless of the reply. Note that the " .+
+            T.Bid 2 T.Notrump .+ " bid is alertable and should\
           \ be described as indicating that you might not have a 4-card major.\
-          \ The Stayman bid is not alertable. This frees up a direct " ++
-            output fmt (T.Bid 2 T.Notrump) ++ " reply to be a minor suit\
+          \ The Stayman bid is not alertable. This frees up a direct " .+
+            T.Bid 2 T.Notrump .+ " reply to be a minor suit\
           \ transfer."
         bid = makeCall $ T.Bid 2 T.Clubs
       in
