@@ -31,7 +31,7 @@ import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
 import DealerProg(DealerProg, addNewReq, addDefn, invert)
-import Output(Commentary, toCommentary)
+import Output(Commentary, Showable, toCommentary)
 import Structures(Bidding, startBidding, (>-), lastCall, currentBidder)
 import qualified Terminology as T
 
@@ -82,9 +82,9 @@ define = modifyDealerProg addDefn
 makeCall :: T.Call -> Action
 makeCall call = modify $ first (>- T.CompleteCall call Nothing)
 
-makeAlertableCall :: T.Call -> String -> Action
+makeAlertableCall :: Showable a => T.Call -> a -> Action
 makeAlertableCall call alert =
-    modify $ first (>- T.CompleteCall call (Just alert))
+    modify $ first (>- T.CompleteCall call (Just . toCommentary $ alert))
 
 
 makePass :: Action

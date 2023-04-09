@@ -45,7 +45,7 @@ instance Showable Bidding where
         formatMaybeBid alertMacro = maybe "" $ formatBid alertMacro
         formatBid _          (T.CompleteCall c  Nothing) = toLatex c
         formatBid alertMacro (T.CompleteCall c (Just a)) =
-            toLatex c ++ "\\" ++ alertMacro ++ "{" ++ a ++ "}"
+            toLatex c ++ "\\" ++ alertMacro ++ "{" ++ toLatex a ++ "}"
         finish T.North = newRow
         finish _       = "&"
 
