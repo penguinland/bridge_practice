@@ -5,57 +5,19 @@
 {-# LANGUAGE FlexibleInstances #-}
 
 module Output (
-  Showable
-, toLatex
-, toHtml
-, OutputType(..)
-, output
-, Punct(..)
+  OutputType(..)
 , Commentary(..)
+, Showable(..)
 , (.+)
+, Punct(..)
 ) where
 
 import Data.Function((&))
 import Data.List.Utils(join)
 
 
-class Showable a where
-    -- The minimal definition is either `output` or both `toLatex` and `toHtml`.
-    toLatex :: a -> String
-    toLatex = output LaTeX
-    toHtml :: a -> String
-    toHtml = undefined -- TODO: change this to `output Html` later
-    toCommentary :: a -> Commentary
-    toCommentary a = Commentary [flip output a]
-    output :: OutputType -> a -> String
-    output LaTeX = toLatex
-    output Html = toHtml
-
-
-instance Showable String where
-    toLatex = id
-    toHtml = id
-
-
--- TODO: remove this when it's no longer needed
-instance Showable (OutputType -> String) where
-    toLatex = toLatex . toCommentary
-    toHtml = toHtml . toCommentary
-    toCommentary a = Commentary [a]
-
-
 data OutputType = LaTeX
                 | Html
-
-
-data Punct = NDash
-           | MDash
-
-instance Showable Punct where
-    toLatex NDash = "--"
-    toLatex MDash = "---"
-    toHtml NDash = "&ndash;"
-    toHtml MDash = "&mdash;"
 
 
 newtype Commentary = Commentary [OutputType -> String]
@@ -71,5 +33,38 @@ instance Monoid Commentary where
     mempty = Commentary [const ""]
 
 
+class Showable a where
+    -- The minimal definition is either `output` or both `toLatex` and `toHtml`.
+    toLatex :: a -> String
+    toLatex = output LaTeX
+    toHtml :: a -> String
+    toHtml = undefined -- TODO: change this to `output Html` later
+    output :: OutputType -> a -> String
+    output LaTeX = toLatex
+    output Html = toHtml
+    toCommentary :: a -> Commentary
+    toCommentary a = Commentary [flip output a]
+
+instance Showable String where
+    toLatex = id
+    toHtml = id
+
+-- TODO: remove this when it's no longer needed
+instance Showable (OutputType -> String) where
+    toLatex = toLatex . toCommentary
+    toHtml = toHtml . toCommentary
+    toCommentary a = Commentary [a]
+
+
 (.+) :: (Showable a, Showable b) => a -> b -> Commentary
 a .+ b = toCommentary a <> toCommentary b
+
+
+data Punct = NDash
+           | MDash
+
+instance Showable Punct where
+    toLatex NDash = "--"
+    toLatex MDash = "---"
+    toHtml NDash = "&ndash;"
+    toHtml MDash = "&mdash;"
