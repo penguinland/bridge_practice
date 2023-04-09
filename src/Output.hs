@@ -36,7 +36,14 @@ instance Showable Punct where
     toHtml NDash = "&ndash;"
     toHtml MDash = "&mdash;"
 
+
 data Commentary = Commentary [OutputType -> String]
 
 instance Showable Commentary where
     toLatex (Commentary comments) = join "" . map (LaTeX &) $ comments
+
+instance Semigroup Commentary where
+    (Commentary as) <> (Commentary bs) = Commentary (as ++ bs)
+
+instance Monoid Commentary where
+    mempty = Commentary [const ""]
