@@ -1,6 +1,6 @@
 -- In order to add the String type to the Showable typeclass, we need this
 -- pragma. String is an alias for a list of characters, and the default compiler
--- doesn't let that be in a type class because not all its arguments are type
+-- doesn't let that be in a typeclass because not all its arguments are type
 -- variables.
 {-# LANGUAGE FlexibleInstances #-}
 
