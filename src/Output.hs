@@ -20,11 +20,16 @@ import Data.List.Utils(join)
 
 
 class Showable a where
+    -- The minimal definition is either `output` or both `toLatex` and `toHtml`.
     toLatex :: a -> String
+    toLatex = output LaTeX
     toHtml :: a -> String
-    toHtml = undefined -- TODO: remove this later
+    toHtml = undefined -- TODO: change this to `output Html` later
     toCommentary :: a -> Commentary
     toCommentary a = Commentary [flip output a]
+    output :: OutputType -> a -> String
+    output LaTeX = toLatex
+    output Html = toHtml
 
 
 instance Showable String where
@@ -43,11 +48,6 @@ data OutputType = LaTeX
                 | Html
 
 
-output :: Showable a => OutputType -> a -> String
-output LaTeX = toLatex
-output Html = toHtml
-
-
 data Punct = NDash
            | MDash
 
@@ -60,12 +60,8 @@ instance Showable Punct where
 
 newtype Commentary = Commentary [OutputType -> String]
 
-_showableHelper :: OutputType -> Commentary -> String
-_showableHelper o (Commentary c) = join "" . map (o &) $ c
-
 instance Showable Commentary where
-    toLatex = _showableHelper LaTeX
-    toHtml = _showableHelper Html
+    output o (Commentary c) = join "" . map (o &) $ c
     toCommentary = id
 
 instance Semigroup Commentary where
