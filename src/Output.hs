@@ -46,14 +46,7 @@ class Showable a where
     toCommentary a = Commentary [flip output a]
 
 instance Showable String where
-    toLatex = id
-    toHtml = id
-
--- TODO: remove this when it's no longer needed
-instance Showable (OutputType -> String) where
-    toLatex = toLatex . toCommentary
-    toHtml = toHtml . toCommentary
-    toCommentary a = Commentary [a]
+    output = flip const
 
 
 (.+) :: (Showable a, Showable b) => a -> b -> Commentary
