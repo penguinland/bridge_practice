@@ -22,10 +22,6 @@ data OutputType = LaTeX
 
 newtype Commentary = Commentary [OutputType -> String]
 
-instance Showable Commentary where
-    output o (Commentary c) = join "" . map (o &) $ c
-    toCommentary = id
-
 instance Semigroup Commentary where
     (Commentary as) <> (Commentary bs) = Commentary (as ++ bs)
 
@@ -47,6 +43,10 @@ class Showable a where
 
 instance Showable String where
     output = flip const
+
+instance Showable Commentary where
+    output o (Commentary c) = join "" . map (o &) $ c
+    toCommentary = id
 
 
 (.+) :: (Showable a, Showable b) => a -> b -> Commentary
