@@ -5,8 +5,12 @@ module Output (
 , OutputType(..)
 , output
 , Punct(..)
-, Commentary
+, Commentary(..)
 ) where
+
+import Data.Function((&))
+import Data.List.Utils(join)
+
 
 class Showable a where
     toLatex :: a -> String
@@ -32,4 +36,7 @@ instance Showable Punct where
     toHtml NDash = "&ndash;"
     toHtml MDash = "&mdash;"
 
-type Commentary = OutputType -> String
+data Commentary = Commentary [OutputType -> String]
+
+instance Showable Commentary where
+    toLatex (Commentary comments) = join "" . map (LaTeX &) $ comments

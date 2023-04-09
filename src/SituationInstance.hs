@@ -10,7 +10,7 @@ import Data.List.Utils(join)
 import System.Random(StdGen, genWord64)
 
 import DealerProg(eval)
-import Output(Showable, toLatex, OutputType(..), Commentary)
+import Output(Showable, toLatex, Commentary)
 import Situation(Situation(..))
 import Structures(Bidding, Deal)
 import Terminology(CompleteCall)
@@ -23,7 +23,7 @@ data SituationInstance =
 instance Showable SituationInstance where
     toLatex (SituationInstance b c s d ds) =
         "\\problem{%\n" ++
-            join "%\n}{%\n" [toLatex d, toLatex b, toLatex c, s LaTeX, ds] ++
+            join "%\n}{%\n" [toLatex d, toLatex b, toLatex c, toLatex s, ds] ++
             "%\n}"
 
 
