@@ -23,7 +23,7 @@ data OutputType = LaTeX
                 | Html
 
 
-output :: (Showable a) => OutputType -> a -> String
+output :: Showable a => OutputType -> a -> String
 output LaTeX = toLatex
 output Html = toHtml
 
