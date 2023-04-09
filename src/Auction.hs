@@ -31,7 +31,7 @@ import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
 import DealerProg(DealerProg, addNewReq, addDefn, invert)
-import Output(output, OutputType)
+import Output(Commentary, toCommentary)
 import Structures(Bidding, startBidding, (>-), lastCall, currentBidder)
 import qualified Terminology as T
 
@@ -163,7 +163,7 @@ extractLastCall =
 
 -- displayLastCall is for use in explanations: it formats the most recent call
 -- from an action while stripping out any alerts it might have
-displayLastCall :: OutputType -> Action -> String
-displayLastCall fmt = output fmt . T.removeAlert . extractLastCall
+displayLastCall :: Action -> Commentary
+displayLastCall = toCommentary . T.removeAlert . extractLastCall
 
 -- TODO: hasCard
