@@ -282,8 +282,10 @@ passTwoSpades = let
 
 
 topic :: Topic
-topic = makeTopic "SMP immediate responses to 1C openings" "SMP1C" situations
+topic = makeTopic description "SMP1C" situations
   where
+    description = "SMP immediate responses to " .+ T.Bid 1 T.Clubs .+
+                  " openings"
     situations = wrap [ oneDiamond
                       , oneHeart  -- Differs from topicExtras, below
                       , oneNotrump  -- Differs from topicExtras, below
@@ -295,9 +297,10 @@ topic = makeTopic "SMP immediate responses to 1C openings" "SMP1C" situations
                       ]
 
 topicExtras :: Topic
-topicExtras = makeTopic "SMP modified immediate responses to 1C openings"
-                        "SMP1CM" situations
+topicExtras = makeTopic description "SMP1CM" situations
   where
+    description = "SMP modified immediate responses to " .+ T.Bid 1 T.Clubs .+
+                  " openings"
     situations = wrap [ oneDiamond
                       , oneHeartNoSpades  -- Differs from topic, above
                       , oneSpadeGF  -- Differs from topic, above

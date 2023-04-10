@@ -252,8 +252,9 @@ correctSignoffHearts = let
 
 
 topic :: Topic
-topic = makeTopic "SMP 2D auctions" "SMP2D" situations
+topic = makeTopic description "SMP2D" situations
   where
+    description = ("SMP " .+ T.Bid 2 T.Diamonds .+ " auctions")
     situations = wrap [ open
                       , wrap [ immediateSignoffSpades3
                              , immediateSignoffSpades4

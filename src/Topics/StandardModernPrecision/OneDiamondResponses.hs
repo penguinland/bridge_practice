@@ -288,8 +288,10 @@ majorGame = let
 
 
 topic :: Topic
-topic = makeTopic "SMP immediate responses to 1D openings" "smp1d" situations
+topic = makeTopic description "smp1d" situations
   where
+    description = "SMP immediate responses to " .+ T.Bid 1 T.Diamonds .+
+                  " openings"
     situations = wrap [ wrap [twoMinor6M, twoMinorLongInv, twoMinorBothInv]
                       , oneMajor
                       , reverseFlannery
