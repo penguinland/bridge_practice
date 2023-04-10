@@ -1,13 +1,13 @@
 module Topics.MinorTransfersScott(topic) where
 
-import Output((.+))
-import Topic(Topic(..), Situations, wrap, makeTopic)
 import Auction(forbid, makeCall, makeAlertableCall, makePass, pointRange,
                hasTopN, constrain, minSuitLength, maxSuitLength, Action,
                balancedHand, withholdBid)
+import qualified CommonBids as B
+import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import qualified CommonBids as B
+import Topic(Topic, Situations, wrap, makeTopic)
 
 
 -- Note that the person initiating the transfer shouldn't have had an

@@ -1,10 +1,10 @@
 module Topics.StandardModernPrecision.MafiaResponses(topic) where
 
-import Output((.+))
-import Topic(Topic(..), wrap, Situations, makeTopic)
 import Auction(Action, suitLength, maxSuitLength)
+import Output((.+))
 import Situation(Situation, situation, (<~))
 import qualified Terminology as T
+import Topic(Topic, wrap, Situations, makeTopic)
 import Topics.StandardModernPrecision.BasicBids(oppsPass, smpWrapN)
 import qualified Topics.StandardModernPrecision.Bids1C as B
 

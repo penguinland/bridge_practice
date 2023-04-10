@@ -1,13 +1,13 @@
 module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 
-import Output((.+))
-import Topic(Topic(..), wrap, stdWrap, wrapVulDlr, Situations, makeTopic)
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, alternatives, constrain, makePass, makeCall,
                makeAlertableCall)
+import qualified CommonBids as B
+import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import qualified CommonBids as B
+import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic)
 
 
 -- TODO: Refactor into a proper list of alertable bids, so that the solutions to
