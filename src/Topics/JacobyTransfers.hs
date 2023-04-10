@@ -1,12 +1,12 @@
 module Topics.JacobyTransfers(topic) where
 
-import Output(Punct(NDash), (.+))
-import Topic(Topic(..), Situations, wrap, stdWrap, wrapVulDlr)
 import Auction(forbid, makeCall, makeAlertableCall, makePass, pointRange,
                suitLength, minSuitLength, Action, balancedHand, constrain)
+import qualified CommonBids as B
+import Output(Punct(NDash), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import qualified CommonBids as B
+import Topic(Topic, Situations, wrap, stdWrap, wrapVulDlr, makeTopic)
 
 
 -- syntactic sugar for writing descriptions of solutions
@@ -251,7 +251,7 @@ majors55gf = let
 
 
 topic :: Topic
-topic = Topic "Jacoby transfers"  "JacTrans" $
+topic = makeTopic "Jacoby transfers"  "JacTrans" $
     wrap [ initiateTransferWeak
          , initiateTransferBInv
          , initiateTransferBGf

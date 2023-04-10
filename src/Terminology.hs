@@ -13,7 +13,7 @@ module Terminology (
 , allVulnerabilities
 ) where
 
-import Output(Showable, toLatex, toHtml)
+import Output(Showable, toLatex, toHtml, Commentary)
 
 
 data Direction = North | East | South | West deriving Eq
@@ -92,8 +92,7 @@ instance Showable Call where
 
 
 -- A complete call is a call with an optional alerted explanation.
--- TODO: do we need to make the alert Showable to format the suits and things?
-data CompleteCall = CompleteCall Call (Maybe String)
+data CompleteCall = CompleteCall Call (Maybe Commentary)
 
 -- The Showable instance is for revealing what the correct answer is; during the
 -- auction we need to do different things for our alerts and our opponents'
@@ -101,7 +100,7 @@ data CompleteCall = CompleteCall Call (Maybe String)
 -- datatype in Structures.hs instead.
 instance Showable CompleteCall where
     toLatex (CompleteCall c a) =
-        toLatex c ++ maybe "" (\x -> " (" ++ x ++ ")") a
+        toLatex c ++ maybe "" (\x -> " (" ++ toLatex x ++ ")") a
 
 
 removeAlert :: CompleteCall -> Call

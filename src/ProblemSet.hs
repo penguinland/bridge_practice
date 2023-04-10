@@ -39,7 +39,7 @@ generate n topics g = let
 outputLatex :: Int -> [Topic] -> String -> StdGen -> IO String
 outputLatex numHands topics filename g = do
     problems <- generate numHands topics g
-    let topicNames = join ", " . sort . map topicName  $ topics
+    let topicNames = join ", " . sort . map (toLatex . topicName) $ topics
         problemSet = join "\n" . map toLatex $ problems
     template <- readFile "template.tex"
     let doc = replace "%<TOPICS>" topicNames .

@@ -1,13 +1,13 @@
 module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 
-import Output((.+))
-import Topic(Topic(..), wrap, stdWrap, wrapVulDlr, Situations)
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, alternatives, constrain, makePass, makeCall,
                makeAlertableCall)
+import qualified CommonBids as B
+import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import qualified CommonBids as B
+import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic)
 
 
 -- TODO: Refactor into a proper list of alertable bids, so that the solutions to
@@ -252,8 +252,9 @@ correctSignoffHearts = let
 
 
 topic :: Topic
-topic = Topic "SMP 2D auctions" "SMP2D" situations
+topic = makeTopic description "SMP2D" situations
   where
+    description = ("SMP " .+ T.Bid 2 T.Diamonds .+ " auctions")
     situations = wrap [ open
                       , wrap [ immediateSignoffSpades3
                              , immediateSignoffSpades4

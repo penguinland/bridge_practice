@@ -11,11 +11,13 @@ module Topic(
 , wrapVulDlr
 , stdWrap
 , Topic(..)
+, makeTopic
 ) where
 
 import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
+import Output(Commentary, toCommentary, Showable)
 import Random(pickItem)
 import Situation(Situation, (<~))
 import Terminology(Direction, allDirections, Vulnerability, allVulnerabilities)
@@ -50,9 +52,16 @@ stdWrap :: (Vulnerability -> Direction -> Situation) -> Situations
 stdWrap = wrapVulDlr . return
 
 
-data Topic = Topic {topicName :: String
+data Topic = Topic { topicName :: Commentary
                    , refName :: String
-                   , topicSituations :: Situations}
+                   , topicSituations :: Situations }
+
+
+-- The intuitive name for this is `topic`, but most of the actual Topic values
+-- in other files are named that. This is named as a verb to distinguish it from
+-- the values it generates.
+makeTopic :: Showable a => a -> String -> Situations -> Topic
+makeTopic c n s = Topic (toCommentary c) n s
 
 
 choose :: Topic -> State StdGen Situation

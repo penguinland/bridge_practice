@@ -1,7 +1,7 @@
 module Topics.StandardOpeners(topic) where
 
 import Output((.+))
-import Topic(Topic(..), wrap, stdWrap, wrapVulDlr, Situations)
+import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic)
 import Auction(forbid, suitLength, minSuitLength, maxSuitLength)
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -202,7 +202,7 @@ bothMinorsReverse = let
 
 
 topic :: Topic
-topic = Topic "Standard 1-level opening bids" "StdOpen" situations
+topic = makeTopic "Standard 1-level opening bids" "StdOpen" situations
   where
     situations = wrap [ oneNotrump
                       , twoNotrump

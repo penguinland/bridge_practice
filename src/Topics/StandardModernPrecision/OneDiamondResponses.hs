@@ -1,11 +1,11 @@
 module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
-import Output(Punct(..), (.+))
-import Topic(Topic(..), wrap, Situations)
 import Auction(maxSuitLength, minSuitLength, pointRange, displayLastCall,
                alternatives)
+import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
+import Topic(Topic, wrap, Situations, makeTopic)
 import Topics.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
 import qualified Topics.StandardModernPrecision.Bids1D as B
 
@@ -288,8 +288,10 @@ majorGame = let
 
 
 topic :: Topic
-topic = Topic "SMP immediate responses to 1D openings" "smp1d" situations
+topic = makeTopic description "smp1d" situations
   where
+    description = "SMP immediate responses to " .+ T.Bid 1 T.Diamonds .+
+                  " openings"
     situations = wrap [ wrap [twoMinor6M, twoMinorLongInv, twoMinorBothInv]
                       , oneMajor
                       , reverseFlannery
