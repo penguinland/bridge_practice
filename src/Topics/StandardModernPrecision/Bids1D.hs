@@ -22,6 +22,7 @@ module Topics.StandardModernPrecision.Bids1D(
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, balancedHand, makeCall, makeAlertableCall, alternatives,
                longerThan, atMostAsLong)
+import Output(Punct(..), (.+))
 import qualified Terminology as T
 
 import Topics.StandardModernPrecision.BasicBids(b1D)
@@ -99,7 +100,7 @@ b1D2H = do
     maxSuitLength T.Hearts 5
     pointRange 6 10
     makeAlertableCall (T.Bid 2 T.Hearts)
-        "5 spades, 4-5 hearts, 6-10 HCP"
+        ("5 spades, 4" .+ NDash .+ "5 hearts, 6" .+ NDash .+ "10 HCP")
 
 
 b1D2S :: Action
@@ -109,7 +110,7 @@ b1D2S = do
     maxSuitLength T.Hearts 5
     pointRange 11 13
     makeAlertableCall (T.Bid 2 T.Spades)
-        "5 spades, 4-5 hearts, invitational strength"
+        ("5 spades, 4" .+ NDash .+ "5 hearts, invitational strength")
 
 
 b1D2N :: Action
@@ -128,7 +129,8 @@ b1D3C = do
                  , suitLength T.Diamonds 4 >> minSuitLength T.Clubs 5 ]
     mapM_ (`maxSuitLength` 3) T.majorSuits
     makeAlertableCall (T.Bid 3 T.Clubs)
-        "5-4 or 4-5 in the minors, less than invitational strength"
+        ("5" .+ NDash .+ "4 or 4" .+ NDash .+ "5 in the minors, " .+
+         "less than invitational strength")
 
 
 b1D3D :: Action
@@ -171,7 +173,8 @@ b1D4C = do
     minSuitLength T.Clubs 5
     minSuitLength T.Diamonds 5
     makeAlertableCall (T.Bid 4 T.Clubs)
-        "At least 5-5 in the minors, less than invitational strength"
+        ("At least 5" .+ NDash .+ "5 in the minors, " .+
+         "less than invitational strength")
 
 
 -- TODO: The book's definitions for b1D3D contains its definition for b1D4D. Why

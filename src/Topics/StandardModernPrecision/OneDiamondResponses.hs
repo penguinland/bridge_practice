@@ -1,11 +1,11 @@
 module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
-import Output(Punct(..), (.+))
-import Topic(Topic(..), wrap, Situations, makeTopic)
 import Auction(maxSuitLength, minSuitLength, pointRange, displayLastCall,
                alternatives)
+import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
+import Topic(Topic(..), wrap, Situations, makeTopic)
 import Topics.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
 import qualified Topics.StandardModernPrecision.Bids1D as B
 

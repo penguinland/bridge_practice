@@ -70,7 +70,7 @@ import Topics.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
 b1C1D :: Action
 b1C1D = do
     pointRange 0 7
-    makeAlertableCall (T.Bid 1 T.Diamonds) "0-7 HCP, any shape"
+    makeAlertableCall (T.Bid 1 T.Diamonds) ("0" .+ NDash .+ "7 HCP, any shape")
 
 
 _gameForcing :: Action
@@ -87,14 +87,15 @@ tripleFourOneShape = constrain "any4441" ["shape(", ", any 4441)"]
 b1C1H :: Action
 b1C1H = do
     _gameForcing
-    makeAlertableCall (T.Bid 1 T.Hearts) "8-11 HCP, any shape"
+    makeAlertableCall (T.Bid 1 T.Hearts) ("8" .+ NDash .+ "11 HCP, any shape")
 
 
 b1C1Hnos :: Action
 b1C1Hnos = do
     _gameForcing
     maxSuitLength T.Spades 4
-    makeAlertableCall (T.Bid 1 T.Hearts) "8-11 HCP, any shape without 5+ spades"
+    makeAlertableCall (T.Bid 1 T.Hearts)
+                      ("8" .+ NDash .+ "11 HCP, any shape without 5+ spades")
 
 
 b1C1S :: Action
@@ -167,7 +168,6 @@ b1C2Nalt = do
     pointRange 12 13
     balancedHand
     mapM_ (`maxSuitLength` 4) T.allSuits
-    -- TODO: Make the en-dash renderable in HTML as well as LaTeX
     makeAlertableCall (T.Bid 2 T.Notrump)
                       ("12" .+ NDash .+ "13 HCP, any 4333 or 4432 shape")
 
@@ -355,7 +355,7 @@ b1C1D1H2N = do
     -- semibalanced response.
     forbid b1C1D1H3H
     makeAlertableCall (T.Bid 2 T.Notrump)
-                      "5-7 HCP, undisclosed splinter for hearts"
+                      ("5" .+ NDash .+ "7 HCP, undisclosed splinter for hearts")
 
 
 b1C1D1H1S :: Action
@@ -372,7 +372,8 @@ b1C1D1H1N = do
     forbid b1C1D1H3H
     forbid b1C1D1H1S
     pointRange 0 5
-    makeAlertableCall (T.Bid 1 T.Notrump) "0-5 HCP, at most 3 hearts"
+    makeAlertableCall (T.Bid 1 T.Notrump)
+                      ("0" .+ NDash .+ "5 HCP, at most 3 hearts")
 
 
 b1C1D1H2D :: Action
@@ -385,7 +386,8 @@ b1C1D1H2D = do
     -- This next line is redundant with forbidding a 1N rebid, but it's nice to
     -- be explicit about it.
     pointRange 6 7
-    makeAlertableCall (T.Bid 2 T.Diamonds) "6-7 HCP, 3-card heart support"
+    makeAlertableCall (T.Bid 2 T.Diamonds)
+                      ("6" .+ NDash .+ "7 HCP, 3-card heart support")
 
 
 b1C1D1H2C :: Action
@@ -401,7 +403,8 @@ b1C1D1H2C = do
     maxSuitLength T.Hearts 2
     maxSuitLength T.Spades 3
     pointRange 6 7  -- Redundant with forbidding a 1N rebid, but explicit
-    makeAlertableCall (T.Bid 2 T.Clubs) "6-7 HCP, at most 2 hearts and 3 spades"
+    makeAlertableCall (T.Bid 2 T.Clubs)
+                      ("6" .+ NDash .+ "7 HCP, at most 2 hearts and 3 spades")
 
 
 b1C1D1S2S :: Action
@@ -428,7 +431,7 @@ b1C1D1S2N = do
     -- semibalanced response.
     forbid b1C1D1S3S
     makeAlertableCall (T.Bid 2 T.Notrump)
-                      "5-7 HCP, undisclosed splinter for spades"
+                      ("5" .+ NDash .+ "7 HCP, undisclosed splinter for spades")
 
 
 b1C1D1S1N :: Action
@@ -437,7 +440,8 @@ b1C1D1S1N = do
     forbid b1C1D1S3S
     -- Note that we might have 5+ hearts, but are too weak to show it.
     pointRange 0 5
-    makeAlertableCall (T.Bid 1 T.Notrump) "0-5 HCP, at most 3 spades"
+    makeAlertableCall (T.Bid 1 T.Notrump)
+                      ("0" .+ NDash .+ "5 HCP, at most 3 spades")
 
 
 b1C1D1S2D :: Action
@@ -447,7 +451,8 @@ b1C1D1S2D = do
     forbid b1C1D1S1N
     pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
     suitLength T.Spades 3
-    makeAlertableCall (T.Bid 2 T.Diamonds) "6-7 HCP, 3-card spade support"
+    makeAlertableCall (T.Bid 2 T.Diamonds)
+                      ("6" .+ NDash .+ "7 HCP, 3-card spade support")
 
 
 b1C1D1S2H :: Action
@@ -478,7 +483,8 @@ b1C1D1S2C = do
     maxSuitLength T.Hearts 4
     maxSuitLength T.Spades 2
     pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
-    makeAlertableCall (T.Bid 2 T.Clubs) "6-7 HCP, at most 2 spades"
+    makeAlertableCall (T.Bid 2 T.Clubs)
+                      ("67" .+ NDash .+ " HCP, at most 2 spades")
 
 
 ---------------------

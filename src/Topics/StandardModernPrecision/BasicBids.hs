@@ -18,13 +18,14 @@ module Topics.StandardModernPrecision.BasicBids(
 import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
-import Topic(wrap, Situations)
 import Auction(forbid, pointRange, suitLength, minSuitLength, hasTopN,
                Action, balancedHand, constrain, makeCall, makeAlertableCall,
                makePass, alternatives)
-import Situation(Situation, (<~))
 import CommonBids(cannotPreempt)
+import Output(Punct(..), (.+))
+import Situation(Situation, (<~))
 import qualified Terminology as T
+import Topic(wrap, Situations)
 
 
 -- Because we're not using the Rule of 20 and its ilk, we're going to skip the
@@ -48,14 +49,14 @@ b1N :: Action
 b1N = do
     pointRange 14 16
     balancedHand
-    makeAlertableCall (T.Bid 1 T.Notrump) "14-16 HCP"
+    makeAlertableCall (T.Bid 1 T.Notrump) ("14" .+ NDash .+ "16 HCP")
 
 
 b2N :: Action
 b2N = do
     pointRange 19 20  -- A modification from Part 1
     balancedHand
-    makeAlertableCall (T.Bid 2 T.Notrump) "19-20 HCP"
+    makeAlertableCall (T.Bid 2 T.Notrump) ("19" .+ NDash .+ "20 HCP")
 
 
 b3N :: Action
@@ -89,7 +90,7 @@ b2C = do
     forbid b1C
     mapM_ (forbid . b1M) T.majorSuits
     minSuitLength T.Clubs 6
-    makeAlertableCall (T.Bid 2 T.Clubs) "10-15 HCP, 6+ clubs"
+    makeAlertableCall (T.Bid 2 T.Clubs) ("10" .+ NDash .+ "15 HCP, 6+ clubs")
 
 
 b2D :: Action
