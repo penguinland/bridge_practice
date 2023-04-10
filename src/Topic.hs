@@ -54,7 +54,7 @@ stdWrap = wrapVulDlr . return
 
 data Topic = Topic { topicName :: Commentary
                    , refName :: String
-                   , topicSituations :: Situations}
+                   , topicSituations :: Situations }
 
 
 -- The intuitive name for this is `topic`, but most of the actual Topic values
