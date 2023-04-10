@@ -1,7 +1,7 @@
 module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 
 import Output((.+))
-import Topic(Topic(..), wrap, stdWrap, wrapVulDlr, Situations)
+import Topic(Topic(..), wrap, stdWrap, wrapVulDlr, Situations, makeTopic)
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, alternatives, constrain, makePass, makeCall,
                makeAlertableCall)
@@ -252,7 +252,7 @@ correctSignoffHearts = let
 
 
 topic :: Topic
-topic = Topic "SMP 2D auctions" "SMP2D" situations
+topic = makeTopic "SMP 2D auctions" "SMP2D" situations
   where
     situations = wrap [ open
                       , wrap [ immediateSignoffSpades3

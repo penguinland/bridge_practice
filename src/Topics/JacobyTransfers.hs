@@ -1,7 +1,7 @@
 module Topics.JacobyTransfers(topic) where
 
 import Output(Punct(NDash), (.+))
-import Topic(Topic(..), Situations, wrap, stdWrap, wrapVulDlr)
+import Topic(Topic, Situations, wrap, stdWrap, wrapVulDlr, makeTopic)
 import Auction(forbid, makeCall, makeAlertableCall, makePass, pointRange,
                suitLength, minSuitLength, Action, balancedHand, constrain)
 import Situation(situation, (<~))
@@ -251,7 +251,7 @@ majors55gf = let
 
 
 topic :: Topic
-topic = Topic "Jacoby transfers"  "JacTrans" $
+topic = makeTopic "Jacoby transfers"  "JacTrans" $
     wrap [ initiateTransferWeak
          , initiateTransferBInv
          , initiateTransferBGf

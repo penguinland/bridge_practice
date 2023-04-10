@@ -1,7 +1,7 @@
 module Topics.StandardModernPrecision.Mafia(topic) where
 
 import Output(Punct(..), (.+))
-import Topic(Topic(..), wrap, Situations)
+import Topic(Topic(..), wrap, Situations, makeTopic)
 import Auction(forbid, minSuitLength, suitLength, balancedHand, equalLength,
                longerThan, displayLastCall)
 import Situation(situation, (<~))
@@ -147,7 +147,7 @@ jumpBid = let
 
 
 topic :: Topic
-topic = Topic "MaFiA bids by opener" "MaFiA" situations
+topic = makeTopic "MaFiA bids by opener" "MaFiA" situations
   where
     situations = wrap [ notrump
                       , wrap [oneMajor, oneMajorMinor]

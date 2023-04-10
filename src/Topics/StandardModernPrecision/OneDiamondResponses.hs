@@ -1,7 +1,7 @@
 module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
 import Output(Punct(..), (.+))
-import Topic(Topic(..), wrap, Situations)
+import Topic(Topic(..), wrap, Situations, makeTopic)
 import Auction(maxSuitLength, minSuitLength, pointRange, displayLastCall,
                alternatives)
 import Situation(situation, (<~))
@@ -288,7 +288,7 @@ majorGame = let
 
 
 topic :: Topic
-topic = Topic "SMP immediate responses to 1D openings" "smp1d" situations
+topic = makeTopic "SMP immediate responses to 1D openings" "smp1d" situations
   where
     situations = wrap [ wrap [twoMinor6M, twoMinorLongInv, twoMinorBothInv]
                       , oneMajor

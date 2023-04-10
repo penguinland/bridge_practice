@@ -3,7 +3,7 @@ module Topics.StandardModernPrecision.OneClubResponses(
 , topicExtras) where
 
 import Output(Punct(..), (.+))
-import Topic(Topic(..), wrap, Situations)
+import Topic(Topic(..), wrap, Situations, makeTopic)
 import Auction(forbid, maxSuitLength, makePass, pointRange)
 import Situation(situation, (<~))
 import CommonBids(cannotPreempt)
@@ -282,7 +282,7 @@ passTwoSpades = let
 
 
 topic :: Topic
-topic = Topic "SMP immediate responses to 1C openings" "SMP1C" situations
+topic = makeTopic "SMP immediate responses to 1C openings" "SMP1C" situations
   where
     situations = wrap [ oneDiamond
                       , oneHeart  -- Differs from topicExtras, below
@@ -295,8 +295,8 @@ topic = Topic "SMP immediate responses to 1C openings" "SMP1C" situations
                       ]
 
 topicExtras :: Topic
-topicExtras = Topic "SMP modified immediate responses to 1C openings"
-                    "SMP1CM" situations
+topicExtras = makeTopic "SMP modified immediate responses to 1C openings"
+                        "SMP1CM" situations
   where
     situations = wrap [ oneDiamond
                       , oneHeartNoSpades  -- Differs from topic, above

@@ -1,7 +1,7 @@
 module Topics.StandardModernPrecision.MafiaResponses(topic) where
 
 import Output((.+))
-import Topic(Topic(..), wrap, Situations)
+import Topic(Topic(..), wrap, Situations, makeTopic)
 import Auction(Action, suitLength, maxSuitLength)
 import Situation(Situation, situation, (<~))
 import qualified Terminology as T
@@ -249,7 +249,7 @@ maxNoMajors = let
 
 
 topic :: Topic
-topic = Topic "MaFiA responses" "MafResp" situations
+topic = makeTopic "MaFiA responses" "MafResp" situations
   where
     situations = wrap [ minSupport
                       , maxSupportSemibalanced

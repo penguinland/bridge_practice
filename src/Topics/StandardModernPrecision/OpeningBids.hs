@@ -1,7 +1,7 @@
 module Topics.StandardModernPrecision.OpeningBids(topic) where
 
 import Output((.+))
-import Topic(Topic(..), wrap, Situations)
+import Topic(Topic(..), wrap, Situations, makeTopic)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified Topics.StandardModernPrecision.BasicBids as B
@@ -92,7 +92,7 @@ twoNotrump = let
 
 
 topic :: Topic
-topic = Topic "SMP opening bids" "SmpOpen" situations
+topic = makeTopic "SMP opening bids" "SmpOpen" situations
   where
     situations = wrap [ oneClub
                       , oneDiamond

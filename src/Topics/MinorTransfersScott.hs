@@ -1,7 +1,7 @@
 module Topics.MinorTransfersScott(topic) where
 
 import Output((.+))
-import Topic(Topic(..), Situations, wrap)
+import Topic(Topic(..), Situations, wrap, makeTopic)
 import Auction(forbid, makeCall, makeAlertableCall, makePass, pointRange,
                hasTopN, constrain, minSuitLength, maxSuitLength, Action,
                balancedHand, withholdBid)
@@ -266,7 +266,7 @@ notrumpInvite = let
 
 
 topic :: Topic
-topic = Topic "Scott's version of minor suit transfers" "MTScott" $
+topic = makeTopic "Scott's version of minor suit transfers" "MTScott" $
         wrap [ initiateTransfer
              , completeTransfer
              , superacceptTransfer
