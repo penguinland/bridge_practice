@@ -49,7 +49,7 @@ oneHeartNoSpades = let
         oppsPass
     explanation =
         "You've got a game-forcing hand but slam is unlikely. With 8 to 11 HCP\
-      \ and no spade suit, bid " .+ T.Bid 1 T.Hearts .+ " to show\
+      \ and no 5-card spade suit, bid " .+ T.Bid 1 T.Hearts .+ " to show\
       \ this kind of hand. Partner's rebid will be a natural 5-card suit, not\
       \ MaFiA."
   in

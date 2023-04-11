@@ -8,6 +8,7 @@ module Topics.StandardModernPrecision.Bids1C1Halt(
   , b1C1H2D
   , b1C1H2H
   , b1C1H2S
+  , b1C1H2N
   -- New bids start here
   , b1C1H1S1N  -- Responses when opener rebids 1S
   , b1C1H1S2C
@@ -44,7 +45,7 @@ import Auction(forbid, suitLength, minSuitLength, maxSuitLength, Action,
 import qualified Terminology as T
 import Topics.StandardModernPrecision.Bids1C(
     b1C, b1C1Hnos, b1C1H1S, b1C1H1N, b1C1H2C, b1C1H2D, b1C1H2H, b1C1H2S,
-    tripleFourOneShape)
+    b1C1H2N, tripleFourOneShape)
 
 -- Alias the bid properly to re-export from here.
 b1C1H :: Action

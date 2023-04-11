@@ -40,15 +40,12 @@ strongNotrumpRebid = let
         pointRange 21 40
     explanation =
         "Partner's " .+ T.Bid 1 T.Hearts .+ " shows game-forcing strength. " .+
-        "You've got a balanced hand with no 5-card suit, so show it by " .+
-        "bidding " .+ T.Bid 1 T.Notrump .+ ", even with a hand that would " .+
-        "have jumped over a " .+ T.Bid 1 T.Diamonds .+ " response! You're " .+
-        "in a game-forcing auction, so there is no need to tell partner " .+
-        "you've got extra strength until partner tries signing off (at " .+
-        "which point you keep going to show your strength). Systems are " .+
-        "on, so partner should have an easy time placing the contract."
+        "You've got a balanced hand with no 5-card suit but a bunch of " .+
+        "extra strength, so slam is likely even if partner is a minimum. " .+
+        "Show it by bidding " .+ T.Bid 2 T.Notrump .+ ". Systems are on, " .+
+        "so partner should have an easy time placing the contract."
   in
-    smpWrapS . return $ situation "1Nstr" action B.b1C1H1N explanation
+    smpWrapS . return $ situation "1Nstr" action B.b1C1H2N explanation
 
 
 naturalSuitRebid :: Situations

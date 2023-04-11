@@ -54,6 +54,7 @@ module Topics.StandardModernPrecision.Bids1C(
   , b1C1H2D
   , b1C1H2H
   , b1C1H2S
+  , b1C1H2N
   , tripleFourOneShape  -- For use when defining other bids
 ) where
 
@@ -503,8 +504,7 @@ b1C1H1N = do
     balancedHand
     forbid b2N
     mapM_ (`maxSuitLength` 4) T.allSuits
-    -- Any strength goes here: we're in a game-forcing auction, so no need to
-    -- jump to show extras until partner attempts to sign off.
+    pointRange 17 18
     makeCall (T.Bid 1 T.Notrump)
 
 
@@ -540,3 +540,15 @@ b1C1H2S :: Action
 b1C1H2S = do
     tripleFourOneShape
     makeAlertableCall (T.Bid 2 T.Spades) "any 4441 hand"
+
+
+-- TODO: we're already in a game-forcing auction. Do we really need to jump to
+-- show the extra strength? Maybe we should just bid 1N and surprise partner
+-- later by bidding on when they try signing off.
+b1C1H2N :: Action
+b1C1H2N = do
+    balancedHand
+    forbid b2N
+    mapM_ (`maxSuitLength` 4) T.allSuits
+    pointRange 21 40
+    makeCall (T.Bid 1 T.Notrump)
