@@ -18,7 +18,7 @@ main :: IO ()
 main = let
     topics = [ --SmpOpenings.topic
              --, Smp1CResponses.topic
-              Smp1CResponses.topicExtras
+              Smp1CResponses.topicAlt
              --, Mafia.topic
              --, MafiaResponses.topic
              --, Smp1DResponses.topic

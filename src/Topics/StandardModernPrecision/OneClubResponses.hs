@@ -1,6 +1,6 @@
 module Topics.StandardModernPrecision.OneClubResponses(
   topic
-, topicExtras) where
+, topicAlt) where
 
 import Auction(forbid, maxSuitLength, makePass, pointRange)
 import CommonBids(cannotPreempt)
@@ -297,8 +297,8 @@ topic = makeTopic description "SMP1C" situations
                       , passTwoSpades
                       ]
 
-topicExtras :: Topic
-topicExtras = makeTopic description "SMP1CM" situations
+topicAlt :: Topic
+topicAlt = makeTopic description "SMP1CM" situations
   where
     description = "SMP modified immediate responses to " .+ T.Bid 1 T.Clubs .+
                   " openings"
