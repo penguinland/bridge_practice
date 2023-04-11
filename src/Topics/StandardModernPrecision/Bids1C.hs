@@ -502,9 +502,9 @@ b1C1H1S = do
 b1C1H1N :: Action
 b1C1H1N = do
     balancedHand
-    forbid b2N
     mapM_ (`maxSuitLength` 4) T.allSuits
     pointRange 17 18
+    forbid b2N  -- Redundant for now, important if the point range is removed
     makeCall (T.Bid 1 T.Notrump)
 
 
@@ -548,7 +548,6 @@ b1C1H2S = do
 b1C1H2N :: Action
 b1C1H2N = do
     balancedHand
-    forbid b2N
     mapM_ (`maxSuitLength` 4) T.allSuits
     pointRange 21 40
-    makeCall (T.Bid 1 T.Notrump)
+    makeCall (T.Bid 2 T.Notrump)
