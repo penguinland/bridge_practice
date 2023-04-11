@@ -10,6 +10,8 @@ import qualified Topics.StandardModernPrecision.OneDiamondResponses as Smp1DResp
 import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
+import qualified Topics.StandardModernPrecision.OneClubOneHeartAltResponses as
+    Smp1C1Halt
 
 import ProblemSet(outputLatex)
 
@@ -19,6 +21,7 @@ main = let
     topics = [ --SmpOpenings.topic
              --, Smp1CResponses.topic
               Smp1CResponses.topicAlt
+             , Smp1C1Halt.topic
              --, Mafia.topic
              --, MafiaResponses.topic
              --, Smp1DResponses.topic
