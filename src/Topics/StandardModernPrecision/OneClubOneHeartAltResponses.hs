@@ -8,7 +8,7 @@ import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
 import Topics.StandardModernPrecision.BasicBids(firstSeatOpener, oppsPass,
-                                                {-smpWrapN,-} smpWrapS)
+                                                smpWrapN, smpWrapS)
 import qualified Topics.StandardModernPrecision.Bids1C1Halt as B
 
 
@@ -91,6 +91,32 @@ tripleFourOne = let
     smpWrapS . return $ situation "1C1H2S" action B.b1C1H2S explanation
 
 
+supportOpener :: Situations
+supportOpener = let
+    sit (openerBid, responderBid) = let
+        action = do
+            firstSeatOpener
+            B.b1C
+            oppsPass
+            B.b1C1H
+            oppsPass
+            -- We explicitly ignore the result just to make the compiler happy
+            _ <- openerBid
+            oppsPass
+        explanation =
+            "You've got support for partner's suit, and setting trump early " .+
+            "is important. Raise partner's suit to set trumps. Partner can " .+
+            "sign off in game, or start control bidding with slam interest, " .+
+            "or search for notrump instead of a minor-suit game by bidding " .+
+            "stoppers up the line."
+      in
+        situation "Fit" action responderBid explanation
+  in
+    smpWrapN $ return sit <~ [(B.b1C1H1S, B.b1C1H1S2S),
+                              (B.b1C1H2C, B.b1C1H2C3C),
+                              (B.b1C1H2D, B.b1C1H2D3D),
+                              (B.b1C1H2H, B.b1C1H2H3H)]
+
 topic :: Topic
 topic = makeTopic description "SMP1C1Hnos" situations
   where
@@ -98,4 +124,5 @@ topic = makeTopic description "SMP1C1Hnos" situations
                   NDash .+ T.Bid 1 T.Hearts .+ " auctions"
     situations = wrap [ wrap [notrumpRebid, tripleFourOne, strongNotrumpRebid]
                       , naturalSuitRebid
+                      , supportOpener
                       ]

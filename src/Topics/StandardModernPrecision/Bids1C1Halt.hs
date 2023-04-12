@@ -119,8 +119,9 @@ b1C1H2C2H = do
 
 b1C1H2C2S :: Action
 b1C1H2C2S = do
-    forbid b1C1H2C3C
+    forbid b1C1H2C2D
     forbid b1C1H2C2H
+    forbid b1C1H2C3C
     minSuitLength T.Diamonds 5
     makeAlertableCall (T.Bid 2 T.Diamonds) "5+ diamonds"
 
@@ -138,6 +139,7 @@ b1C1H2C3C :: Action
 b1C1H2C3C = do
     mapM_ forbid [balancedHand, b1C1H2C2D, b1C1H2C2H, b1C1H2C2N]
     minSuitLength T.Clubs 3
+    maxSuitLength T.Diamonds 4
     makeCall (T.Bid 3 T.Clubs)
 
 
