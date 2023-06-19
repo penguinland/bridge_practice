@@ -1,6 +1,7 @@
 module Topics.OneNotrump(texasTransfers) where
 
-import Auction(makePass)  -- TODO: replace this with something more intelligent
+-- TODO: replace makePass with something more intelligent
+import Auction(makePass, suitLength)
 import CommonBids(setOpener)
 import Output((.+))
 import Situation(situation, (<~))
@@ -81,10 +82,35 @@ completeTransfer = let
                       <~ T.allVulnerabilities <~ [T.South, T.East]
 
 
+completeTransferDoubleton :: Situations
+completeTransferDoubleton = let
+    sit (partnerBid, ourBid, suit) = let
+        action = do
+            setOpener T.South
+            B.b1N
+            makePass
+            _ <- partnerBid  -- Make the linter happy
+            makePass
+            suitLength suit 2
+        explanation =
+            "We have opened " .+ T.Bid 1 T.Notrump .+ ", and partner has " .+
+            "made a Texas Transfer. Complete the transfer, and see what " .+
+            "they do next. Even if we only have a doubleton, partner is " .+
+            "promising a 6-card suit, so we've got a fit."
+        in situation "comp2" action ourBid explanation
+  in
+    -- Same optimization here: don't have North make a Texas Transfer as a
+    -- passed hand.
+    wrap $ return sit <~ [ (B.b1N4D, B.b1N4D4H, T.Hearts)
+                         , (B.b1N4H, B.b1N4H4S, T.Spades)]
+                      <~ T.allVulnerabilities <~ [T.South, T.East]
+
+
 texasTransfers :: Topic
 texasTransfers = makeTopic "Texas Transfers" "TexTr" situations
   where
     situations = wrap [ makeTransferSignoff
                       , makeTransferSlam
                       , completeTransfer
+                      , completeTransferDoubleton
                       ]
