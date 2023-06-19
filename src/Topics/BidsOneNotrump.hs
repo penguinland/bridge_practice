@@ -34,7 +34,7 @@ maxNotrumpStrength = 17
 strengthNeededForGame :: Int
 strengthNeededForGame = 25
 strengthNeededForSlam :: Int
-strengthNeededForSlam = 31
+strengthNeededForSlam = 30
 
 gameForcing :: Action  -- Could be stronger
 gameForcing = pointRange (strengthNeededForGame - minNotrumpStrength) 40

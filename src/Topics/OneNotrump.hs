@@ -1,7 +1,7 @@
 module Topics.OneNotrump(texasTransfers) where
 
 -- TODO: replace makePass with something more intelligent
-import Auction(makePass, suitLength)
+import Auction(makePass, suitLength, minSuitLength)
 import CommonBids(setOpener)
 import Output((.+))
 import Situation(situation, (<~))
@@ -106,11 +106,62 @@ completeTransferDoubleton = let
                       <~ T.allVulnerabilities <~ [T.South, T.East]
 
 
+-- WARNING: This situation is rare, and typically requires generating 100,000
+-- boards. Use it sparingly.
+completeTransferSuperfit :: Situations
+completeTransferSuperfit = let
+    sit (partnerBid, ourBid, suit) = let
+        action = do
+            setOpener T.South
+            B.b1N
+            makePass
+            _ <- partnerBid  -- Make the linter happy
+            makePass
+            suitLength suit 5
+        explanation =
+            "We have opened " .+ T.Bid 1 T.Notrump .+ ", and partner has " .+
+            "made a Texas Transfer. Complete the transfer, and see what " .+
+            "they do next. Even if we know we have an 11-card fit, " .+
+            "partner might only have 10 HCP. Leave it up to them whether " .+
+            "to investigate slam."
+        in situation "comp5" action ourBid explanation
+  in
+    -- Same optimization here: don't have North make a Texas Transfer as a
+    -- passed hand.
+    wrap $ return sit <~ [ (B.b1N4D, B.b1N4D4H, T.Hearts)
+                         , (B.b1N4H, B.b1N4H4S, T.Spades)]
+                      <~ T.allVulnerabilities <~ [T.South, T.East]
+
+
+transferSlamInvite :: Situations
+transferSlamInvite = let
+    sit (bid, suit) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            minSuitLength suit 6
+            B.slamInvite
+        explanation =
+            "Partner has opened " .+ T.Bid 1 T.Notrump .+ ", and you've " .+
+            "got a 6-card major and a slam invite. Make a Jacoby transfer, " .+
+            "then raise to game. If partner is a maximum, they'll " .+
+            "investigate slam, and with a minimum, they'll pass."
+        in situation "SInv" action bid explanation
+  in
+    wrap $ return sit <~ [(B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
+                      <~ T.allVulnerabilities <~ [T.North, T.West]
+
+
 texasTransfers :: Topic
 texasTransfers = makeTopic "Texas Transfers" "TexTr" situations
   where
     situations = wrap [ makeTransferSignoff
                       , makeTransferSlam
                       , completeTransfer
-                      , completeTransferDoubleton
+                      -- Make the unusual variants rarer than the common one.
+                      , wrap [ completeTransferDoubleton
+                             , completeTransferSuperfit
+                             , transferSlamInvite
+                             ]
                       ]
