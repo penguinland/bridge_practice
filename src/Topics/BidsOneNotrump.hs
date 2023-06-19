@@ -4,7 +4,9 @@ module Topics.BidsOneNotrump(
   , b1N2D
   , b1N2H
   , b1N4D
+  , b1N4D4H
   , b1N4H
+  , b1N4H4S
   -- Strengths
   , gameForcing  -- Game or stronger
   , slamInterest
@@ -85,6 +87,13 @@ b1N4D = texasTransfer T.Hearts
 
 b1N4H :: Action
 b1N4H = texasTransfer T.Spades
+
+-- Opener should always complete the Texas Transfer: no constraints on that.
+b1N4D4H :: Action
+b1N4D4H = makeCall $ T.Bid 4 T.Hearts
+
+b1N4H4S :: Action
+b1N4H4S = makeCall $ T.Bid 4 T.Spades
 
 
 jacobyTransfer :: T.Suit -> Action

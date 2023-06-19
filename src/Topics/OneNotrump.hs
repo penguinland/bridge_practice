@@ -60,10 +60,31 @@ makeTransferSlam = let
                       <~ [T.North, T.West]
 
 
+completeTransfer :: Situations
+completeTransfer = let
+    sit (partnerBid, ourBid) = let
+        action = do
+            setOpener T.South
+            B.b1N
+            makePass
+            _ <- partnerBid  -- Make the linter happy
+            makePass
+        explanation =
+            "We have opened " .+ T.Bid 1 T.Notrump .+ ", and partner has " .+
+            "made a Texas Transfer. Complete the transfer, and see what " .+
+            "they do next."
+        in situation "comp" action ourBid explanation
+  in
+    -- Same optimization here: don't have North make a Texas Transfer as a
+    -- passed hand.
+    wrap $ return sit <~ [(B.b1N4D, B.b1N4D4H), (B.b1N4H, B.b1N4H4S)]
+                      <~ T.allVulnerabilities <~ [T.South, T.East]
+
+
 texasTransfers :: Topic
 texasTransfers = makeTopic "Texas Transfers" "TexTr" situations
   where
     situations = wrap [ makeTransferSignoff
                       , makeTransferSlam
-                      --, completeTransfer
+                      , completeTransfer
                       ]
