@@ -37,10 +37,33 @@ makeTransferSignoff = let
                       <~ [T.North, T.West]
 
 
+makeTransferSlam :: Situations
+makeTransferSlam = let
+    sit bid = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.slamInterest
+        explanation =
+            "Partner has opened " .+ T.Bid 1 T.Notrump .+ ", and you've " .+
+            "got a 6-card major and slam interest. " .+
+            "Make a Texas Transfer by bidding 1 below your suit. " .+
+            "Partner will complete the transfer by bidding your suit, and " .+
+            "then you can investigate slam with whatever systems you and " .+
+            "partner have agreed on. You're guaranteed a trump fit because " .+
+            "partner should have at least a doubleton in every suit."
+        in situation "SI" action bid explanation
+  in
+    -- Note that South cannot be a passed hand and have interest in slam.
+    wrap $ return sit <~ [B.b1N4D, B.b1N4H] <~ T.allVulnerabilities
+                      <~ [T.North, T.West]
+
+
 texasTransfers :: Topic
 texasTransfers = makeTopic "Texas Transfers" "TexTr" situations
   where
     situations = wrap [ makeTransferSignoff
-                      --, makeTransferSlam
+                      , makeTransferSlam
                       --, completeTransfer
                       ]
