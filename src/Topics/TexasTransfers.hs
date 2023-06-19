@@ -1,4 +1,4 @@
-module Topics.OneNotrump(texasTransfers) where
+module Topics.TexasTransfers(topic) where
 
 -- TODO: replace makePass with something more intelligent
 import Auction(makePass, suitLength, minSuitLength)
@@ -153,13 +153,13 @@ transferSlamInvite = let
                       <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
-texasTransfers :: Topic
-texasTransfers = makeTopic "Texas Transfers" "TexTr" situations
+topic :: Topic
+topic = makeTopic "Texas Transfers" "TexTr" situations
   where
     situations = wrap [ makeTransferSignoff
                       , makeTransferSlam
                       , completeTransfer
-                      -- Make the unusual variants rarer than the common one.
+                      -- Make the unusual variants rarer than the common ones.
                       , wrap [ completeTransferDoubleton
                              , completeTransferSuperfit
                              , transferSlamInvite
