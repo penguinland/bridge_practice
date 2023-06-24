@@ -22,8 +22,10 @@ pushd /tmp > /dev/null
 echo ""
 echo "Generating PDFs..."
 xelatex test.tex
+xelatex test.tex  # Rerun because table widths have been recalculated
 mv test.pdf questions.pdf
 xelatex "\let\showsolutions\relax\input{test}"
+xelatex "\let\showsolutions\relax\input{test}"  # More table width recalculation
 mv test.pdf solutions.pdf
 
 # Different OSes have different PDF viewers.
