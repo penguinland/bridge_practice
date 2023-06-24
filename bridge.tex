@@ -21,7 +21,7 @@
 \newcommand{\hand}[4]{{%
   %Example: \hand{AKJ765}{AK9}{--}{T983}
   \setlength{\tabcolsep}{0.5ex}
-  \begin{tabular}[t]{rl}
+  \begin{tabular}[t]{|r|l|}
     \s&#1\\
     \h&#2\\
     \d&#3\\
@@ -32,7 +32,7 @@
 \newcommand{\NESW}{{
   \setlength{\tabcolsep}{0mm}
   \begin{centering}
-  \begin{tabular}[t]{|ccc|}
+  \begin{tabular}[t]{|c|c|c|}
     \hline
     &N&\\
     ~W&&E~{}~\\
@@ -56,7 +56,7 @@
 
 \newcommand{\fulldeal}[6]{
   % Arguments are: dealer, vulnerability, N E S W
-  \begin{tabular}[t]{lll}
+  \begin{tabular}[t]{|l|l|l|}
     \stepcounter{dealno}
     \textbf{Deal \arabic{dealno}}&#3&
     \begin{tabular}[t]{l}Dlr: #1\\ Vul: #2\end{tabular}\\
@@ -68,7 +68,7 @@
 \newcommand{\isolatedhand}[6]{
   % Arguments are: dealer, vulnerability, N E S W
   % We only want to show dealer, vulnerability, and the South hand
-  \begin{tabular}{lll}
+  \begin{tabular}{|l|l|l|}
     \stepcounter{dealno}
     \textbf{Deal \arabic{dealno}}&
     \begin{tabular}[t]{l}
@@ -87,8 +87,8 @@
 }
 
 \newenvironment{bidding}{
-  \begin{minipage}[t]{1.9in}
-    \begin{tabular}{llll}%
+  \begin{minipage}[t]{2in}
+    \begin{tabular}{|l|l|l|l|}%
       \emph{West}&
       \emph{North}&
       \emph{East}&
@@ -117,12 +117,17 @@
     #1\\\\#2
   \end{tabular}
   &
-  \begin{minipage}[t]{3in}
-    Answer: #3\\ % Extra separation between the short answer and the explanation
+  \begin{minipage}[t]{2.58in}
+    Answer: #3
 
-    #4\\ % TODO: Maybe just change the paragraph separation length?
+    ~ % Extra spearation between the short answer and the explanation.
 
-    {\footnotesize Debug Ref.: #5}
+    #4 % TODO: Maybe just change the paragraph separation length?
+
+    ~ % Note that using \\ in a minipage gives "underful hbox" errors.
+
+    {\footnotesize Debug Ref.: #5
+      }
   \end{minipage}
   \vspace*{0.5ex}\\
 }
@@ -138,7 +143,7 @@
 
 \newenvironment{problemset}{
   \begin{center}
-    \begin{longtable}[H]{ll}
+    \begin{longtable}[H]{|l|l|}
 }{
       \hline
     \end{longtable}
