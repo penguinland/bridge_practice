@@ -21,7 +21,7 @@
 \newcommand{\hand}[4]{{%
   %Example: \hand{AKJ765}{AK9}{--}{T983}
   \setlength{\tabcolsep}{0.5ex}
-  \begin{tabular}[t]{|r|l|}
+  \begin{tabular}[t]{rl}
     \s&#1\\
     \h&#2\\
     \d&#3\\
@@ -32,7 +32,7 @@
 \newcommand{\NESW}{{
   \setlength{\tabcolsep}{0mm}
   \begin{centering}
-  \begin{tabular}[t]{|c|c|c|}
+  \begin{tabular}[t]{|ccc|}
     \hline
     &N&\\
     ~W&&E~{}~\\
@@ -56,7 +56,7 @@
 
 \newcommand{\fulldeal}[6]{
   % Arguments are: dealer, vulnerability, N E S W
-  \begin{tabular}[t]{|l|l|l|}
+  \begin{tabular}[t]{lll}
     \stepcounter{dealno}
     \textbf{Deal \arabic{dealno}}&#3&
     \begin{tabular}[t]{l}Dlr: #1\\ Vul: #2\end{tabular}\\
@@ -68,7 +68,7 @@
 \newcommand{\isolatedhand}[6]{
   % Arguments are: dealer, vulnerability, N E S W
   % We only want to show dealer, vulnerability, and the South hand
-  \begin{tabular}{|l|l|l|}
+  \begin{tabular}{lll}
     \stepcounter{dealno}
     \textbf{Deal \arabic{dealno}}&
     \begin{tabular}[t]{l}
@@ -88,7 +88,7 @@
 
 \newenvironment{bidding}{
   \begin{minipage}[t]{2in}
-    \begin{tabular}{|l|l|l|l|}%
+    \begin{tabular}{llll}%
       \emph{West}&
       \emph{North}&
       \emph{East}&
@@ -126,8 +126,7 @@
 
     ~ % Note that using \\ in a minipage gives "underful hbox" errors.
 
-    {\footnotesize Debug Ref.: #5
-      }
+    {\footnotesize Debug Ref.: #5}
   \end{minipage}
   \vspace*{0.5ex}\\
 }
@@ -143,7 +142,7 @@
 
 \newenvironment{problemset}{
   \begin{center}
-    \begin{longtable}[H]{|l|l|}
+    \begin{longtable}[H]{ll}
 }{
       \hline
     \end{longtable}
