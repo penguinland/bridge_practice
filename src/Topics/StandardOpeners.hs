@@ -23,7 +23,7 @@ oneNotrump = let
         T.Bid 1 T.Notrump .+ ". No need to plan a second bid;\
       \ partner is now captain of the auction and will take over for you."
   in
-    stdWrap $ situation "1N" action SO.b1n explanation
+    stdWrap $ situation "1N" action SO.b1N explanation
 
 
 twoNotrump :: Situations
@@ -35,7 +35,7 @@ twoNotrump = let
         T.Bid 2 T.Notrump .+ ". No need to plan a second bid;\
       \ partner is now captain of the auction and will take over for you."
   in
-    stdWrap $ situation "2N" action SO.b2n explanation
+    stdWrap $ situation "2N" action SO.b2N explanation
 
 
 oneSpade :: Situations
@@ -47,7 +47,7 @@ oneSpade = let
         "With a 5-card spade suit and a hand unsuitable for opening \
       \ notrump, open " .+ T.Bid 1 T.Spades .+ "."
   in
-    stdWrap $ situation "1S" action SO.b1s explanation
+    stdWrap $ situation "1S" action SO.b1S explanation
 
 
 oneHeart :: Situations
@@ -59,7 +59,7 @@ oneHeart = let
         "With a 5-card heart suit and a hand unsuitable for opening \
       \ notrump, open " .+ T.Bid 1 T.Hearts .+ "."
   in
-    stdWrap $ situation "1H" action SO.b1h explanation
+    stdWrap $ situation "1H" action SO.b1H explanation
 
 
 bothMajorsReverse :: Situations
@@ -73,7 +73,7 @@ bothMajorsReverse = let
       \ open " .+ T.Bid 1 T.Hearts .+ ", planning to rebid " .+
         T.Bid 2 T.Spades .+ " next turn."
   in
-    stdWrap $ situation "MajRev" action SO.b1h explanation
+    stdWrap $ situation "MajRev" action SO.b1H explanation
 
 
 bothMajorsNoReverse :: Situations
@@ -87,7 +87,7 @@ bothMajorsNoReverse = let
       \ reverse, open " .+ T.Bid 1 T.Spades .+ ", planning to rebid " .+
         T.Bid 2 T.Hearts .+ " next turn."
   in
-    stdWrap $ situation "MajNoRev" action SO.b1s explanation
+    stdWrap $ situation "MajNoRev" action SO.b1S explanation
 
 
 oneDiamond :: Situations
@@ -101,7 +101,7 @@ oneDiamond = let
       \ notrump, open " .+ T.Bid 1 T.Diamonds .+ " when \
       \ diamonds is your only minor."
   in
-    stdWrap $ situation "1D1Suit" action SO.b1d explanation
+    stdWrap $ situation "1D1Suit" action SO.b1D explanation
 
 
 oneDiamond3Cards :: Situations
@@ -119,7 +119,7 @@ oneDiamond3Cards = let
       \ only time you'd open 1D with a 3-card suit in standard openings is \
       \ when your shape is exactly 4=4=3=2."
   in
-    stdWrap $ situation "1D4432" action SO.b1d explanation
+    stdWrap $ situation "1D4432" action SO.b1D explanation
 
 
 oneClub :: Situations
@@ -132,7 +132,7 @@ oneClub = let
         "With no 5-card major and a hand unsuitable for opening  notrump,\
       \ open " .+ T.Bid 1 T.Clubs .+ " when  clubs is your only minor."
   in
-    stdWrap $ situation "1C1Suit" action SO.b1c explanation
+    stdWrap $ situation "1C1Suit" action SO.b1C explanation
 
 
 oneClubEqualMinors :: Situations
@@ -148,7 +148,7 @@ oneClubEqualMinors = let
           \ your minors are of equal, short length. As the saying goes, \
           \ ``up the line with 3s and 4s, from the top with 5s or mores.''"
       in
-        situation "1C1Suit" action SO.b1c explanation
+        situation "1C1Suit" action SO.b1C explanation
   in
     wrapVulDlr $ return sit <~ [3, 4]
 
@@ -164,7 +164,7 @@ bothMinorsNoReverse = let
         T.Bid 1 T.Diamonds .+ ", planning to rebid " .+
         T.Bid 2 T.Clubs .+ " next turn."
   in
-    stdWrap $ situation "MinNoRev" action SO.b1d explanation
+    stdWrap $ situation "MinNoRev" action SO.b1D explanation
 
 
 bothMinorsNoReverseShortD :: Situations
@@ -183,7 +183,7 @@ bothMinorsNoReverseShortD = let
       \ enough strength to make a 3-level contract viable when partner has\
       \ a minimum."
   in
-    stdWrap $ situation "MinNoRv4D" action SO.b1d explanation
+    stdWrap $ situation "MinNoRv4D" action SO.b1D explanation
 
 
 bothMinorsReverse :: Situations
@@ -197,7 +197,7 @@ bothMinorsReverse = let
         T.Bid 1 T.Clubs .+ ", planning to rebid " .+
         T.Bid 2 T.Diamonds .+ " next turn."
   in
-    stdWrap $ situation "MinRev55" action SO.b1c explanation
+    stdWrap $ situation "MinRev55" action SO.b1C explanation
 
 
 

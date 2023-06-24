@@ -1,11 +1,11 @@
 module StandardOpenings(
-  b1c
-, b1d
-, b1h
-, b1s
-, b1n
-, b2n
-, b2c
+  b1C
+, b1D
+, b1H
+, b1S
+, b1N
+, b2N
+, b2C
 ) where
 
 -- NOTE: none of these include point ranges, because they vary depending on
@@ -18,19 +18,19 @@ import qualified CommonBids as B
 import qualified Terminology as T
 
 
-b1n :: Action
-b1n = B.strong1NT
+b1N :: Action
+b1N = B.strong1NT
 
 
-b2n :: Action
-b2n = do
+b2N :: Action
+b2N = do
     balancedHand
     pointRange 20 21
     makeCall (T.Bid 2 T.Notrump)
 
 
-b2c :: Action
-b2c = do
+b2C :: Action
+b2C = do
     pointRange 22 40
     makeCall (T.Bid 2 T.Clubs)
 
@@ -38,9 +38,9 @@ b2c = do
 -- Helper function, not exported
 notTooStrong :: Action
 notTooStrong = do
-    forbid b1n
-    forbid b2n
-    forbid b2c
+    forbid b1N
+    forbid b2N
+    forbid b2C
 
 
 -- Helper function, not exported
@@ -54,8 +54,8 @@ reverseInMajors = do
     minSuitLength T.Spades 5
     reverseStrength
 
-b1s :: Action
-b1s = do
+b1S :: Action
+b1S = do
     notTooStrong
     minSuitLength T.Spades 5
     -- If you're equal length in the majors and have enough points to reverse,
@@ -64,8 +64,8 @@ b1s = do
     makeCall (T.Bid 1 T.Spades)
 
 
-b1h :: Action
-b1h = do
+b1H :: Action
+b1H = do
     notTooStrong
     minSuitLength T.Hearts 5
     alternatives [reverseInMajors, maxSuitLength T.Spades 4]
@@ -95,8 +95,8 @@ bothMinors = alternatives .
              [(4, 5), (5, 4)]
 
 
-b1d :: Action
-b1d = let
+b1D :: Action
+b1D = let
   in do
     notTooStrong
     noMajor
@@ -106,8 +106,8 @@ b1d = let
     makeCall (T.Bid 1 T.Diamonds)
 
 
-b1c :: Action
-b1c = do
+b1C :: Action
+b1C = do
     notTooStrong
     noMajor
     minSuitLength T.Clubs 3
