@@ -484,7 +484,7 @@ b1C1D1S2C = do
     maxSuitLength T.Spades 2
     pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
     makeAlertableCall (T.Bid 2 T.Clubs)
-                      ("67" .+ NDash .+ " HCP, at most 2 spades")
+                      ("6" .+ NDash .+ "7 HCP, at most 2 spades")
 
 
 ---------------------
