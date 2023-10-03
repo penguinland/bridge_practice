@@ -21,8 +21,13 @@ pushd /tmp > /dev/null
 
 echo ""
 echo "Generating PDFs..."
+# We rerun LaTeX twice each time, because the table widths might have changed.
+# It would be great to suppress all output from the first run, but if something
+# in it fails and it drops you into interactive mode, you need to see that!
+xelatex test.tex
 xelatex test.tex
 mv test.pdf questions.pdf
+xelatex "\let\showsolutions\relax\input{test}"
 xelatex "\let\showsolutions\relax\input{test}"
 mv test.pdf solutions.pdf
 
