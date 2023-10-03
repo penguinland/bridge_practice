@@ -17,7 +17,7 @@ import Topic(Topic, topicName, refName, choose)
 
 -- TODO: find a more compact way to `show g`.
 reference :: String -> String -> StdGen -> String
-reference topic sit _ = topic ++ "." ++ sit ++ " "-- ++ show g
+reference topic sit _ = topic ++ "." ++ sit ++ " TODO"-- ++ show g
 
 
 generate :: Int -> [Topic] -> StdGen -> IO [SituationInstance]
