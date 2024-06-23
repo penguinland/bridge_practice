@@ -2,7 +2,13 @@ module Topics.BidsOneNotrump(
     b1N  -- Copied from StandardOpenings
   , b1N2C
   , b1N2D
+  , b1N2D2H
+  , b1N2D2H4H
+  , b1N2D3H
   , b1N2H
+  , b1N2H2S
+  , b1N2H2S4S
+  , b1N2H3S
   , b1N4D
   , b1N4D4H
   , b1N4H
@@ -34,7 +40,7 @@ maxNotrumpStrength = 17
 strengthNeededForGame :: Int
 strengthNeededForGame = 25
 strengthNeededForSlam :: Int
-strengthNeededForSlam = 30
+strengthNeededForSlam = 30  -- TODO: is this the right number?
 
 gameForcing :: Action  -- Could be stronger
 gameForcing = pointRange (strengthNeededForGame - minNotrumpStrength) 40
@@ -88,6 +94,7 @@ b1N4D = texasTransfer T.Hearts
 b1N4H :: Action
 b1N4H = texasTransfer T.Spades
 
+
 -- Opener should always complete the Texas Transfer: no constraints on that.
 b1N4D4H :: Action
 b1N4D4H = makeCall $ T.Bid 4 T.Hearts
@@ -115,6 +122,47 @@ b1N2D = jacobyTransfer T.Hearts
 
 b1N2H :: Action
 b1N2H = jacobyTransfer T.Spades
+
+
+-- You can superaccept a Jacoby transfer with 4-card support and a maximum.
+b1N2D3H :: Action
+b1N2D3H = do
+    minSuitLength T.Hearts 4
+    pointRange 17 17 -- Do it with a good 16, too, but defining "good" is hard
+    makeCall $ T.Bid 3 T.Hearts
+
+b1N2H3S :: Action
+b1N2H3S = do
+    minSuitLength T.Spades 4
+    pointRange 17 17 -- Do it with a good 16, too, but defining "good" is hard
+    makeCall $ T.Bid 3 T.Spades
+
+
+-- If you can't superaccept, just normal-accept
+b1N2D2H :: Action
+b1N2D2H = do
+    forbid b1N2D3H
+    makeCall $ T.Bid 2 T.Hearts
+
+b1N2H2S :: Action
+b1N2H2S = do
+    forbid b1N2H3S
+    makeCall $ T.Bid 2 T.Spades
+
+
+-- A slam invite is a Jacoby transfer that is then raised immediately to game
+b1N2D2H4H :: Action
+b1N2D2H4H = do
+    minSuitLength T.Hearts 6
+    slamInvite
+    makeCall $ T.Bid 4 T.Hearts
+
+b1N2H2S4S :: Action
+b1N2H2S4S = do
+    minSuitLength T.Spades 6
+    slamInvite
+    makeCall $ T.Bid 4 T.Spades
+
 
 
 b1N2C :: Action

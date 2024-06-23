@@ -2,7 +2,7 @@ import System.Random(mkStdGen)
 
 --import qualified Topics.JacobyTransfers as JacobyTransfers
 --import qualified Topics.MinorTransfersScott as MinorTransfers
---import qualified Topics.StandardOpeners as StandardOpeners
+import qualified Topics.StandardOpeners as StandardOpeners
 import qualified Topics.TexasTransfers as TexasTransfers
 
 {-
@@ -20,7 +20,7 @@ import ProblemSet(outputLatex)
 main :: IO ()
 main = let
     topics = [ TexasTransfers.topic
-               --StandardOpeners.topic
+             --, StandardOpeners.topic
              --SmpOpenings.topic
              --, Smp1CResponses.topic
               --Smp1CResponses.topicExtras

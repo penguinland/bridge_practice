@@ -1,7 +1,8 @@
 module Topics.TexasTransfers(topic) where
 
 -- TODO: replace makePass with something more intelligent
-import Auction(makePass, suitLength, minSuitLength)
+import Auction(makePass, makeCall, suitLength, minSuitLength, maxSuitLength,
+               pointRange)
 import CommonBids(setOpener)
 import Output((.+))
 import Situation(situation, (<~))
@@ -9,6 +10,9 @@ import qualified Terminology as T
 import Topic(Topic, wrap, --wrapVulDlr,
  Situations, makeTopic)
 import qualified Topics.BidsOneNotrump as B
+
+
+-- TODO: Texas transfers after interference by the opponents
 
 
 makeTransferSignoff :: Situations
@@ -48,7 +52,7 @@ makeTransferSlam = let
             B.slamInterest
         explanation =
             "Partner has opened " .+ T.Bid 1 T.Notrump .+ ", and you've " .+
-            "got a 6-card major and slam interest. " .+
+            "got a 6-card major and definite slam interest. " .+
             "Make a Texas Transfer by bidding 1 below your suit. " .+
             "Partner will complete the transfer by bidding your suit, and " .+
             "then you can investigate slam with whatever systems you and " .+
@@ -153,6 +157,63 @@ transferSlamInvite = let
                       <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
+transferSlamInviteDeclined :: Situations
+transferSlamInviteDeclined = let
+    sit (transferBid, acceptBid, raiseBid, suit) = let
+        action = do
+            setOpener T.South
+            B.b1N
+            makePass
+            _ <- transferBid
+            makePass
+            _ <- acceptBid
+            makePass
+            _ <- raiseBid
+            makePass
+            pointRange 15 15
+            maxSuitLength suit 3
+        explanation =
+            "We opened " .+ T.Bid 1 T.Notrump .+ ", partner made a Jacoby " .+
+            "transfer, and after we completed it, partner raised to game " .+
+            "without even checking if we like the suit. That's a slam " .+
+            "invite: with a minimum hand and no extra trump length, pass."
+        in situation "SInvDec" action makePass explanation
+  in
+    wrap $ return sit <~ [(B.b1N2D, B.b1N2D2H, B.b1N2D2H4H, T.Hearts)
+                         ,(B.b1N2H, B.b1N2H2S, B.b1N2H2S4S, T.Spades)]
+                      <~ T.allVulnerabilities <~ [T.South, T.East]
+
+
+transferSlamInviteAccepted :: Situations
+transferSlamInviteAccepted = let
+    sit (transferBid, acceptBid, raiseBid, suit) = let
+        action = do
+            setOpener T.South
+            B.b1N
+            makePass
+            _ <- transferBid
+            makePass
+            _ <- acceptBid
+            makePass
+            _ <- raiseBid
+            makePass
+            pointRange 17 17
+            minSuitLength suit 3
+        explanation =
+            "We opened " .+ T.Bid 1 T.Notrump .+ ", partner made a Jacoby " .+
+            "transfer, and after we completed it, partner raised to game " .+
+            "without even checking if we like the suit. That's a slam " .+
+            "invite: with a maximum hand and extra trump length, accept the " .+
+            "invite by investigating slam (if your partnership uses " .+
+            "something other than " .+ T.Bid 4 T.Notrump .+ " to " .+
+            "invistigate slam, your preferred bid might differ)."
+        in situation "SInvAcc" action (makeCall $ T.Bid 4 T.Notrump) explanation
+  in
+    wrap $ return sit <~ [(B.b1N2D, B.b1N2D2H, B.b1N2D2H4H, T.Hearts)
+                         ,(B.b1N2H, B.b1N2H2S, B.b1N2H2S4S, T.Spades)]
+                      <~ T.allVulnerabilities <~ [T.South, T.East]
+
+
 topic :: Topic
 topic = makeTopic "Texas Transfers" "TexTr" situations
   where
@@ -163,5 +224,7 @@ topic = makeTopic "Texas Transfers" "TexTr" situations
                       , wrap [ completeTransferDoubleton
                              , completeTransferSuperfit
                              , transferSlamInvite
+                             , transferSlamInviteDeclined
+                             , transferSlamInviteAccepted
                              ]
                       ]
