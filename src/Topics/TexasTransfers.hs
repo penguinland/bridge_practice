@@ -12,9 +12,6 @@ import Topic(Topic, wrap, --wrapVulDlr,
 import qualified Topics.BidsOneNotrump as B
 
 
--- TODO: Texas transfers after interference by the opponents
-
-
 makeTransferSignoff :: Situations
 makeTransferSignoff = let
     sit bid = let
@@ -212,6 +209,11 @@ transferSlamInviteAccepted = let
     wrap $ return sit <~ [(B.b1N2D, B.b1N2D2H, B.b1N2D2H4H, T.Hearts)
                          ,(B.b1N2H, B.b1N2H2S, B.b1N2H2S4S, T.Spades)]
                       <~ T.allVulnerabilities <~ [T.South, T.East]
+
+
+-- TODO: More situations:
+-- 6-4 in majors: Stayman, then Texas if necessary (from both perspectives)
+-- Texas after interference (from both perspectives, special-case the cue bids)
 
 
 topic :: Topic
