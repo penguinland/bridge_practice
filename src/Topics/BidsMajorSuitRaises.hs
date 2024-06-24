@@ -12,16 +12,8 @@ module Topics.BidsMajorSuitRaises(
 
 import Auction(pointRange, minSuitLength, maxSuitLength, suitLength, Action,
                makeCall, constrain)
-import StandardOpenings
+import StandardOpenings(b1H, b1S)
 import qualified Terminology as T
-
-
-b1H :: Action
-b1H = StandardOpenings.b1h
-
-
-b1S :: Action
-b1S = StandardOpenings.b1s
 
 
 basicRaise :: T.Suit -> Action
