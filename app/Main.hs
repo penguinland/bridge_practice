@@ -13,6 +13,7 @@ import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 -}
+import qualified Topics.MajorSuitRaises as MajorSuitRaises
 
 import ProblemSet(outputLatex)
 
@@ -20,10 +21,11 @@ import ProblemSet(outputLatex)
 main :: IO ()
 main = let
     topics = [ TexasTransfers.topic
-             --, StandardOpeners.topic
+             , StandardOpeners.topic
              --SmpOpenings.topic
              --, Smp1CResponses.topic
               --Smp1CResponses.topicExtras
+             , MajorSuitRaises.topic
              --, Mafia.topic
              --, MafiaResponses.topic
              --, Smp1DResponses.topic
