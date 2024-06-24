@@ -1,8 +1,11 @@
 module Topics.StandardOpeners(topic) where
 
+import Control.Monad.Trans.State.Strict(get)
+
 import Output((.+))
-import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic)
-import Auction(forbid, suitLength, minSuitLength, maxSuitLength)
+import Structures(currentBidder)
+import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic, wrap)
+import Auction(forbid, suitLength, minSuitLength, maxSuitLength, alternatives, pointRange, makePass, balancedHand)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified CommonBids as B
@@ -200,6 +203,27 @@ bothMinorsReverse = let
     stdWrap $ situation "MinRev55" action SO.b1C explanation
 
 
+pass :: Situations
+pass = let
+    action = do
+        -- We can't use B.setOpener because that ensures that we *can* open the
+        -- bidding, and we want to ensure we cannot. So, do it manually.
+        (bidding, _) <- get
+        if currentBidder bidding == T.East then do
+            forbid B.firstSeatOpener
+            B.cannotPreempt
+            makePass
+        else return ()
+        alternatives [balancedHand >> pointRange 8 10,
+                      B.cannotPreempt >> pointRange 7 9]
+    explanation =
+        "You don't have the strength to open, and you don't have the shape " .+
+        "to preempt. Just pass."
+  in
+    -- Some people might be tempted to open light in 3rd or 4th seat, so
+    -- restrict this situation to 1st or 2nd.
+    wrap $ return (situation "Pass" action makePass explanation)
+        <~ T.allVulnerabilities <~ [T.South, T.East]
 
 topic :: Topic
 topic = makeTopic "Standard 1-level opening bids" "StdOpen" situations
@@ -213,4 +237,5 @@ topic = makeTopic "Standard 1-level opening bids" "StdOpen" situations
                       , wrap [oneClub, oneClubEqualMinors]
                       , wrap [bothMinorsNoReverse, bothMinorsNoReverseShortD,
                               bothMinorsReverse]
+                      , pass
                       ]
