@@ -68,9 +68,37 @@ limitRaise = let
                       <~ [T.West, T.North]
 
 
+blast3N :: Situations
+blast3N = let
+    sit (opening, response, suit) = let
+        action = do
+            setOpener T.North
+            _ <- opening
+            noInterference
+        explanation =
+            "With 13-15 HCP, you probably want to be in game but not slam " .+
+            "when partner opens the bidding. You've got an 8-card fit in " .+
+            "partner's major, but with your 4333 shape, you're unlikely to " .+
+            "ruff anything in the short hand, so will likely take the same " .+
+            "number of tricks in notrump as you would in " .+ show suit .+
+            ". Offer " .+ T.Bid 3 T.Notrump .+ " to show this: partner can " .+
+            "pass with a balanced minimum, correct to " .+ T.Bid 4 suit .+
+            " with an unbalanced minimum, and invesigate slam if they have " .+
+            "a very strong hand."
+      in
+        situation "3N" action response explanation
+  in
+    -- You should be an unpassed hand to be game-forcing.
+    wrap $ return sit
+        <~ [(B.b1H, B.b1H3N, T.Hearts), (B.b1S, B.b1S3N, T.Spades)]
+        <~ T.allVulnerabilities
+        <~ [T.West, T.North]
+
+
 topic :: Topic
 topic = makeTopic "natural major-suit raises" "MajRai" situations
   where
     situations = wrap [ simpleRaise
                       , limitRaise
+                      , blast3N
                       ]

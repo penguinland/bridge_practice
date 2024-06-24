@@ -58,7 +58,7 @@ blast3N :: T.Suit -> Action
 blast3N suit = do
     pointRange 13 15
     suitLength suit 3
-    constrain "fourtriple3" ["shape(", " any 4333)"]
+    constrain "fourtriple3" ["shape(", ", any 4333)"]
     makeCall $ T.Bid 3 T.Notrump
 
 b1H3N :: Action
