@@ -217,7 +217,7 @@ transferSlamInviteAccepted = let
 
 
 topic :: Topic
-topic = makeTopic "Texas Transfers" "TexTr" situations
+topic = makeTopic "Texas transfers" "TexTr" situations
   where
     situations = wrap [ makeTransferSignoff
                       , makeTransferSlam
