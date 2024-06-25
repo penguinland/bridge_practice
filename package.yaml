@@ -52,7 +52,6 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - bridge-practice
-    - aeson
     - mtl
     - Spock
     - text
