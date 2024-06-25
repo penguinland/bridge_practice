@@ -25,8 +25,9 @@ import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 -}
 
 
-data MySession = EmptySession
-data MyAppState = EmptyAppState
+-- I'm surprised this isn't defined in a popular, standard location.
+enumerate :: [a] -> [(Int, a)]
+enumerate = zipWith (,) [0..]
 
 
 topicList :: [Topic]
@@ -40,9 +41,8 @@ topics :: Map Int String
 topics = fromList . enumerate . map (toHtml . topicName) $ topicList
 
 
--- This is defined in tidal, but I'm surprised it's not more standard.
-enumerate :: [a] -> [(Int, a)]
-enumerate = zipWith (,) [0..]
+data MySession = EmptySession
+data MyAppState = EmptyAppState
 
 
 main :: IO ()
@@ -55,4 +55,5 @@ app :: SpockM () MySession MyAppState ()
 app = do
     get root $ text "Hello World!"
     get "topics" $ json topics
-    get ("situation" <//> var) $ \requested -> text . pack $ ("requested: " ++ requested)
+    get ("situation" <//> var) $ \requested ->
+        text . pack $ ("requested: " ++ requested)
