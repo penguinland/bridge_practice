@@ -33,7 +33,7 @@ class Showable a where
     toLatex :: a -> String
     toLatex = output LaTeX
     toHtml :: a -> String
-    toHtml = undefined -- TODO: change this to `output Html` later
+    toHtml = output Html
     output :: OutputType -> a -> String
     output LaTeX = toLatex
     output Html = toHtml
