@@ -13,6 +13,7 @@ import qualified Topics.JacobyTransfers as JacobyTransfers
 --import qualified Topics.MinorTransfersScott as MinorTransfers
 import qualified Topics.StandardOpeners as StandardOpeners
 import qualified Topics.TexasTransfers as TexasTransfers
+import qualified Topics.MajorSuitRaises as MajorSuitRaises
 
 {-
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
@@ -22,7 +23,6 @@ import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 -}
---import qualified Topics.MajorSuitRaises as MajorSuitRaises
 
 
 data MySession = EmptySession
@@ -31,6 +31,7 @@ data MyAppState = EmptyAppState
 
 topicList :: [Topic]
 topicList = [ StandardOpeners.topic
+            , MajorSuitRaises.topic
             , JacobyTransfers.topic
             , TexasTransfers.topic
             ]
