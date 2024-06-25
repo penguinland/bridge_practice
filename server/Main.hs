@@ -41,6 +41,19 @@ topics :: Map Int String
 topics = fromList . enumerate . map (toHtml . topicName) $ topicList
 
 
+-- The idea here is that we'll look up each topic index, and get either a topic
+-- or an error about it missing, and then we'll collect all that data into
+-- either a list of topics or a list of missing indices.
+collectResults :: [Either a b] -> Either [a] [b]
+collectResults [] = Right []
+collectResults (Left l : rest) = case collectResults rest of
+                                 Left ll -> Left (l : ll)
+                                 Right _ -> Left [l]
+collectResults (Right r : rest) = case collectResults rest of
+                                  Left l -> Left l
+                                  Right rr -> Right (r : rr)
+
+
 data MySession = EmptySession
 data MyAppState = EmptyAppState
 
