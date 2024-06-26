@@ -85,5 +85,6 @@ app :: SpockM () MySession MyAppState ()
 app = do
     get root $ text "Hello World!"
     get "topics" $ json topicNames
-    get ("situation" <//> var) $ \requested ->
-        text . pack $ ("requested: " ++ requested)
+    get ("situation" <//> var) $ \requested -> case findTopics requested of
+        Left err -> text . pack $ err
+        Right topics -> json . map (toHtml . topicName) $ topics
