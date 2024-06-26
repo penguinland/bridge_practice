@@ -61,6 +61,9 @@ collectResults (Right r : rest) = case collectResults rest of
                                   Right rr -> Right (r : rr)
 
 
+-- The argument should be a comma-separated list of indices. We return either a
+-- description of which indices we don't recognize, or a list of all the
+-- corresponding topics.
 findTopics :: String -> Either String [Topic]
 findTopics indices = let
     results = collectResults . map (getTopic . read) . split "," $ indices
