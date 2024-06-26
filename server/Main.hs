@@ -4,7 +4,6 @@ module Main where
 import Data.Either.Extra(maybeToEither, mapLeft)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
-import qualified Data.Map -- for Data.Map.map without conflicts with map
 import Data.Text(pack)
 import Web.Spock(SpockM, text, var, get, root, (<//>), spock, runSpock, json)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
@@ -43,7 +42,7 @@ topics = fromList . enumerate $ topicList
     enumerate = zipWith (,) [0..]
 
 topicNames :: Map Int String
-topicNames = Data.Map.map (toHtml . topicName) topics
+topicNames = fmap (toHtml . topicName) topics
 
 
 getTopic :: Int -> Either Int Topic
