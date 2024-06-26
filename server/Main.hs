@@ -26,11 +26,6 @@ import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 -}
 
 
--- I'm surprised this isn't defined in a popular, standard location.
-enumerate :: [a] -> [(Int, a)]
-enumerate = zipWith (,) [0..]
-
-
 topicList :: [Topic]
 topicList = [ StandardOpeners.topic
             , MajorSuitRaises.topic
@@ -40,6 +35,10 @@ topicList = [ StandardOpeners.topic
 
 topics :: Map Int Topic
 topics = fromList . enumerate $ topicList
+  where
+    -- I'm surprised this isn't defined in a popular, standard location.
+    enumerate :: [a] -> [(Int, a)]
+    enumerate = zipWith (,) [0..]
 
 topicNames :: Map Int String
 topicNames = Data.Map.map (toHtml . topicName) topics
