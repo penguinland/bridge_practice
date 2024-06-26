@@ -49,9 +49,8 @@ getTopic :: Int -> Either Int Topic
 getTopic i = maybeToEither i (topics !? i)
 
 
--- The idea here is that we'll look up each topic index, and get either a topic
--- or an error about it missing, and then we'll collect all that data into
--- either a list of topics or a list of missing indices.
+-- If there are any Left results, we'll return all of them, and otherwise we'll
+-- return all the Right results.
 collectResults :: [Either a b] -> Either [a] [b]
 collectResults [] = Right []
 collectResults (Left l : rest) = case collectResults rest of
