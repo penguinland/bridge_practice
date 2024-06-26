@@ -1,7 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Data.Map(Map, fromList)
+import Data.Either.Extra(maybeToEither, mapLeft)
+import Data.List.Utils(join, split)
+import Data.Map(Map, fromList, (!?))
 import Data.Text(pack)
 import Web.Spock(SpockM, text, var, get, root, (<//>), spock, runSpock, json)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
@@ -25,11 +27,6 @@ import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 -}
 
 
--- I'm surprised this isn't defined in a popular, standard location.
-enumerate :: [a] -> [(Int, a)]
-enumerate = zipWith (,) [0..]
-
-
 topicList :: [Topic]
 topicList = [ StandardOpeners.topic
             , MajorSuitRaises.topic
@@ -37,8 +34,39 @@ topicList = [ StandardOpeners.topic
             , TexasTransfers.topic
             ]
 
-topics :: Map Int String
-topics = fromList . enumerate . map (toHtml . topicName) $ topicList
+topics :: Map Int Topic
+topics = fromList . enumerate $ topicList
+  where
+    -- I'm surprised this isn't defined in a popular, standard location.
+    enumerate :: [a] -> [(Int, a)]
+    enumerate = zipWith (,) [0..]
+
+topicNames :: Map Int String
+topicNames = fmap (toHtml . topicName) topics
+
+
+getTopic :: Int -> Either Int Topic
+getTopic i = maybeToEither i (topics !? i)
+
+
+-- If there are any Left results, we'll return all of them, and otherwise we'll
+-- return all the Right results.
+collectResults :: [Either a b] -> Either [a] [b]
+collectResults [] = Right []
+collectResults (Left l : rest) = case collectResults rest of
+                                 Left ll -> Left (l : ll)
+                                 Right _ -> Left [l]
+collectResults (Right r : rest) = case collectResults rest of
+                                  Left l -> Left l
+                                  Right rr -> Right (r : rr)
+
+
+findTopics :: String -> Either String [Topic]
+findTopics indices = let
+    results = collectResults . map (getTopic . read) . split "," $ indices
+    formatError = ("Unknown indices: " ++) . join "," . map show
+  in
+    mapLeft formatError results
 
 
 data MySession = EmptySession
@@ -54,6 +82,7 @@ main = do
 app :: SpockM () MySession MyAppState ()
 app = do
     get root $ text "Hello World!"
-    get "topics" $ json topics
-    get ("situation" <//> var) $ \requested ->
-        text . pack $ ("requested: " ++ requested)
+    get "topics" $ json topicNames
+    get ("situation" <//> var) $ \requested -> case findTopics requested of
+        Left err -> text . pack $ err
+        Right topics -> json . map (toHtml . topicName) $ topics
