@@ -1,7 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Data.Map(Map, fromList)
+import Data.Either.Extra(maybeToEither)
+import Data.Map(Map, fromList, (!?), map)
 import Data.Text(pack)
 import Web.Spock(SpockM, text, var, get, root, (<//>), spock, runSpock, json)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
@@ -37,8 +38,15 @@ topicList = [ StandardOpeners.topic
             , TexasTransfers.topic
             ]
 
-topics :: Map Int String
-topics = fromList . enumerate . map (toHtml . topicName) $ topicList
+topics :: Map Int Topic
+topics = fromList . enumerate $ topicList
+
+topicNames :: Map Int String
+topicNames = Data.Map.map (toHtml . topicName) topics
+
+
+getTopic :: Int -> Either Int Topic
+getTopic i = maybeToEither i (topics !? i)
 
 
 -- The idea here is that we'll look up each topic index, and get either a topic
@@ -67,6 +75,6 @@ main = do
 app :: SpockM () MySession MyAppState ()
 app = do
     get root $ text "Hello World!"
-    get "topics" $ json topics
+    get "topics" $ json topicNames
     get ("situation" <//> var) $ \requested ->
         text . pack $ ("requested: " ++ requested)
