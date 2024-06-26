@@ -1,8 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Data.Either.Extra(maybeToEither)
-import Data.Map(Map, fromList, (!?), map)
+import Data.Either.Extra(maybeToEither, mapLeft)
+import Data.List.Utils(join, split)
+import Data.Map(Map, fromList, (!?))
+import qualified Data.Map -- for Data.Map.map without conflicts with map
 import Data.Text(pack)
 import Web.Spock(SpockM, text, var, get, root, (<//>), spock, runSpock, json)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
@@ -59,6 +61,14 @@ collectResults (Left l : rest) = case collectResults rest of
 collectResults (Right r : rest) = case collectResults rest of
                                   Left l -> Left l
                                   Right rr -> Right (r : rr)
+
+
+findTopics :: String -> Either String [Topic]
+findTopics indices = let
+    results = collectResults . map (getTopic . read) . split "," $ indices
+    formatError = ("Unknown indices: " ++) . join "," . map show
+  in
+    mapLeft formatError results
 
 
 data MySession = EmptySession
