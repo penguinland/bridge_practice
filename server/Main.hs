@@ -79,7 +79,7 @@ data MyAppState = EmptyAppState
 main :: IO ()
 main = do
     spockCfg <- defaultSpockCfg EmptySession PCNoDatabase EmptyAppState
-    runSpock 8080 (spock spockCfg app)
+    runSpock 8765 (spock spockCfg app)
 
 
 app :: SpockM () MySession MyAppState ()
