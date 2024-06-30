@@ -60,8 +60,12 @@ instance Showable Bidding where
         finish _       = "&"
 
 instance ToJSON Bidding where
-    toJSON (Bidding _ b) = toJSON . reverse . map reverse .
+    toJSON (Bidding _ b) = toJSON . reverse . map reverse . appendPrompt .
                            map (map (fromMaybe "" . fmap toHtml)) $ b
+      where
+        appendPrompt []                        = [["??"]]
+        appendPrompt (row@([_, _, _, _]):rows) = ["??"] : row : rows
+        appendPrompt (first:rest)              = ("??" : first) : rest
 
 
 currentBidder :: Bidding -> T.Direction
