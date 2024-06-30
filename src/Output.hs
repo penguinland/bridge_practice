@@ -7,6 +7,7 @@
 module Output (
   OutputType(..)
 , Commentary(..)
+, toCommentary
 , Showable(..)
 , (.+)
 , Punct(..)
@@ -34,22 +35,27 @@ class Showable a where
     toLatex = output LaTeX
     toHtml :: a -> String
     toHtml = output Html
-    output :: OutputType -> a -> String
-    output LaTeX = toLatex
-    output Html = toHtml
-    toCommentary :: a -> Commentary
-    toCommentary a = Commentary [flip output a]
 
 instance Showable String where
-    output = flip const
+    toLatex = id
+    toHtml = id
 
 instance Showable Commentary where
-    output o (Commentary c) = concatMap (o &) $ c
-    toCommentary = id
+    toLatex (Commentary c) = concatMap (LaTeX &) $ c
+    toHtml  (Commentary c) = concatMap (Html  &) $ c
 
 
 (.+) :: (Showable a, Showable b) => a -> b -> Commentary
 a .+ b = toCommentary a <> toCommentary b
+
+
+output :: Showable a => OutputType -> a -> String
+output LaTeX = toLatex
+output Html = toHtml
+
+
+toCommentary :: Showable a => a -> Commentary
+toCommentary a = Commentary [flip output a]
 
 
 data Punct = NDash

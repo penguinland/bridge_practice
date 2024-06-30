@@ -20,8 +20,8 @@ reference :: String -> String -> StdGen -> String
 reference topic sit _ = topic ++ "." ++ sit ++ " TODO"-- ++ show g
 
 
-generate :: Int -> [Topic] -> StdGen -> IO [SituationInstance]
-generate 0 _      _ = return []
+generate :: Int -> [Topic] -> StdGen -> IO ([SituationInstance], StdGen)
+generate 0 _      g = return ([], g)
 generate n topics g = let
     makeInst = do
         topic <- pickItem topics
@@ -34,12 +34,14 @@ generate n topics g = let
     maybeSit <- sitInst
     case maybeSit of
         Nothing -> generate n topics g'  -- Try again
-        Just d  -> (d:) <$> generate (n - 1) topics g'
+        Just d  -> do
+            (rest, g'') <- generate (n - 1) topics g'
+            return (d:rest, g'')
 
 
 outputLatex :: Int -> [Topic] -> String -> StdGen -> IO String
 outputLatex numHands topics filename g = do
-    problems <- generate numHands topics g
+    (problems, _) <- generate numHands topics g
     let topicNames = join ", " . sort . map (toLatex . topicName) $ topics
         problemSet = join "\n" . map toLatex $ problems
     template <- readFile "template.tex"

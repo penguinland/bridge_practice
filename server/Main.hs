@@ -1,14 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
+import Control.Monad.Trans(liftIO)
 import Data.Either.Extra(maybeToEither, mapLeft)
+import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
 import Data.Text(pack)
-import Web.Spock(SpockM, text, var, get, root, (<//>), spock, runSpock, json)
+import System.Random(StdGen, getStdGen)
+import Web.Spock(SpockM, text, var, get, root, (<//>), spock, runSpock, json, getState)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
 import Output(toHtml)
+import ProblemSet(generate)
 import Topic(Topic, topicName)
 
 import qualified Topics.JacobyTransfers as JacobyTransfers
@@ -61,6 +65,9 @@ collectResults (Right r : rest) = case collectResults rest of
                                   Right rr -> Right (r : rr)
 
 
+-- The argument should be a comma-separated list of indices. We return either a
+-- description of which indices we don't recognize, or a list of all the
+-- corresponding topics.
 findTopics :: String -> Either String [Topic]
 findTopics indices = let
     results = collectResults . map (getTopic . read) . split "," $ indices
@@ -70,19 +77,27 @@ findTopics indices = let
 
 
 data MySession = EmptySession
-data MyAppState = EmptyAppState
+data MyAppState = IoRng (IORef StdGen)
 
 
 main :: IO ()
 main = do
-    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase EmptyAppState
-    runSpock 8080 (spock spockCfg app)
+    rng <- getStdGen
+    ref <- newIORef rng
+    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref)
+    runSpock 8765 (spock spockCfg app)
 
 
 app :: SpockM () MySession MyAppState ()
 app = do
     get root $ text "Hello World!"
     get "topics" $ json topicNames
-    get ("situation" <//> var) $ \requested -> case findTopics requested of
-        Left err -> text . pack $ err
-        Right topics -> json . map (toHtml . topicName) $ topics
+    get ("situation" <//> var) $ \requested -> do
+        (IoRng ioRng) <- getState
+        rng <- liftIO . readIORef $ ioRng
+        case findTopics requested of
+            Left err -> text . pack $ err
+            Right topics -> do
+                (sitInstList, rng') <- liftIO $ generate 1 topics rng
+                liftIO . writeIORef ioRng $ rng'
+                text . pack . (show rng' ++ ) . toHtml . head $ sitInstList

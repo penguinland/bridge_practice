@@ -10,7 +10,7 @@ import Data.List.Utils(join)
 import System.Random(StdGen, genWord64)
 
 import DealerProg(eval)
-import Output(Showable, toLatex, Commentary)
+import Output(Showable(..), Commentary)
 import Situation(Situation(..))
 import Structures(Bidding, Deal)
 import Terminology(CompleteCall)
@@ -25,6 +25,7 @@ instance Showable SituationInstance where
         "\\problem{%\n" ++
             join "%\n}{%\n" [toLatex d, toLatex b, toLatex c, toLatex s, ds] ++
             "%\n}"
+    toHtml _ = "todo"
 
 
 -- TODO: Find a way to make this cleaner. Monad transformers might be a relevant

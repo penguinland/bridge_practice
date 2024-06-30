@@ -218,7 +218,8 @@ majors55inv = let
       \ hand and no spade fit (in which case a heart fit is guaranteed), or\
       \ bidding one of the majors at the 4 level with a maximum. This\
       \ wrong-sides the contract if we end up playing in spades."
-    bid = jacobyTransfer T.Hearts
+    bid = makeAlertableCall (T.Bid 2 T.Diamonds)
+                            ("Transfer to " ++ show T.Hearts)
   in
     stdWrap $ situation "55Inv" action bid explanation
 
@@ -240,7 +241,8 @@ majors55gf = let
             \ and then bid " .+ T.Bid 3 T.Hearts .+ " afterwards.\
             \ Partner will then have the options of which game to bid.\
             \ This wrong-sides the contract if we end up playing in hearts."
-        bid = jacobyTransfer T.Spades
+        bid = makeAlertableCall (T.Bid 2 T.Hearts)
+                                ("Transfer to " ++ show T.Spades)
       in
         situation "55GF" action bid explanation
   in
