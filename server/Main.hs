@@ -7,7 +7,7 @@ import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
 import Data.Text(pack)
 import System.Random(StdGen, getStdGen)
-import Web.Spock(SpockM, text, var, get, root, (<//>), spock, runSpock, json)
+import Web.Spock(SpockM, text, var, get, root, (<//>), spock, runSpock, json, getState)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
 import Output(toHtml)
@@ -75,14 +75,14 @@ findTopics indices = let
 
 
 data MySession = EmptySession
-data MyAppState = Rng (IORef StdGen)
+data MyAppState = IoRng (IORef StdGen)
 
 
 main :: IO ()
 main = do
     rng <- getStdGen
     ref <- newIORef rng
-    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (Rng ref)
+    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref)
     runSpock 8765 (spock spockCfg app)
 
 
@@ -90,6 +90,8 @@ app :: SpockM () MySession MyAppState ()
 app = do
     get root $ text "Hello World!"
     get "topics" $ json topicNames
-    get ("situation" <//> var) $ \requested -> case findTopics requested of
-        Left err -> text . pack $ err
-        Right topics -> json . map (toHtml . topicName) $ topics
+    get ("situation" <//> var) $ \requested -> do
+        (IoRng ioRng) <- getState
+        case findTopics requested of
+            Left err -> text . pack $ err
+            Right topics -> json . map (toHtml . topicName) $ topics
