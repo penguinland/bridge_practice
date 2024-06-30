@@ -3,7 +3,7 @@ module Main where
 
 import Control.Monad.Trans(liftIO)
 import Data.Either.Extra(maybeToEither, mapLeft)
-import Data.IORef(IORef, newIORef, readIORef)
+import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
 import Data.Text(pack)
@@ -12,6 +12,7 @@ import Web.Spock(SpockM, text, var, get, root, (<//>), spock, runSpock, json, ge
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
 import Output(toHtml)
+import ProblemSet(generate)
 import Topic(Topic, topicName)
 
 import qualified Topics.JacobyTransfers as JacobyTransfers
@@ -96,4 +97,7 @@ app = do
         rng <- liftIO . readIORef $ ioRng
         case findTopics requested of
             Left err -> text . pack $ err
-            Right topics -> json . map (toHtml . topicName) $ topics
+            Right topics -> do
+                (sit, rng') <- liftIO $ generate 1 topics rng
+                liftIO . writeIORef ioRng $ rng'
+                json . map (toHtml . topicName) $ topics
