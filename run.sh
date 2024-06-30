@@ -11,9 +11,7 @@ stack build
 
 echo ""
 echo "Running..."
-# This next line is platform- and version-agnostic, assuming you've only set
-# things up for a single one of each.
-$CWD/.stack-work/dist/*/*/build/bridge-practice-exe/bridge-practice-exe
+stack run bridge-practice-exe
 
 mv test.tex /tmp
 cp bridge.tex /tmp
