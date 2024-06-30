@@ -8,12 +8,14 @@ module Structures (
 , Deal(..)
 ) where
 
+import Data.Aeson(ToJSON, toJSON)
 import Data.Char(toUpper)
 import Data.List.Utils(join, replace)
+import Data.Map(fromList)
 import Data.Maybe(fromMaybe)
 import Data.Semigroup(First(..), getFirst)
 
-import Output(Showable, toLatex)
+import Output(Showable(..), Punct(NDash))
 import qualified Terminology as T
 
 
@@ -23,10 +25,18 @@ data Hand = Hand String String String String
 instance Showable Hand where
     toLatex (Hand s h d c) =
         "\\hand{" ++
-        join "}{" (map (replace "-" "--" .
+        join "}{" (map (replace "-" (toLatex NDash) .
                         replace "T" "10" .
                         replace " " "\\,") [s, h, d, c])
         ++ "}"
+
+instance ToJSON Hand where
+    toJSON (Hand s h d c) = toJSON . fmap formatHolding . fromList $
+        [("spades", s), ("hearts", h), ("diamonds", d), ("clubs", c)]
+      where
+        formatHolding = replace "-" (toHtml NDash) .
+                        replace "T" "10" .
+                        replace " " ""
 
 
 -- The direction is the next bidder
