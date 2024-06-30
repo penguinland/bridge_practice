@@ -100,4 +100,4 @@ app = do
             Right topics -> do
                 (sitInstList, rng') <- liftIO $ generate 1 topics rng
                 liftIO . writeIORef ioRng $ rng'
-                text . pack . toHtml . head $ sitInstList
+                text . pack . (show rng' ++ ) . toHtml . head $ sitInstList
