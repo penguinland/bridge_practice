@@ -59,6 +59,8 @@ instance Showable Bidding where
         finish T.North = newRow
         finish _       = "&"
 
+-- TODO: make good support for alerts in here. Currently they're all displayed
+-- all the time.
 instance ToJSON Bidding where
     toJSON (Bidding _ b) = toJSON . reverse . map reverse . appendPrompt .
                            map (map (fromMaybe "" . fmap toHtml)) $ b
