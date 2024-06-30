@@ -13,6 +13,7 @@ module Output (
 , Punct(..)
 ) where
 
+import Data.Aeson(ToJSON, toJSON)
 import Data.Function((&))
 
 
@@ -27,6 +28,9 @@ instance Semigroup Commentary where
 
 instance Monoid Commentary where
     mempty = Commentary [const ""]
+
+instance ToJSON Commentary where
+    toJSON (Commentary c) = toJSON . concatMap (Html  &) $ c
 
 
 class Showable a where
