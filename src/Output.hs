@@ -29,29 +29,33 @@ instance Monoid Commentary where
     mempty = Commentary [const ""]
 
 
-toCommentary :: Showable a => a -> Commentary
-toCommentary a = Commentary [flip output a]
-
-
 class Showable a where
     -- The minimal definition is either `output` or both `toLatex` and `toHtml`.
     toLatex :: a -> String
     toLatex = output LaTeX
     toHtml :: a -> String
     toHtml = output Html
-    output :: OutputType -> a -> String
-    output LaTeX = toLatex
-    output Html = toHtml
 
 instance Showable String where
-    output = flip const
+    toLatex = id
+    toHtml = id
 
 instance Showable Commentary where
-    output o (Commentary c) = concatMap (o &) $ c
+    toLatex (Commentary c) = concatMap (LaTeX &) $ c
+    toHtml  (Commentary c) = concatMap (Html  &) $ c
 
 
 (.+) :: (Showable a, Showable b) => a -> b -> Commentary
 a .+ b = toCommentary a <> toCommentary b
+
+
+output :: Showable a => OutputType -> a -> String
+output LaTeX = toLatex
+output Html = toHtml
+
+
+toCommentary :: Showable a => a -> Commentary
+toCommentary a = Commentary [flip output a]
 
 
 data Punct = NDash
