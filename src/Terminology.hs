@@ -101,6 +101,8 @@ data CompleteCall = CompleteCall Call (Maybe Commentary)
 instance Showable CompleteCall where
     toLatex (CompleteCall c a) =
         toLatex c ++ maybe "" (\x -> " (" ++ toLatex x ++ ")") a
+    toHtml (CompleteCall c a) =
+        toHtml c ++ maybe "" (\x -> " (" ++ toHtml x ++ ")") a
 
 
 removeAlert :: CompleteCall -> Call
