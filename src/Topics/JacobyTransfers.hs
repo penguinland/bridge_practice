@@ -168,7 +168,8 @@ completeTransfer = let
             "You have opened a strong " .+ oneNT .+ ", and partner\
           \ has made a Jacoby transfer. Complete the transfer by bidding the\
           \ next higher suit. Partner promises at least 5 cards in that major,\
-          \ but wants you to be declarer so your stronger hand stays hidden."
+          \ and will describe their hand further (possibly by passing with a\
+          \ weak hand) afterward."
         bid = makeCall $ T.Bid 2 suit
       in
         situation "Complete" action bid explanation
