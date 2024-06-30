@@ -98,6 +98,6 @@ app = do
         case findTopics requested of
             Left err -> text . pack $ err
             Right topics -> do
-                (sit, rng') <- liftIO $ generate 1 topics rng
+                (sitInstList, rng') <- liftIO $ generate 1 topics rng
                 liftIO . writeIORef ioRng $ rng'
-                json . map (toHtml . topicName) $ topics
+                text . pack . toHtml . head $ sitInstList
