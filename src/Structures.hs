@@ -36,7 +36,7 @@ instance ToJSON Hand where
       where
         formatHolding = replace "-" (toHtml NDash) .
                         replace "T" "10" .
-                        replace " " ""
+                        replace " " "&thinsp;"
 
 
 -- The direction is the next bidder
