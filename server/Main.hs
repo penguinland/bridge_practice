@@ -1,8 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
+import Control.Monad.Trans(liftIO)
 import Data.Either.Extra(maybeToEither, mapLeft)
-import Data.IORef(IORef, newIORef)
+import Data.IORef(IORef, newIORef, readIORef)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
 import Data.Text(pack)
@@ -92,6 +93,7 @@ app = do
     get "topics" $ json topicNames
     get ("situation" <//> var) $ \requested -> do
         (IoRng ioRng) <- getState
+        rng <- liftIO . readIORef $ ioRng
         case findTopics requested of
             Left err -> text . pack $ err
             Right topics -> json . map (toHtml . topicName) $ topics
