@@ -104,3 +104,13 @@ instance Showable Deal where
       where
         capitalize (h:t) = toUpper h : t
         capitalize _     = error "Attempt to capitalize empty direction!?"
+
+instance ToJSON Deal where
+    toJSON (Deal d v n e s w) = toJSON . fromList $
+        [ ("dealer",        toJSON . toHtml $ d)
+        , ("vulnerability", toJSON . toHtml $ v)
+        , ("north_hand",    toJSON n)
+        , ("east_hand",     toJSON e)
+        , ("south_hand",    toJSON s)
+        , ("west_hand",     toJSON w)
+        ]
