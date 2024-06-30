@@ -8,12 +8,14 @@ module Structures (
 , Deal(..)
 ) where
 
+import Data.Aeson(ToJSON, toJSON)
 import Data.Char(toUpper)
 import Data.List.Utils(join, replace)
+import Data.Map(fromList)
 import Data.Maybe(fromMaybe)
 import Data.Semigroup(First(..), getFirst)
 
-import Output(Showable, toLatex)
+import Output(Showable(..), Punct(NDash))
 import qualified Terminology as T
 
 
@@ -23,10 +25,18 @@ data Hand = Hand String String String String
 instance Showable Hand where
     toLatex (Hand s h d c) =
         "\\hand{" ++
-        join "}{" (map (replace "-" "--" .
+        join "}{" (map (replace "-" (toLatex NDash) .
                         replace "T" "10" .
                         replace " " "\\,") [s, h, d, c])
         ++ "}"
+
+instance ToJSON Hand where
+    toJSON (Hand s h d c) = toJSON . fmap formatHolding . fromList $
+        [("spades", s), ("hearts", h), ("diamonds", d), ("clubs", c)]
+      where
+        formatHolding = replace "-" (toHtml NDash) .
+                        replace "T" "10" .
+                        replace " " "&thinsp;"
 
 
 -- The direction is the next bidder
@@ -48,6 +58,16 @@ instance Showable Bidding where
             toLatex c ++ "\\" ++ alertMacro ++ "{" ++ toLatex a ++ "}"
         finish T.North = newRow
         finish _       = "&"
+
+-- TODO: make good support for alerts in here. Currently they're all displayed
+-- all the time.
+instance ToJSON Bidding where
+    toJSON (Bidding _ b) = toJSON . reverse . map reverse . appendPrompt .
+                           map (map (fromMaybe "" . fmap toHtml)) $ b
+      where
+        appendPrompt []                        = [["??"]]
+        appendPrompt (row@([_, _, _, _]):rows) = ["??"] : row : rows
+        appendPrompt (first:rest)              = ("??" : first) : rest
 
 
 currentBidder :: Bidding -> T.Direction
@@ -90,3 +110,13 @@ instance Showable Deal where
       where
         capitalize (h:t) = toUpper h : t
         capitalize _     = error "Attempt to capitalize empty direction!?"
+
+instance ToJSON Deal where
+    toJSON (Deal d v n e s w) = toJSON . fromList $
+        [ ("dealer",        toJSON . toHtml $ d)
+        , ("vulnerability", toJSON . toHtml $ v)
+        , ("north_hand",    toJSON n)
+        , ("east_hand",     toJSON e)
+        , ("south_hand",    toJSON s)
+        , ("west_hand",     toJSON w)
+        ]
