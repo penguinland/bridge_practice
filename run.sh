@@ -11,7 +11,7 @@ stack build
 
 echo ""
 echo "Running..."
-stack run bridge-practice-exe
+stack run make_pdf
 
 mv test.tex /tmp
 cp bridge.tex /tmp

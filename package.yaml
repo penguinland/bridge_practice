@@ -36,7 +36,7 @@ library:
   - -Werror
 
 executables:
-  bridge-practice-exe:
+  make_pdf:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
