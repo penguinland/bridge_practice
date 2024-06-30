@@ -27,6 +27,7 @@ dependencies:
 - process
 - random
 - transformers
+- wai-middleware-static
 
 library:
   source-dirs: src
