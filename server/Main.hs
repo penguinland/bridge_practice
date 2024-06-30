@@ -2,9 +2,11 @@
 module Main where
 
 import Data.Either.Extra(maybeToEither, mapLeft)
+import Data.IORef(IORef, newIORef)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
 import Data.Text(pack)
+import System.Random(StdGen, getStdGen)
 import Web.Spock(SpockM, text, var, get, root, (<//>), spock, runSpock, json)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
@@ -73,12 +75,14 @@ findTopics indices = let
 
 
 data MySession = EmptySession
-data MyAppState = EmptyAppState
+data MyAppState = Rng (IORef StdGen)
 
 
 main :: IO ()
 main = do
-    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase EmptyAppState
+    rng <- getStdGen
+    ref <- newIORef rng
+    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (Rng ref)
     runSpock 8765 (spock spockCfg app)
 
 
