@@ -59,6 +59,10 @@ instance Showable Bidding where
         finish T.North = newRow
         finish _       = "&"
 
+instance ToJSON Bidding where
+    toJSON (Bidding _ b) = toJSON . reverse . map reverse .
+                           map (map (fromMaybe "" . fmap toHtml)) $ b
+
 
 currentBidder :: Bidding -> T.Direction
 currentBidder (Bidding d _) = d
