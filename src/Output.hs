@@ -7,6 +7,7 @@
 module Output (
   OutputType(..)
 , Commentary(..)
+, toCommentary
 , Showable(..)
 , (.+)
 , Punct(..)
@@ -28,6 +29,10 @@ instance Monoid Commentary where
     mempty = Commentary [const ""]
 
 
+toCommentary :: Showable a => a -> Commentary
+toCommentary a = Commentary [flip output a]
+
+
 class Showable a where
     -- The minimal definition is either `output` or both `toLatex` and `toHtml`.
     toLatex :: a -> String
@@ -37,15 +42,12 @@ class Showable a where
     output :: OutputType -> a -> String
     output LaTeX = toLatex
     output Html = toHtml
-    toCommentary :: a -> Commentary
-    toCommentary a = Commentary [flip output a]
 
 instance Showable String where
     output = flip const
 
 instance Showable Commentary where
     output o (Commentary c) = concatMap (o &) $ c
-    toCommentary = id
 
 
 (.+) :: (Showable a, Showable b) => a -> b -> Commentary
