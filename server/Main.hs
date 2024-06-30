@@ -7,8 +7,9 @@ import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
 import Data.Text(pack)
+import Network.Wai.Middleware.Static(staticPolicy, addBase)
 import System.Random(StdGen, getStdGen)
-import Web.Spock(SpockM, text, var, get, root, (<//>), spock, runSpock, json, getState)
+import Web.Spock(SpockM, file, text, var, get, root, (<//>), spock, runSpock, json, getState, middleware)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
 import Output(toHtml)
@@ -90,7 +91,10 @@ main = do
 
 app :: SpockM () MySession MyAppState ()
 app = do
-    get root $ text "Hello World!"
+    -- NOTE: these first two are relative to the current working directory when
+    -- you execute the program! So, you need to run it from the right place.
+    middleware (staticPolicy (addBase "static"))
+    get root $ file "text/html" "static/index.html"
     get "topics" $ json topicNames
     get ("situation" <//> var) $ \requested -> do
         (IoRng ioRng) <- getState
