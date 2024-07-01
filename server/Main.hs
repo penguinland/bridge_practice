@@ -17,19 +17,19 @@ import ProblemSet(generate)
 import Topic(Topic, topicName)
 
 import qualified Topics.JacobyTransfers as JacobyTransfers
---import qualified Topics.MinorTransfersScott as MinorTransfers
 import qualified Topics.StandardOpeners as StandardOpeners
 import qualified Topics.TexasTransfers as TexasTransfers
 import qualified Topics.MajorSuitRaises as MajorSuitRaises
 
-{-
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
 import qualified Topics.StandardModernPrecision.OneClubResponses as Smp1CResponses
 import qualified Topics.StandardModernPrecision.OneDiamondResponses as Smp1DResponses
 import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
-import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
--}
+
+-- I don't think I ever finished making these topics...
+--import qualified Topics.MinorTransfersScott as MinorTransfers
+--import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 
 
 topicList :: [Topic]
@@ -37,6 +37,11 @@ topicList = [ StandardOpeners.topic
             , MajorSuitRaises.topic
             , JacobyTransfers.topic
             , TexasTransfers.topic
+            , SmpOpenings.topic
+            , Smp1CResponses.topic
+            , Smp1DResponses.topic
+            , Mafia.topic
+            , MafiaResponses.topic
             ]
 
 topics :: Map Int Topic
