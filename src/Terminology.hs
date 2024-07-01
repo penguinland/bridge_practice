@@ -58,10 +58,10 @@ instance Showable Suit where
     toLatex Spades    = "\\s{}"
     toLatex Notrump   = "\\nt{}"
     toHtml Clubs     = "&clubs;"
-    toHtml Diamonds  = "<span class='red'>&diams;</span>"
-    toHtml Hearts    = "<span class='red'>&hearts;</span>"
+    toHtml Diamonds  = "<span style='color: red'>&diams;</span>"
+    toHtml Hearts    = "<span style='color: red'>&hearts;</span>"
     toHtml Spades    = "&spades;"
-    toHtml Notrump   = "<span class='smallcaps'>NT</span>"
+    toHtml Notrump   = "<span style='font-variant: small-caps'>NT</span>"
 
 instance Show Suit where
     show Clubs    = "clubs"
