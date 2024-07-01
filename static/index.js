@@ -16,8 +16,8 @@ async function getTopics() {
 }
 
 async function getSituation() {
-    var checkboxes = document.getElementsByName("topics");
-    var indices = Array.prototype.slice.call(checkboxes)
+    const checkboxes = document.getElementsByName("topics");
+    const indices = Array.prototype.slice.call(checkboxes)
         .filter(ch => ch.checked == true)
         .map(t => t.value)
         .join(",");
