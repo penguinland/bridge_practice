@@ -15,16 +15,13 @@ async function getTopics() {
     return await getJson("/topics");
 }
 
-function findSelectedTopics() {
-    checkboxes = document.getElementsByName("topics");
-    selected = Array.prototype.slice.call(checkboxes).filter(
-        ch => ch.checked == true);
-    return [...selected].map(t => t.value);
-}
-
 async function getSituation() {
-    selected = findSelectedTopics().join(",");
-    return await getJson("/situation/" + selected);
+    var checkboxes = document.getElementsByName("topics");
+    var indices = Array.prototype.slice.call(checkboxes)
+        .filter(ch => ch.checked == true)
+        .map(t => t.value)
+        .join(",");
+    return await getJson("/situation/" + indices);
 }
 
 getTopics().then(topics => {
@@ -58,6 +55,5 @@ async function displayProblem () {
     getSituation().then(sitInst => {
         sit = document.getElementById("current_situation");
         sit.innerHTML = JSON.stringify(sitInst);
-        console.log(sitInst);
     })
 }
