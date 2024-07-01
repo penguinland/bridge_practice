@@ -77,10 +77,17 @@ function displayBidding(bids) {
     bidding.appendChild(table);
 }
 
+function setValue(id, val) {
+    elem = document.getElementById(id);
+    elem.innerHTML = val;
+}
+
 async function displayProblem () {
     getSituation().then(sitInst => {
         sit = document.getElementById("current_situation");
         sit.innerHTML = JSON.stringify(sitInst);
         displayBidding(sitInst.bidding);
+        setValue("dealer", sitInst.deal.dealer);
+        setValue("vulnerability", sitInst.deal.vulnerability);
     })
 }
