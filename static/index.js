@@ -51,9 +51,36 @@ getTopics().then(topics => {
     displayProblem();
 })
 
+function makeBiddingRow(bids, type) {
+    row = document.createElement("tr");
+    bids.forEach(value => {
+        item = document.createElement(type);
+        item.innerHTML = value;
+        item.width = "25%";
+        row.appendChild(item);
+    })
+    return row
+}
+
+function displayBidding(bids) {
+    table = document.createElement("table");
+    table.style = "table-layout:fixed;";
+    table.appendChild(makeBiddingRow(["West", "North", "East", "South"], "th"));
+    bids.forEach(round => {
+        table.appendChild(makeBiddingRow(round, "td"));
+    })
+
+    bidding = document.getElementById("bidding");
+    if (bidding.firstChild) {
+        bidding.removeChild(bidding.firstChild);
+    }
+    bidding.appendChild(table);
+}
+
 async function displayProblem () {
     getSituation().then(sitInst => {
         sit = document.getElementById("current_situation");
         sit.innerHTML = JSON.stringify(sitInst);
+        displayBidding(sitInst.bidding);
     })
 }
