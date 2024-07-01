@@ -36,7 +36,7 @@ getTopics().then(topics => {
         checkbox.id    = tag_name;
         checkbox.name  = "topics";
         checkbox.value = index;
-        if (index <= 3) {
+        if (index <= 2) {
             checkbox.checked = true; // Start off with a couple defaults
         }
 
@@ -61,4 +61,3 @@ async function displayProblem () {
         console.log(sitInst);
     })
 }
-
