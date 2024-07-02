@@ -162,8 +162,8 @@ b1D3N :: Action
 b1D3N = do
     pointRange 13 16
     balancedHand
-    maxSuitLength T.Spades 3
     maxSuitLength T.Hearts 3
+    maxSuitLength T.Spades 3
     makeCall $ T.Bid 3 T.Notrump
 
 
