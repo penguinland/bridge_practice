@@ -85,7 +85,7 @@ twoNotrump = let
     action = do
         B.firstSeatOpener
     explanation =
-        "With a balanced hand and 19 to a bad 21 HCP, open " .+
+        "With a balanced hand and 19 or 20 HCP, open " .+
         T.Bid 2 T.Notrump .+ "."
   in
     B.smpWrapS . return $ situation "2N" action B.b2N explanation
