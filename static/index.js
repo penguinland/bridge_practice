@@ -91,8 +91,6 @@ function clear(id) {
 
 async function displayProblem () {
     getSituation().then(problem => {
-        sit = document.getElementById("current_situation");
-        sit.innerHTML = JSON.stringify(problem);
         displayBidding(problem.bidding);
         setValue("dealer", problem.deal.dealer);
         setValue("vulnerability", problem.deal.vulnerability);
