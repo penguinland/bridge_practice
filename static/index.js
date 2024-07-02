@@ -55,6 +55,7 @@ function makeBiddingRow(bids, type) {
     row = document.createElement("tr");
     bids.forEach(value => {
         item = document.createElement(type);
+        item.style = "text-align: left;";
         item.innerHTML = value;
         item.width = "25%";
         row.appendChild(item);
@@ -101,10 +102,11 @@ async function displayProblem () {
         current_problem = problem;
 
         show_ans = document.createElement("button");
-        show_ans.innerHTML = "Confirm Bid";
+        show_ans.innerHTML = "Show Answer";
         show_ans.onclick = show_answer;
         expl = clear("explanation");
         expl.appendChild(show_ans);
+        expl.style = "";
     })
 }
 
@@ -125,6 +127,7 @@ function show_answer() {
     displayHand(current_problem.deal.north_hand, "north_hand");
 
     expl = clear("explanation");
+    expl.style="vertical-align:top;";
     ans = document.createElement("p");
     ans.innerHTML = "Answer: " + current_problem.answer;
     expl.appendChild(ans);
