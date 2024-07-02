@@ -125,4 +125,17 @@ function show_answer() {
     displayHand(current_problem.deal.west_hand, "west_hand");
     displayHand(current_problem.deal.east_hand, "east_hand");
     displayHand(current_problem.deal.north_hand, "north_hand");
+
+    expl = clear("explanation");
+    ans = document.createElement("p");
+    ans.innerHTML = "Answer: " + current_problem.answer;
+    expl.appendChild(ans);
+    expl.appendChild(document.createElement("br"));
+    sol = document.createElement("p");
+    sol.innerHTML = current_problem.explanation;
+    expl.appendChild(sol);
+    expl.appendChild(document.createElement("br"));
+    dbg = document.createElement("p")
+    dbg.innerHTML = "debug string: " + current_problem.debug_string;
+    expl.appendChild(dbg);
 }
