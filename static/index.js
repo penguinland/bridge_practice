@@ -82,14 +82,17 @@ function setValue(id, val) {
     elem.innerHTML = val;
 }
 
+var current_problem = null;
+
 async function displayProblem () {
-    getSituation().then(sitInst => {
+    getSituation().then(problem => {
         sit = document.getElementById("current_situation");
-        sit.innerHTML = JSON.stringify(sitInst);
-        displayBidding(sitInst.bidding);
-        setValue("dealer", sitInst.deal.dealer);
-        setValue("vulnerability", sitInst.deal.vulnerability);
-        displayHand(sitInst.deal.south_hand, "south_hand");
+        sit.innerHTML = JSON.stringify(problem);
+        displayBidding(problem.bidding);
+        setValue("dealer", problem.deal.dealer);
+        setValue("vulnerability", problem.deal.vulnerability);
+        displayHand(problem.deal.south_hand, "south_hand");
+        current_problem = problem
     })
 }
 
