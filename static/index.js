@@ -70,10 +70,7 @@ function displayBidding(bids) {
         table.appendChild(makeBiddingRow(round, "td"));
     })
 
-    bidding = document.getElementById("bidding");
-    if (bidding.firstChild) {
-        bidding.removeChild(bidding.firstChild);
-    }
+    bidding = clear("bidding");
     bidding.appendChild(table);
 }
 
@@ -84,6 +81,14 @@ function setValue(id, val) {
 
 var current_problem = null;
 
+function clear(id) {
+    elem = document.getElementById(id);
+    while (elem.firstChild) {
+        elem.removeChild(elem.firstChild);
+    }
+    return elem;
+}
+
 async function displayProblem () {
     getSituation().then(problem => {
         sit = document.getElementById("current_situation");
@@ -92,7 +97,16 @@ async function displayProblem () {
         setValue("dealer", problem.deal.dealer);
         setValue("vulnerability", problem.deal.vulnerability);
         displayHand(problem.deal.south_hand, "south_hand");
-        current_problem = problem
+        clear("west_hand");
+        clear("east_hand");
+        clear("north_hand");
+        current_problem = problem;
+
+        show_ans = document.createElement("button");
+        show_ans.innerHTML = "Confirm Bid";
+        show_ans.onclick = show_answer;
+        expl = clear("explanation");
+        expl.appendChild(show_ans);
     })
 }
 
@@ -105,4 +119,10 @@ function displayHand(hand, id) {
                          hand.diamonds + "<br/>" +
                      "&clubs;&nbsp;&nbsp;" + hand.clubs;
     elem.style = "word-spacing:-0.1em;"
+}
+
+function show_answer() {
+    displayHand(current_problem.deal.west_hand, "west_hand");
+    displayHand(current_problem.deal.east_hand, "east_hand");
+    displayHand(current_problem.deal.north_hand, "north_hand");
 }
