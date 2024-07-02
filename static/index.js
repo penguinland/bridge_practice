@@ -55,7 +55,7 @@ function makeBiddingRow(bids, type) {
     row = document.createElement("tr");
     bids.forEach(value => {
         item = document.createElement(type);
-        item.style = "text-align: left;";
+        item.style = "text-align: left; padding-left: 0.5em; padding-right: 0.5em;";
         item.innerHTML = value;
         item.width = "25%";
         row.appendChild(item);
