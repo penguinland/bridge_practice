@@ -89,5 +89,17 @@ async function displayProblem () {
         displayBidding(sitInst.bidding);
         setValue("dealer", sitInst.deal.dealer);
         setValue("vulnerability", sitInst.deal.vulnerability);
+        displayHand(sitInst.deal.south_hand, "south_hand");
     })
+}
+
+function displayHand(hand, id) {
+    elem = document.getElementById(id);
+    elem.innerHTML = "&spades;&nbsp;&nbsp;" + hand.spades + "<br/>" +
+                     "<span style='color: red'>&hearts;</span>&nbsp;&nbsp;" +
+                         hand.hearts + "<br/>" +
+                     "<span style='color: red'>&diams;</span>&nbsp;&nbsp;" +
+                         hand.diamonds + "<br/>" +
+                     "&clubs;&nbsp;&nbsp;" + hand.clubs;
+    elem.style = "word-spacing:-0.1em;"
 }
