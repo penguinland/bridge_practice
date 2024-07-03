@@ -51,24 +51,63 @@ getTopics().then(topics => {
     displayProblem();
 })
 
-function makeBiddingRow(bids, type) {
+var footnote_value;
+
+function makeBiddingRow(calls) {
+    alert_section = document.getElementById("alerts");
+
     row = document.createElement("tr");
-    bids.forEach(value => {
-        item = document.createElement(type);
+    calls.forEach(call => {
+        item = document.createElement("td");
         item.style = "text-align: left; padding-left: 0.5em; padding-right: 0.5em;";
-        item.innerHTML = value;
+        item.innerHTML = call.call ?? "";
         item.width = "25%";
+
+        if (call.alert !== undefined) {
+            sup = document.createElement("sup");
+            sup.innerHTML = String.fromCharCode(footnote_value);
+            item.appendChild(sup);
+            //item.innerHTML += "*";
+
+            description = document.createElement("li");
+            description.innerHTML = call.alert;
+
+            footnote_value += 1;
+            alert_section.appendChild(description);
+        }
         row.appendChild(item);
     })
+
+    /*
+    alerts.forEach(value => {
+        alert_section.appendChild(item);
+    }
+    */
+
     return row
 }
 
 function displayBidding(bids) {
+    footnote_value = 97;
+    clear("alerts");
+
     table = document.createElement("table");
     table.style = "table-layout:fixed;";
-    table.appendChild(makeBiddingRow(["West", "North", "East", "South"], "th"));
+
+    // First, put in the headers.
+    tr = document.createElement("tr");
+    for (const direction of ["West", "North", "East", "South"]) {
+        item = document.createElement("th");
+        item.style = "text-align: left; padding-left: 0.5em; padding-right: 0.5em;";
+        item.innerHTML = direction;
+        item.width = "25%";
+        tr.appendChild(item);
+    }
+    table.appendChild(tr);
+
+    // Now, append each row of bidding
     bids.forEach(round => {
-        table.appendChild(makeBiddingRow(round.map(b => b.call ?? ""), "td"));
+        table.appendChild(makeBiddingRow(round));
     })
 
     bidding = clear("bidding");
@@ -93,6 +132,7 @@ function clear(id) {
 async function displayProblem () {
     getSituation().then(problem => {
         current_problem = problem;
+        console.log(problem);
         displayBidding(problem.bidding);
         setValue("dealer", problem.deal.dealer);
         setValue("vulnerability", problem.deal.vulnerability);
