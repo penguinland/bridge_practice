@@ -68,7 +68,7 @@ function displayBidding(bids) {
     table.style = "table-layout:fixed;";
     table.appendChild(makeBiddingRow(["West", "North", "East", "South"], "th"));
     bids.forEach(round => {
-        table.appendChild(makeBiddingRow(round, "td"));
+        table.appendChild(makeBiddingRow(round.map(b => b.call ?? ""), "td"));
     })
 
     bidding = clear("bidding");
@@ -92,6 +92,7 @@ function clear(id) {
 
 async function displayProblem () {
     getSituation().then(problem => {
+        current_problem = problem;
         displayBidding(problem.bidding);
         setValue("dealer", problem.deal.dealer);
         setValue("vulnerability", problem.deal.vulnerability);
@@ -99,7 +100,6 @@ async function displayProblem () {
         clear("west_hand");
         clear("east_hand");
         clear("north_hand");
-        current_problem = problem;
 
         show_ans = document.createElement("button");
         show_ans.innerHTML = "Show Answer";

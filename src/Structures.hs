@@ -8,7 +8,8 @@ module Structures (
 , Deal(..)
 ) where
 
-import Data.Aeson(ToJSON, toJSON)
+import Data.Aeson(ToJSON, toJSON, (.=), object)
+import Data.Aeson.Key(fromString)
 import Data.Char(toUpper)
 import Data.List.Utils(join, replace)
 import Data.Map(fromList)
@@ -35,8 +36,7 @@ instance ToJSON Hand where
         [("spades", s), ("hearts", h), ("diamonds", d), ("clubs", c)]
       where
         formatHolding = replace "-" (toHtml NDash) .
-                        replace "T" "10" .
-                        replace " " "&thinsp;"
+                        replace "T" "10"
 
 
 -- The direction is the next bidder
@@ -63,11 +63,12 @@ instance Showable Bidding where
 -- all the time.
 instance ToJSON Bidding where
     toJSON (Bidding _ b) = toJSON . reverse . map reverse . appendPrompt .
-                           map (map (fromMaybe "" . fmap toHtml)) $ b
+                           map (map (fromMaybe (object []) . fmap toJSON)) $ b
       where
-        appendPrompt []                        = [["??"]]
-        appendPrompt (row@([_, _, _, _]):rows) = ["??"] : row : rows
-        appendPrompt (first:rest)              = ("??" : first) : rest
+        challenge = object [fromString "call" .= "??"]
+        appendPrompt []                        = [[challenge]]
+        appendPrompt (row@([_, _, _, _]):rows) = [challenge] : row : rows
+        appendPrompt (first:rest)              = (challenge : first) : rest
 
 
 currentBidder :: Bidding -> T.Direction
