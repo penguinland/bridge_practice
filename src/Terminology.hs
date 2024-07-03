@@ -13,6 +13,10 @@ module Terminology (
 , allVulnerabilities
 ) where
 
+import Data.Aeson(ToJSON, toJSON, object, (.=))
+import Data.Aeson.Key(fromString)
+import Data.List(singleton)
+
 import Output(Showable, toLatex, toHtml, Commentary)
 
 
@@ -103,6 +107,13 @@ instance Showable CompleteCall where
         toLatex c ++ maybe "" (\x -> " (" ++ toLatex x ++ ")") a
     toHtml (CompleteCall c a) =
         toHtml c ++ maybe "" (\x -> " (" ++ toHtml x ++ ")") a
+
+instance ToJSON CompleteCall where
+    toJSON (CompleteCall c a) = let
+        jsonC = fromString "call" .= toHtml c
+        jsonA = maybe [] (singleton . (fromString "alert" .=) . toHtml) a
+      in
+        object $ jsonC:jsonA
 
 
 removeAlert :: CompleteCall -> Call
