@@ -103,7 +103,7 @@ async function displayProblem () {
 
         show_ans = document.createElement("button");
         show_ans.innerHTML = "Show Answer";
-        show_ans.onclick = show_answer;
+        show_ans.onclick = display_solution;
         expl = clear("explanation");
         expl.appendChild(show_ans);
         expl.style = "";
@@ -121,7 +121,7 @@ function displayHand(hand, id) {
     elem.style = "word-spacing:-0.1em;"
 }
 
-function show_answer() {
+function display_solution() {
     displayHand(current_problem.deal.west_hand, "west_hand");
     displayHand(current_problem.deal.east_hand, "east_hand");
     displayHand(current_problem.deal.north_hand, "north_hand");
