@@ -24,6 +24,7 @@ async function getSituation() {
     return await getJson("/situation/" + indices);
 }
 
+// Create checkbox options for each topic the server supports.
 getTopics().then(topics => {
     const topic_section = document.getElementById("topic_list")
     Object.entries(topics).forEach(([index, name]) => {
@@ -82,14 +83,7 @@ function makeBiddingRow(calls, show_our_alerts) {
     return row
 }
 
-function displayBidding(bids, show_our_alerts) {
-    footnote_value = 97;
-    clear("alerts");
-
-    table = document.createElement("table");
-    table.style = "table-layout:fixed;";
-
-    // First, put in the headers.
+function displayBiddingHeaders(table) {
     tr = document.createElement("tr");
     for (const direction of ["West", "North", "East", "South"]) {
         item = document.createElement("th");
@@ -99,8 +93,16 @@ function displayBidding(bids, show_our_alerts) {
         tr.appendChild(item);
     }
     table.appendChild(tr);
+}
 
-    // Now, append each row of bidding
+function displayBidding(bids, show_our_alerts) {
+    footnote_value = 97;  // lower-case 'a'
+    clear("alerts");
+
+    table = document.createElement("table");
+    table.style = "table-layout:fixed;";
+    displayBiddingHeaders(table);
+
     bids.forEach(round => {
         table.appendChild(makeBiddingRow(round, show_our_alerts));
     })
@@ -114,8 +116,7 @@ function setValue(id, val) {
     elem.innerHTML = val;
 }
 
-var current_problem = null;
-
+// Removes all child nodes and returns the current node.
 function clear(id) {
     elem = document.getElementById(id);
     while (elem.firstChild) {
@@ -123,6 +124,8 @@ function clear(id) {
     }
     return elem;
 }
+
+var current_problem = null;
 
 async function displayProblem () {
     getSituation().then(problem => {
@@ -138,7 +141,7 @@ async function displayProblem () {
 
         show_ans = document.createElement("button");
         show_ans.innerHTML = "Show Answer";
-        show_ans.onclick = display_solution;
+        show_ans.onclick = displaySolution;
         expl = clear("explanation");
         expl.appendChild(show_ans);
         expl.style = "";
@@ -156,7 +159,7 @@ function displayHand(hand, id) {
     elem.style = "word-spacing:-0.1em;"
 }
 
-function display_solution() {
+function displaySolution() {
     displayHand(current_problem.deal.west_hand, "west_hand");
     displayHand(current_problem.deal.east_hand, "east_hand");
     displayHand(current_problem.deal.north_hand, "north_hand");
