@@ -53,21 +53,21 @@ getTopics().then(topics => {
 
 var footnote_value;
 
-function makeBiddingRow(calls) {
+function makeBiddingRow(calls, show_our_alerts) {
     alert_section = document.getElementById("alerts");
-
     row = document.createElement("tr");
+    var is_opps_call = true; // First call is by West
+
     calls.forEach(call => {
         item = document.createElement("td");
         item.style = "text-align: left; padding-left: 0.5em; padding-right: 0.5em;";
         item.innerHTML = call.call ?? "";
         item.width = "25%";
 
-        if (call.alert !== undefined) {
+        if (call.alert !== undefined && (is_opps_call || show_our_alerts)) {
             sup = document.createElement("sup");
             sup.innerHTML = String.fromCharCode(footnote_value);
             item.appendChild(sup);
-            //item.innerHTML += "*";
 
             description = document.createElement("li");
             description.innerHTML = call.alert;
@@ -76,18 +76,13 @@ function makeBiddingRow(calls) {
             alert_section.appendChild(description);
         }
         row.appendChild(item);
+        is_opps_call = !is_opps_call;
     })
-
-    /*
-    alerts.forEach(value => {
-        alert_section.appendChild(item);
-    }
-    */
 
     return row
 }
 
-function displayBidding(bids) {
+function displayBidding(bids, show_our_alerts) {
     footnote_value = 97;
     clear("alerts");
 
@@ -107,7 +102,7 @@ function displayBidding(bids) {
 
     // Now, append each row of bidding
     bids.forEach(round => {
-        table.appendChild(makeBiddingRow(round));
+        table.appendChild(makeBiddingRow(round, show_our_alerts));
     })
 
     bidding = clear("bidding");
@@ -133,7 +128,7 @@ async function displayProblem () {
     getSituation().then(problem => {
         current_problem = problem;
         console.log(problem);
-        displayBidding(problem.bidding);
+        displayBidding(problem.bidding, false);
         setValue("dealer", problem.deal.dealer);
         setValue("vulnerability", problem.deal.vulnerability);
         displayHand(problem.deal.south_hand, "south_hand");
@@ -165,17 +160,17 @@ function display_solution() {
     displayHand(current_problem.deal.west_hand, "west_hand");
     displayHand(current_problem.deal.east_hand, "east_hand");
     displayHand(current_problem.deal.north_hand, "north_hand");
+    displayBidding(current_problem.bidding, true);
 
     expl = clear("explanation");
     expl.style="vertical-align:top;";
     ans = document.createElement("p");
     ans.innerHTML = "Answer: " + current_problem.answer;
     expl.appendChild(ans);
-    expl.appendChild(document.createElement("br"));
     sol = document.createElement("p");
     sol.innerHTML = current_problem.explanation;
     expl.appendChild(sol);
-    expl.appendChild(document.createElement("br"));
+    expl.appendChild(document.createElement("hr"));
     dbg = document.createElement("p")
     dbg.innerHTML = "debug string: " + current_problem.debug_string;
     expl.appendChild(dbg);
