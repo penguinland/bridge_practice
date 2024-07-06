@@ -10,7 +10,7 @@ module Topics.BidsMeckwell(
 
 
 import Auction(pointRange, minSuitLength, maxSuitLength, Action, makeCall,
-               alternatives)
+               alternatives, soundHolding, makeAlertableCall)
 import StandardOpenings(b1N)
 import qualified Terminology as T
 
@@ -25,6 +25,7 @@ pointsToCompete = pointRange 10 40
 singleSuit :: T.Suit -> Action
 singleSuit suit = do
     minSuitLength suit 6
+    soundHolding suit
     mapM_ (`maxSuitLength` 3) . filter (/= suit) $ T.allSuits
 
 
@@ -42,7 +43,7 @@ b1NoX = do
                  , singleSuit T.Diamonds
                  , twoSuited T.Hearts T.Spades
                  ]
-    makeCall T.Double
+    makeAlertableCall T.Double "one long minor, or both majors"
 
 
 minorAndMajor :: T.Suit -> Action
@@ -51,7 +52,7 @@ minorAndMajor minor = do
     minSuitLength minor 4
     alternatives . map (`minSuitLength` 4) $ T.majorSuits
     alternatives . map (`minSuitLength` 5) $ minor : T.majorSuits
-    makeCall $ T.Bid 2 minor
+    makeAlertableCall (T.Bid 2 minor) (show minor .+ " and a major")
 
 b1No2C :: Action
 b1No2C = minorAndMajor T.Clubs
@@ -78,4 +79,4 @@ b1No2N :: Action
 b1No2N = do
     pointsToCompete
     twoSuited T.Clubs T.Diamonds
-    makeCall $ T.Bid 2 T.Notrump
+    makeAlertableCall (T.Bid 2 T.Notrump) "both minors"
