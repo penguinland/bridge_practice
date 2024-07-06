@@ -11,6 +11,7 @@ module Topics.BidsMeckwell(
 
 import Auction(pointRange, minSuitLength, maxSuitLength, Action, makeCall,
                alternatives, soundHolding, makeAlertableCall)
+import Output ((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
 

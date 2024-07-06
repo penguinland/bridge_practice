@@ -20,6 +20,7 @@ import qualified Topics.JacobyTransfers as JacobyTransfers
 import qualified Topics.StandardOpeners as StandardOpeners
 import qualified Topics.TexasTransfers as TexasTransfers
 import qualified Topics.MajorSuitRaises as MajorSuitRaises
+import qualified Topics.Meckwell as Meckwell
 
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
 import qualified Topics.StandardModernPrecision.OneClubResponses as Smp1CResponses
@@ -37,6 +38,7 @@ topicList = [ StandardOpeners.topic
             , MajorSuitRaises.topic
             , JacobyTransfers.topic
             , TexasTransfers.topic
+            , Meckwell.topic
             , SmpOpenings.topic
             , Smp1CResponses.topic
             , Smp1DResponses.topic
