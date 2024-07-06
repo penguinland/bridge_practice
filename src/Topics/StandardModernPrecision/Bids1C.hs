@@ -289,6 +289,13 @@ b1C1D1H = do
     forbid b1C1D1N
     _notGameForcing
     minSuitLength T.Hearts 4
+    T.Hearts `atLeastAsLong` T.Spades
+    -- If you're 4-4 in the majors, start with 1H, and you'll find your spade
+    -- fit if partner doesn't show a heart fit. but if you're 5-5 in the majors,
+    -- start with 1S, planning to rebid 2H. If you were thinking of reversing,
+    -- you're strong enough to jump straight to 2S and rebid 3H, instead of
+    -- bidding at the 1 level.
+    maxSuitLength T.Spades 4
     makeCall $ T.Bid 1 T.Hearts
 
 
