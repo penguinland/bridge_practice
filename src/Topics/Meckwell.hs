@@ -4,7 +4,7 @@ import CommonBids(setOpener)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapVulDlr, Situations, makeTopic)
+import Topic(Topic, wrap, Situations, makeTopic)
 import qualified Topics.BidsMeckwell as B
 
 
@@ -19,7 +19,10 @@ majorSuit = let
             "natural overcall."
         in situation "SInvAcc" action bid explanation
   in
-    wrapVulDlr $ return sit <~ [(T.Hearts, B.b1No2H), (T.Spades, B.b1No2S)]
+    -- Ensure we're not dealer: it's too rare to find a hand where we'd want to
+    -- overcall after 1N but not open the bidding ourselves.
+    wrap $ return sit <~ [(T.Hearts, B.b1No2H), (T.Spades, B.b1No2S)]
+                      <~ allVulnerabilities <~ [T.West, T.North, T.East]
 
 
 
