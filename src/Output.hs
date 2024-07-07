@@ -64,9 +64,15 @@ toCommentary a = Commentary [flip output a]
 
 data Punct = NDash
            | MDash
+           | OpenQuote
+           | CloseQuote
 
 instance Showable Punct where
     toLatex NDash = "--"
     toLatex MDash = "---"
+    toLatex OpenQuote = "``"
+    toLatex CloseQuote = "''"
     toHtml NDash = "&ndash;"
     toHtml MDash = "&mdash;"
+    toHtml OpenQuote = "&#x201C;"
+    toHtml CloseQuote = "&#x201D;"
