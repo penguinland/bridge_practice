@@ -1,4 +1,4 @@
-module Topics.StandardModernPrecision.Bids1C(
+module Bids.StandardModernPrecision.OneClub(
     b1C  -- Copied from BasicBids
   -- Responses to 1C
   , b1C1D
@@ -64,7 +64,7 @@ import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                alternatives, longerThan, atLeastAsLong, constrain)
 import Output((.+), Punct(..))
 import qualified Terminology as T
-import Topics.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
+import Bids.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
 
 
 b1C1D :: Action

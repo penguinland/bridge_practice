@@ -1,4 +1,4 @@
-module Topics.BidsOneNotrump(
+module Bids.OneNotrump(
     b1N  -- Copied from StandardOpenings
   , b1N2C
   , b1N2D

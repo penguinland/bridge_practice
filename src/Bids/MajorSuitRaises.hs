@@ -1,4 +1,4 @@
-module Topics.BidsMajorSuitRaises(
+module Bids.MajorSuitRaises(
     b1H  -- Re-exported from StandardOpenings
   , b1H2H
   , b1H3H

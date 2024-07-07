@@ -11,10 +11,10 @@ import qualified Topics.StandardModernPrecision.OneClubResponses as Smp1CRespons
 import qualified Topics.StandardModernPrecision.OneDiamondResponses as Smp1DResponses
 import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
-import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 -}
+import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 --import qualified Topics.MajorSuitRaises as MajorSuitRaises
-import qualified Topics.Meckwell as Meckwell
+--import qualified Topics.Meckwell as Meckwell
 
 import ProblemSet(outputLatex)
 
@@ -28,10 +28,10 @@ main = let
               --Smp1CResponses.topicExtras
              --, MajorSuitRaises.topic
              --, Mafia.topic
-              --MafiaResponses.topic
+              MafiaResponses.topic
              --, Smp1DResponses.topic
              --, Smp2DOpen.topic
-             Meckwell.topic
+             --Meckwell.topic
              ]
   in do
     outputLatex 100 topics "test" (mkStdGen 0)

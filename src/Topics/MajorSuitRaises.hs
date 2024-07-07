@@ -5,7 +5,7 @@ import Topic(Topic, wrap, wrapVulDlr, Situations, makeTopic)
 import Auction(Action, makePass, alternatives, pointRange, constrain)
 import Situation(situation, (<~))
 import qualified Terminology as T
-import qualified Topics.BidsMajorSuitRaises as B
+import qualified Bids.MajorSuitRaises as B
 import CommonBids(setOpener, cannotPreempt)
 
 

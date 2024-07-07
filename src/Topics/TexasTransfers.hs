@@ -9,7 +9,7 @@ import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, --wrapVulDlr,
  Situations, makeTopic)
-import qualified Topics.BidsOneNotrump as B
+import qualified Bids.OneNotrump as B
 
 
 makeTransferSignoff :: Situations

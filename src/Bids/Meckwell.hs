@@ -1,4 +1,4 @@
-module Topics.BidsMeckwell(
+module Bids.Meckwell(
     b1N  -- Re-exported from StandardOpenings
   , b1NoX
   , b1NoX2C

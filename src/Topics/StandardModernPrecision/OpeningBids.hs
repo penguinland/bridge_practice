@@ -4,7 +4,7 @@ import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import qualified Topics.StandardModernPrecision.BasicBids as B
+import qualified Bids.StandardModernPrecision.BasicBids as B
 
 
 oneClub :: Situations
