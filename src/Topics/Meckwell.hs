@@ -78,9 +78,10 @@ relayAfterDouble = let
             minSuitLength T.Clubs 2 -- Avoid Garbage Stayman
             makePass
         explanation =
-            "No matter what you have, relay to " .+ T.Bid 2 T.Clubs .+ " to " .+
-            "find out what kind of hand partner has. Do this even if you " .+
-            "have absolutely no strength: leaving the opponents in " .+
+            "Partner has either one long minor or both majors. No matter " .+
+            "what you have, relay to " .+ T.Bid 2 T.Clubs .+ " to find out " .+
+            "what kind of hand partner has. Do this even if you have " .+
+            "absolutely no strength: leaving the opponents in " .+
             T.Bid 1 T.Notrump .+ " doubled is never the right choice."
         in situation "Xrelay" action B.b1NoX2C explanation
   in
