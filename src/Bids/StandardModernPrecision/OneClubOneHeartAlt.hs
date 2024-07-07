@@ -1,4 +1,4 @@
-module Topics.StandardModernPrecision.Bids1C1Halt(
+module Bids.StandardModernPrecision.OneClubOneHeartAlt(
   -- Copied from earlier auctions
     b1C
   , b1C1H  -- An alias for b1C1Hnos!
