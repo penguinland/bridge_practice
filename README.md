@@ -77,7 +77,9 @@ might bid differently (for example, the intended solution is to make a limit
 raise but you think you're shapely enough and have good enough intermediates to
 be game forcing). The system as currently written doesn't have much nuance coded
 into it, and does not take those things into account. Sorry, but the nuance of
-proper hand evaluation is _hard._
+proper hand evaluation is _hard._ In these cases, it's fine to disagree with the
+intended solution, as long as you understand why a less sophisticated player
+might think the intended solution is correct.
 
 Sometimes (hopefully rarely!), there will be a bug in the business logic, and
 the "intended" solution is flat-out wrong (for example, the stated solution is
