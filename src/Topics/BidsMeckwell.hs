@@ -1,6 +1,8 @@
 module Topics.BidsMeckwell(
     b1N  -- Re-exported from StandardOpenings
   , b1NoX
+  , b1NoX2C
+  , b1NoX2C2H
   , b1No2C
   , b1No2D
   , b1No2H
@@ -30,6 +32,11 @@ singleSuit suit = do
     mapM_ (`maxSuitLength` 3) . filter (/= suit) $ T.allSuits
 
 
+-- TODO: there should probably be more constraints on suit quality, rather than
+-- just length. Should both suits be sound? At least one be sound? Maybe
+-- neither? Maybe it depends on the vulnerability? Can the suits be 5-4 either
+-- way, or must one always be at least 5? I need opinions from someone who has
+-- better fundamentals on this stuff.
 twoSuited :: T.Suit -> T.Suit -> Action
 twoSuited a b = do
     minSuitLength a 4
@@ -68,7 +75,6 @@ b1No2H = do
     singleSuit T.Hearts
     makeCall $ T.Bid 2 T.Hearts
 
-
 b1No2S :: Action
 b1No2S = do
     pointsToCompete
@@ -81,3 +87,17 @@ b1No2N = do
     pointsToCompete
     twoSuited T.Clubs T.Diamonds
     makeAlertableCall (T.Bid 2 T.Notrump) "both minors"
+
+
+b1NoX2C :: Action
+b1NoX2C = do
+    -- If you've got a freak hand, you might be tempted to bid your long suit.
+    -- So, forbid those here just to make the bid more obvious.
+    mapM_ (`maxSuitLength` 6) T.allSuits
+    makeAlertableCall (T.Bid 2 T.Clubs) "pass or correct"
+
+
+b1NoX2C2H :: Action
+b1NoX2C2H = do
+   twoSuited T.Hearts T.Spades
+   makeAlertableCall (T.Bid 2 T.Hearts) "both majors: pass or correct"
