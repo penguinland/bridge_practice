@@ -41,8 +41,11 @@ singleSuit suit = do
 -- better fundamentals on this stuff.
 twoSuited :: T.Suit -> T.Suit -> Action
 twoSuited a b = do
-    minSuitLength a 4
-    minSuitLength b 4
+    -- With a 6-card suit, you might be better off treating your hand as
+    -- single-suited, depending on the suit quality. Rather than program all
+    -- that nuance in, we limit ourselves to either 5-4 or 5-5 shapes.
+    mapM_ (`minSuitLength` 4) [a, b]
+    mapM_ (`maxSuitLength` 5) [a, b]
     alternatives [minSuitLength a 5, minSuitLength b 5]
     -- For simplicity, we also forbid having any type of 3-suited hand. It's
     -- easy enough to say "don't show both minors if you've got a major," but
@@ -64,9 +67,7 @@ b1NoX = do
 minorAndMajor :: T.Suit -> Action
 minorAndMajor minor = do
     pointsToCompete
-    minSuitLength minor 4
-    alternatives . map (`minSuitLength` 4) $ T.majorSuits
-    alternatives . map (`minSuitLength` 5) $ minor : T.majorSuits
+    alternatives [twoSuited minor T.Hearts, twoSuited minor T.Spades]
     makeAlertableCall (T.Bid 2 minor) (show minor .+ " and a major")
 
 b1No2C :: Action
