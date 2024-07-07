@@ -6,7 +6,7 @@ import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import qualified Topics.BidsMeckwell as B
+import qualified Bids.Meckwell as B
 
 
 responderCannotBid :: Action
