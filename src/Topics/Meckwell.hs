@@ -1,12 +1,20 @@
 module Topics.Meckwell(topic) where
 
-import Auction(pointRange, minSuitLength, maxSuitLength, makePass)
+import Auction(pointRange, minSuitLength, maxSuitLength, makePass, Action)
 import CommonBids(setOpener)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
 import qualified Topics.BidsMeckwell as B
+
+
+responderCannotBid :: Action
+responderCannotBid = do
+    pointRange 0 7                          -- No jumping to 3N, etc.
+    mapM_ (`maxSuitLength` 4) T.majorSuits  -- No transfers
+    minSuitLength T.Clubs 2                 -- Avoid Garbage Stayman
+    makePass
 
 
 majorSuit :: Situations
@@ -71,12 +79,7 @@ relayAfterDouble = let
             setOpener T.West
             B.b1N
             B.b1NoX
-            -- Make sure responder doesn't bid anything useful.
-            pointRange 0 7
-            maxSuitLength T.Hearts 4
-            maxSuitLength T.Spades 4
-            minSuitLength T.Clubs 2 -- Avoid Garbage Stayman
-            makePass
+            responderCannotBid
         explanation =
             "Partner has either one long minor or both majors. No matter " .+
             "what you have, relay to " .+ T.Bid 2 T.Clubs .+ " to find out " .+
@@ -96,12 +99,7 @@ doubleBothMajors = let
             setOpener T.East
             B.b1N
             B.b1NoX
-            -- Make sure responder doesn't bid anything useful.
-            pointRange 0 7
-            maxSuitLength T.Hearts 4
-            maxSuitLength T.Spades 4
-            minSuitLength T.Clubs 2 -- Avoid Garbage Stayman
-            makePass
+            responderCannotBid
             B.b1NoX2C
             makePass
         explanation =
@@ -136,12 +134,7 @@ findMajor = let
             setOpener T.West
             B.b1N
             _ <- bid  -- Make the compiler happy
-            -- Make sure responder doesn't bid anything useful.
-            pointRange 0 7
-            maxSuitLength T.Hearts 4
-            maxSuitLength T.Spades 4
-            minSuitLength T.Clubs 2 -- Avoid Garbage Stayman
-            makePass
+            responderCannotBid
         explanation =
             "Partner has shown a two-suited hand with " .+ show suit .+
             " and a major. You don't have a " .+ show suit .+ " fit, so " .+
