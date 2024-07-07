@@ -44,6 +44,11 @@ twoSuited a b = do
     minSuitLength a 4
     minSuitLength b 4
     alternatives [minSuitLength a 5, minSuitLength b 5]
+    -- For simplicity, we also forbid having any type of 3-suited hand. It's
+    -- easy enough to say "don't show both minors if you've got a major," but
+    -- deciding which minor to show requires nuance that I don't have the
+    -- patience to program in right now.
+    mapM_ (`maxSuitLength` 3) . filter (/= a) . filter (/= b) $ T.allSuits
 
 
 b1NoX :: Action
