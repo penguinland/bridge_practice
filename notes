@@ -1,5 +1,0 @@
-To set up:
-stack build
-
-binary is in
-./.stack-work/dist/something/something/build/bridge-practice-exe/bridge-practice-exe
