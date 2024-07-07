@@ -4,7 +4,9 @@ module Topics.BidsMeckwell(
   , b1NoX2C
   , b1NoX2C2H
   , b1No2C
+  , b1No2C2H
   , b1No2D
+  , b1No2D2H
   , b1No2H
   , b1No2S
   , b1No2N
@@ -99,5 +101,21 @@ b1NoX2C = do
 
 b1NoX2C2H :: Action
 b1NoX2C2H = do
-   twoSuited T.Hearts T.Spades
-   makeAlertableCall (T.Bid 2 T.Hearts) "both majors: pass or correct"
+    twoSuited T.Hearts T.Spades
+    makeAlertableCall (T.Bid 2 T.Hearts) "both majors: pass or correct"
+
+
+-- For when partner bids a minor and you want to find their major
+findMajor :: T.Suit -> Action
+findMajor minor = do
+    maxSuitLength minor 2
+    minSuitLength T.Hearts 3
+    minSuitLength T.Spades 3
+    mapM_ (`maxSuitLength` 6) T.allSuits
+    makeAlertableCall (T.Bid 2 T.Hearts) "pass or correct"
+
+b1No2C2H :: Action
+b1No2C2H = findMajor T.Clubs
+
+b1No2D2H :: Action
+b1No2D2H = findMajor T.Diamonds

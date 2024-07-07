@@ -119,15 +119,6 @@ bothMinors = let
         action = do
             setOpener T.East
             B.b1N
-            B.b1NoX
-            -- Make sure responder doesn't bid anything useful.
-            pointRange 0 7
-            maxSuitLength T.Hearts 4
-            maxSuitLength T.Spades 4
-            minSuitLength T.Clubs 2 -- Avoid Garbage Stayman
-            makePass
-            B.b1NoX2C
-            makePass
         explanation =
             "With both minors, bid an unusual-like " .+ T.Bid 2 T.Notrump .+
             ". Partner will bid their favorite minor, and you'll pass."
@@ -135,6 +126,34 @@ bothMinors = let
   in
     -- Ensure we're not dealer.
     wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+
+
+findMajor :: Situations
+findMajor = let
+    sit (bid, response, suit) = let
+        action = do
+            setOpener T.West
+            B.b1N
+            _ <- bid  -- Make the compiler happy
+            -- Make sure responder doesn't bid anything useful.
+            pointRange 0 7
+            maxSuitLength T.Hearts 4
+            maxSuitLength T.Spades 4
+            minSuitLength T.Clubs 2 -- Avoid Garbage Stayman
+            makePass
+        explanation =
+            "Partner has shown a two-suited hand with " .+ show suit .+
+            " and a major. You don't have a " .+ show suit .+ " fit, so " .+
+            "bid " .+ T.Bid 2 T.Hearts .+ ", which partner can pass or " .+
+            "correct. It's possible you'll end up in only a 7-card fit, " .+
+            "if your hands are particularly mismatched."
+        in situation "majpoc" action response explanation
+  in
+    -- Ensure partner is not dealer.
+    wrap $ return sit <~ [ (B.b1No2C, B.b1No2C2H, T.Clubs)
+                         , (B.b1No2D, B.b1No2D2H, T.Diamonds)
+                         ]
+                      <~ T.allVulnerabilities <~ [T.West, T.South, T.East]
 
 
 topic :: Topic
@@ -145,4 +164,5 @@ topic = makeTopic "Meckwell over strong notrump" "MW1N" situations
                       , double
                       , wrap [relayAfterDouble, doubleBothMajors]
                       , bothMinors
+                      , findMajor
                       ]
