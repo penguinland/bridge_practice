@@ -51,7 +51,7 @@ solutions).
 
 ## Running the webserver (XeLaTeX not required!)
 
-To run the server, go to the *root directory of this repo* and run `stack run
+To run the server, go to the **root directory of this repo** and run `stack run
 server`. Then, in your browser, head to http://localhost:8765. At the bottom,
 you can check the topics you want to practice, you can hit "Next" to get a new
 problem, and hit "Show Answer" to see the solution to the current problem.
