@@ -56,9 +56,9 @@ server`. Then, in your browser, head to http://localhost:8765. At the bottom,
 you can check the topics you want to practice, you can hit "Next" to get a new
 problem, and hit "Show Answer" to see the solution to the current problem.
 
-To repeat: `stack run server` must be run from the root directory of this
-repository, and will not do the right thing if you run it from another
-directory instead.
+To reiterate an important part: `stack run server` must be run from the root
+directory of this repository, and will not do the right thing if you run it from
+another directory instead.
 
 ### I'm bad at web technologies
 
