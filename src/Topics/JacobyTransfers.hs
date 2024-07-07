@@ -186,7 +186,7 @@ completeTransferShort = let
         explanation =
             "You have opened a strong " .+ oneNT .+ ", and partner\
           \ has made a Jacoby transfer, indicating they have at least 5 " .+
-            suit .+ ". Even though you only have 2-card support, complete\
+            show suit .+ ". Even though you only have 2-card support, complete\
           \ the transfer by bidding the next higher suit. You have at least a\
           \ 7-card fit. If partner is very weak, " .+
             T.Bid 2 suit .+ " rates to play better than notrump,\

@@ -16,6 +16,7 @@ module Auction (
 , minSuitLength
 , maxSuitLength
 , hasTopN
+, soundHolding
 , withholdBid
 , longerThan
 , shorterThan
@@ -123,6 +124,11 @@ hasTopN suit range minCount = do
     constrain (join "_" [show suit, show minCount, "of", "top", show range])
               ["top" ++ show range ++ "(", ", " ++ show suit ++
                ") >= " ++ show minCount]
+
+
+-- A sound pre-empt has 2 of the top 3 or 3 of the top 5 cards in the suit.
+soundHolding :: T.Suit -> Action
+soundHolding suit = alternatives [hasTopN suit 3 2, hasTopN suit 5 3]
 
 
 -- Define the constraints in this action without modifying the current Auction.
