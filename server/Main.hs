@@ -41,6 +41,7 @@ topicList = [ StandardOpeners.topic
             , Meckwell.topic
             , SmpOpenings.topic
             , Smp1CResponses.topic
+            , Smp1CResponses.topicExtras
             , Smp1DResponses.topic
             , Mafia.topic
             , MafiaResponses.topic
