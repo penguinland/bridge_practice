@@ -1,4 +1,4 @@
-module Topics.StandardModernPrecision.Bids1D(
+module Bids.StandardModernPrecision.OneDiamond(
     b1D
   , b1D1H
   , b1D1S

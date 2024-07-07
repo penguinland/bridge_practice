@@ -7,7 +7,7 @@ import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
 import Bids.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
-import qualified Topics.StandardModernPrecision.Bids1D as B
+import qualified Bids.StandardModernPrecision.OneDiamond as B
 
 
 oneMajor :: Situations
