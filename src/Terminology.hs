@@ -65,7 +65,7 @@ instance Showable Suit where
     toHtml Diamonds  = "<span style='color: red'>&diams;</span>"
     toHtml Hearts    = "<span style='color: red'>&hearts;</span>"
     toHtml Spades    = "&spades;"
-    toHtml Notrump   = "<span style='font-variant: small-caps'>NT</span>"
+    toHtml Notrump   = "<span style='font-variant: small-caps'>nt</span>"
 
 instance Show Suit where
     show Clubs    = "clubs"
