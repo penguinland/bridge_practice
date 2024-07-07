@@ -1,4 +1,4 @@
-module Topics.StandardModernPrecision.Bids1C(
+module Bids.StandardModernPrecision.OneClub(
     b1C  -- Copied from BasicBids
   -- Responses to 1C
   , b1C1D

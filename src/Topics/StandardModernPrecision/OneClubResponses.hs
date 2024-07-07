@@ -10,7 +10,7 @@ import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
 import Bids.StandardModernPrecision.BasicBids(firstSeatOpener, oppsPass, b1C,
                                               smpWrapN, smpWrapS)
-import qualified Topics.StandardModernPrecision.Bids1C as B
+import qualified Bids.StandardModernPrecision.OneClub as B
 
 
 oneDiamond :: Situations

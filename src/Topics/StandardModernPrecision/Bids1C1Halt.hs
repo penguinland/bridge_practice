@@ -42,7 +42,7 @@ import Auction(forbid, suitLength, minSuitLength, maxSuitLength, Action,
                balancedHand, makeCall, makeAlertableCall, alternatives,
                longerThan, atLeastAsLong)
 import qualified Terminology as T
-import Topics.StandardModernPrecision.Bids1C(
+import Bids.StandardModernPrecision.OneClub(
     b1C, b1C1Hnos, b1C1H1S, b1C1H1N, b1C1H2C, b1C1H2D, b1C1H2H, b1C1H2S,
     tripleFourOneShape)
 
