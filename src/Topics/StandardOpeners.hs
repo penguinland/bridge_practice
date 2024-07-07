@@ -2,7 +2,7 @@ module Topics.StandardOpeners(topic) where
 
 import Control.Monad.Trans.State.Strict(get)
 
-import Output((.+))
+import Output((.+), Punct(..))
 import Structures(currentBidder)
 import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic, wrap)
 import Auction(forbid, suitLength, minSuitLength, maxSuitLength, alternatives, pointRange, makePass, balancedHand)
@@ -148,8 +148,9 @@ oneClubEqualMinors = let
         explanation =
             "With no 5-card major and a hand unsuitable for opening \
           \ notrump, open " .+ T.Bid 1 T.Clubs .+ " when \
-          \ your minors are of equal, short length. As the saying goes, \
-          \ ``up the line with 3s and 4s, from the top with 5s or mores.''"
+          \ your minors are of equal, short length. As the saying goes, " .+
+            OpenQuote .+ "up the line with 3s and 4s, from the top with 5s " .+
+            "or mores." .+ CloseQuote
       in
         situation "1C1Suit" action SO.b1C explanation
   in

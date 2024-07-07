@@ -1,7 +1,7 @@
 module Topics.StandardModernPrecision.MafiaResponses(topic) where
 
 import Auction(Action, suitLength, maxSuitLength)
-import Output((.+))
+import Output((.+), Punct(..))
 import Situation(Situation, situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
@@ -69,8 +69,8 @@ maxSupportUnbalanced = let
            \ either sign off in our major (in partscore or game), or bid " .+
              T.Bid 3 T.Clubs .+ " to ask\
            \ us to bid our singleton. Remember that you can bid the\
-           \ singleton/void ``naturally'' unless it's clubs, in which case bid\
-           \ our trump suit to show it!"
+           \ singleton/void " .+ OpenQuote .+ "naturally" .+ CloseQuote .+ "\
+           \ unless it's clubs, in which case bid our trump suit to show it!"
       in
         situation "3MV" action responderBid explanation
   in
@@ -87,7 +87,8 @@ brakesHearts = let
             oppsPass
         explanation =
             "With neither major and a non-maximum hand, bid " .+
-             T.Bid 1 T.Notrump .+ " as the ``double negative''\
+             T.Bid 1 T.Notrump .+ " as the " .+ OpenQuote .+
+            "double negative" .+ CloseQuote .+ "\
            \ brake bid. Unless partner makes a jump bid, seriously consider\
            \ passing whatever they do next (if they do anything at all;\
            \ perhaps they'll prefer playing in " .+
@@ -109,7 +110,8 @@ brakesSpades = let
             maxSuitLength T.Hearts 4
         explanation =
             "With a minimum hand and no support for partner's spades, bid " .+
-             T.Bid 1 T.Notrump .+ " as the ``double negative''\
+             T.Bid 1 T.Notrump .+ " as the " .+ OpenQuote .+
+            "double negative" .+ CloseQuote .+ "\
            \ brake bid. Unless partner makes a jump bid, seriously consider\
            \ passing whatever they do next (if they do anything at all;\
            \ perhaps they'll prefer playing in " .+
@@ -131,7 +133,8 @@ brakesSpadesHearts = let
             suitLength T.Hearts 5
         explanation =
             "With a minimum hand and no support for partner's spades, bid " .+
-             T.Bid 1 T.Notrump .+ " as the ``double negative''\
+             T.Bid 1 T.Notrump .+ " as the " .+ OpenQuote .+
+            "double negative" .+ CloseQuote .+ "\
            \ brake bid. Do this even if you've got a heart suit! Partner's " .+
              T.Bid 1 T.Spades .+ " bid has denied 4 hearts, and\
            \ although we might have a 5-3 fit, you're too weak to risk getting\
