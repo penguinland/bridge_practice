@@ -25,7 +25,7 @@ import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
 import Output(Punct(..), (.+))
 import qualified Terminology as T
 
-import Topics.StandardModernPrecision.BasicBids(b1D)
+import Bids.StandardModernPrecision.BasicBids(b1D)
 
 
 b1D1H :: Action

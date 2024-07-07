@@ -6,7 +6,7 @@ import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import Topics.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
+import Bids.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
 import qualified Topics.StandardModernPrecision.Bids1D as B
 
 

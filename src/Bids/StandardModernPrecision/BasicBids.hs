@@ -1,4 +1,4 @@
-module Topics.StandardModernPrecision.BasicBids(
+module Bids.StandardModernPrecision.BasicBids(
     firstSeatOpener
   , oppsPass
   -- Opening bids

@@ -8,8 +8,8 @@ import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import Topics.StandardModernPrecision.BasicBids(firstSeatOpener, oppsPass, b1C,
-                                                smpWrapN, smpWrapS)
+import Bids.StandardModernPrecision.BasicBids(firstSeatOpener, oppsPass, b1C,
+                                              smpWrapN, smpWrapS)
 import qualified Topics.StandardModernPrecision.Bids1C as B
 
 
