@@ -137,10 +137,10 @@ findMajor = let
             responderCannotBid
         explanation =
             "Partner has shown a two-suited hand with " .+ show suit .+
-            " and a major. You don't have a " .+ show suit .+ " fit, so " .+
-            "bid " .+ T.Bid 2 T.Hearts .+ ", which partner can pass or " .+
-            "correct. It's possible you'll end up in only a 7-card fit, " .+
-            "if your hands are particularly mismatched."
+            " and a major. You don't have a " .+ (init . show $ suit) .+
+            " fit, so bid " .+ T.Bid 2 T.Hearts .+ ", which partner can " .+
+            "pass or correct. It's possible you'll end up in only a 7-card " .+
+            "fit, if your hands are particularly mismatched."
         in situation "majpoc" action response explanation
   in
     -- Ensure partner is not dealer.
