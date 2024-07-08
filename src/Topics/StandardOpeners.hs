@@ -119,8 +119,8 @@ oneDiamond3Cards = let
         "With no 5-card major and a hand unsuitable for opening \
       \ notrump, open " .+ T.Bid 1 T.Diamonds .+ " when \
       \ diamonds is your only minor, even if you only have 3 of them. The \
-      \ only time you'd open 1D with a 3-card suit in standard openings is \
-      \ when your shape is exactly 4=4=3=2."
+      \ only time you'd open " .+ T.Bid 1 T.Diamonds .+ " with a 3-card suit \
+      \ in standard openings is when your shape is exactly 4=4=3=2."
   in
     stdWrap $ situation "1D4432" action SO.b1D explanation
 
@@ -227,7 +227,7 @@ pass = let
         <~ T.allVulnerabilities <~ [T.South, T.East]
 
 topic :: Topic
-topic = makeTopic "standard 1-level opening bids" "StdOpen" situations
+topic = makeTopic "standard opening bids" "StdOpen" situations
   where
     situations = wrap [ oneNotrump
                       , twoNotrump
