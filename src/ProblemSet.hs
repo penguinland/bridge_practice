@@ -4,7 +4,6 @@ module ProblemSet(
 ) where
 
 import Control.Monad.Trans.State.Strict(runState, get)
-import Data.List(sort)
 import Data.List.Utils(join, replace)
 import System.Random(StdGen)
 
@@ -42,7 +41,7 @@ generate n topics g = let
 outputLatex :: Int -> [Topic] -> String -> StdGen -> IO String
 outputLatex numHands topics filename g = do
     (problems, _) <- generate numHands topics g
-    let topicNames = join ", " . sort . map (toLatex . topicName) $ topics
+    let topicNames = join ", " . map (toLatex . topicName) $ topics
         problemSet = join "\n" . map toLatex $ problems
     template <- readFile "template.tex"
     let doc = replace "%<TOPICS>" topicNames .
