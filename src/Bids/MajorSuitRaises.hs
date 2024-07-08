@@ -36,6 +36,9 @@ limitRaise suit = do
     -- 1N followed by a jump raise for 3-card raises. Also don't do 5-card
     -- raises, because a lot of the time those should just blast game.
     suitLength suit 4
+    -- Ensure that there are no singletons or voids, with which you might
+    -- instead want to splinter.
+    mapM_ (`minSuitLength` 2) T.allSuits
     pointRange 10 12
     makeCall $ T.Bid 3 suit
 
