@@ -22,12 +22,12 @@ import ProblemSet(outputLatex)
 main :: IO ()
 main = let
     topics = [ StandardOpeners.topic
+             , MajorSuitRaises.topic
              , JacobyTransfers.topic
              , TexasTransfers.topic
              --SmpOpenings.topic
              --, Smp1CResponses.topic
               --Smp1CResponses.topicExtras
-             , MajorSuitRaises.topic
              --, Mafia.topic
               --MafiaResponses.topic
              --, Smp1DResponses.topic

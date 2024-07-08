@@ -1,5 +1,5 @@
 module Bids.StandardModernPrecision.OneDiamond(
-    b1D
+    b1D  -- re-exported from BasicBids
   , b1D1H
   , b1D1S
   , b1D1N
