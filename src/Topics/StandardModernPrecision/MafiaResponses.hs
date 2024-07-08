@@ -70,7 +70,8 @@ maxSupportUnbalanced = let
              T.Bid 3 T.Clubs .+ " to ask\
            \ us to bid our singleton. Remember that you can bid the\
            \ singleton/void " .+ OpenQuote .+ "naturally" .+ CloseQuote .+ "\
-           \ unless it's clubs, in which case bid our trump suit to show it!"
+           \ at the 2 level unless it's clubs, in which case bid our trump " .+
+            "suit to show it!"
       in
         situation "3MV" action responderBid explanation
   in
