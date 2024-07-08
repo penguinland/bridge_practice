@@ -2,21 +2,22 @@ module Topics.MajorSuitRaises(topic) where
 
 import Output((.+))
 import Topic(Topic, wrap, wrapVulDlr, Situations, makeTopic)
-import Auction(Action, makePass, alternatives, pointRange, constrain)
+import Auction(Action, makePass, alternatives, pointRange, constrain, forbid)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified Bids.MajorSuitRaises as B
-import CommonBids(setOpener, cannotPreempt)
+import CommonBids(setOpener, cannotPreempt, takeoutDouble)
 
 
-noInterference :: Action
-noInterference = do
+noInterference :: T.Suit -> Action
+noInterference suit = do
     cannotPreempt
     -- Building out the entire overcall structure just so we can forbid
     -- any of it here is too complicated for now. Let's just say either
     -- the opponent has at most 14 HCP, and either doesn't have a 5-card
     -- suit or has at most 7 HCP.
     pointRange 0 14
+    forbid $ takeoutDouble suit
     alternatives [
         constrain "no_five_card_suit" [
             "shape(", ", any 4441, any 4333, any 4432)"]
@@ -26,11 +27,11 @@ noInterference = do
 
 simpleRaise :: Situations
 simpleRaise = let
-    sit (opening, response) = let
+    sit (opening, response, suit) = let
         action = do
             setOpener T.North
             _ <- opening
-            noInterference
+            noInterference suit
         explanation =
             "With at least 3-card support for partner's suit but no " .+
             "interest in game, raise partner's suit to the 2 level. " .+
@@ -40,16 +41,17 @@ simpleRaise = let
       in
         situation "simpR" action response explanation
   in
-    wrapVulDlr $ return sit <~ [(B.b1H, B.b1H2H), (B.b1S, B.b1S2S)]
+    wrapVulDlr $ return sit <~ [ (B.b1H, B.b1H2H, T.Hearts)
+                               , (B.b1S, B.b1S2S, T.Spades)]
 
 
 limitRaise :: Situations
 limitRaise = let
-    sit (opening, response) = let
+    sit (opening, response, suit) = let
         action = do
             setOpener T.North
             _ <- opening
-            noInterference
+            noInterference suit
         explanation =
             -- Don't mention needing at least 4-card support here: we're not
             -- assuming that we're playing 2/1, so might not fold the 3-card
@@ -63,7 +65,8 @@ limitRaise = let
   in
     -- You should be an unpassed hand to make a limit raise; otherwise, consider
     -- using Drury.
-    wrap $ return sit <~ [(B.b1H, B.b1H3H), (B.b1S, B.b1S3S)]
+    wrap $ return sit <~ [ (B.b1H, B.b1H3H, T.Hearts)
+                         , (B.b1S, B.b1S3S, T.Spades)]
                       <~ T.allVulnerabilities
                       <~ [T.West, T.North]
 
@@ -74,7 +77,7 @@ blast3N = let
         action = do
             setOpener T.North
             _ <- opening
-            noInterference
+            noInterference suit
         explanation =
             "With 13-15 HCP, you probably want to be in game but not slam " .+
             "when partner opens the bidding. You've got an 8-card fit in " .+
