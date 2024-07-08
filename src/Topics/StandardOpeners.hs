@@ -227,7 +227,7 @@ pass = let
         <~ T.allVulnerabilities <~ [T.South, T.East]
 
 topic :: Topic
-topic = makeTopic "Standard 1-level opening bids" "StdOpen" situations
+topic = makeTopic "standard 1-level opening bids" "StdOpen" situations
   where
     situations = wrap [ oneNotrump
                       , twoNotrump
