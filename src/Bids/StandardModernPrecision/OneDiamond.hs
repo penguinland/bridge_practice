@@ -66,12 +66,16 @@ b1D1N = do
 b1D2C :: Action
 b1D2C = do
     pointRange 11 40
+    forbid balancedHand
     -- Either you've got 5+ clubs, or you've got 9+ cards in the minors and are
     -- game forcing (with an invitational hand, start with 2D and rebid 3C).
     alternatives [ minSuitLength T.Clubs 5
                  , minSuitLength T.Clubs 4 >> minSuitLength T.Diamonds 5 >>
                        pointRange 14 40 ]
-    forbid balancedHand
+    -- If you're 5-5 or longer in the minors, bid 2C only if you're game
+    -- forcing, and bid 2D if you're just invitational.
+    alternatives [ forbid $ mapM_ (`minSuitLength` 5) T.minorSuits
+                 , pointRange 14 40 ]
     -- If you've got a major, you must have a 6-card minor.
     alternatives [ minSuitLength T.Clubs 6
                  , mapM_ (`maxSuitLength` 3) T.majorSuits ]
@@ -81,12 +85,16 @@ b1D2C = do
 b1D2D :: Action
 b1D2D = do
     pointRange 11 40
+    forbid balancedHand
     -- Either you've got 5+ diamonds, or you've got 9+ cards in the minors and
     -- are invitational (with a game forcing hand, start with 2C).
     alternatives [ minSuitLength T.Diamonds 5
                  , minSuitLength T.Diamonds 4 >> minSuitLength T.Clubs 5 >>
                        pointRange 11 13 ]
-    forbid balancedHand
+    -- If you're 5-5 or longer in the minors, bid 2D only if you're
+    -- invitational, and bid 2C if you're game forcing.
+    alternatives [ forbid $ mapM_ (`minSuitLength` 5) T.minorSuits
+                 , pointRange 11 13 ]
     -- If you've got a major, you must have a 6-card minor.
     alternatives [ minSuitLength T.Diamonds 6
                  , mapM_ (`maxSuitLength` 3) T.majorSuits ]
