@@ -3,53 +3,60 @@
   <body style="font-size: 16pt;">
     <center>
       <h1>Bidding Practice</h1>
-      <table border=1 style="table-layout: fixed;" height="500ex">
+      <table border=0>
         <tr>
           <td width="400em" style="vertical-align: top;">
             <span id="topic_list"></span>
           </td>
-          <td style="vertical-align: top;">
-            <table width="600em" border=1 style="table-layout: fixed;">
+          <td>
+            <table border=0 style="table-layout: fixed;" height="500ex">
               <tr>
-                <td width="33%" height="120ex">
-                  &nbsp;&nbsp;Dealer: <span id="dealer"></span><br/>
-                  &nbsp;&nbsp;Vul: <span id="vulnerability"></span>
+                <td style="vertical-align: top;">
+                  <table width="600em" border=1 style="table-layout: fixed;">
+                    <tr>
+                      <td width="33%" height="120ex">
+                        &nbsp;&nbsp;Dealer: <span id="dealer"></span><br/>
+                        &nbsp;&nbsp;Vul: <span id="vulnerability"></span>
+                      </td>
+                      <td width="33%">
+                        <span id="north_hand"></span>
+                      </td>
+                      <td width="33%">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td height="120ex">
+                        <span id="west_hand"></span>
+                      </td>
+                      <td>
+                      </td>
+                      <td>
+                        <span id="east_hand"></span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td height="120ex">
+                      </td>
+                      <td>
+                        <span id="south_hand"></span>
+                      </td>
+                      <td>
+                      </td>
+                    </tr>
+                  </table>
+                  <center>
+                    <table>
+                      <tr><td><span id="bidding"></span></td></tr>
+                      <tr><td><ol type="a" id="alerts"></ol></td></tr>
+                    </table>
+                  </center>
                 </td>
-                <td width="33%">
-                  <span id="north_hand"></span>
-                </td>
-                <td width="33%">
-                </td>
-              </tr>
-              <tr>
-                <td height="120ex">
-                  <span id="west_hand"></span>
-                </td>
-                <td>
-                </td>
-                <td>
-                  <span id="east_hand"></span>
-                </td>
-              </tr>
-              <tr>
-                <td height="120ex">
-                </td>
-                <td>
-                  <span id="south_hand"></span>
-                </td>
-                <td>
+                <td id="explanation" width="400em" style="vertical-align: top;">
                 </td>
               </tr>
             </table>
-            <center>
-              <table>
-                <tr><td><span id="bidding"></span></td></tr>
-                <tr><td><ol type="a" id="alerts"></ol></td></tr>
-              </table>
-            </center>
           </td>
-          <td id="explanation" width="400em" style="vertical-align: top;">
-          </td>
+        </tr>
       </table>
       <br/>
       <button onclick="displayProblem()">Next</button>
