@@ -105,12 +105,12 @@ app = do
     get root $ file "text/html" "static/index.html"
     get "topics" $ json topicNames
     get ("situation") $ do
-        (IoRng ioRng) <- getState
-        rng <- liftIO . readIORef $ ioRng
         requested <- param "topics"
         case maybe (Left "no topics selected") findTopics requested of
             Left err -> text . pack $ err
             Right topics -> do
+                (IoRng ioRng) <- getState
+                rng <- liftIO . readIORef $ ioRng
                 (sitInstList, rng') <- liftIO $ generate 1 topics rng
                 liftIO . writeIORef ioRng $ rng'
                 json . head $ sitInstList
