@@ -21,7 +21,7 @@ async function getSituation() {
         .filter(ch => ch.checked == true)
         .map(t => t.value)
         .join(",");
-    return await getJson("/situation/" + indices);
+    return await getJson("/situation?topics=" + indices);
 }
 
 // Create checkbox options for each topic the server supports.
