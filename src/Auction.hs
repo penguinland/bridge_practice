@@ -5,6 +5,7 @@ module Auction (
 , finish
 , forbid
 , alternatives
+, impliesThat
 , constrain
 , define
 , makeCall
@@ -59,6 +60,10 @@ forbid action = do
 alternatives :: [Action] -> Action
 -- We use deMorgan's laws. (A || B || C) becomes !(!A && !B && !C)
 alternatives = forbid . mapM_ forbid
+
+
+impliesThat :: Action -> Action -> Action
+impliesThat a b = alternatives [forbid a, b]
 
 
 -- modifyDealerProg takes the name of a constraint and pieces of a definition

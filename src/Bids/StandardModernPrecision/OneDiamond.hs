@@ -21,7 +21,7 @@ module Bids.StandardModernPrecision.OneDiamond(
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, balancedHand, makeCall, makeAlertableCall, alternatives,
-               longerThan, atMostAsLong)
+               longerThan, atMostAsLong, impliesThat)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
 
@@ -74,11 +74,10 @@ b1D2C = do
                        pointRange 14 40 ]
     -- If you're 5-5 or longer in the minors, bid 2C only if you're game
     -- forcing, and bid 2D if you're just invitational.
-    alternatives [ forbid $ mapM_ (`minSuitLength` 5) T.minorSuits
-                 , pointRange 14 40 ]
+    (mapM_ (`minSuitLength` 5) T.minorSuits) `impliesThat` pointRange 14 40
     -- If you've got a major, you must have a 6-card minor.
-    alternatives [ minSuitLength T.Clubs 6
-                 , mapM_ (`maxSuitLength` 3) T.majorSuits ]
+    (alternatives . map (`minSuitLength` 4) $ T.majorSuits) `impliesThat`
+        minSuitLength T.Clubs 6
     makeCall $ T.Bid 2 T.Clubs
 
 
@@ -93,11 +92,10 @@ b1D2D = do
                        pointRange 11 13 ]
     -- If you're 5-5 or longer in the minors, bid 2D only if you're
     -- invitational, and bid 2C if you're game forcing.
-    alternatives [ forbid $ mapM_ (`minSuitLength` 5) T.minorSuits
-                 , pointRange 11 13 ]
+    (mapM_ (`minSuitLength` 5) T.minorSuits) `impliesThat` pointRange 11 13
     -- If you've got a major, you must have a 6-card minor.
-    alternatives [ minSuitLength T.Diamonds 6
-                 , mapM_ (`maxSuitLength` 3) T.majorSuits ]
+    (alternatives . map (`minSuitLength` 4) $ T.majorSuits) `impliesThat`
+        minSuitLength T.Diamonds 6
     makeAlertableCall (T.Bid 2 T.Diamonds) "Invitational or better"
 
 
