@@ -11,11 +11,12 @@ module CommonBids(
 , fourthSeatOpener
 , setOpener
 , takeoutDouble
+, noInterference
 ) where
 
 import Auction(Action, constrain, define, forbid, pointRange, balancedHand,
                makeCall, makeAlertableCall, makePass, suitLength,
-               minSuitLength, maxSuitLength)
+               minSuitLength, maxSuitLength, alternatives)
 import Structures(currentBidder)
 import Control.Monad.Trans.State.Strict(get)
 -- Not currently needed:
@@ -150,3 +151,19 @@ takeoutDouble shortSuit = do
         if suit == shortSuit
         then maxSuitLength suit 2
         else minSuitLength suit 3
+
+
+noInterference :: T.Suit -> Action
+noInterference suit = do
+    cannotPreempt
+    -- Building out the entire overcall structure just so we can forbid
+    -- any of it here is too complicated for now. Let's just say either
+    -- the opponent has at most 14 HCP, and either doesn't have a 5-card
+    -- suit or has at most 7 HCP.
+    pointRange 0 14
+    forbid $ takeoutDouble suit
+    alternatives [
+        constrain "no_five_card_suit" [
+            "shape(", ", any 4441, any 4333, any 4432)"]
+      , pointRange 0 7]
+    makePass
