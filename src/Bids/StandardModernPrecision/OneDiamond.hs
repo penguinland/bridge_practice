@@ -67,14 +67,12 @@ b1D2C :: Action
 b1D2C = do
     pointRange 11 40
     forbid balancedHand
-    -- Either you've got 5+ clubs, or you've got 9+ cards in the minors and are
-    -- game forcing (with an invitational hand, start with 2D and rebid 3C).
+    -- Either you've got 5+ clubs, or you've got 9+ cards in the minors.
     alternatives [ minSuitLength T.Clubs 5
-                 , minSuitLength T.Clubs 4 >> minSuitLength T.Diamonds 5 >>
-                       pointRange 14 40 ]
-    -- If you're 5-5 or longer in the minors, bid 2C only if you're game
-    -- forcing, and bid 2D if you're just invitational.
-    (mapM_ (`minSuitLength` 5) T.minorSuits) `impliesThat` pointRange 14 40
+                 , minSuitLength T.Clubs 4 >> minSuitLength T.Diamonds 5 ]
+    -- If you've got 9+ cards in the minors, you must be game forcing (if you're
+    -- only invitational, start with 2D and rebid 3C).
+    minSuitLength T.Diamonds 4 `impliesThat` pointRange 14 40
     -- If you've got a major, you must have a 6-card minor.
     (alternatives . map (`minSuitLength` 4) $ T.majorSuits) `impliesThat`
         minSuitLength T.Clubs 6
@@ -85,14 +83,12 @@ b1D2D :: Action
 b1D2D = do
     pointRange 11 40
     forbid balancedHand
-    -- Either you've got 5+ diamonds, or you've got 9+ cards in the minors and
-    -- are invitational (with a game forcing hand, start with 2C).
+    -- Either you've got 5+ diamonds, or you've got 9+ cards in the minors.
     alternatives [ minSuitLength T.Diamonds 5
-                 , minSuitLength T.Diamonds 4 >> minSuitLength T.Clubs 5 >>
-                       pointRange 11 13 ]
-    -- If you're 5-5 or longer in the minors, bid 2D only if you're
-    -- invitational, and bid 2C if you're game forcing.
-    (mapM_ (`minSuitLength` 5) T.minorSuits) `impliesThat` pointRange 11 13
+                 , minSuitLength T.Diamonds 4 >> minSuitLength T.Clubs 5 ]
+    -- If you've got both minors (5-4 or better, either direction), bid 2D only
+    -- if you're invitational, and bid 2C if you're game forcing.
+    minSuitLength T.Clubs 4 `impliesThat` pointRange 11 13
     -- If you've got a major, you must have a 6-card minor.
     (alternatives . map (`minSuitLength` 4) $ T.majorSuits) `impliesThat`
         minSuitLength T.Diamonds 6
