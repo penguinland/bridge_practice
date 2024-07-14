@@ -2,7 +2,7 @@ module Topics.ForcingOneNotrump(topic) where
 
 import Output((.+), Punct(..))
 import Topic(Topic, wrap, Situations, makeTopic)
-import Auction(suitLength, pointRange)
+import Auction(suitLength, maxSuitLength, pointRange)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified Bids.ForcingOneNotrump as B
@@ -141,8 +141,6 @@ jumpRebid = let
                       <~ T.allVulnerabilities
                       <~ [T.South, T.East]
 
--- more situations: limit raise, 2-card constructive raise, weak with long suit,
---                  opener rebids without jumping/reversing
 
 limitRaise3 :: Situations
 limitRaise3 = let
@@ -168,6 +166,44 @@ limitRaise3 = let
                       <~ T.allVulnerabilities
                       <~ [T.North, T.West]
 
+
+raise2 :: Situations
+raise2 = let
+    sit (opening, response, suit) = let
+        action = do
+            setOpener T.North
+            _ <- opening
+            noInterference T.Hearts
+            suitLength suit 2
+            pointRange 6 9
+            mapM_ (`maxSuitLength` 5) . filter (/= suit) $ T.allSuits
+        explanation =
+            "We're not even strong enough to invite to game, we only have " .+
+            "2-card support for partner's major, and we don't have our own " .+
+            "long suit to suggest. Bid a forcing " .+ T.Bid 1 T.Notrump .+
+            ", planning to then rebid 2 of partner's major, which will " .+
+            "likely be the final contract. but if we've got a 5-card suit " .+
+            "and partner bids that on their second turn, we might pass it " .+
+            "instead! If partner rebids their major, showing at least 6 " .+
+            "cards in it, we'll be delighted to pass in an 8-card fit. " .+
+            "If partner jumps or reverses, game might still be available, " .+
+            "and we'll continue bidding naturally over that."
+      in
+        situation "mr2" action response explanation
+  in
+    -- For us to bid a forcing 1N, we must be an unpassed hand.
+    wrap $ return sit <~ [ (B.b1H, B.b1H1N, T.Hearts)
+                         , (B.b1S, B.b1S1N, T.Spades) ]
+                      <~ T.allVulnerabilities
+                      <~ [T.North, T.West]
+
+
+-- more situations:
+--                  opener rebids without jumping/reversing
+--                  opener accepts/rejects invite
+--                  responder weak with long suit,
+
+
 topic :: Topic
 topic = makeTopic ("forcing " .+ T.Bid 1 T.Notrump) "F1N" situations
   where
@@ -175,4 +211,5 @@ topic = makeTopic ("forcing " .+ T.Bid 1 T.Notrump) "F1N" situations
                       , wrap [ wrap jumpShift
                              , wrap [jumpRebid, rebid2N, majorReverse]]
                       , limitRaise3
+                      , raise2
                       ]

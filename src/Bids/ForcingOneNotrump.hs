@@ -102,10 +102,10 @@ b1H1N2S = do
 
 jumpRebid :: T.Suit -> Action
 jumpRebid major = do
-    pointRange 18 40
+    pointRange 17 40
     minSuitLength major 6
     -- With extra strength and extra length, just jump straight to 4.
-    minSuitLength major 7 `impliesThat` pointRange 18 19
+    minSuitLength major 7 `impliesThat` pointRange 17 19
     -- If we were 6-4 in two suits and strong enough to jump, we should probably
     -- bid our second suit instead.
     mapM_ (`maxSuitLength` 3) . filter (/= major) $ T.allSuits
