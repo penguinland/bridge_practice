@@ -1,8 +1,8 @@
 module Topics.ForcingOneNotrump(topic) where
 
 import Output((.+), Punct(..))
-import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic)
---import Auction(forbid)
+import Topic(Topic, wrap, Situations, makeTopic)
+import Auction(suitLength, pointRange)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified Bids.ForcingOneNotrump as B
@@ -25,7 +25,8 @@ bid1NHearts = let
       in
         situation "H1N" action B.b1H1N explanation
   in
-    stdWrap sit
+    -- For us to bid a forcing 1N, we must be an unpassed hand.
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
 bid1NSpades :: Situations
@@ -43,7 +44,8 @@ bid1NSpades = let
       in
         situation "S1N" action B.b1S1N explanation
   in
-    stdWrap sit
+    -- For us to bid a forcing 1N, we must be an unpassed hand.
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.North, T.West]
 
 rebid2N :: Situations
 rebid2N = let
@@ -62,8 +64,10 @@ rebid2N = let
       in
         situation "rb2N" action B.b1M1N2N explanation
   in
-    wrapVulDlr $ return sit <~ [ (B.b1H, B.b1H1N, T.Hearts)
-                               , (B.b1S, B.b1S1N, T.Spades) ]
+    wrap $ return sit
+        <~ [(B.b1H, B.b1H1N, T.Hearts), (B.b1S, B.b1S1N, T.Spades)]
+        <~ T.allVulnerabilities
+        <~ [T.South, T.East]
 
 
 jumpShift :: Situations
@@ -84,12 +88,14 @@ jumpShift = let
       in
         situation "js" action rebid explanation
   in
-    wrapVulDlr $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3C, T.Hearts)
-                               , (B.b1H, B.b1H1N, B.b1H1N3D, T.Hearts)
-                               , (B.b1S, B.b1S1N, B.b1S1N3C, T.Spades)
-                               , (B.b1S, B.b1S1N, B.b1S1N3D, T.Spades)
-                               , (B.b1S, B.b1S1N, B.b1S1N3H, T.Spades)
-                               ]
+    wrap $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3C, T.Hearts)
+                         , (B.b1H, B.b1H1N, B.b1H1N3D, T.Hearts)
+                         , (B.b1S, B.b1S1N, B.b1S1N3C, T.Spades)
+                         , (B.b1S, B.b1S1N, B.b1S1N3D, T.Spades)
+                         , (B.b1S, B.b1S1N, B.b1S1N3H, T.Spades)
+                         ]
+                      <~ T.allVulnerabilities
+                      <~ [T.South, T.East]
 
 
 majorReverse :: Situations
@@ -111,7 +117,7 @@ majorReverse = let
       in
         situation "rev" action B.b1H1N2S explanation
   in
-    stdWrap sit
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.South, T.East]
 
 
 jumpRebid :: Situations
@@ -130,15 +136,43 @@ jumpRebid = let
       in
         situation "jrb" action rebid explanation
   in
-    wrapVulDlr $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3H, T.Hearts)
-                               , (B.b1S, B.b1S1N, B.b1S1N3S, T.Spades) ]
+    wrap $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3H, T.Hearts)
+                         , (B.b1S, B.b1S1N, B.b1S1N3S, T.Spades) ]
+                      <~ T.allVulnerabilities
+                      <~ [T.South, T.East]
 
+-- more situations: limit raise, 2-card constructive raise, weak with long suit,
+--                  opener rebids without jumping/reversing
+
+limitRaise3 :: Situations
+limitRaise3 = let
+    sit (opening, response, suit) = let
+        action = do
+            setOpener T.North
+            _ <- opening
+            noInterference T.Hearts
+            suitLength suit 3
+            pointRange 10 12
+        explanation =
+            "We've got 3-card support for partner's major, and strength for " .+
+            "a limit raise. Start with a forcing " .+ T.Bid 1 T.Notrump .+
+            ", planning to then jump to 3 of partner's major. If they've " .+
+            "got a minimum, they'll pass your second bid, and if they've " .+
+            "got a little extra, they'll bid game."
+      in
+        situation "lr3" action response explanation
+  in
+    -- For us to bid a forcing 1N, we must be an unpassed hand.
+    wrap $ return sit <~ [ (B.b1H, B.b1H1N, T.Hearts)
+                         , (B.b1S, B.b1S1N, T.Spades) ]
+                      <~ T.allVulnerabilities
+                      <~ [T.North, T.West]
 
 topic :: Topic
 topic = makeTopic ("forcing " .+ T.Bid 1 T.Notrump) "F1N" situations
   where
-    situations = wrap [ bid1NHearts
-                      , bid1NSpades
+    situations = wrap [ wrap [bid1NHearts, bid1NSpades]
                       , wrap [ wrap jumpShift
                              , wrap [jumpRebid, rebid2N, majorReverse]]
+                      , limitRaise3
                       ]
