@@ -16,10 +16,11 @@ import Output(toHtml)
 import ProblemSet(generate)
 import Topic(Topic, topicName)
 
-import qualified Topics.JacobyTransfers as JacobyTransfers
 import qualified Topics.StandardOpeners as StandardOpeners
-import qualified Topics.TexasTransfers as TexasTransfers
 import qualified Topics.MajorSuitRaises as MajorSuitRaises
+import qualified Topics.ForcingOneNotrump as ForcingOneNotrump
+import qualified Topics.JacobyTransfers as JacobyTransfers
+import qualified Topics.TexasTransfers as TexasTransfers
 import qualified Topics.Meckwell as Meckwell
 
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
@@ -36,6 +37,7 @@ import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 topicList :: [Topic]
 topicList = [ StandardOpeners.topic
             , MajorSuitRaises.topic
+            , ForcingOneNotrump.topic
             , JacobyTransfers.topic
             , TexasTransfers.topic
             , Meckwell.topic

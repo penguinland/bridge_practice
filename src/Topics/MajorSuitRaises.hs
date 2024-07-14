@@ -2,27 +2,10 @@ module Topics.MajorSuitRaises(topic) where
 
 import Output((.+))
 import Topic(Topic, wrap, wrapVulDlr, Situations, makeTopic)
-import Auction(Action, makePass, alternatives, pointRange, constrain, forbid)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified Bids.MajorSuitRaises as B
-import CommonBids(setOpener, cannotPreempt, takeoutDouble)
-
-
-noInterference :: T.Suit -> Action
-noInterference suit = do
-    cannotPreempt
-    -- Building out the entire overcall structure just so we can forbid
-    -- any of it here is too complicated for now. Let's just say either
-    -- the opponent has at most 14 HCP, and either doesn't have a 5-card
-    -- suit or has at most 7 HCP.
-    pointRange 0 14
-    forbid $ takeoutDouble suit
-    alternatives [
-        constrain "no_five_card_suit" [
-            "shape(", ", any 4441, any 4333, any 4432)"]
-      , pointRange 0 7]
-    makePass
+import CommonBids(setOpener, noInterference)
 
 
 simpleRaise :: Situations

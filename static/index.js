@@ -34,7 +34,7 @@ getTopics().then(topics => {
         checkbox.id    = tag_name;
         checkbox.name  = "topics";
         checkbox.value = index;
-        if (index <= 2) {
+        if (index < 4) {
             checkbox.checked = true; // Start off with a couple defaults
         }
 

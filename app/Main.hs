@@ -15,6 +15,7 @@ import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 -}
 import qualified Topics.MajorSuitRaises as MajorSuitRaises
 import qualified Topics.Meckwell as Meckwell
+import qualified Topics.ForcingOneNotrump as ForcingOneNotrump
 
 import ProblemSet(outputLatex)
 
@@ -22,6 +23,7 @@ import ProblemSet(outputLatex)
 main :: IO ()
 main = let
     topics = [ StandardOpeners.topic
+             , ForcingOneNotrump.topic
              , MajorSuitRaises.topic
              , JacobyTransfers.topic
              , TexasTransfers.topic
