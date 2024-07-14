@@ -1,12 +1,14 @@
 module Bids.ForcingOneNotrump(
     b1H  -- Re-exported from StandardOpenings
   , b1H1N
+  , b1H1N2H
   , b1H1N2S
   , b1H1N3C
   , b1H1N3D
   , b1H1N3H
   , b1S  -- Re-exported from StandardOpenings
   , b1S1N
+  , b1S1N2S
   , b1S1N3C
   , b1S1N3D
   , b1S1N3H
@@ -105,7 +107,7 @@ jumpRebid major = do
     pointRange 17 40
     minSuitLength major 6
     -- With extra strength and extra length, just jump straight to 4.
-    minSuitLength major 7 `impliesThat` pointRange 17 19
+    minSuitLength major 7 `impliesThat` pointRange 0 19
     -- If we were 6-4 in two suits and strong enough to jump, we should probably
     -- bid our second suit instead.
     mapM_ (`maxSuitLength` 3) . filter (/= major) $ T.allSuits
@@ -116,3 +118,24 @@ b1H1N3H = jumpRebid T.Hearts
 
 b1S1N3S :: Action
 b1S1N3S = jumpRebid T.Spades
+
+
+rebid :: T.Suit -> Action
+rebid major = do
+    forbid $ jumpRebid major
+    minSuitLength major 6
+    -- If we're 6-5 in two suits, we'd rebid the second one.
+    -- TODO: if we're 6-4, do we rebid the major or not? Does it matter if the
+    -- second suit is also a major?
+    mapM_ (`maxSuitLength` 4) . filter (/= major) $ T.allSuits
+    makeCall $ T.Bid 2 major
+
+b1H1N2H :: Action
+b1H1N2H = rebid T.Hearts
+
+b1S1N2S :: Action
+b1S1N2S = do
+    -- If you're 6-4 in the majors, I'd be seriously tempted to show the second
+    -- major instead of rebidding the first. Avoid this possibility.
+    maxSuitLength T.Hearts 3
+    rebid T.Spades

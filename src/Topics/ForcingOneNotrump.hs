@@ -35,7 +35,7 @@ bid1NSpades = let
         action = do
             setOpener T.North
             B.b1S
-            noInterference T.Hearts
+            noInterference T.Spades
         explanation =
             "Partner has opened " .+ T.Bid 1 T.Spades .+ ". You don't have " .+
             "a spade fit and aren't strong enough to force to game. Bid a " .+
@@ -126,9 +126,9 @@ jumpRebid = let
         action = do
             setOpener T.South
             _ <- bid
-            noInterference T.Hearts
+            noInterference suit
             _ <- response
-            noInterference T.Hearts
+            noInterference suit
         explanation =
             "We've got a single-suited hand with at least 6 " .+ show suit .+
             " and 18+ HCP. Rebid our suit to show the extra length, and " .+
@@ -148,7 +148,7 @@ limitRaise3 = let
         action = do
             setOpener T.North
             _ <- opening
-            noInterference T.Hearts
+            noInterference suit
             suitLength suit 3
             pointRange 10 12
         explanation =
@@ -173,7 +173,7 @@ raise2 = let
         action = do
             setOpener T.North
             _ <- opening
-            noInterference T.Hearts
+            noInterference suit
             suitLength suit 2
             pointRange 6 9
             mapM_ (`maxSuitLength` 5) . filter (/= suit) $ T.allSuits
@@ -198,6 +198,32 @@ raise2 = let
                       <~ [T.North, T.West]
 
 
+nonjumpRebid :: Situations
+nonjumpRebid = let
+    sit (bid, response, rebid, suit) = let
+        action = do
+            setOpener T.South
+            _ <- bid
+            noInterference suit
+            _ <- response
+            noInterference suit
+        explanation =
+            "We've got a single-suited hand with at least 6 " .+ show suit .+
+            " but not monster strength. Rebid our suit to show the extra " .+
+            "length. Partner might pass with a doubleton " .+
+            (init $ show suit) .+ ", raise to the 3 level to invite to " .+
+            "game (we'd accept with a good 14 or more HCP, and pass " .+
+            "otherwise), or bid their own long suit (which we would almost " .+
+            "certainly pass)."
+      in
+        situation "nrb" action rebid explanation
+  in
+    wrap $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2H, T.Hearts)
+                         , (B.b1S, B.b1S1N, B.b1S1N2S, T.Spades) ]
+                      <~ T.allVulnerabilities
+                      <~ [T.South, T.East]
+
+
 -- more situations:
 --                  opener rebids without jumping/reversing
 --                  opener accepts/rejects invite
@@ -212,4 +238,5 @@ topic = makeTopic ("forcing " .+ T.Bid 1 T.Notrump) "F1N" situations
                              , wrap [jumpRebid, rebid2N, majorReverse]]
                       , limitRaise3
                       , raise2
+                      , nonjumpRebid
                       ]
