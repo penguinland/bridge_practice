@@ -156,10 +156,9 @@ takeoutDouble shortSuit = do
 noInterference :: T.Suit -> Action
 noInterference suit = do
     cannotPreempt
-    -- Building out the entire overcall structure just so we can forbid
-    -- any of it here is too complicated for now. Let's just say either
-    -- the opponent has at most 14 HCP, and either doesn't have a 5-card
-    -- suit or has at most 7 HCP.
+    -- Building out the entire overcall structure just so we can forbid any of
+    -- it here is too complicated for now. Let's just say the opponent has at
+    -- most 14 HCP, and either doesn't have a 5-card suit or has at most 7 HCP.
     pointRange 0 14
     forbid $ takeoutDouble suit
     alternatives [
