@@ -21,6 +21,10 @@ basicRaise suit = do
     minSuitLength suit 3
     maxSuitLength suit 4 -- With 5+, you might jump straight to game, per LoTT
     pointRange 6 9
+    -- If you've got a freak distribution, you might instead want to either
+    -- upgrade your hand or bid your other suit on the way to supporting
+    -- partner. Ensure we don't have freak distribution.
+    mapM_ (`maxSuitLength` 5) T.allSuits
     makeCall $ T.Bid 2 suit
 
 b1H2H :: Action
