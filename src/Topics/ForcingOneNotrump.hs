@@ -2,7 +2,7 @@ module Topics.ForcingOneNotrump(topic) where
 
 import Output((.+), Punct(..))
 import Topic(Topic, wrap, Situations, makeTopic)
-import Auction(suitLength, maxSuitLength, pointRange)
+import Auction(suitLength, maxSuitLength, pointRange, makeCall)
 import Situation(situation, (<~))
 import qualified Terminology as T
 import qualified Bids.ForcingOneNotrump as B
@@ -59,7 +59,7 @@ rebid2N = let
         explanation =
             "We opened our major, which partner hasn't (yet?) supported. " .+
             "With a balanced 18" .+ NDash .+ "19 count, now bid " .+
-            T.Bid 2 T.Notrump .+ ". Partner now knows almost exactly what " .+
+            T.Bid 2 T.Notrump .+ ". Partner will know almost exactly what " .+
             "we have, and can place the final contract."
       in
         situation "rb2N" action B.b1M1N2N explanation
@@ -224,8 +224,93 @@ nonjumpRebid = let
                       <~ [T.South, T.East]
 
 
+secondSuitRebid :: Situations
+secondSuitRebid = let
+    sit (bid, response, rebid, firstSuit) = let
+        action = do
+            setOpener T.South
+            _ <- bid
+            noInterference firstSuit
+            _ <- response
+            noInterference firstSuit
+            maxSuitLength firstSuit 5  -- Don't worry about 6-5 or 6-4 shapes
+        explanation =
+            "We've opened our major, and partner has bid a forcing " .+
+            T.Bid 1 T.Notrump .+ ". We're too weak to rebid " .+
+            T.Bid 2 T.Notrump .+ ", and can't rebid " .+ show firstSuit .+
+            " with only a 5-card suit. Bid our longest other suit. " .+
+            "Sometimes it might only be a 3-card suit."
+      in
+        situation "b2nd" action rebid explanation
+  in
+    wrap $ return sit <~ [ (B.b1S, B.b1S1N, B.b1S1N2H, T.Spades)
+                         , (B.b1S, B.b1S1N, B.b1S1N2D, T.Spades)
+                         , (B.b1S, B.b1S1N, B.b1S1N2C, T.Spades)
+                         , (B.b1H, B.b1H1N, B.b1H1N2C, T.Hearts)
+                         , (B.b1H, B.b1H1N, B.b1H1N2D, T.Hearts)
+                         ]
+                      <~ T.allVulnerabilities
+                      <~ [T.South, T.East]
+
+
+heartsSpadesThird :: Situations
+heartsSpadesThird = let
+    sit (bid, response, rebid) = let
+        action = do
+            setOpener T.South
+            _ <- bid
+            noInterference T.Hearts
+            _ <- response
+            noInterference T.Hearts
+            suitLength T.Spades 4
+        explanation =
+            "We've opened " .+ T.Bid 1 T.Hearts .+ ", and partner has bid " .+
+            "a forcing " .+ T.Bid 1 T.Notrump .+ ". Even though we have " .+
+            "4 spades, we're too weak to reverse to " .+
+            T.Bid 2 T.Spades .+ " (and we already know we don't have a " .+
+            "spade fit because partner didn't bid " .+ T.Bid 1 T.Spades .+
+            "). Bid our longest minor suit instead. "
+      in
+        situation "b2nd4" action rebid explanation
+  in
+    wrap $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2C)
+                         , (B.b1H, B.b1H1N, B.b1H1N2D)
+                         ]
+                      <~ T.allVulnerabilities
+                      <~ [T.South, T.East]
+
+
+wantFlannery :: Situations
+wantFlannery = let
+    sit = let
+        action = do
+            setOpener T.South
+            B.b1H
+            noInterference T.Hearts
+            B.b1H1N
+            noInterference T.Hearts
+            suitLength T.Spades 4
+            suitLength T.Hearts 5
+            suitLength T.Diamonds 2
+            suitLength T.Clubs 2
+            pointRange 0 16
+        explanation =
+            "This is a super awkward shape that presents a challenge to " .+
+            "basic 2/1 bidding. Partner's " .+T.Bid 1 T.Notrump .+ " is " .+
+            "forcing, but we're not strong enough to reverse to " .+
+            T.Bid 2 T.Spades .+ " or bid " .+ T.Bid 2 T.Notrump .+ ", we " .+
+            "don't have a three-card minor to bid, and we don't have a " .+
+            "sixth heart to rebid. The least bad lie is probably to rebid " .+
+            "hearts anyway, but this hand shape is the exact problem that " .+
+            "Flannery " .+ T.Bid 2 T.Diamonds .+ " or Semiforcing " .+
+            T.Bid 1 T.Notrump .+ " are intended to fix."
+      in
+        situation "flan" action (makeCall $ T.Bid 2 T.Hearts) explanation
+  in
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.South, T.East]
+
+
 -- more situations:
---                  opener rebids without jumping/reversing
 --                  opener accepts/rejects invite
 --                  responder weak with long suit,
 
@@ -234,9 +319,13 @@ topic :: Topic
 topic = makeTopic ("forcing " .+ T.Bid 1 T.Notrump) "F1N" situations
   where
     situations = wrap [ wrap [bid1NHearts, bid1NSpades]
-                      , wrap [ wrap jumpShift
-                             , wrap [jumpRebid, rebid2N, majorReverse]]
                       , limitRaise3
                       , raise2
                       , nonjumpRebid
+                      , secondSuitRebid
+                      -- Rarer situations
+                      , wrap [ wrap jumpShift
+                             , wrap [jumpRebid, rebid2N, majorReverse]
+                             , wrap [wantFlannery, heartsSpadesThird]
+                             ]
                       ]

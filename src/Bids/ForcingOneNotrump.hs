@@ -1,6 +1,8 @@
 module Bids.ForcingOneNotrump(
     b1H  -- Re-exported from StandardOpenings
   , b1H1N
+  , b1H1N2C
+  , b1H1N2D
   , b1H1N2H
   , b1H1N2S
   , b1H1N3C
@@ -8,6 +10,9 @@ module Bids.ForcingOneNotrump(
   , b1H1N3H
   , b1S  -- Re-exported from StandardOpenings
   , b1S1N
+  , b1S1N2C
+  , b1S1N2D
+  , b1S1N2H
   , b1S1N2S
   , b1S1N3C
   , b1S1N3D
@@ -19,7 +24,7 @@ module Bids.ForcingOneNotrump(
 
 import Auction(pointRange, suitLength, minSuitLength, maxSuitLength, Action,
                makeCall, makeAlertableCall, forbid, balancedHand, withholdBid,
-               impliesThat)
+               longerThan, atLeastAsLong, alternatives)
 import qualified Bids.MajorSuitRaises as M
 import StandardOpenings(b1H, b1S)
 import qualified Terminology as T
@@ -131,11 +136,72 @@ rebid major strongBids = do
     makeCall $ T.Bid 2 major
 
 b1H1N2H :: Action
-b1H1N2H = rebid T.Hearts [b1H1N3C, b1H1N3D, b1H1N3H, b1H1N2S, b1M1N2N T.Hearts]
+b1H1N2H = rebid T.Hearts [b1H1N3C, b1H1N3D, b1H1N3H, b1H1N2S, b1M1N2N]
 
 b1S1N2S :: Action
 b1S1N2S = do
     -- If you're 6-4 in the majors, I'd be seriously tempted to show the second
     -- major instead of rebidding the first. Avoid this possibility.
     maxSuitLength T.Hearts 3
-    rebid T.Spades [b1S1N3C, b1S1N3D, b1S1N3H, b1S1N3S, b1M1N2N T.Spades]
+    rebid T.Spades [b1S1N3C, b1S1N3D, b1S1N3H, b1S1N3S, b1M1N2N]
+
+
+b1S1N2H :: Action
+b1S1N2H = do
+    -- Even if we've got 6+ spades, prefer to show the second major to give
+    -- partner options.
+    minSuitLength T.Hearts 4
+    pointRange 0 16
+    T.Spades `atLeastAsLong` T.Hearts
+    T.Hearts `longerThan` T.Diamonds
+    T.Hearts `longerThan` T.Clubs
+    makeCall $ T.Bid 2 T.Hearts
+
+
+-- TODO: if you've got a 5-card major and a 6-card minor, what do you open?
+
+
+b1S1N2D :: Action
+b1S1N2D = do
+    minSuitLength T.Diamonds 3  -- might be 5332
+    -- With 6-5, bid the second suit. With 6-4 (or 6-3!), rebid the major first.
+    alternatives [minSuitLength T.Diamonds 5, maxSuitLength T.Spades 5]
+    pointRange 0 16
+    T.Spades `atLeastAsLong` T.Diamonds
+    T.Diamonds `atLeastAsLong` T.Hearts
+    T.Diamonds `longerThan` T.Clubs
+    makeCall $ T.Bid 2 T.Diamonds
+
+
+b1S1N2C :: Action
+b1S1N2C = do
+    minSuitLength T.Clubs 3  -- might be 5332
+    -- With 6-5, bid the second suit. With 6-4 (or 6-3!), rebid the major first.
+    alternatives [minSuitLength T.Clubs 5, maxSuitLength T.Spades 5]
+    pointRange 0 16
+    T.Spades `atLeastAsLong` T.Clubs
+    T.Clubs `atLeastAsLong` T.Hearts
+    T.Clubs `atLeastAsLong` T.Diamonds
+    makeCall $ T.Bid 2 T.Clubs
+
+
+b1H1N2D :: Action
+b1H1N2D = do
+    minSuitLength T.Diamonds 3
+    -- With 6-5, bid the second suit. With 6-4 (or 6-3!), rebid the major first.
+    alternatives [minSuitLength T.Diamonds 5, maxSuitLength T.Hearts 5]
+    pointRange 0 16
+    T.Hearts `atLeastAsLong` T.Diamonds
+    T.Diamonds `longerThan` T.Clubs
+    makeCall $ T.Bid 2 T.Diamonds
+
+
+b1H1N2C :: Action
+b1H1N2C = do
+    minSuitLength T.Clubs 3
+    -- With 6-5, bid the second suit. With 6-4 (or 6-3!), rebid the major first.
+    alternatives [minSuitLength T.Clubs 5, maxSuitLength T.Hearts 5]
+    pointRange 0 16
+    T.Hearts `atLeastAsLong` T.Clubs
+    T.Clubs `atLeastAsLong` T.Diamonds
+    makeCall $ T.Bid 2 T.Clubs
