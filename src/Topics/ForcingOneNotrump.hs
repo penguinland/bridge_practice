@@ -94,7 +94,7 @@ jumpShift = let
 
 majorReverse :: Situations
 majorReverse = let
-    sit  = let
+    sit = let
         action = do
             setOpener T.South
             B.b1H
@@ -102,14 +102,36 @@ majorReverse = let
             B.b1H1N
             noInterference T.Hearts
         explanation =
-            "We opened our major, which partner hasn't (yet?) supported. " .+
-            "With 18+ HCP and a two-suited hand, jump in our second suit. " .+
-            "This almost certainly is game forcing, even if partner is a " .+
-            "minimum. They'll place the contract from here."
+            "With 5-4 in the majors and 17+ HCP, we opened " .+
+            T.Bid 1 T.Hearts .+ ", and can now reverse to " .+
+            T.Bid 2 T.Spades .+ ". We're strong enough that even if " .+
+            "we don't have a fit and partner is a minimum, they can " .+
+            "reluctantly sign off in some 7-card fit, but if they've got a " .+
+            "non-minimum, they know to guide us into the right game."
       in
         situation "rev" action B.b1H1N2S explanation
   in
     stdWrap sit
+
+
+jumpRebid :: Situations
+jumpRebid = let
+    sit (bid, response, rebid, suit) = let
+        action = do
+            setOpener T.South
+            _ <- bid
+            noInterference T.Hearts
+            _ <- response
+            noInterference T.Hearts
+        explanation =
+            "We've got a single-suited hand with at least 6 " .+ show suit .+
+            " and 18+ HCP. Rebid our suit to show the extra length, and " .+
+            "jump to show our extra strength."
+      in
+        situation "jrb" action rebid explanation
+  in
+    wrapVulDlr $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3H, T.Hearts)
+                               , (B.b1S, B.b1S1N, B.b1S1N3S, T.Spades) ]
 
 
 topic :: Topic
@@ -117,5 +139,6 @@ topic = makeTopic ("forcing " .+ T.Bid 1 T.Notrump) "F1N" situations
   where
     situations = wrap [ bid1NHearts
                       , bid1NSpades
-                      , wrap [wrap jumpShift, wrap [rebid2N, majorReverse]]
+                      , wrap [ wrap jumpShift
+                             , wrap [jumpRebid, rebid2N, majorReverse]]
                       ]
