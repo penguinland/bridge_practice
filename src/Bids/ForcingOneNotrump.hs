@@ -102,28 +102,28 @@ b1H1N2S = do
     makeCall $ T.Bid 2 T.Spades
 
 
-jumpRebid :: T.Suit -> Action
-jumpRebid major = do
-    pointRange 17 40
+jumpRebid :: T.Suit -> [Action] -> Action
+jumpRebid major jumpShifts = do
+    pointRange 16 18
     minSuitLength major 6
-    -- With extra strength and extra length, just jump straight to 4.
-    minSuitLength major 7 `impliesThat` pointRange 0 19
-    -- If we were 6-4 in two suits and strong enough to jump, we should probably
-    -- bid our second suit instead.
-    mapM_ (`maxSuitLength` 3) . filter (/= major) $ T.allSuits
+    maxSuitLength major 7  -- With 8+ cards in the suit, just jump to game.
+    mapM_ forbid jumpShifts
     makeCall $ T.Bid 3 major
 
 b1H1N3H :: Action
-b1H1N3H = jumpRebid T.Hearts
+b1H1N3H = jumpRebid T.Hearts [b1H1N3C, b1H1N3D, b1H1N2S]
 
 b1S1N3S :: Action
-b1S1N3S = jumpRebid T.Spades
+b1S1N3S = jumpRebid T.Spades [b1S1N3C, b1S1N3D, b1S1N3H]
 
 
-rebid :: T.Suit -> Action
-rebid major = do
-    forbid $ jumpRebid major
+rebid :: T.Suit -> [Action] -> Action
+rebid major strongBids = do
+    mapM_ forbid strongBids
     minSuitLength major 6
+    -- It's possible some rare, strong hands have slipped through the cracks of
+    -- the strong bids. Make sure they don't show up here!
+    pointRange 0 15
     -- If we're 6-5 in two suits, we'd rebid the second one.
     -- TODO: if we're 6-4, do we rebid the major or not? Does it matter if the
     -- second suit is also a major?
@@ -131,11 +131,11 @@ rebid major = do
     makeCall $ T.Bid 2 major
 
 b1H1N2H :: Action
-b1H1N2H = rebid T.Hearts
+b1H1N2H = rebid T.Hearts [b1H1N3C, b1H1N3D, b1H1N3H, b1H1N2S, b1M1N2N T.Hearts]
 
 b1S1N2S :: Action
 b1S1N2S = do
     -- If you're 6-4 in the majors, I'd be seriously tempted to show the second
     -- major instead of rebidding the first. Avoid this possibility.
     maxSuitLength T.Hearts 3
-    rebid T.Spades
+    rebid T.Spades [b1S1N3C, b1S1N3D, b1S1N3H, b1S1N3S, b1M1N2N T.Spades]
