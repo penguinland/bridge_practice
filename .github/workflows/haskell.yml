@@ -1,0 +1,33 @@
+name: Haskell CI
+
+on: [pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  runhaskell-linux:
+    name: Build on Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: haskell-actions/setup@v2
+        with:
+          ghc-version: '9.2.5'
+          # cabal-version: 'latest'. Omitted, but defaults to 'latest'
+          enable-stack: true
+          stack-version: 'latest'
+      - run: stack build
+
+  runhaskell-mac:
+    name: Build on Mac
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: haskell-actions/setup@v2
+        with:
+          ghc-version: '9.2.5'
+          # cabal-version: 'latest'. Omitted, but defaults to 'latest'
+          enable-stack: true
+          stack-version: 'latest'
+      - run: stack build
