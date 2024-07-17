@@ -135,6 +135,11 @@ rebid major strongBids = do
     -- TODO: if we're 6-4, do we rebid the major or not? Does it matter if the
     -- second suit is also a major?
     mapM_ (`maxSuitLength` 4) . filter (/= major) $ T.allSuits
+    -- TODO: If you're 6-4 with a minor, would you rebid spades or bid your
+    -- minor? Avoid these possibilities, as I don't think there is consensus on
+    -- the topic.
+    maxSuitLength T.Clubs 3
+    maxSuitLength T.Diamonds 3
     makeCall $ T.Bid 2 major
 
 b1H1N2H :: Action
