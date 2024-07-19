@@ -1,6 +1,8 @@
 module Bids.StandardModernPrecision.Lampe(
     b1D  -- Re-exported from BasicBids
   , b1D2C
+  , b1D2C2D
+  , b1D2C2H
   , b1D2D
 ) where
 
@@ -8,6 +10,7 @@ module Bids.StandardModernPrecision.Lampe(
 import Auction(pointRange, minSuitLength, Action, makeAlertableCall, forbid,
                balancedHand, alternatives, longerThan)
 import Bids.StandardModernPrecision.BasicBids(b1D)
+import Output(Punct(..), (.+))
 import qualified Terminology as T
 
 
@@ -22,6 +25,22 @@ b1D2C = do
         suit `longerThan` T.Spades
         )
     makeAlertableCall (T.Bid 2 T.Clubs) "invitational or better with a minor"
+
+
+b1D2C2D :: Action
+b1D2C2D = do
+    pointRange 11 13
+    forbid balancedHand
+    makeAlertableCall (T.Bid 2 T.Diamonds)
+        ("unbalanced 11" .+ NDash .+ "13 HCP")
+
+
+b1D2C2H :: Action
+b1D2C2H = do
+    pointRange 11 13
+    balancedHand
+    makeAlertableCall (T.Bid 2 T.Hearts)
+        ("balanced 11" .+ NDash .+ "13 HCP")
 
 
 b1D2D :: Action

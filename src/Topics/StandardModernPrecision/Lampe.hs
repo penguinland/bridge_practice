@@ -5,7 +5,8 @@ import Output((.+), Punct(..))
 import Situation(situation)
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import Bids.StandardModernPrecision.BasicBids(firstSeatOpener, smpWrapN)
+import Bids.StandardModernPrecision.BasicBids(
+    firstSeatOpener, smpWrapN, smpWrapS)
 import qualified Bids.StandardModernPrecision.Lampe as B
 
 
@@ -20,6 +21,36 @@ twoClubs = let
         "artificial " .+ T.Bid 2 T.Clubs .+ "."
   in
     smpWrapN . return $ situation "2C" action B.b1D2C explanation
+
+
+twoClubsUnbal :: Situations
+twoClubsUnbal = let
+    action = do
+        firstSeatOpener
+        B.b1D
+        noInterference T.Diamonds
+        B.b1D2C
+        noInterference T.Diamonds
+    explanation =
+        "With an unbalanced minimum, rebid an artificial " .+
+        T.Bid 2 T.Diamonds .+ "."
+  in
+    smpWrapS . return $ situation "2CUnbal" action B.b1D2C2D explanation
+
+
+twoClubsBal :: Situations
+twoClubsBal = let
+    action = do
+        firstSeatOpener
+        B.b1D
+        noInterference T.Diamonds
+        B.b1D2C
+        noInterference T.Diamonds
+    explanation =
+        "With a balanced minimum, rebid an artificial " .+
+        T.Bid 2 T.Hearts .+ "."
+  in
+    smpWrapS . return $ situation "2CBal" action B.b1D2C2H explanation
 
 
 twoDiamonds :: Situations
@@ -40,5 +71,7 @@ topic = makeTopic summary "Lampe" situations
   where
     summary = "Lampe responses to Precision 1" .+ T.Diamonds .+ NDash .+ "2m"
     situations = wrap [ twoClubs
+                      , twoClubsUnbal
+                      , twoClubsBal
                       , twoDiamonds
                       ]
