@@ -43,7 +43,10 @@ limitRaise suit = do
     -- Ensure that there are no singletons or voids, with which you might
     -- instead want to splinter.
     mapM_ (`minSuitLength` 2) T.allSuits
-    pointRange 10 12
+    -- Sometimes, a 12 HCP hand should be considered a limit raise, and
+    -- sometimes it should be considered game forcing. To avoid this ambiguity,
+    -- we ensure that you've got at most 11 HCP for a limit raise.
+    pointRange 10 11
     makeCall $ T.Bid 3 suit
 
 b1H3H :: Action
