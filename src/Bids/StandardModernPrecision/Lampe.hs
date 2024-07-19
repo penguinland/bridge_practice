@@ -15,7 +15,7 @@ module Bids.StandardModernPrecision.Lampe(
 
 import Auction(pointRange, suitLength, minSuitLength, maxSuitLength, Action,
                makeCall, makeAlertableCall, balancedHand, alternatives,
-               forbid, longerThan)
+               forbid, longerThan, impliesThat)
 import Bids.StandardModernPrecision.BasicBids(b1D)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
@@ -78,6 +78,9 @@ b1D2C = do
         suit `longerThan` T.Hearts
         suit `longerThan` T.Spades
         )
+    -- If you have a major, you must have a 6-card minor.
+    (alternatives . map (`minSuitLength` 4) $ T.majorSuits) `impliesThat`
+        (alternatives . map (`minSuitLength` 6) $ T.minorSuits)
     makeAlertableCall (T.Bid 2 T.Clubs) "invitational or better with a minor"
 
 
