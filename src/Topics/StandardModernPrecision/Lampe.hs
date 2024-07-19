@@ -2,7 +2,7 @@ module Topics.StandardModernPrecision.Lampe(topic) where
 
 import CommonBids(noInterference)
 import Output((.+), Punct(..))
-import Situation(situation)
+import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
 import Bids.StandardModernPrecision.BasicBids(
@@ -53,6 +53,31 @@ twoClubsBal = let
     smpWrapS . return $ situation "2CBal" action B.b1D2C2H explanation
 
 
+twoClubsSS :: Situations
+twoClubsSS = let
+    sit answer = let
+        action = do
+            firstSeatOpener
+            B.b1D
+            noInterference T.Diamonds
+            B.b1D2C
+            noInterference T.Diamonds
+        explanation =
+            "You opened an ambiguous " .+ T.Bid 1 T.Diamonds .+ ", and " .+
+            "partner has shown an invitational or better hand with a minor." .+
+            "With a maximum, make a shape-shower bid immediately. Partner " .+
+            "is invitational or better, and this bid indicates you would " .+
+            "accept an invitation, so is game-forcing."
+      in
+        situation "2CSS" action answer explanation
+  in
+    -- For us to bid a forcing 1N, we must be an unpassed hand.
+    wrap $ return sit
+        <~ [B.b1D2C2S, B.b1D2C2N, B.b1D2C3C, B.b1D2C3D, B.b1D2C3H, B.b1D2C3S]
+        <~ T.allVulnerabilities
+        <~ [T.South]
+
+
 twoDiamonds :: Situations
 twoDiamonds = let
     action = do
@@ -73,5 +98,6 @@ topic = makeTopic summary "Lampe" situations
     situations = wrap [ twoClubs
                       , twoClubsUnbal
                       , twoClubsBal
+                      , twoClubsSS
                       , twoDiamonds
                       ]
