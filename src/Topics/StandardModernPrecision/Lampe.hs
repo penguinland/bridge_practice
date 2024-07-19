@@ -94,7 +94,7 @@ twoDiamonds = let
 topic :: Topic
 topic = makeTopic summary "Lampe" situations
   where
-    summary = "Lampe responses to Precision 1" .+ T.Diamonds .+ NDash .+ "2m"
+    summary = "Lampe responses to Precision 1" .+ T.Diamonds
     situations = wrap [ twoClubs
                       , twoClubsUnbal
                       , twoClubsBal
