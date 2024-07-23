@@ -78,6 +78,14 @@ twoClubsSS = let
         <~ [T.South]
 
 
+-- TODO:
+--     all of responder's rebids after opener rebids 2D or 2H
+--     all of opener's rebids to the Reverse-Flannery-like 2D
+--     rethink responder's hands with a 6-card minor and 4- or 5-card major  
+--     consider using loser count insead of HCPs to help opener decide whether
+--         they're a minimum or maximum
+
+
 twoDiamonds :: Situations
 twoDiamonds = let
     action = do
