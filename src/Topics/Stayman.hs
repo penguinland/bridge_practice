@@ -1,13 +1,12 @@
 module Topics.Stayman(topic) where
 
 -- TODO: replace makePass with something more intelligent
-import Auction(makePass, pointRange)
+import Auction(makePass, pointRange, suitLength, maxSuitLength)
 import CommonBids(setOpener)
 import Output((.+), Punct(..))
-import Situation(situation)--, (<~))
+import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, stdWrap, wrap, --wrapVulDlr,
- Situations, makeTopic)
+import Topic(Topic, stdWrap, wrap, wrapVulDlr, Situations, makeTopic)
 import qualified Bids.OneNotrump as B
 
 
@@ -72,109 +71,53 @@ noMajor = let
     stdWrap sit
 
 
+oneMajor :: Situations
+oneMajor = let
+    sit (bid, shortSuit) = let
+        action = do
+            setOpener T.South
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            maxSuitLength shortSuit 3
+        explanation =
+            "We opened a strong " .+ T.Bid 1 T.Notrump .+ ", and partner " .+
+            "has bid Stayman, asking whether we have any major suits. " .+
+            "We've got one, so bid it. Partner is captain of " .+
+            "the auction; they'll know what to do next."
+      in situation "1Maj" action bid explanation
+  in
+    wrapVulDlr $ return sit <~ [(B.b1N2C2H, T.Spades), (B.b1N2C2S, T.Hearts)]
+
+
+bothMajors :: Situations
+bothMajors = let
+    sit = let
+        action = do
+            setOpener T.South
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            mapM_ (`suitLength` 4) T.majorSuits
+        explanation =
+            "We opened a strong " .+ T.Bid 1 T.Notrump .+ ", and partner " .+
+            "has bid Stayman, asking whether we have any major suits. " .+
+            "We've got both, so bid the cheaper one, hearts. If partner " .+
+            "doesn't like that suit, they must have spades, and we'll " .+
+            "bid those later."
+      in situation "2Maj" action B.b1N2C2H explanation
+  in
+    stdWrap sit
+
+
 topic :: Topic
 topic = makeTopic "Stayman" "Stmn" situations
   where
-    situations = wrap [ garbageStayman
+    situations = wrap [ wrap [garbageStayman]
                       , nongarbageStayman
                       , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
-                      , noMajor
+                      , oneMajor
+                      , bothMajors
                       ]
