@@ -11,7 +11,7 @@ module Bids.MajorSuitRaises(
 
 
 import Auction(pointRange, minSuitLength, maxSuitLength, suitLength, Action,
-               makeCall, constrain)
+               makeCall, flatHand)
 import StandardOpenings(b1H, b1S)
 import qualified Terminology as T
 
@@ -60,7 +60,7 @@ blast3N :: T.Suit -> Action
 blast3N suit = do
     pointRange 13 15
     suitLength suit 3
-    constrain "fourtriple3" ["shape(", ", any 4333)"]
+    flatHand
     makeCall $ T.Bid 3 T.Notrump
 
 b1H3N :: Action
