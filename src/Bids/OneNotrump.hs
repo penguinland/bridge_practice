@@ -31,7 +31,7 @@ module Bids.OneNotrump(
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, makeCall, makeAlertableCall, alternatives, longerThan,
-               balancedHand)
+               balancedHand, flatHand)
 import Output((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
@@ -176,11 +176,20 @@ b1N2H2S4S = do
 -- major, so that 2N can be a transfer to diamonds instead of a natural invite.
 b1N2C :: Action
 b1N2C = do
+    -- For normal Stayman, you should have an exactly 4-card major: 4-2 is
+    -- Stayman, 4-4 is Stayman, 5-4 is Stayman then Smolen, 6-4 is Stayman then
+    -- Texas, 5-5 is a transfer, 5-3 is a transfer, 6-3 is a transfer.
     alternatives [ do pointRange 8 40  -- Normal Stayman
                       alternatives . map (`suitLength` 4) $ T.majorSuits
                  , do suitLength T.Hearts 4  -- Garbage Stayman
                       suitLength T.Spades 4
                       minSuitLength T.Diamonds 4]
+    -- With 4333 shape, just stick with notrump.
+    forbid flatHand
+    -- With 4-3 in the majors GF, you might use Puppet Stayman instead
+    forbid (do alternatives [ suitLength T.Hearts 3 >> suitLength T.Spades 4
+                            , suitLength T.Spades 3 >> suitLength T.Hearts 4 ]
+               pointRange 10 40)
     makeCall $ T.Bid 2 T.Clubs  -- Not alertable in the ACBL!
 
 

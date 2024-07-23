@@ -116,13 +116,20 @@ bothMajors = let
 --   - responder invites with a fit
 --   - responder goes to game with a fit
 --   - responder shows slam interest with a fit
---   - responder bids Texas over 2D
---   - opener completes Texas
+--   - responder bids their major at the 2 level, showing 5-4 shape and
+--     invitational strength
 --   - responder invites with 2N after no fit
 --   - responder signs off in 3N after no fit
 --   - opener has both majors, and tries the other one after 3N
 --   - responder bids another side suit, GF, after there's no fit
+--   - opener has both majors, responder bids another side suit after 2H, and
+--     opener should go to 4S.
 --   - Smolen?
+--   - responder bids Texas over 2D
+--   - opener completes Texas
+--   - DON'T DO opener having both majors and responder inviting with 2N over
+--     2H. If you're playing 4-way transfers, that doesn't necessarily show
+--     spades.
 
 
 topic :: Topic
