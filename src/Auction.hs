@@ -13,6 +13,7 @@ module Auction (
 , makePass
 , pointRange
 , balancedHand
+, flatHand
 , suitLength
 , minSuitLength
 , maxSuitLength
@@ -100,6 +101,10 @@ makePass = makeCall T.Pass
 balancedHand :: Action
 balancedHand =
     constrain "balanced" ["shape(", ", any 4333 + any 5332 + any 4432)"]
+
+
+flatHand :: Action
+flatHand = constrain "flat" ["shape(", ", any 4333)"]
 
 
 pointRange :: Int -> Int -> Action
