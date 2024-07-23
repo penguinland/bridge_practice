@@ -112,6 +112,19 @@ bothMajors = let
     stdWrap sit
 
 
+-- TODO:
+--   - responder invites with a fit
+--   - responder goes to game with a fit
+--   - responder shows slam interest with a fit
+--   - responder bids Texas over 2D
+--   - opener completes Texas
+--   - responder invites with 2N after no fit
+--   - responder signs off in 3N after no fit
+--   - opener has both majors, and tries the other one after 3N
+--   - responder bids another side suit, GF, after there's no fit
+--   - Smolen?
+
+
 topic :: Topic
 topic = makeTopic "Stayman" "Stmn" situations
   where
