@@ -1,6 +1,12 @@
 module Bids.OneNotrump(
     b1N  -- Copied from StandardOpenings
   , b1N2C
+  , b1N2C2D
+  , b1N2C2D2N
+  , b1N2C2D3H
+  , b1N2C2D3S
+  , b1N2C2H
+  , b1N2C2S
   , b1N2D
   , b1N2D2H
   , b1N2D2H4H
@@ -164,17 +170,58 @@ b1N2H2S4S = do
     makeCall $ T.Bid 4 T.Spades
 
 
-
+-- This version of Stayman guarantees a 4-card major. If you use 4-way
+-- transfers, use a Stayman that might be a notrump invite without a 4-card
+-- major, so that 2N can be a transfer to diamonds instead of a natural invite.
 b1N2C :: Action
 b1N2C = do
-    alternatives [pointRange 8 40,  -- Normal Stayman
-                  suitLength T.Hearts 4 >>  -- Garbage Stayman
-                  suitLength T.Spades 4 >>
-                  minSuitLength T.Diamonds 4]
-    maxSuitLength T.Clubs 4 -- With more than that, raise partner's minor
-    minSuitLength T.Diamonds 4
-    -- If you've got a major, only respond 1D if you're game forcing.
-    alternatives [maxSuitLength T.Hearts 3 >> maxSuitLength T.Spades 3,
-                  pointRange 13 40]
-    makeCall $ T.Bid 1 T.Diamonds
+    alternatives [ do pointRange 8 40  -- Normal Stayman
+                      alternatives . map (`suitLength` 4) $ T.majorSuits
+                 , do suitLength T.Hearts 4  -- Garbage Stayman
+                      suitLength T.Spades 4
+                      minSuitLength T.Diamonds 4]
+    makeCall $ T.Bid 2 T.Clubs  -- Not alertable in the ACBL!
 
+
+b1N2C2D :: Action
+b1N2C2D = do
+    maxSuitLength T.Hearts 3
+    maxSuitLength T.Spades 3
+    makeCall $ T.Bid 2 T.Diamonds  -- Not alertable in the ACBL!
+
+
+b1N2C2H :: Action
+b1N2C2H = do
+    minSuitLength T.Hearts 4
+    makeCall $ T.Bid 2 T.Hearts
+
+
+b1N2C2S :: Action
+b1N2C2S = do
+    minSuitLength T.Spades 4
+    -- If you're 4-4 in the majors, bid 1H instead.
+    maxSuitLength T.Hearts 3
+    makeCall $ T.Bid 2 T.Spades
+
+
+b1N2C2D3H :: Action
+b1N2C2D3H = do
+    pointRange 10 40
+    suitLength T.Spades 5
+    suitLength T.Hearts 4
+    makeAlertableCall (T.Bid 3 T.Hearts) "Smolen: 5 spades, 4 hearts, GF"
+
+
+b1N2C2D3S :: Action
+b1N2C2D3S = do
+    pointRange 10 40
+    suitLength T.Hearts 5
+    suitLength T.Spades 4
+    makeAlertableCall (T.Bid 3 T.Spades) "Smolen: 5 hearts, 4 spades, GF"
+
+
+b1N2C2D2N :: Action
+b1N2C2D2N = do
+    balancedHand  -- Is this right? What would you rebid with a 4135 invite?
+    pointRange 8 9
+    makeCall $ T.Bid 2 T.Notrump
