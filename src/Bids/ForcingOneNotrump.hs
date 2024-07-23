@@ -24,7 +24,7 @@ module Bids.ForcingOneNotrump(
 
 import Auction(pointRange, suitLength, minSuitLength, maxSuitLength, Action,
                makeCall, makeAlertableCall, forbid, balancedHand, withholdBid,
-               longerThan, atLeastAsLong, alternatives)
+               longerThan, atLeastAsLong, alternatives, impliesThat)
 import qualified Bids.MajorSuitRaises as M
 import StandardOpenings(b1H, b1S)
 import qualified Terminology as T
@@ -57,7 +57,9 @@ b1S1N = do
     notGameForcing
     forbid M.b1S2S
     forbid M.b1S3S
+    -- TODO: implement splinters, and forbid them in here.
     maxSuitLength T.Spades 4  -- With 5+ spades, raise partner's suit instead
+    suitLength T.Spades 4 `impliesThat` pointRange 6 9
     -- TODO: remove this when we support jump shifts.
     mapM_ (`maxSuitLength` 6) T.minorSuits
     makeAlertableCall (T.Bid 1 T.Notrump) "forcing"
@@ -133,6 +135,11 @@ rebid major strongBids = do
     -- TODO: if we're 6-4, do we rebid the major or not? Does it matter if the
     -- second suit is also a major?
     mapM_ (`maxSuitLength` 4) . filter (/= major) $ T.allSuits
+    -- TODO: If you're 6-4 with a minor, would you rebid spades or bid your
+    -- minor? Avoid these possibilities, as I don't think there is consensus on
+    -- the topic.
+    maxSuitLength T.Clubs 3
+    maxSuitLength T.Diamonds 3
     makeCall $ T.Bid 2 major
 
 b1H1N2H :: Action
