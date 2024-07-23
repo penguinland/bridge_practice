@@ -30,7 +30,8 @@ module Bids.OneNotrump(
 
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-               Action, makeCall, makeAlertableCall, alternatives, longerThan)
+               Action, makeCall, makeAlertableCall, alternatives, longerThan,
+               balancedHand)
 import Output((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T

@@ -20,6 +20,7 @@ import qualified Topics.StandardOpeners as StandardOpeners
 import qualified Topics.MajorSuitRaises as MajorSuitRaises
 import qualified Topics.ForcingOneNotrump as ForcingOneNotrump
 import qualified Topics.JacobyTransfers as JacobyTransfers
+import qualified Topics.Stayman as Stayman
 import qualified Topics.TexasTransfers as TexasTransfers
 import qualified Topics.Meckwell as Meckwell
 
@@ -40,6 +41,7 @@ topicList = [ StandardOpeners.topic
             , MajorSuitRaises.topic
             , ForcingOneNotrump.topic
             , JacobyTransfers.topic
+            , Stayman.topic
             , TexasTransfers.topic
             , Meckwell.topic
             , SmpOpenings.topic
