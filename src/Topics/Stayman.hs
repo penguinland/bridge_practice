@@ -105,8 +105,8 @@ bothMajors = let
             "We opened a strong " .+ T.Bid 1 T.Notrump .+ ", and partner " .+
             "has bid Stayman, asking whether we have any major suits. " .+
             "We've got both, so bid the cheaper one, hearts. If partner " .+
-            "doesn't like that suit, they must have spades, and we'll " .+
-            "bid those later."
+            "doesn't like our suit, they must have spades, and we'll " .+
+            "be able to bid those later."
       in situation "2Maj" action B.b1N2C2H explanation
   in
     stdWrap sit
