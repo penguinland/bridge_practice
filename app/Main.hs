@@ -1,6 +1,7 @@
 import System.Random(mkStdGen)
 
 import qualified Topics.JacobyTransfers as JacobyTransfers
+import qualified Topics.Stayman as Stayman
 --import qualified Topics.MinorTransfersScott as MinorTransfers
 import qualified Topics.StandardOpeners as StandardOpeners
 import qualified Topics.TexasTransfers as TexasTransfers
@@ -22,7 +23,7 @@ import ProblemSet(outputLatex)
 
 main :: IO ()
 main = let
-    topics = [ StandardOpeners.topic
+    topics' = [ StandardOpeners.topic
              , ForcingOneNotrump.topic
              , MajorSuitRaises.topic
              , JacobyTransfers.topic
@@ -36,6 +37,7 @@ main = let
              --, Smp2DOpen.topic
              , Meckwell.topic
              ]
+    topics = [Stayman.topic]
   in do
     outputLatex 100 topics "test" (mkStdGen 0)
     return ()

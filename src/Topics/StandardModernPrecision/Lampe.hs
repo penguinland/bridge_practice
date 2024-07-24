@@ -1,7 +1,7 @@
 module Topics.StandardModernPrecision.Lampe(topic) where
 
 import CommonBids(noInterference)
-import Output((.+), Punct(..))
+import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)

@@ -13,6 +13,7 @@ module Auction (
 , makePass
 , pointRange
 , balancedHand
+, flatHand
 , suitLength
 , minSuitLength
 , maxSuitLength
@@ -24,6 +25,9 @@ module Auction (
 , equalLength
 , atLeastAsLong
 , atMostAsLong
+, loserCount
+, minLoserCount
+, maxLoserCount
 , extractLastCall
 , displayLastCall
 ) where
@@ -102,6 +106,10 @@ balancedHand =
     constrain "balanced" ["shape(", ", any 4333 + any 5332 + any 4432)"]
 
 
+flatHand :: Action
+flatHand = constrain "flat" ["shape(", ", any 4333)"]
+
+
 pointRange :: Int -> Int -> Action
 pointRange minHcp maxHcp =
     constrain (join "_" ["range", show minHcp, show maxHcp])
@@ -144,6 +152,8 @@ withholdBid action = do
         (_, dealerToWithhold) = execState action freshAuction
     put (bidding, dealerProg `mappend` dealerToWithhold)
 
+
+-- unexported helper
 _compareSuitLength :: String -> String -> T.Suit -> T.Suit -> Action
 _compareSuitLength name op suitA suitB = let
     fullName = join "_" [show suitA, name, show suitB, "length"]
@@ -166,6 +176,24 @@ atLeastAsLong = _compareSuitLength "ge" ">="
 atMostAsLong :: T.Suit -> T.Suit -> Action
 atMostAsLong = _compareSuitLength "le" "<="
 
+
+-- unexported helper
+loserComparison :: String -> String -> Int -> Action
+loserComparison name op count = let
+    fullName = join "_" ["losers", name, show count]
+  in
+    constrain fullName ["loser(", ") " ++ op ++ " " ++ show count]
+
+loserCount :: Int -> Action
+loserCount = loserComparison "equal" "=="
+
+minLoserCount :: Int -> Action
+minLoserCount = loserComparison "at_least" ">="
+
+maxLoserCount :: Int -> Action
+maxLoserCount = loserComparison "at_most" "<="
+
+
 extractLastCall :: Action -> T.CompleteCall
 extractLastCall =
     -- It doesn't matter who was dealer: use North just to extract the bidding
@@ -176,5 +204,6 @@ extractLastCall =
 -- from an action while stripping out any alerts it might have
 displayLastCall :: Action -> Commentary
 displayLastCall = toCommentary . T.removeAlert . extractLastCall
+
 
 -- TODO: hasCard

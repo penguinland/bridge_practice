@@ -1,6 +1,20 @@
 module Bids.OneNotrump(
     b1N  -- Copied from StandardOpenings
   , b1N2C
+  , b1N2C2D
+  , b1N2C2D2N
+  , b1N2C2D3H
+  , b1N2C2D3S
+  , b1N2C2D3N
+  , b1N2C2D4N
+  , b1N2C2H
+  , b1N2C2H3H
+  , b1N2C2H3S
+  , b1N2C2H4H
+  , b1N2C2S
+  , b1N2C2S3H
+  , b1N2C2S3S
+  , b1N2C2S4S
   , b1N2D
   , b1N2D2H
   , b1N2D2H4H
@@ -24,7 +38,8 @@ module Bids.OneNotrump(
 
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-               Action, makeCall, makeAlertableCall, alternatives, longerThan)
+               Action, makeCall, makeAlertableCall, alternatives, longerThan,
+               balancedHand, flatHand, minLoserCount)
 import Output((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
@@ -164,17 +179,122 @@ b1N2H2S4S = do
     makeCall $ T.Bid 4 T.Spades
 
 
-
+-- This version of Stayman guarantees a 4-card major. If you use 4-way
+-- transfers, use a Stayman that might be a notrump invite without a 4-card
+-- major, so that 2N can be a transfer to diamonds instead of a natural invite.
 b1N2C :: Action
 b1N2C = do
-    alternatives [pointRange 8 40,  -- Normal Stayman
-                  suitLength T.Hearts 4 >>  -- Garbage Stayman
-                  suitLength T.Spades 4 >>
-                  minSuitLength T.Diamonds 4]
-    maxSuitLength T.Clubs 4 -- With more than that, raise partner's minor
-    minSuitLength T.Diamonds 4
-    -- If you've got a major, only respond 1D if you're game forcing.
-    alternatives [maxSuitLength T.Hearts 3 >> maxSuitLength T.Spades 3,
-                  pointRange 13 40]
-    makeCall $ T.Bid 1 T.Diamonds
+    -- For normal Stayman, you should have an exactly 4-card major: 4-2 is
+    -- Stayman, 4-4 is Stayman, 5-4 is Stayman then Smolen, 6-4 is Stayman then
+    -- Texas, 5-5 is a transfer, 5-3 is a transfer, 6-3 is a transfer.
+    alternatives [ do pointRange 8 40  -- Normal Stayman
+                      alternatives . map (`suitLength` 4) $ T.majorSuits
+                 , do suitLength T.Hearts 4  -- Garbage Stayman
+                      suitLength T.Spades 4
+                      minSuitLength T.Diamonds 4]
+    -- With 4333 shape, just stick with notrump.
+    forbid flatHand
+    -- With 4-3 in the majors GF, you might use Puppet Stayman instead
+    forbid (do alternatives [ suitLength T.Hearts 3 >> suitLength T.Spades 4
+                            , suitLength T.Spades 3 >> suitLength T.Hearts 4 ]
+               pointRange 10 40)
+    makeCall $ T.Bid 2 T.Clubs  -- Not alertable in the ACBL!
 
+
+b1N2C2D :: Action
+b1N2C2D = do
+    maxSuitLength T.Hearts 3
+    maxSuitLength T.Spades 3
+    makeCall $ T.Bid 2 T.Diamonds  -- Not alertable in the ACBL!
+
+
+b1N2C2H :: Action
+b1N2C2H = do
+    minSuitLength T.Hearts 4
+    makeCall $ T.Bid 2 T.Hearts
+
+
+b1N2C2S :: Action
+b1N2C2S = do
+    minSuitLength T.Spades 4
+    -- If you're 4-4 in the majors, bid 1H instead.
+    maxSuitLength T.Hearts 3
+    makeCall $ T.Bid 2 T.Spades
+
+
+b1N2C2D3H :: Action
+b1N2C2D3H = do
+    pointRange 10 40
+    suitLength T.Spades 5
+    suitLength T.Hearts 4
+    makeAlertableCall (T.Bid 3 T.Hearts) "Smolen: 5 spades, 4 hearts, GF"
+
+
+b1N2C2D3S :: Action
+b1N2C2D3S = do
+    pointRange 10 40
+    suitLength T.Hearts 5
+    suitLength T.Spades 4
+    makeAlertableCall (T.Bid 3 T.Spades) "Smolen: 5 hearts, 4 spades, GF"
+
+
+b1N2C2D2N :: Action
+b1N2C2D2N = do
+    balancedHand  -- Is this right? What would you rebid with a 4135 invite?
+    pointRange 8 9
+    makeCall $ T.Bid 2 T.Notrump
+
+
+b1N2C2D3N :: Action
+b1N2C2D3N = do
+    balancedHand
+    pointRange 10 13
+    makeCall $ T.Bid 3 T.Notrump
+
+
+b1N2C2D4N :: Action
+b1N2C2D4N = do
+    balancedHand
+    pointRange 14 15
+    makeCall $ T.Bid 4 T.Notrump
+
+
+inviteWithMajor :: T.Suit -> Action
+inviteWithMajor suit = do
+    minSuitLength suit 4
+    pointRange 8 9
+    minLoserCount 9
+    makeCall $ T.Bid 3 suit
+
+b1N2C2H3H :: Action
+b1N2C2H3H = inviteWithMajor T.Hearts
+
+b1N2C2S3S :: Action
+b1N2C2S3S = inviteWithMajor T.Spades
+
+
+gameForceWithMajor :: T.Suit -> Action
+gameForceWithMajor suit = do
+    minSuitLength suit 4
+    pointRange 10 13
+    minLoserCount 7
+    makeCall $ T.Bid 4 suit
+
+b1N2C2H4H :: Action
+b1N2C2H4H = gameForceWithMajor T.Hearts
+
+b1N2C2S4S :: Action
+b1N2C2S4S = gameForceWithMajor T.Spades
+
+
+slamWithMajor :: T.Suit -> T.Suit -> Action
+slamWithMajor suit otherSuit = do
+    minSuitLength suit 4
+    pointRange 14 40
+    makeAlertableCall (T.Bid 3 otherSuit) "slam interest in partner's major"
+
+b1N2C2H3S :: Action
+b1N2C2H3S = slamWithMajor T.Hearts T.Spades
+
+b1N2C2S3H :: Action
+b1N2C2S3H = slamWithMajor T.Spades T.Hearts
