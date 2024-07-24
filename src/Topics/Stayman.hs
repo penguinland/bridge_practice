@@ -261,10 +261,15 @@ fitSlam = let
 topic :: Topic
 topic = makeTopic "Stayman" "Stmn" situations
   where
-    situations = wrap [ wrap [garbageStayman, nongarbageStayman]
-                      , wrap [noMajor, oneMajor, bothMajors]
-                      , wrap [ noFitBalancedInv
-                             , noFitBalancedGf
-                             , noFitBalancedSlamInv ]
-                      , wrap [fitInvite, fitGf, fitSlam]
+    situations = wrap [ garbageStayman
+                      , nongarbageStayman
+                      , noMajor
+                      , oneMajor
+                      , bothMajors
+                      , noFitBalancedInv
+                      , noFitBalancedGf
+                      , noFitBalancedSlamInv
+                      , fitInvite
+                      , fitGf
+                      , fitSlam
                       ]
