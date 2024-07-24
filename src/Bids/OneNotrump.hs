@@ -248,14 +248,14 @@ b1N2C2D2N = do
 b1N2C2D3N :: Action
 b1N2C2D3N = do
     balancedHand
-    pointRange 10 13
+    pointRange 10 14
     makeCall $ T.Bid 3 T.Notrump
 
 
 b1N2C2D4N :: Action
 b1N2C2D4N = do
     balancedHand
-    pointRange 14 15
+    pointRange 15 16
     makeCall $ T.Bid 4 T.Notrump
 
 
