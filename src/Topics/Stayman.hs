@@ -112,14 +112,36 @@ bothMajors = let
     stdWrap sit
 
 
+noFitBalanced :: Situations
+noFitBalanced = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            B.b1N2C2D
+            makePass
+        explanation =
+            "We bid Stayman, hoping for a fit with partner, but they " .+
+            "don't have a 4-card major. With no major-suit fit, bid " .+
+            T.Bid 2 T.Notrump .+ " to show our balanced invite. Partner " .+
+            "will pass with a minimum, and raise to game with a maximum."
+      in situation "invNoF" action B.b1N2C2D2N explanation
+  in
+    stdWrap sit
+
+
+
 -- TODO:
+--   - responder invites with 2N after no fit
+--   - responder signs off in 3N after no fit
 --   - responder invites with a fit
 --   - responder goes to game with a fit
 --   - responder shows slam interest with a fit
 --   - responder bids their major at the 2 level, showing 5-4 shape and
 --     invitational strength
---   - responder invites with 2N after no fit
---   - responder signs off in 3N after no fit
 --   - opener has both majors, and tries the other one after 3N
 --   - responder bids another side suit, GF, after there's no fit
 --   - opener has both majors, responder bids another side suit after 2H, and
@@ -140,4 +162,104 @@ topic = makeTopic "Stayman" "Stmn" situations
                       , noMajor
                       , oneMajor
                       , bothMajors
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
+                      , noFitBalanced
                       ]
