@@ -11,7 +11,7 @@ module Bids.MajorSuitRaises(
 
 
 import Auction(pointRange, minSuitLength, maxSuitLength, suitLength, Action,
-               makeCall, flatHand)
+               makeCall, flatHand, minLoserCount)
 import StandardOpenings(b1H, b1S)
 import qualified Terminology as T
 
@@ -43,10 +43,8 @@ limitRaise suit = do
     -- Ensure that there are no singletons or voids, with which you might
     -- instead want to splinter.
     mapM_ (`minSuitLength` 2) T.allSuits
-    -- Sometimes, a 12 HCP hand should be considered a limit raise, and
-    -- sometimes it should be considered game forcing. To avoid this ambiguity,
-    -- we ensure that you've got at most 11 HCP for a limit raise.
-    pointRange 10 11
+    pointRange 10 12
+    minLoserCount 8  -- With at most 7 losers, you should be game forcing.
     makeCall $ T.Bid 3 suit
 
 b1H3H :: Action
