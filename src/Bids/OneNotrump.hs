@@ -5,8 +5,16 @@ module Bids.OneNotrump(
   , b1N2C2D2N
   , b1N2C2D3H
   , b1N2C2D3S
+  , b1N2C2D3N
+  , b1N2C2D4N
   , b1N2C2H
+  , b1N2C2H3H
+  , b1N2C2H3S
+  , b1N2C2H4H
   , b1N2C2S
+  , b1N2C2S3H
+  , b1N2C2S3S
+  , b1N2C2S4S
   , b1N2D
   , b1N2D2H
   , b1N2D2H4H
@@ -31,7 +39,7 @@ module Bids.OneNotrump(
 
 import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
                Action, makeCall, makeAlertableCall, alternatives, longerThan,
-               balancedHand, flatHand)
+               balancedHand, flatHand, minLoserCount)
 import Output((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
@@ -235,3 +243,58 @@ b1N2C2D2N = do
     balancedHand  -- Is this right? What would you rebid with a 4135 invite?
     pointRange 8 9
     makeCall $ T.Bid 2 T.Notrump
+
+
+b1N2C2D3N :: Action
+b1N2C2D3N = do
+    balancedHand
+    pointRange 10 13
+    makeCall $ T.Bid 3 T.Notrump
+
+
+b1N2C2D4N :: Action
+b1N2C2D4N = do
+    balancedHand
+    pointRange 14 15
+    makeCall $ T.Bid 4 T.Notrump
+
+
+inviteWithMajor :: T.Suit -> Action
+inviteWithMajor suit = do
+    minSuitLength suit 4
+    pointRange 8 9
+    minLoserCount 9
+    makeCall $ T.Bid 3 suit
+
+b1N2C2H3H :: Action
+b1N2C2H3H = inviteWithMajor T.Hearts
+
+b1N2C2S3S :: Action
+b1N2C2S3S = inviteWithMajor T.Spades
+
+
+gameForceWithMajor :: T.Suit -> Action
+gameForceWithMajor suit = do
+    minSuitLength suit 4
+    pointRange 10 13
+    minLoserCount 7
+    makeCall $ T.Bid 4 suit
+
+b1N2C2H4H :: Action
+b1N2C2H4H = gameForceWithMajor T.Hearts
+
+b1N2C2S4S :: Action
+b1N2C2S4S = gameForceWithMajor T.Spades
+
+
+slamWithMajor :: T.Suit -> T.Suit -> Action
+slamWithMajor suit otherSuit = do
+    minSuitLength suit 4
+    pointRange 14 40
+    makeAlertableCall (T.Bid 3 otherSuit) "slam interest in partner's major"
+
+b1N2C2H3S :: Action
+b1N2C2H3S = slamWithMajor T.Hearts T.Spades
+
+b1N2C2S3H :: Action
+b1N2C2S3H = slamWithMajor T.Spades T.Hearts

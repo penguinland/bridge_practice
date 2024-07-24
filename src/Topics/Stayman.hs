@@ -112,8 +112,8 @@ bothMajors = let
     stdWrap sit
 
 
-noFitBalanced :: Situations
-noFitBalanced = let
+noFitBalancedInv :: Situations
+noFitBalancedInv = let
     sit = let
         action = do
             setOpener T.North
@@ -133,22 +133,126 @@ noFitBalanced = let
     stdWrap sit
 
 
+noFitBalancedGf :: Situations
+noFitBalancedGf = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            B.b1N2C2D
+            makePass
+        explanation =
+            "We bid Stayman, hoping for a major-suit fit, but partner " .+
+            "doesn't have a 4-card major. With game-forcing strength but " .+
+            "no slam interest, sign off in " .+ T.Bid 3 T.Notrump .+ "."
+      in situation "GfNoF" action B.b1N2C2D3N explanation
+  in
+    stdWrap sit
+
+
+
+noFitBalancedSlamInv :: Situations
+noFitBalancedSlamInv = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            B.b1N2C2D
+            makePass
+        explanation =
+            "We bid Stayman, hoping for a major-suit fit, but partner " .+
+            "doesn't have a 4-card major. With slam-invitational strength, " .+
+            "invite with a quantitative " .+ T.Bid 4 T.Notrump .+ ". " .+
+            "Partner will pass with a minimum and bid 6 with a maximum."
+      in situation "SlINoF" action B.b1N2C2D4N explanation
+  in
+    -- We're slam invitational; we can't be a passed hand.
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.North, T.West]
+
+
+fitInvite :: Situations
+fitInvite = let
+    sit (openerRebid, responderRebid) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            _ <- openerRebid
+            makePass
+        explanation =
+            "Partner opened a strong " .+ T.Bid 1 T.Notrump .+ ", we bid " .+
+            "Stayman, and found a major-suit fit. With invitational " .+
+            "strength, invite to game. Partner will pass with a minimum " .+
+            "and bid 4 with a maximum."
+      in situation "fitInv" action responderRebid explanation
+  in
+    wrapVulDlr $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3H)
+                               , (B.b1N2C2S, B.b1N2C2S3S) ]
+
+
+fitGf :: Situations
+fitGf = let
+    sit (openerRebid, responderRebid) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            _ <- openerRebid
+            makePass
+        explanation =
+            "Partner opened a strong " .+ T.Bid 1 T.Notrump .+ ", we bid " .+
+            "Stayman, and found a major-suit fit. With no slam interest, " .+
+            "sign off in game."
+      in situation "fitGF" action responderRebid explanation
+  in
+    wrapVulDlr $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H4H)
+                               , (B.b1N2C2S, B.b1N2C2S4S) ]
+
+
+fitSlam :: Situations
+fitSlam = let
+    sit (openerRebid, responderRebid) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            _ <- openerRebid
+            makePass
+        explanation =
+            "Partner opened a strong " .+ T.Bid 1 T.Notrump .+ ", we bid " .+
+            "Stayman, and found a major-suit fit. Show at least mild slam " .+
+            "interest by bidding the other major at the 3 level! Partner " .+
+            "will start control bidding."
+      in situation "fitSl" action responderRebid explanation
+  in
+    -- We're slam invitational; we can't be a passed hand.
+    wrap $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3S)
+                         , (B.b1N2C2S, B.b1N2C2S3H) ]
+                      <~ T.allVulnerabilities <~ [T.North, T.West]
+
 
 -- TODO:
---   - responder invites with 2N after no fit
---   - responder signs off in 3N after no fit
---   - responder invites with a fit
---   - responder goes to game with a fit
---   - responder shows slam interest with a fit
---   - responder bids their major at the 2 level, showing 5-4 shape and
---     invitational strength
 --   - opener has both majors, and tries the other one after 3N
 --   - responder bids another side suit, GF, after there's no fit
+--   - responder bids their major at the 2 level, showing 5-4 shape and
+--     invitational strength
 --   - opener has both majors, responder bids another side suit after 2H, and
 --     opener should go to 4S.
---   - Smolen?
 --   - responder bids Texas over 2D
 --   - opener completes Texas
+--   - DON'T DO Smolen: that's a separate topic
 --   - DON'T DO opener having both majors and responder inviting with 2N over
 --     2H. If you're playing 4-way transfers, that doesn't necessarily show
 --     spades.
@@ -157,109 +261,10 @@ noFitBalanced = let
 topic :: Topic
 topic = makeTopic "Stayman" "Stmn" situations
   where
-    situations = wrap [ wrap [garbageStayman]
-                      , nongarbageStayman
-                      , noMajor
-                      , oneMajor
-                      , bothMajors
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
-                      , noFitBalanced
+    situations = wrap [ wrap [garbageStayman, nongarbageStayman]
+                      , wrap [noMajor, oneMajor, bothMajors]
+                      , wrap [ noFitBalancedInv
+                             , noFitBalancedGf
+                             , noFitBalancedSlamInv ]
+                      , wrap [fitInvite, fitGf, fitSlam]
                       ]
