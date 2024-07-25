@@ -10,10 +10,13 @@ module Bids.OneNotrump(
   , b1N2C2H
   , b1N2C2H3H
   , b1N2C2H3S
+  , b1N2C2H3N
+  , b1N2C2H3N4S
   , b1N2C2H4H
   , b1N2C2S
   , b1N2C2S3H
   , b1N2C2S3S
+  , b1N2C2S3N
   , b1N2C2S4S
   , b1N2D
   , b1N2D2H
@@ -298,3 +301,25 @@ b1N2C2H3S = slamWithMajor T.Hearts T.Spades
 
 b1N2C2S3H :: Action
 b1N2C2S3H = slamWithMajor T.Spades T.Hearts
+
+
+wrongMajorTo3N :: T.Suit -> Action
+wrongMajorTo3N suit = do
+    pointRange 10 13
+    balancedHand
+    maxSuitLength suit 3
+    makeCall $ T.Bid 3 T.Notrump
+
+b1N2C2H3N :: Action
+b1N2C2H3N = wrongMajorTo3N T.Hearts
+
+b1N2C2S3N :: Action
+b1N2C2S3N = wrongMajorTo3N T.Spades
+
+
+b1N2C2H3N4S :: Action
+b1N2C2H3N4S = do
+    -- To get here, we must already have a 1N opener and 4 hearts, so all we
+    -- need now is 4 spades to match partner.
+    suitLength T.Spades 4
+    makeCall $ T.Bid 4 T.Spades

@@ -243,8 +243,109 @@ fitSlam = let
                       <~ T.allVulnerabilities <~ [T.North, T.West]
 
 
+wrongMajorGFH :: Situations
+wrongMajorGFH = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            B.b1N2C2H
+            makePass
+        explanation =
+            "Partner opened a strong " .+ T.Bid 1 T.Notrump .+ ", and we " .+
+            "bid Stayman. Our only major is spades, though, and partner's " .+
+            "major is hearts, so we don't seem to have a fit. We're game " .+
+            "forcing with a balanced hand, so try signing off in " .+
+            T.Bid 3 T.Notrump .+ ". It's possible partner actually has " .+
+            "both majors, and will correct to " .+ T.Bid 4 T.Spades .+ "."
+      in situation "Wr3NH" action B.b1N2C2H3N explanation
+  in
+    stdWrap sit
+
+
+wrongMajorGFS :: Situations
+wrongMajorGFS = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            B.b1N2C2S
+            makePass
+            maxSuitLength T.Spades 2
+        explanation =
+            "Partner opened a strong " .+ T.Bid 1 T.Notrump .+ ", and we " .+
+            "bid Stayman. Partner has 4+ spades, but does not have " .+
+            "4 hearts, so we definitely don't have a fit. We're " .+
+            "game forcing with a balanced hand, though, so sign off in " .+
+            T.Bid 3 T.Notrump .+ "."
+      in situation "Wr3NS" action B.b1N2C2S3N explanation
+  in
+    stdWrap sit
+
+
+-- Note: the following situation sounds plausible, until you realize that
+-- responder must be 4-3 in the majors. In some systems, they might have bid
+-- Puppet Stayman instead of regular Stayman. So, these hands are excluded from
+-- the regular Stayman topic to avoid overlap!
+{-
+wrongMajorGFSAmb :: Situations
+wrongMajorGFSAmb = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            B.b1N2C2S
+            makePass
+            suitLength T.Spades 3
+        explanation =
+            "Partner opened a strong " .+ T.Bid 1 T.Notrump .+ ", and we " .+
+            "bid Stayman. Partner has 4+ spades, but does not have " .+
+            "4 hearts, so we don't obviously have a fit. We're " .+
+            "game forcing with a balanced hand, though, so sign off in " .+
+            T.Bid 3 T.Notrump .+ ". It's possible we have missed a 5" .+
+            NDash .+ "3 spade fit, but there's not much we can do about " .+
+            "that, and playing in notrump is probably alright."
+      in situation "Wr3NSo" action B.b1N2C2S3N explanation
+  in
+    stdWrap sit
+-}
+
+bothMajorsGF :: Situations
+bothMajorsGF = let
+    sit = let
+        action = do
+            setOpener T.South
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            B.b1N2C2H
+            makePass
+            B.b1N2C2H3N
+            makePass
+        explanation =
+            "We opened a strong " .+ T.Bid 1 T.Notrump .+ " with both " .+
+            "majors, and partner bid Stayman. We showed our cheapest one, " .+
+            "and partner jumped to " .+ T.Bid 3 T.Notrump .+ ", showing " .+
+            "game-forcing strength with no slam interest, and no heart fit. " .+
+            "To bid Stayman, they must have had a 4-card major, so they " .+
+            "must have spades! We've got a fit: let's play in that instead " .+
+            "of notrump."
+      in situation "3N4S" action B.b1N2C2H3N4S explanation
+  in
+    stdWrap sit
+
+
 -- TODO:
---   - opener has both majors, and tries the other one after 3N
 --   - responder bids another side suit, GF, after there's no fit
 --   - responder bids their major at the 2 level, showing 5-4 shape and
 --     invitational strength
@@ -261,8 +362,7 @@ fitSlam = let
 topic :: Topic
 topic = makeTopic "Stayman" "Stmn" situations
   where
-    situations = wrap [ garbageStayman
-                      , nongarbageStayman
+    situations = wrap [ wrap [garbageStayman, nongarbageStayman, bothMajorsGF]
                       , noMajor
                       , oneMajor
                       , bothMajors
@@ -272,4 +372,5 @@ topic = makeTopic "Stayman" "Stmn" situations
                       , fitInvite
                       , fitGf
                       , fitSlam
+                      , wrap [wrongMajorGFH, wrongMajorGFS]
                       ]
