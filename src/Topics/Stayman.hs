@@ -249,7 +249,7 @@ fitSlam = let
 --   - responder bids their major at the 2 level, showing 5-4 shape and
 --     invitational strength
 --   - opener has both majors, responder bids another side suit after 2H, and
---     opener should go to 4S.
+--     opener should rebid 3S.
 --   - responder bids Texas over 2D
 --   - opener completes Texas
 --   - DON'T DO Smolen: that's a separate topic
