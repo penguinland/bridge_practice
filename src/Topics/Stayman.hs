@@ -46,7 +46,7 @@ nongarbageStayman = let
         explanation =
             "Partner has opened a strong " .+ T.Bid 1 T.Notrump .+ ". We " .+
             "have a 4-card major and at least invitational strength. Bid " .+
-            "Stayman, and see if you've got a fit with partner."
+            "Stayman, and see if you've got a major-suit fit."
       in situation "stmn" action B.b1N2C explanation
   in
     stdWrap sit
