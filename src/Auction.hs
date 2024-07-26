@@ -1,3 +1,13 @@
+-- We want to put Action in the Showable typeclass, but it's an alias for a
+-- particular State monad, and the default compiler doesn't let that be in a
+-- typeclass because not all its arguments are type variables.
+{-# LANGUAGE FlexibleInstances #-}
+-- Putting Action in the Showable typeclass gives warnings about an orphan
+-- instance, because this file is neither the place where Showable is defined,
+-- nor the place where State is defined. but it *is* the place where Action is
+-- defined, so suppress the warning.
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Auction (
   Auction
 , Action
@@ -29,7 +39,6 @@ module Auction (
 , minLoserCount
 , maxLoserCount
 , extractLastCall
-, displayLastCall
 ) where
 
 import Control.Monad.Trans.State.Strict(State, execState, get, put, modify)
@@ -37,12 +46,17 @@ import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
 import DealerProg(DealerProg, addNewReq, addDefn, invert)
-import Output(Commentary, Showable, toCommentary)
+import Output(Showable(..), toCommentary)
 import Structures(Bidding, startBidding, (>-), lastCall, currentBidder)
 import qualified Terminology as T
 
 type Auction = (Bidding, DealerProg)
 type Action = State Auction ()
+
+
+instance Showable Action where
+    toLatex = toLatex . extractLastCall
+    toHtml = toHtml . extractLastCall
 
 
 newAuction :: T.Direction -> Auction
@@ -199,11 +213,5 @@ extractLastCall =
     -- It doesn't matter who was dealer: use North just to extract the bidding
     -- from the action.
     lastCall . fst . finish T.North
-
--- displayLastCall is for use in explanations: it formats the most recent call
--- from an action while stripping out any alerts it might have
-displayLastCall :: Action -> Commentary
-displayLastCall = toCommentary . T.removeAlert . extractLastCall
-
 
 -- TODO: hasCard
