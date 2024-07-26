@@ -34,11 +34,12 @@ instance ToJSON Commentary where
 
 
 class Showable a where
-    -- The minimal definition is either `output` or both `toLatex` and `toHtml`.
     toLatex :: a -> String
-    toLatex = output LaTeX
+    -- This wasn't organized as well as I would have preferred: many types are
+    -- supposed to be Showable but the HTML-like output is really JSON. Give a
+    -- default "implementation" for those types, and clean this up eventually.
     toHtml :: a -> String
-    toHtml = output Html
+    toHtml _ = undefined
 
 instance Showable String where
     toLatex = id
