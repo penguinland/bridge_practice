@@ -10,12 +10,16 @@ module Bids.OneNotrump(
   , b1N2C2D3N
   , b1N2C2D4N
   , b1N2C2H
+  , b1N2C2H3C
+  , b1N2C2H3D
   , b1N2C2H3H
   , b1N2C2H3S
   , b1N2C2H3N
   , b1N2C2H3N4S
   , b1N2C2H4H
   , b1N2C2S
+  , b1N2C2S3C
+  , b1N2C2S3D
   , b1N2C2S3H
   , b1N2C2S3S
   , b1N2C2S3N
@@ -88,18 +92,13 @@ lessThanInvitational :: Action
 lessThanInvitational = do
     mapM_ forbid [invitational, gameForcing]
 
-otherMajor :: T.Suit -> T.Suit
-otherMajor T.Hearts = T.Spades
-otherMajor T.Spades = T.Hearts
-otherMajor _        = error "other major of non-major suit"
-
 
 texasTransfer :: T.Suit -> Action
 texasTransfer suit = do
     alternatives [gameNoSlam, slamInterest]
     minSuitLength suit 6
     -- If you're 6-4, bid Stayman, and *then* make a Texas Transfer if necessary
-    maxSuitLength (otherMajor suit) 3
+    maxSuitLength (T.otherMajor suit) 3
     -- If you're 6-6, which suit to use is a matter of judgment, and you won't
     -- get practice here. Too bad.
     mapM_ (suit `longerThan`) . filter (/= suit) $ T.allSuits
@@ -333,7 +332,7 @@ inv54 :: T.Suit -> Action
 inv54 major = do
     pointRange 8 9
     suitLength major 5
-    suitLength (otherMajor major) 4
+    suitLength (T.otherMajor major) 4
     minLoserCount 7
     makeCall $ T.Bid 2 major
 
@@ -342,3 +341,27 @@ b1N2C2D2H = inv54 T.Hearts
 
 b1N2C2D2S :: Action
 b1N2C2D2S = inv54 T.Spades
+
+
+gfNoFitUnbalanced :: T.Suit -> T.Suit -> Action
+gfNoFitUnbalanced partnerMajor ourMinor = do
+    pointRange 10 40
+    maxSuitLength partnerMajor 3
+    minSuitLength ourMinor 4
+    -- We're going to skip 3-suited hands in here: deciding which of your 4-card
+    -- minors to bid is more nuance than I want to figure out right now.
+    maxSuitLength (T.otherMinor ourMinor) 3
+    forbid balancedHand
+    makeCall $ T.Bid 3 ourMinor
+
+b1N2C2H3C :: Action
+b1N2C2H3C = gfNoFitUnbalanced T.Hearts T.Clubs
+
+b1N2C2H3D :: Action
+b1N2C2H3D = gfNoFitUnbalanced T.Hearts T.Diamonds
+
+b1N2C2S3C :: Action
+b1N2C2S3C = gfNoFitUnbalanced T.Spades T.Clubs
+
+b1N2C2S3D :: Action
+b1N2C2S3D = gfNoFitUnbalanced T.Spades T.Diamonds

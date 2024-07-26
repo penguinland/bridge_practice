@@ -319,6 +319,7 @@ wrongMajorGFSAmb = let
     stdWrap sit
 -}
 
+
 bothMajorsGF :: Situations
 bothMajorsGF = let
     sit = let
@@ -365,14 +366,42 @@ inv54 = let
             " or bid " .+ T.Bid 2 T.Notrump .+ " if we still don't have a " .+
             "fit, and if they have a maximum they can either raise us to " .+
             "game with a fit or " .+ T.Bid 3 T.Notrump .+ " without one."
-      in situation "fitSl" action bid explanation
+      in situation "inv54" action bid explanation
   in
     wrapVulDlr $ return sit <~ [ (B.b1N2C2D2H, T.Hearts)
                                , (B.b1N2C2D2S, T.Spades) ]
 
 
+noFitUnbalancedGF :: Situations
+noFitUnbalancedGF = let
+    sit (openerBid, responderRebid) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            _ <- openerBid
+            makePass
+        explanation =
+            "Partner opened a strong " .+ T.Bid 1 T.Notrump .+ ". With " .+
+            "a game-forcing hand and a 4-card major, we bid Stayman, " .+
+            "hoping to find a fit with partner, but they have the other " .+
+            "major. We've got an unbalanced hand, so let's bid our second " .+
+            "suit. If partner has the fourth suit covered, they'll bid " .+
+            T.Bid 3 T.Notrump .+ ", and if they don't, they'll continue " .+
+            "to describe their hand. Our bid is game-forcing, so we don't " .+
+            "need to worry about partner passing us out too low."
+      in situation "nfubgf" action responderRebid explanation
+  in
+    wrapVulDlr $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C)
+                               , (B.b1N2C2H, B.b1N2C2H3D)
+                               , (B.b1N2C2S, B.b1N2C2S3C)
+                               , (B.b1N2C2S, B.b1N2C2S3D)
+                               ]
+
+
 -- TODO:
---   - responder bids another side suit, GF, after there's no fit
 --   - opener has both majors, responder bids another side suit after 2H, and
 --     opener should rebid 3S.
 --   - responder bids Texas over 2D
@@ -398,103 +427,5 @@ topic = makeTopic "Stayman" "Stmn" situations
                       , fitSlam
                       , wrap [wrongMajorGFH, wrongMajorGFS]
                       , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
-                      , inv54
+                      , noFitUnbalancedGF
                       ]
