@@ -345,10 +345,34 @@ bothMajorsGF = let
     stdWrap sit
 
 
+inv54 :: Situations
+inv54 = let
+    sit (bid, suit) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            B.b1N2C2D
+            makePass
+        explanation =
+            "Partner opened a strong " .+ T.Bid 1 T.Notrump .+ ". With " .+
+            "an invitational hand and 5-4 in the majors, we bid Stayman, " .+
+            "hoping to find a fit with partner, but they don't have a " .+
+            "4-card major. Bid our 5-card major to show our hand. If " .+
+            "partner has a minimum, they can pass with 3 " .+ show suit .+
+            " or bid " .+ T.Bid 2 T.Notrump .+ " if we still don't have a " .+
+            "fit, and if they have a maximum they can either raise us to " .+
+            "game with a fit or " .+ T.Bid 3 T.Notrump .+ " without one."
+      in situation "fitSl" action bid explanation
+  in
+    wrapVulDlr $ return sit <~ [ (B.b1N2C2D2H, T.Hearts)
+                               , (B.b1N2C2D2S, T.Spades) ]
+
+
 -- TODO:
 --   - responder bids another side suit, GF, after there's no fit
---   - responder bids their major at the 2 level, showing 5-4 shape and
---     invitational strength
 --   - opener has both majors, responder bids another side suit after 2H, and
 --     opener should rebid 3S.
 --   - responder bids Texas over 2D
@@ -373,4 +397,104 @@ topic = makeTopic "Stayman" "Stmn" situations
                       , fitGf
                       , fitSlam
                       , wrap [wrongMajorGFH, wrongMajorGFS]
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
+                      , inv54
                       ]

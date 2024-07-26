@@ -2,6 +2,8 @@ module Bids.OneNotrump(
     b1N  -- Copied from StandardOpenings
   , b1N2C
   , b1N2C2D
+  , b1N2C2D2H
+  , b1N2C2D2S
   , b1N2C2D2N
   , b1N2C2D3H
   , b1N2C2D3S
@@ -86,6 +88,11 @@ lessThanInvitational :: Action
 lessThanInvitational = do
     mapM_ forbid [invitational, gameForcing]
 
+otherMajor :: T.Suit -> T.Suit
+otherMajor T.Hearts = T.Spades
+otherMajor T.Spades = T.Hearts
+otherMajor _        = error "other major of non-major suit"
+
 
 texasTransfer :: T.Suit -> Action
 texasTransfer suit = do
@@ -102,9 +109,6 @@ texasTransfer suit = do
     transferSuit T.Hearts = T.Diamonds
     transferSuit T.Spades = T.Hearts
     transferSuit _        = error "Texas transfer to non-major suit"
-    otherMajor T.Hearts = T.Spades
-    otherMajor T.Spades = T.Hearts
-    otherMajor _        = error "other major of non-major suit"
 
 b1N4D :: Action
 b1N4D = texasTransfer T.Hearts
@@ -323,3 +327,18 @@ b1N2C2H3N4S = do
     -- need now is 4 spades to match partner.
     suitLength T.Spades 4
     makeCall $ T.Bid 4 T.Spades
+
+
+inv54 :: T.Suit -> Action
+inv54 major = do
+    pointRange 8 9
+    suitLength major 5
+    suitLength (otherMajor major) 4
+    minLoserCount 7
+    makeCall $ T.Bid 2 major
+
+b1N2C2D2H :: Action
+b1N2C2D2H = inv54 T.Hearts
+
+b1N2C2D2S :: Action
+b1N2C2D2S = inv54 T.Spades
