@@ -46,7 +46,7 @@ nongarbageStayman = let
         explanation =
             "Partner has opened a strong " .+ T.Bid 1 T.Notrump .+ ". We " .+
             "have a 4-card major and at least invitational strength. Bid " .+
-            "Stayman, and see if you've got a fit with partner."
+            "Stayman, and see if you've got a major-suit fit."
       in situation "stmn" action B.b1N2C explanation
   in
     stdWrap sit
@@ -198,8 +198,8 @@ fitInvite = let
                                , (B.b1N2C2S, B.b1N2C2S3S) ]
 
 
-fitGf :: Situations
-fitGf = let
+fitGF :: Situations
+fitGF = let
     sit (openerRebid, responderRebid) = let
         action = do
             setOpener T.North
@@ -319,6 +319,7 @@ wrongMajorGFSAmb = let
     stdWrap sit
 -}
 
+
 bothMajorsGF :: Situations
 bothMajorsGF = let
     sit = let
@@ -345,15 +346,127 @@ bothMajorsGF = let
     stdWrap sit
 
 
--- TODO:
---   - responder bids another side suit, GF, after there's no fit
---   - responder bids their major at the 2 level, showing 5-4 shape and
---     invitational strength
---   - opener has both majors, responder bids another side suit after 2H, and
---     opener should rebid 3S.
---   - responder bids Texas over 2D
+inv54 :: Situations
+inv54 = let
+    sit (bid, suit) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            B.b1N2C2D
+            makePass
+        explanation =
+            "Partner opened a strong " .+ T.Bid 1 T.Notrump .+ ". With " .+
+            "an invitational hand and 5-4 in the majors, we bid Stayman, " .+
+            "hoping to find a fit with partner, but they don't have a " .+
+            "4-card major. Bid our 5-card major to show our hand. If " .+
+            "partner has a minimum, they can pass with 3 " .+ show suit .+
+            " or bid " .+ T.Bid 2 T.Notrump .+ " if we still don't have a " .+
+            "fit, and if they have a maximum they can either raise us to " .+
+            "game with a fit or " .+ T.Bid 3 T.Notrump .+ " without one."
+      in situation "inv54" action bid explanation
+  in
+    wrapVulDlr $ return sit <~ [ (B.b1N2C2D2H, T.Hearts)
+                               , (B.b1N2C2D2S, T.Spades) ]
+
+
+noFitUnbalancedGF :: Situations
+noFitUnbalancedGF = let
+    sit (openerBid, responderRebid) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            _ <- openerBid
+            makePass
+        explanation =
+            "Partner opened a strong " .+ T.Bid 1 T.Notrump .+ ". With " .+
+            "a game-forcing hand and a 4-card major, we bid Stayman, " .+
+            "hoping to find a fit with partner, but they have the other " .+
+            "major. We've got an unbalanced hand, so let's bid our second " .+
+            "suit. If partner has the fourth suit covered, they'll bid " .+
+            T.Bid 3 T.Notrump .+ ", and if they don't, they'll continue " .+
+            "to describe their hand. Our bid is game-forcing, so we don't " .+
+            "need to worry about partner passing us out too low."
+      in situation "nfubgf" action responderRebid explanation
+  in
+    wrapVulDlr $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C)
+                               , (B.b1N2C2H, B.b1N2C2H3D)
+                               , (B.b1N2C2S, B.b1N2C2S3C)
+                               , (B.b1N2C2S, B.b1N2C2S3D)
+                               ]
+
+
+bothMajorsUnbalancedPassed :: Situations
+bothMajorsUnbalancedPassed = let
+    sit (openerBid, responderBid, opener4S) = let
+        action = do
+            setOpener T.South
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            _ <- openerBid
+            makePass
+            _ <- responderBid
+            makePass
+        explanation =
+            "We opened a strong " .+ T.Bid 1 T.Notrump .+ ", and partner " .+
+            "bid Stayman. We've got both majors and showed our lower suit, " .+
+            "but didn't find a fit there. Instead, partner showed an " .+
+            "unbalanced, game-forcing hand. They must have 4 spades! " .+
+            "Furthermore, partner is a passed hand, so they can't be " .+
+            "interested in slam. On the Principle of Fast Arrival, sign " .+
+            "off in our major-suit game."
+      in situation "bmubup" action opener4S explanation
+  in
+    -- This version is only for when responder is a passed hand
+    wrap $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C4S)
+                         , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D4S)
+                         ]
+                      <~ T.allVulnerabilities <~ [T.West, T.North]
+
+
+bothMajorsUnbalancedUnpassed :: Situations
+bothMajorsUnbalancedUnpassed = let
+    sit (openerBid, responderBid, opener4S) = let
+        action = do
+            setOpener T.South
+            B.b1N
+            makePass
+            B.b1N2C
+            makePass
+            _ <- openerBid
+            makePass
+            _ <- responderBid
+            makePass
+        explanation =
+            "We opened a strong " .+ T.Bid 1 T.Notrump .+ ", and partner " .+
+            "bid Stayman. We've got both majors and showed our lower suit, " .+
+            "but didn't find a fit there. Instead, partner showed an " .+
+            "unbalanced, game-forcing hand. They must have 4 spades! " .+
+            "We should show our major-suit fit. However, partner is an " .+
+            "unpassed hand, so we should conserve bidding space by " .+
+            "responding as cheaply as possible. Partner will probably " .+
+            "just sign off in " .+ T.Bid 4 T.Spades .+ " themselves, but " .+
+            "give them a chance to control bid in case they have slam interest."
+      in situation "bmubp" action opener4S explanation
+  in
+    -- This version is only for when responder is a passed hand
+    wrap $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C3S)
+                         , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D3S)
+                         ]
+                      <~ T.allVulnerabilities <~ [T.South, T.East]
+
+
+-- TODO eventually, but maybe in separate topics:
+--   - responder bids Texas over 1N-2C-2D
 --   - opener completes Texas
---   - DON'T DO Smolen: that's a separate topic
+--   - Smolen
 --   - DON'T DO opener having both majors and responder inviting with 2N over
 --     2H. If you're playing 4-way transfers, that doesn't necessarily show
 --     spades.
@@ -362,7 +475,11 @@ bothMajorsGF = let
 topic :: Topic
 topic = makeTopic "Stayman" "Stmn" situations
   where
-    situations = wrap [ wrap [garbageStayman, nongarbageStayman, bothMajorsGF]
+    situations = wrap [ wrap [ garbageStayman
+                             , nongarbageStayman
+                             , bothMajorsGF
+                             , bothMajorsUnbalancedPassed
+                             , bothMajorsUnbalancedUnpassed]
                       , noMajor
                       , oneMajor
                       , bothMajors
@@ -370,7 +487,9 @@ topic = makeTopic "Stayman" "Stmn" situations
                       , noFitBalancedGf
                       , noFitBalancedSlamInv
                       , fitInvite
-                      , fitGf
+                      , fitGF
                       , fitSlam
                       , wrap [wrongMajorGFH, wrongMajorGFS]
+                      , inv54
+                      , noFitUnbalancedGF
                       ]

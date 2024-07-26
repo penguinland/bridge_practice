@@ -2,18 +2,28 @@ module Bids.OneNotrump(
     b1N  -- Copied from StandardOpenings
   , b1N2C
   , b1N2C2D
+  , b1N2C2D2H
+  , b1N2C2D2S
   , b1N2C2D2N
   , b1N2C2D3H
   , b1N2C2D3S
   , b1N2C2D3N
   , b1N2C2D4N
   , b1N2C2H
+  , b1N2C2H3C
+  , b1N2C2H3C3S
+  , b1N2C2H3C4S
+  , b1N2C2H3D
+  , b1N2C2H3D3S
+  , b1N2C2H3D4S
   , b1N2C2H3H
   , b1N2C2H3S
   , b1N2C2H3N
   , b1N2C2H3N4S
   , b1N2C2H4H
   , b1N2C2S
+  , b1N2C2S3C
+  , b1N2C2S3D
   , b1N2C2S3H
   , b1N2C2S3S
   , b1N2C2S3N
@@ -92,7 +102,7 @@ texasTransfer suit = do
     alternatives [gameNoSlam, slamInterest]
     minSuitLength suit 6
     -- If you're 6-4, bid Stayman, and *then* make a Texas Transfer if necessary
-    maxSuitLength (otherMajor suit) 3
+    maxSuitLength (T.otherMajor suit) 3
     -- If you're 6-6, which suit to use is a matter of judgment, and you won't
     -- get practice here. Too bad.
     mapM_ (suit `longerThan`) . filter (/= suit) $ T.allSuits
@@ -102,9 +112,6 @@ texasTransfer suit = do
     transferSuit T.Hearts = T.Diamonds
     transferSuit T.Spades = T.Hearts
     transferSuit _        = error "Texas transfer to non-major suit"
-    otherMajor T.Hearts = T.Spades
-    otherMajor T.Spades = T.Hearts
-    otherMajor _        = error "other major of non-major suit"
 
 b1N4D :: Action
 b1N4D = texasTransfer T.Hearts
@@ -317,9 +324,69 @@ b1N2C2S3N :: Action
 b1N2C2S3N = wrongMajorTo3N T.Spades
 
 
-b1N2C2H3N4S :: Action
-b1N2C2H3N4S = do
-    -- To get here, we must already have a 1N opener and 4 hearts, so all we
-    -- need now is 4 spades to match partner.
+inv54 :: T.Suit -> Action
+inv54 major = do
+    pointRange 8 9
+    suitLength major 5
+    suitLength (T.otherMajor major) 4
+    minLoserCount 7
+    makeCall $ T.Bid 2 major
+
+b1N2C2D2H :: Action
+b1N2C2D2H = inv54 T.Hearts
+
+b1N2C2D2S :: Action
+b1N2C2D2S = inv54 T.Spades
+
+
+gfNoFitUnbalanced :: T.Suit -> T.Suit -> Action
+gfNoFitUnbalanced partnerMajor ourMinor = do
+    pointRange 10 40
+    maxSuitLength partnerMajor 3
+    minSuitLength ourMinor 4
+    -- We're going to skip 3-suited hands in here: deciding which of your 4-card
+    -- minors to bid is more nuance than I want to figure out right now.
+    maxSuitLength (T.otherMinor ourMinor) 3
+    forbid balancedHand
+    makeCall $ T.Bid 3 ourMinor
+
+b1N2C2H3C :: Action
+b1N2C2H3C = gfNoFitUnbalanced T.Hearts T.Clubs
+
+b1N2C2H3D :: Action
+b1N2C2H3D = gfNoFitUnbalanced T.Hearts T.Diamonds
+
+b1N2C2S3C :: Action
+b1N2C2S3C = gfNoFitUnbalanced T.Spades T.Clubs
+
+b1N2C2S3D :: Action
+b1N2C2S3D = gfNoFitUnbalanced T.Spades T.Diamonds
+
+
+-- Times when opener is 4-4 in the majors, bids hearts over Stayman, and doesn't
+-- yet find a fit.
+b1N2C2H3C4S :: Action
+b1N2C2H3C4S = do
     suitLength T.Spades 4
     makeCall $ T.Bid 4 T.Spades
+
+b1N2C2H3D4S :: Action
+b1N2C2H3D4S = do
+    suitLength T.Spades 4
+    makeCall $ T.Bid 4 T.Spades
+
+b1N2C2H3N4S :: Action
+b1N2C2H3N4S = do
+    suitLength T.Spades 4
+    makeCall $ T.Bid 4 T.Spades
+
+-- If responder is an unpassed hand, prefer to rebid 3S instead of 4S
+b1N2C2H3C3S :: Action
+b1N2C2H3C3S = do
+    suitLength T.Spades 4
+    makeCall $ T.Bid 3 T.Spades
+
+b1N2C2H3D3S :: Action
+b1N2C2H3D3S = do
+    suitLength T.Spades 4
+    makeCall $ T.Bid 3 T.Spades

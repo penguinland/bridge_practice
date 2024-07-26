@@ -6,6 +6,8 @@ module Terminology (
 , allSuits
 , minorSuits
 , majorSuits
+, otherMinor
+, otherMajor
 , Call(..)
 , CompleteCall(..)
 , removeAlert
@@ -80,6 +82,18 @@ minorSuits :: [Suit]
 minorSuits = [Clubs, Diamonds]
 majorSuits :: [Suit]
 majorSuits = [Hearts, Spades]
+
+
+otherMinor :: Suit -> Suit
+otherMinor Clubs = Diamonds
+otherMinor Diamonds = Clubs
+otherMinor _      = error "otherMinor of non-minor"
+
+
+otherMajor :: Suit -> Suit
+otherMajor Hearts = Spades
+otherMajor Spades = Hearts
+otherMajor _      = error "otherMajor of non-major"
 
 
 data Call = Pass | Double | Redouble | Bid Int Suit deriving Eq
