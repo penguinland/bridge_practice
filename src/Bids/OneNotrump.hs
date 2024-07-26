@@ -11,7 +11,11 @@ module Bids.OneNotrump(
   , b1N2C2D4N
   , b1N2C2H
   , b1N2C2H3C
+  , b1N2C2H3C3S
+  , b1N2C2H3C4S
   , b1N2C2H3D
+  , b1N2C2H3D3S
+  , b1N2C2H3D4S
   , b1N2C2H3H
   , b1N2C2H3S
   , b1N2C2H3N
@@ -320,14 +324,6 @@ b1N2C2S3N :: Action
 b1N2C2S3N = wrongMajorTo3N T.Spades
 
 
-b1N2C2H3N4S :: Action
-b1N2C2H3N4S = do
-    -- To get here, we must already have a 1N opener and 4 hearts, so all we
-    -- need now is 4 spades to match partner.
-    suitLength T.Spades 4
-    makeCall $ T.Bid 4 T.Spades
-
-
 inv54 :: T.Suit -> Action
 inv54 major = do
     pointRange 8 9
@@ -365,3 +361,32 @@ b1N2C2S3C = gfNoFitUnbalanced T.Spades T.Clubs
 
 b1N2C2S3D :: Action
 b1N2C2S3D = gfNoFitUnbalanced T.Spades T.Diamonds
+
+
+-- Times when opener is 4-4 in the majors, bids hearts over Stayman, and doesn't
+-- yet find a fit.
+b1N2C2H3C4S :: Action
+b1N2C2H3C4S = do
+    suitLength T.Spades 4
+    makeCall $ T.Bid 4 T.Spades
+
+b1N2C2H3D4S :: Action
+b1N2C2H3D4S = do
+    suitLength T.Spades 4
+    makeCall $ T.Bid 4 T.Spades
+
+b1N2C2H3N4S :: Action
+b1N2C2H3N4S = do
+    suitLength T.Spades 4
+    makeCall $ T.Bid 4 T.Spades
+
+-- If responder is an unpassed hand, prefer to rebid 3S instead of 4S
+b1N2C2H3C3S :: Action
+b1N2C2H3C3S = do
+    suitLength T.Spades 4
+    makeCall $ T.Bid 3 T.Spades
+
+b1N2C2H3D3S :: Action
+b1N2C2H3D3S = do
+    suitLength T.Spades 4
+    makeCall $ T.Bid 3 T.Spades
