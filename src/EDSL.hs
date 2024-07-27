@@ -48,7 +48,7 @@ alternatives = forbid . mapM_ forbid
 
 
 impliesThat :: Action -> Action -> Action
-impliesThat a b = alternatives [forbid a, b]
+impliesThat ifPart thenPart = alternatives [thenPart, forbid ifPart]
 
 
 makeCall :: T.Call -> Action
