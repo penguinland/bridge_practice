@@ -38,7 +38,7 @@ library:
 executables:
   make_pdf:
     main:                Main.hs
-    source-dirs:         app
+    source-dirs:         make_pdf
     ghc-options:
     - -threaded
     - -rtsopts
