@@ -12,9 +12,10 @@ module StandardOpenings(
 -- which seat you're in. These Actions are solely based on distribution, and you
 -- must specify strength yourself before using them.
 
-import Auction(Action, suitLength, minSuitLength, maxSuitLength, makeCall,
-               forbid, longerThan, pointRange, balancedHand, alternatives)
+import Auction(Action)
 import qualified CommonBids as B
+import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, forbid,
+            longerThan, pointRange, balancedHand, alternatives)
 import qualified Terminology as T
 
 

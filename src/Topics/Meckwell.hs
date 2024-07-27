@@ -1,12 +1,13 @@
 module Topics.Meckwell(topic) where
 
-import Auction(pointRange, minSuitLength, maxSuitLength, makePass, Action)
+import Auction(Action)
+import qualified Bids.Meckwell as B
 import CommonBids(setOpener)
+import EDSL(pointRange, minSuitLength, maxSuitLength, makePass)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import qualified Bids.Meckwell as B
 
 
 responderCannotBid :: Action

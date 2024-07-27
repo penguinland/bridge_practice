@@ -2,15 +2,15 @@ module Topics.StandardModernPrecision.OneClubResponses(
   topic
 , topicExtras) where
 
-import Auction(forbid, maxSuitLength, makePass, pointRange)
+import Bids.StandardModernPrecision.BasicBids(
+    firstSeatOpener, oppsPass, b1C, smpWrapN, smpWrapS)
+import qualified Bids.StandardModernPrecision.OneClub as B
 import CommonBids(cannotPreempt)
+import EDSL(forbid, maxSuitLength, makePass, pointRange)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import Bids.StandardModernPrecision.BasicBids(firstSeatOpener, oppsPass, b1C,
-                                              smpWrapN, smpWrapS)
-import qualified Bids.StandardModernPrecision.OneClub as B
 
 
 oneDiamond :: Situations

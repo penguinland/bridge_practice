@@ -1,13 +1,12 @@
 module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
-import Auction(maxSuitLength, minSuitLength, pointRange, displayLastCall,
-               alternatives)
+import Bids.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
+import qualified Bids.StandardModernPrecision.OneDiamond as B
+import EDSL(maxSuitLength, minSuitLength, pointRange, alternatives)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import Bids.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
-import qualified Bids.StandardModernPrecision.OneDiamond as B
 
 
 oneMajor :: Situations
@@ -17,7 +16,7 @@ oneMajor = let
             b1D
             oppsPass
         explanation =
-            "Let's start with a natural " .+ displayLastCall bid .+ "\
+            "Let's start with a natural " .+ bid .+ "\
            \ bid, and see where things go from there."
       in
         situation "1M" action bid explanation
@@ -101,7 +100,7 @@ reverseFlannery = let
             "With 5 spades, 4 or 5 hearts, and " .+
             (if isInvite then "" else "less than ") .+
             "invitational strength, bid a Reverse Flannery " .+
-            displayLastCall bid .+ ". Partner can then place the final\
+            bid .+ ". Partner can then place the final\
           \ contract, bid " .+ T.Bid 3 T.Clubs .+ " (pass or\
           \ correct) with both minors, or bid " .+
             T.Bid 2 T.Notrump .+ " to ask for\
@@ -219,7 +218,7 @@ invertedMinors = let
             oppsPass
         explanation =
             "With less than invitational strength, no 4-card major, but a long\
-           \ diamond suit, jump to " .+ displayLastCall B.b1D3D .+ ", like\
+           \ diamond suit, jump to " .+ B.b1D3D .+ ", like\
            \ an inverted minor. Note that you need 6+ cards in the suit to do\
            \ this, since opener might only have a doubleton."
       in

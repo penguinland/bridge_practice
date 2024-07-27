@@ -1,10 +1,10 @@
 module Topics.StandardModernPrecision.OpeningBids(topic) where
 
+import qualified Bids.StandardModernPrecision.BasicBids as B
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import qualified Bids.StandardModernPrecision.BasicBids as B
 
 
 oneClub :: Situations

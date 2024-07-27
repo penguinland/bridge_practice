@@ -10,8 +10,9 @@ module Bids.MajorSuitRaises(
 ) where
 
 
-import Auction(pointRange, minSuitLength, maxSuitLength, suitLength, Action,
-               makeCall, flatHand, minLoserCount)
+import Auction(Action)
+import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, makeCall,
+            flatHand, minLoserCount)
 import StandardOpenings(b1H, b1S)
 import qualified Terminology as T
 

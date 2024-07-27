@@ -1,11 +1,11 @@
 module Topics.MajorSuitRaises(topic) where
 
-import Output((.+))
-import Topic(Topic, wrap, wrapVulDlr, Situations, makeTopic)
-import Situation(situation, (<~))
-import qualified Terminology as T
 import qualified Bids.MajorSuitRaises as B
 import CommonBids(setOpener, noInterference)
+import Output((.+))
+import Situation(situation, (<~))
+import qualified Terminology as T
+import Topic(Topic, wrap, wrapVulDlr, Situations, makeTopic)
 
 
 simpleRaise :: Situations

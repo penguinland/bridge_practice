@@ -1,15 +1,14 @@
 module Topics.TexasTransfers(topic) where
 
--- TODO: replace makePass with something more intelligent
-import Auction(makePass, makeCall, suitLength, minSuitLength, maxSuitLength,
-               pointRange)
+import qualified Bids.OneNotrump as B
 import CommonBids(setOpener)
+-- TODO: replace makePass with something more intelligent
+import EDSL(makePass, makeCall, suitLength, minSuitLength, maxSuitLength,
+            pointRange)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, --wrapVulDlr,
- Situations, makeTopic)
-import qualified Bids.OneNotrump as B
+import Topic(Topic, wrap, Situations, makeTopic)
 
 
 makeTransferSignoff :: Situations

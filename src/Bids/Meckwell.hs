@@ -13,8 +13,9 @@ module Bids.Meckwell(
 ) where
 
 
-import Auction(pointRange, minSuitLength, maxSuitLength, Action, makeCall,
-               alternatives, soundHolding, makeAlertableCall)
+import Auction(Action)
+import EDSL(pointRange, minSuitLength, maxSuitLength, makeCall, alternatives,
+            soundHolding, makeAlertableCall)
 import Output ((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T

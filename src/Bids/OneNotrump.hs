@@ -50,9 +50,10 @@ module Bids.OneNotrump(
 ) where
 
 
-import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-               Action, makeCall, makeAlertableCall, alternatives, longerThan,
-               balancedHand, flatHand, minLoserCount)
+import Auction(Action)
+import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
+            makeCall, makeAlertableCall, alternatives, longerThan, balancedHand,
+            flatHand, minLoserCount)
 import Output((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
