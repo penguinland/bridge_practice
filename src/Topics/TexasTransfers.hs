@@ -1,8 +1,8 @@
 module Topics.TexasTransfers(topic) where
 
 -- TODO: replace makePass with something more intelligent
-import Auction(makePass, makeCall, suitLength, minSuitLength, maxSuitLength,
-               pointRange)
+import EDSL(makePass, makeCall, suitLength, minSuitLength, maxSuitLength,
+            pointRange)
 import CommonBids(setOpener)
 import Output((.+))
 import Situation(situation, (<~))

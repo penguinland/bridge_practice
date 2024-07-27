@@ -38,9 +38,10 @@ module Bids.StandardModernPrecision.OneClubOneHeartAlt(
   , b1C1H2H3S
 ) where
 
-import Auction(forbid, suitLength, minSuitLength, maxSuitLength, Action,
-               balancedHand, makeCall, makeAlertableCall, alternatives,
-               longerThan, atLeastAsLong)
+import Auction(Action)
+import EDSL(forbid, suitLength, minSuitLength, maxSuitLength, balancedHand,
+            makeCall, makeAlertableCall, alternatives, longerThan,
+            atLeastAsLong)
 import qualified Terminology as T
 import Bids.StandardModernPrecision.OneClub(
     b1C, b1C1Hnos, b1C1H1S, b1C1H1N, b1C1H2C, b1C1H2D, b1C1H2H, b1C1H2S,

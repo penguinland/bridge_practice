@@ -18,9 +18,9 @@ module Bids.StandardModernPrecision.BasicBids(
 import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
-import Auction(forbid, pointRange, suitLength, minSuitLength, hasTopN,
-               Action, balancedHand, constrain, makeCall, makeAlertableCall,
-               makePass, alternatives)
+import Auction(Action, constrain)
+import EDSL(forbid, pointRange, suitLength, minSuitLength, hasTopN,
+            balancedHand, makeCall, makeAlertableCall, makePass, alternatives)
 import CommonBids(cannotPreempt)
 import Output(Punct(..), (.+))
 import Situation(Situation, (<~))

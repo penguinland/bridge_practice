@@ -1,10 +1,10 @@
 module Topics.ForcingOneNotrump(topic) where
 
+import EDSL(suitLength, maxSuitLength, pointRange, makeCall)
 import Output((.+), Punct(..))
-import Topic(Topic, wrap, Situations, makeTopic)
-import Auction(suitLength, maxSuitLength, pointRange, makeCall)
 import Situation(situation, (<~))
 import qualified Terminology as T
+import Topic(Topic, wrap, Situations, makeTopic)
 import qualified Bids.ForcingOneNotrump as B
 import CommonBids(setOpener, noInterference)
 

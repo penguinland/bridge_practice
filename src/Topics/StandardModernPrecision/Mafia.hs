@@ -1,7 +1,7 @@
 module Topics.StandardModernPrecision.Mafia(topic) where
 
-import Auction(forbid, minSuitLength, suitLength, balancedHand, equalLength,
-               longerThan)
+import EDSL(forbid, minSuitLength, suitLength, balancedHand, equalLength,
+            longerThan)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T

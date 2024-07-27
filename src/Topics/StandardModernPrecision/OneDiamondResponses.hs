@@ -1,6 +1,6 @@
 module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
-import Auction(maxSuitLength, minSuitLength, pointRange, alternatives)
+import EDSL(maxSuitLength, minSuitLength, pointRange, alternatives)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T

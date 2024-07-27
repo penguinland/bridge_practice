@@ -1,7 +1,7 @@
 module Topics.Stayman(topic) where
 
 -- TODO: replace makePass with something more intelligent
-import Auction(makePass, pointRange, suitLength, maxSuitLength)
+import EDSL(makePass, pointRange, suitLength, maxSuitLength)
 import CommonBids(setOpener)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))

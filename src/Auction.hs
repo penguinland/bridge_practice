@@ -13,46 +13,23 @@ module Auction (
 , Action
 , newAuction
 , finish
-, forbid
-, alternatives
-, impliesThat
 , constrain
 , define
-, makeCall
-, makeAlertableCall
-, makePass
-, pointRange
-, balancedHand
-, flatHand
-, suitLength
-, minSuitLength
-, maxSuitLength
-, hasTopN
-, soundHolding
 , withholdBid
-, longerThan
-, shorterThan
-, equalLength
-, atLeastAsLong
-, atMostAsLong
-, loserCount
-, minLoserCount
-, maxLoserCount
 , extractLastCall
 ) where
 
-import Control.Monad.Trans.State.Strict(State, execState, get, put, modify)
-import Data.Bifunctor(first)
+import Control.Monad.Trans.State.Strict(State, execState, get, put)
 import Data.List.Utils(join)
 
-import DealerProg(DealerProg, addNewReq, addDefn, invert)
-import Output(Showable(..), toCommentary)
-import Structures(Bidding, startBidding, (>-), lastCall, currentBidder)
+import DealerProg(DealerProg, addNewReq, addDefn)
+import Output(Showable(..))
+import Structures(Bidding, startBidding, lastCall, currentBidder)
 import qualified Terminology as T
+
 
 type Auction = (Bidding, DealerProg)
 type Action = State Auction ()
-
 
 instance Showable Action where
     toLatex = toLatex . extractLastCall
@@ -65,23 +42,6 @@ newAuction dealer = (startBidding dealer, mempty)
 
 finish :: T.Direction -> Action -> Auction
 finish firstBidder = flip execState (newAuction firstBidder)
-
-
-forbid :: Action -> Action
-forbid action = do
-    (bidding, dealerProg) <- get
-    let freshAuction = newAuction . currentBidder $ bidding
-        (_, dealerToInvert) = execState action freshAuction
-    put (bidding, dealerProg `mappend` invert dealerToInvert)
-
-
-alternatives :: [Action] -> Action
--- We use deMorgan's laws. (A || B || C) becomes !(!A && !B && !C)
-alternatives = forbid . mapM_ forbid
-
-
-impliesThat :: Action -> Action -> Action
-impliesThat a b = alternatives [forbid a, b]
 
 
 -- modifyDealerProg takes the name of a constraint and pieces of a definition
@@ -103,61 +63,6 @@ define :: String -> [String] -> Action
 define = modifyDealerProg addDefn
 
 
-makeCall :: T.Call -> Action
-makeCall call = modify $ first (>- T.CompleteCall call Nothing)
-
-makeAlertableCall :: Showable a => T.Call -> a -> Action
-makeAlertableCall call alert =
-    modify $ first (>- T.CompleteCall call (Just . toCommentary $ alert))
-
-
-makePass :: Action
-makePass = makeCall T.Pass
-
-
-balancedHand :: Action
-balancedHand =
-    constrain "balanced" ["shape(", ", any 4333 + any 5332 + any 4432)"]
-
-
-flatHand :: Action
-flatHand = constrain "flat" ["shape(", ", any 4333)"]
-
-
-pointRange :: Int -> Int -> Action
-pointRange minHcp maxHcp =
-    constrain (join "_" ["range", show minHcp, show maxHcp])
-              ["hcp(", ") >= " ++ show minHcp ++ " && " ++
-               "hcp(", ") <= " ++ show maxHcp]
-
-
-suitLengthOp :: String -> String -> T.Suit -> Int -> Action
-suitLengthOp op suffix suit len =
-    constrain (join "_" [show suit, suffix, show len])
-              [show suit ++ "(", ") " ++ op ++ " " ++ show len]
-
-suitLength :: T.Suit -> Int -> Action
-suitLength = suitLengthOp "==" "eq"
-
-minSuitLength :: T.Suit -> Int -> Action
-minSuitLength = suitLengthOp ">=" "ge"
-
-maxSuitLength :: T.Suit -> Int -> Action
-maxSuitLength = suitLengthOp "<=" "le"
-
-
-hasTopN :: T.Suit -> Int -> Int -> Action
-hasTopN suit range minCount = do
-    constrain (join "_" [show suit, show minCount, "of", "top", show range])
-              ["top" ++ show range ++ "(", ", " ++ show suit ++
-               ") >= " ++ show minCount]
-
-
--- A sound pre-empt has 2 of the top 3 or 3 of the top 5 cards in the suit.
-soundHolding :: T.Suit -> Action
-soundHolding suit = alternatives [hasTopN suit 3 2, hasTopN suit 5 3]
-
-
 -- Define the constraints in this action without modifying the current Auction.
 withholdBid :: Action -> Action
 withholdBid action = do
@@ -167,51 +72,8 @@ withholdBid action = do
     put (bidding, dealerProg `mappend` dealerToWithhold)
 
 
--- unexported helper
-_compareSuitLength :: String -> String -> T.Suit -> T.Suit -> Action
-_compareSuitLength name op suitA suitB = let
-    fullName = join "_" [show suitA, name, show suitB, "length"]
-  in
-    constrain fullName [show suitA ++ "(", ") " ++ op ++ " " ++
-                        show suitB ++ "(", ")"]
-
-longerThan :: T.Suit -> T.Suit -> Action
-longerThan = _compareSuitLength "longer" ">"
-
-shorterThan :: T.Suit -> T.Suit -> Action
-shorterThan = _compareSuitLength "shorter" "<"
-
-equalLength :: T.Suit -> T.Suit -> Action
-equalLength = _compareSuitLength "equal" "=="
-
-atLeastAsLong :: T.Suit -> T.Suit -> Action
-atLeastAsLong = _compareSuitLength "ge" ">="
-
-atMostAsLong :: T.Suit -> T.Suit -> Action
-atMostAsLong = _compareSuitLength "le" "<="
-
-
--- unexported helper
-loserComparison :: String -> String -> Int -> Action
-loserComparison name op count = let
-    fullName = join "_" ["losers", name, show count]
-  in
-    constrain fullName ["loser(", ") " ++ op ++ " " ++ show count]
-
-loserCount :: Int -> Action
-loserCount = loserComparison "equal" "=="
-
-minLoserCount :: Int -> Action
-minLoserCount = loserComparison "at_least" ">="
-
-maxLoserCount :: Int -> Action
-maxLoserCount = loserComparison "at_most" "<="
-
-
 extractLastCall :: Action -> T.CompleteCall
 extractLastCall =
     -- It doesn't matter who was dealer: use North just to extract the bidding
     -- from the action.
     lastCall . fst . finish T.North
-
--- TODO: hasCard

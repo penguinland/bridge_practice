@@ -1,6 +1,7 @@
 module Topics.Meckwell(topic) where
 
-import Auction(pointRange, minSuitLength, maxSuitLength, makePass, Action)
+import Auction(Action)
+import EDSL(pointRange, minSuitLength, maxSuitLength, makePass)
 import CommonBids(setOpener)
 import Output((.+))
 import Situation(situation, (<~))

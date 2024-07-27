@@ -2,7 +2,7 @@ module Topics.StandardModernPrecision.OneClubResponses(
   topic
 , topicExtras) where
 
-import Auction(forbid, maxSuitLength, makePass, pointRange)
+import EDSL(forbid, maxSuitLength, makePass, pointRange)
 import CommonBids(cannotPreempt)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))

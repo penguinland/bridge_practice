@@ -2,14 +2,15 @@ module Topics.StandardOpeners(topic) where
 
 import Control.Monad.Trans.State.Strict(get)
 
-import Output((.+), Punct(..))
-import Structures(currentBidder)
-import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic, wrap)
-import Auction(forbid, suitLength, minSuitLength, maxSuitLength, alternatives, pointRange, makePass, balancedHand)
-import Situation(situation, (<~))
-import qualified Terminology as T
 import qualified CommonBids as B
+import EDSL(forbid, suitLength, minSuitLength, maxSuitLength, alternatives,
+            pointRange, makePass, balancedHand)
+import Output((.+), Punct(..))
+import Situation(situation, (<~))
 import qualified StandardOpenings as SO
+import Structures(currentBidder)
+import qualified Terminology as T
+import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic, wrap)
 
 
 -- Yes, I realize that many of these Situations lack the nuance of planning your

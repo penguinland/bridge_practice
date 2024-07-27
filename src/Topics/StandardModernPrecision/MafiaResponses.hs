@@ -1,6 +1,7 @@
 module Topics.StandardModernPrecision.MafiaResponses(topic) where
 
-import Auction(Action, suitLength, maxSuitLength)
+import Auction(Action)
+import EDSL(suitLength, maxSuitLength)
 import Output((.+), Punct(..))
 import Situation(Situation, situation, (<~))
 import qualified Terminology as T

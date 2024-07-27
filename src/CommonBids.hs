@@ -14,13 +14,12 @@ module CommonBids(
 , noInterference
 ) where
 
-import Auction(Action, constrain, define, forbid, pointRange, balancedHand,
-               makeCall, makeAlertableCall, makePass, suitLength,
-               minSuitLength, maxSuitLength, alternatives)
-import Structures(currentBidder)
 import Control.Monad.Trans.State.Strict(get)
--- Not currently needed:
---import DealerProg(addDefn, addReq)
+
+import Auction(Action, constrain, define)
+import EDSL(forbid, pointRange, balancedHand, makeCall, makeAlertableCall,
+            makePass, suitLength, minSuitLength, maxSuitLength, alternatives)
+import Structures(currentBidder)
 import qualified Terminology as T
 
 strong1NT :: Action

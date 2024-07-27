@@ -22,9 +22,10 @@ module Bids.ForcingOneNotrump(
 ) where
 
 
-import Auction(pointRange, suitLength, minSuitLength, maxSuitLength, Action,
-               makeCall, makeAlertableCall, forbid, balancedHand, withholdBid,
-               longerThan, atLeastAsLong, alternatives, impliesThat)
+import Auction(Action, withholdBid)
+import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, impliesThat,
+            makeCall, makeAlertableCall, forbid, balancedHand, longerThan,
+            atLeastAsLong, alternatives)
 import qualified Bids.MajorSuitRaises as M
 import StandardOpenings(b1H, b1S)
 import qualified Terminology as T

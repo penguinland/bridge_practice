@@ -19,9 +19,10 @@ module Bids.StandardModernPrecision.OneDiamond(
   , b1D4S
 ) where
 
-import Auction(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-               Action, balancedHand, makeCall, makeAlertableCall, alternatives,
-               longerThan, atMostAsLong, impliesThat)
+import Auction(Action)
+import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
+            balancedHand, makeCall, makeAlertableCall, alternatives,
+            longerThan, atMostAsLong, impliesThat)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
 

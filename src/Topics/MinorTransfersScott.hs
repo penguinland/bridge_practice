@@ -1,8 +1,8 @@
 module Topics.MinorTransfersScott(topic) where
 
-import Auction(forbid, makeCall, makeAlertableCall, makePass, pointRange,
-               hasTopN, constrain, minSuitLength, maxSuitLength, Action,
-               balancedHand, withholdBid)
+import Auction(Action, constrain, withholdBid)
+import EDSL(forbid, makeCall, makeAlertableCall, makePass, pointRange,
+            hasTopN, minSuitLength, maxSuitLength, balancedHand)
 import qualified CommonBids as B
 import Output((.+))
 import Situation(situation, (<~))
