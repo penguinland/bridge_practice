@@ -29,15 +29,17 @@ import qualified Terminology as T
 
 
 type Auction = (Bidding, DealerProg)
+
+
+newAuction :: T.Direction -> Auction
+newAuction dealer = (startBidding dealer, mempty)
+
+
 type Action = State Auction ()
 
 instance Showable Action where
     toLatex = toLatex . extractLastCall
     toHtml = toHtml . extractLastCall
-
-
-newAuction :: T.Direction -> Auction
-newAuction dealer = (startBidding dealer, mempty)
 
 
 finish :: T.Direction -> Action -> Auction
