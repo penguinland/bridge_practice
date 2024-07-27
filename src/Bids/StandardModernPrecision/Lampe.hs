@@ -17,7 +17,7 @@ import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b1D)
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, makeCall,
             makeAlertableCall, balancedHand, alternatives, forbid, longerThan,
-            impliesThat)
+            impliesThat, forEach)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
 
@@ -40,7 +40,7 @@ shapeShower2N = do
 
 shapeShower3C :: Action
 shapeShower3C = do
-    mapM_ (`minSuitLength` 4) T.minorSuits
+    forEach T.minorSuits (`minSuitLength` 4)
     makeAlertableCall (T.Bid 3 T.Clubs) "at least 4-4 in the minors"
 
 

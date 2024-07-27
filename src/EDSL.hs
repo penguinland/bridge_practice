@@ -2,6 +2,7 @@ module EDSL (
   forbid
 , alternatives
 , impliesThat
+, forEach
 , makeCall
 , makeAlertableCall
 , makePass
@@ -49,6 +50,10 @@ alternatives = forbid . mapM_ forbid
 
 impliesThat :: Action -> Action -> Action
 impliesThat ifPart thenPart = alternatives [thenPart, forbid ifPart]
+
+
+forEach :: [a] -> (a -> Action) -> Action
+forEach = flip mapM_
 
 
 makeCall :: T.Call -> Action

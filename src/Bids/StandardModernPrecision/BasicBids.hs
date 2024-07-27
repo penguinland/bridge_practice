@@ -23,7 +23,7 @@ import Action(Action, constrain)
 import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, hasTopN,
             balancedHand, makeCall, makeAlertableCall, makePass, alternatives,
-            minLoserCount)
+            minLoserCount, forEach)
 import Output(Punct(..), (.+))
 import Situation(Situation, (<~))
 import qualified Terminology as T
@@ -76,18 +76,18 @@ b3N = do
 b1C :: Action
 b1C = do
     pointRange 16 40
-    mapM_ forbid [b1N, b2N]
+    forEach [b1N, b2N] forbid
     makeAlertableCall (T.Bid 1 T.Clubs) "16+ HCP, any shape"
 
 
 b1M :: T.Suit -> Action
 b1M suit = do
     firstSeatOpener
-    mapM_ forbid [b1C, b1N, b2N]
+    forEach [b1C, b1N, b2N] forbid
     minSuitLength suit 5
     -- If you're a maximum with a 6-card minor and 5-card major, open the minor.
-    mapM_ forbid . flip map T.minorSuits $ (\minor ->
-        pointRange 14 15 >> minSuitLength minor 6 >> suitLength suit 5)
+    forEach T.minorSuits (\minor -> forbid (
+        pointRange 14 15 >> minSuitLength minor 6 >> suitLength suit 5))
     makeCall $ T.Bid 1 suit
 
 
@@ -95,7 +95,7 @@ b2C :: Action
 b2C = do
     firstSeatOpener
     forbid b1C
-    mapM_ (forbid . b1M) T.majorSuits
+    forEach T.majorSuits (forbid . b1M)
     minSuitLength T.Clubs 6
     makeAlertableCall (T.Bid 2 T.Clubs) ("10" .+ NDash .+ "15 HCP, 6+ clubs")
 
@@ -111,7 +111,7 @@ b2D = do
 b1D :: Action
 b1D = do
     firstSeatOpener
-    mapM_ forbid [b1C, b1N, b1M T.Hearts, b1M T.Spades, b2C, b2D]
+    forEach [b1C, b1N, b1M T.Hearts, b1M T.Spades, b2C, b2D] forbid
     -- The next line is commented out because if it can be violated, we're gonna
     -- have a bad day. Make sure that it's never violated in the results even if
     -- it's not explicitly required.

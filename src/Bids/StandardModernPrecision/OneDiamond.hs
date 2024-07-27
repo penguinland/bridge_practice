@@ -23,7 +23,7 @@ import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b1D)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             balancedHand, makeCall, makeAlertableCall, alternatives,
-            longerThan, atMostAsLong, impliesThat)
+            longerThan, atMostAsLong, impliesThat, forEach)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
 
@@ -33,7 +33,7 @@ b1D1H = do
     pointRange 6 40
     minSuitLength T.Hearts 4
     -- If you've got a more specific bid, do that instead
-    mapM_ forbid [b1D2C, b1D2D, b1D2H, b1D2S, b1D3H]
+    forEach [b1D2C, b1D2D, b1D2H, b1D2S, b1D3H] forbid
     -- With longer spades, bid those first. With equal-length spades, either
     -- you're 4-4 and you should probably bid the hearts first, or you're 5-5
     -- and either you're going to bid Reverse Flannery or you're game forcing
@@ -47,7 +47,7 @@ b1D1S = do
     pointRange 6 40
     minSuitLength T.Spades 4
     -- If you've got a more specific bid, do that instead
-    mapM_ forbid [b1D2C, b1D2D, b1D2H, b1D2S, b1D3S]
+    forEach [b1D2C, b1D2D, b1D2H, b1D2S, b1D3S] forbid
     -- Your spades should be your longest major. If your hearts are at least as
     -- long, start with 1H instead.
     T.Spades `longerThan` T.Hearts
@@ -129,7 +129,7 @@ b1D3C = do
     pointRange 6 10
     alternatives [ suitLength T.Clubs 4 >> minSuitLength T.Diamonds 5
                  , suitLength T.Diamonds 4 >> minSuitLength T.Clubs 5 ]
-    mapM_ (`maxSuitLength` 3) T.majorSuits
+    forEach T.majorSuits (`maxSuitLength` 3)
     makeAlertableCall (T.Bid 3 T.Clubs)
         ("5" .+ NDash .+ "4 or 4" .+ NDash .+ "5 in the minors, " .+
          "less than invitational strength")
@@ -141,7 +141,7 @@ b1D3D = do
     minSuitLength T.Diamonds 6
     -- With 8+ diamonds, bid 4D (the book says 7+, but that's anti-LoTT).
     maxSuitLength T.Diamonds 7
-    mapM_ (`maxSuitLength` 3) T.majorSuits
+    forEach T.majorSuits (`maxSuitLength` 3)
     makeAlertableCall (T.Bid 3 T.Diamonds) "Weak"
 
 

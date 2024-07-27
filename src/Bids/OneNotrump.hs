@@ -53,7 +53,7 @@ module Bids.OneNotrump(
 import Action(Action)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             makeCall, makeAlertableCall, alternatives, longerThan, balancedHand,
-            flatHand, minLoserCount)
+            flatHand, minLoserCount, forEach)
 import Output((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
@@ -95,7 +95,7 @@ invitational = do
 
 lessThanInvitational :: Action
 lessThanInvitational = do
-    mapM_ forbid [invitational, gameForcing]
+    forEach [invitational, gameForcing] forbid
 
 
 texasTransfer :: T.Suit -> Action
@@ -106,7 +106,7 @@ texasTransfer suit = do
     maxSuitLength (T.otherMajor suit) 3
     -- If you're 6-6, which suit to use is a matter of judgment, and you won't
     -- get practice here. Too bad.
-    mapM_ (suit `longerThan`) . filter (/= suit) $ T.allSuits
+    forEach (filter (/= suit) T.allSuits) (suit `longerThan`)
     makeAlertableCall (T.Bid 4 (transferSuit suit))
                       ("Transfer to " .+ show suit)
   where
@@ -135,7 +135,7 @@ jacobyTransfer suit = do
                  , minSuitLength suit 6 >> forbid (texasTransfer suit)]
     -- If you're 6-6, which suit to use is a matter of judgment, and you won't
     -- get practice here. Too bad.
-    mapM_ (suit `longerThan`) . filter (/= suit) $ T.allSuits
+    forEach (filter (/= suit) T.allSuits) (suit `longerThan`)
     makeAlertableCall (T.Bid 2 (transferSuit suit))
                       ("Transfer to " .+ show suit)
   where

@@ -12,7 +12,7 @@ module Bids.MajorSuitRaises(
 
 import Action(Action)
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, makeCall,
-            flatHand, minLoserCount)
+            flatHand, minLoserCount, forEach)
 import StandardOpenings(b1H, b1S)
 import qualified Terminology as T
 
@@ -25,7 +25,7 @@ basicRaise suit = do
     -- If you've got a freak distribution, you might instead want to either
     -- upgrade your hand or bid your other suit on the way to supporting
     -- partner. Ensure we don't have freak distribution.
-    mapM_ (`maxSuitLength` 5) T.allSuits
+    forEach T.allSuits (`maxSuitLength` 5)
     makeCall $ T.Bid 2 suit
 
 b1H2H :: Action
@@ -43,7 +43,7 @@ limitRaise suit = do
     suitLength suit 4
     -- Ensure that there are no singletons or voids, with which you might
     -- instead want to splinter.
-    mapM_ (`minSuitLength` 2) T.allSuits
+    forEach T.allSuits (`minSuitLength` 2)
     pointRange 10 12
     minLoserCount 8  -- With at most 7 losers, you should be game forcing.
     makeCall $ T.Bid 3 suit
