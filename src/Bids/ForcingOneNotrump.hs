@@ -26,7 +26,7 @@ import Action(Action, withholdBid)
 import qualified Bids.MajorSuitRaises as M
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, impliesThat,
             makeCall, makeAlertableCall, forbid, balancedHand, longerThan,
-            atLeastAsLong, alternatives, forEach)
+            atLeastAsLong, alternatives, forEach, forbidAll)
 import StandardOpenings(b1H, b1S)
 import qualified Terminology as T
 
@@ -115,7 +115,7 @@ jumpRebid major jumpShifts = do
     pointRange 16 18
     minSuitLength major 6
     maxSuitLength major 7  -- With 8+ cards in the suit, just jump to game.
-    forEach jumpShifts forbid
+    forbidAll jumpShifts
     makeCall $ T.Bid 3 major
 
 b1H1N3H :: Action
@@ -127,7 +127,7 @@ b1S1N3S = jumpRebid T.Spades [b1S1N3C, b1S1N3D, b1S1N3H]
 
 rebid :: T.Suit -> [Action] -> Action
 rebid major strongBids = do
-    forEach strongBids forbid
+    forbidAll strongBids
     minSuitLength major 6
     -- It's possible some rare, strong hands have slipped through the cracks of
     -- the strong bids. Make sure they don't show up here!

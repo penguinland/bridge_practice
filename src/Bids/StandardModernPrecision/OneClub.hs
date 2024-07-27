@@ -63,7 +63,7 @@ import Action(Action, constrain)
 import Bids.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             balancedHand, makeCall, makeAlertableCall, alternatives, longerThan,
-            atLeastAsLong, forEach)
+            atLeastAsLong, forEach, forbidAll)
 import Output((.+), Punct(..))
 import qualified Terminology as T
 
@@ -500,7 +500,7 @@ b1C1D1S2C = do
 ---------------------
 b1C1H1S :: Action
 b1C1H1S = do
-    forEach [b1C1H1N, b1C1H2N, b1C1H3N] forbid
+    forbidAll [b1C1H1N, b1C1H2N, b1C1H3N]
     minSuitLength T.Spades 5
     T.Spades `atLeastAsLong` T.Clubs
     T.Spades `atLeastAsLong` T.Diamonds
@@ -533,7 +533,7 @@ b1C1H3N = do
 
 b1C1H2C :: Action
 b1C1H2C = do
-    forEach [b1C1H1N, b1C1H2N, b1C1H3N] forbid
+    forbidAll [b1C1H1N, b1C1H2N, b1C1H3N]
     minSuitLength T.Clubs 5
     -- Given 5-5 in the minors, start with diamonds, and bid clubs later.
     T.Clubs `longerThan` T.Diamonds
@@ -544,7 +544,7 @@ b1C1H2C = do
 
 b1C1H2D :: Action
 b1C1H2D = do
-    forEach [b1C1H1N, b1C1H2N, b1C1H3N] forbid
+    forbidAll [b1C1H1N, b1C1H2N, b1C1H3N]
     minSuitLength T.Diamonds 5
     T.Diamonds `atLeastAsLong` T.Clubs
     T.Diamonds `longerThan` T.Hearts
@@ -554,7 +554,7 @@ b1C1H2D = do
 
 b1C1H2H :: Action
 b1C1H2H = do
-    forEach [b1C1H1N, b1C1H2N, b1C1H3N] forbid
+    forbidAll [b1C1H1N, b1C1H2N, b1C1H3N]
     minSuitLength T.Hearts 5
     T.Hearts `atLeastAsLong` T.Clubs
     T.Hearts `atLeastAsLong` T.Diamonds

@@ -44,7 +44,7 @@ import Bids.StandardModernPrecision.OneClub(
     tripleFourOneShape)
 import EDSL(forbid, suitLength, minSuitLength, maxSuitLength, balancedHand,
             makeCall, makeAlertableCall, alternatives, longerThan,
-            atLeastAsLong, forEach)
+            atLeastAsLong, forEach, forbidAll)
 import qualified Terminology as T
 
 
@@ -137,7 +137,7 @@ b1C1H2C2N = do
 
 b1C1H2C3C :: Action
 b1C1H2C3C = do
-    forEach [balancedHand, b1C1H2C2D, b1C1H2C2H, b1C1H2C2N] forbid
+    forbidAll [balancedHand, b1C1H2C2D, b1C1H2C2H, b1C1H2C2N]
     minSuitLength T.Clubs 3
     makeCall (T.Bid 3 T.Clubs)
 
@@ -184,7 +184,7 @@ b1C1H2D3C = do
 
 b1C1H2D3D :: Action
 b1C1H2D3D = do
-    forEach [balancedHand, b1C1H2D2H, b1C1H2D2S, b1C1H2D2N] forbid
+    forbidAll [balancedHand, b1C1H2D2H, b1C1H2D2S, b1C1H2D2N]
     minSuitLength T.Diamonds 3
     makeCall (T.Bid 3 T.Diamonds)
 
@@ -211,14 +211,13 @@ b1C1H2H2N :: Action
 b1C1H2H2N = do
     forEach T.allSuits (`maxSuitLength` 4)
     balancedHand
-    forEach [b1C1H2H2S, b1C1H2H3H] forbid
+    forbidAll [b1C1H2H2S, b1C1H2H3H]
     makeCall (T.Bid 2 T.Notrump)
 
 
 b1C1H2H3C :: Action
 b1C1H2H3C = do
-    forbid b1C1H2H3H
-    forEach [b1C1H2H2S, b1C1H2H2N, b1C1H2H3H] forbid
+    forbidAll [b1C1H2H2S, b1C1H2H2N, b1C1H2H3H]
     minSuitLength T.Clubs 5
     T.Clubs `longerThan` T.Diamonds
     makeCall (T.Bid 3 T.Clubs)
@@ -226,8 +225,7 @@ b1C1H2H3C = do
 
 b1C1H2H3D :: Action
 b1C1H2H3D = do
-    forbid b1C1H2H3H
-    forEach [b1C1H2H2S, b1C1H2H2N, b1C1H2H3H] forbid
+    forbidAll [b1C1H2H2S, b1C1H2H2N, b1C1H2H3H]
     minSuitLength T.Diamonds 5
     T.Diamonds `atLeastAsLong` T.Clubs
     makeCall (T.Bid 3 T.Diamonds)

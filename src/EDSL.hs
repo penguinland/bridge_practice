@@ -1,5 +1,6 @@
 module EDSL (
   forbid
+, forbidAll
 , alternatives
 , impliesThat
 , forEach
@@ -41,6 +42,10 @@ forbid action = do
     let freshAuction = newAuction . currentBidder $ bidding
         (_, dealerToInvert) = execState action freshAuction
     put (bidding, dealerProg `mappend` invert dealerToInvert)
+
+
+forbidAll :: [Action] -> Action
+forbidAll = mapM_ forbid
 
 
 alternatives :: [Action] -> Action

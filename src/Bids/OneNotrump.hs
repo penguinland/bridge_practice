@@ -53,7 +53,7 @@ module Bids.OneNotrump(
 import Action(Action)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             makeCall, makeAlertableCall, alternatives, longerThan, balancedHand,
-            flatHand, minLoserCount, forEach)
+            flatHand, minLoserCount, forEach, forbidAll)
 import Output((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
@@ -95,7 +95,7 @@ invitational = do
 
 lessThanInvitational :: Action
 lessThanInvitational = do
-    forEach [invitational, gameForcing] forbid
+    forbidAll [invitational, gameForcing]
 
 
 texasTransfer :: T.Suit -> Action
