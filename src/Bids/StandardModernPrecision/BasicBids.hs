@@ -1,5 +1,6 @@
 module Bids.StandardModernPrecision.BasicBids(
-    firstSeatOpener
+    lessThanInvitational
+  , firstSeatOpener
   , oppsPass
   -- Opening bids
   , b1C
@@ -21,12 +22,18 @@ import System.Random(StdGen)
 import Action(Action, constrain)
 import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, hasTopN,
-            balancedHand, makeCall, makeAlertableCall, makePass, alternatives)
+            balancedHand, makeCall, makeAlertableCall, makePass, alternatives,
+            minLoserCount)
 import Output(Punct(..), (.+))
 import Situation(Situation, (<~))
 import qualified Terminology as T
 import Topic(wrap, Situations)
 
+
+lessThanInvitational :: Action
+lessThanInvitational = do
+    pointRange 0 10
+    minLoserCount 9
 
 -- Because we're not using the Rule of 20 and its ilk, we're going to skip the
 -- auctions that start with other folks passing for now, and maybe come back to
