@@ -59,7 +59,7 @@ module Bids.StandardModernPrecision.OneClub(
   , tripleFourOneShape  -- For use when defining other bids
 ) where
 
-import Auction(Action, constrain)
+import Action(Action, constrain)
 import Bids.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             balancedHand, makeCall, makeAlertableCall, alternatives, longerThan,

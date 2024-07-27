@@ -19,7 +19,7 @@ module Bids.StandardModernPrecision.OneDiamond(
   , b1D4S
 ) where
 
-import Auction(Action)
+import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b1D)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             balancedHand, makeCall, makeAlertableCall, alternatives,

@@ -27,7 +27,7 @@ import Control.Monad.Trans.State.Strict(execState, get, put, modify)
 import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
-import Auction(Action, newAuction, constrain)
+import Action(Action, newAuction, constrain)
 import DealerProg(invert)
 import Output(Showable, toCommentary)
 import Structures((>-), currentBidder)

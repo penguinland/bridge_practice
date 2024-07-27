@@ -16,7 +16,7 @@ module CommonBids(
 
 import Control.Monad.Trans.State.Strict(get)
 
-import Auction(Action, constrain, define)
+import Action(Action, constrain, define)
 import EDSL(forbid, pointRange, balancedHand, makeCall, makeAlertableCall,
             makePass, suitLength, minSuitLength, maxSuitLength, alternatives)
 import Structures(currentBidder)

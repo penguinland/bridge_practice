@@ -1,6 +1,6 @@
 module Topics.JacobyTransfers(topic) where
 
-import Auction(Action, constrain)
+import Action(Action, constrain)
 import qualified CommonBids as B
 import EDSL(forbid, makeCall, makeAlertableCall, makePass, pointRange,
             suitLength, minSuitLength, balancedHand)

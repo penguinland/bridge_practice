@@ -50,7 +50,7 @@ module Bids.OneNotrump(
 ) where
 
 
-import Auction(Action)
+import Action(Action)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             makeCall, makeAlertableCall, alternatives, longerThan, balancedHand,
             flatHand, minLoserCount)

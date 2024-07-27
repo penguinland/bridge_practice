@@ -22,7 +22,7 @@ module Bids.ForcingOneNotrump(
 ) where
 
 
-import Auction(Action, withholdBid)
+import Action(Action, withholdBid)
 import qualified Bids.MajorSuitRaises as M
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, impliesThat,
             makeCall, makeAlertableCall, forbid, balancedHand, longerThan,

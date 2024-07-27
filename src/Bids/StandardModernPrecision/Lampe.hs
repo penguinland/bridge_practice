@@ -13,7 +13,7 @@ module Bids.StandardModernPrecision.Lampe(
 ) where
 
 
-import Auction(Action)
+import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b1D)
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, makeCall,
             makeAlertableCall, balancedHand, alternatives, forbid, longerThan,

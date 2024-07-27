@@ -8,7 +8,7 @@
 -- defined, so suppress the warning.
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Auction (
+module Action (
   Auction
 , Action
 , newAuction

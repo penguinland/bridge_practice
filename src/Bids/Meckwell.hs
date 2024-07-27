@@ -13,7 +13,7 @@ module Bids.Meckwell(
 ) where
 
 
-import Auction(Action)
+import Action(Action)
 import EDSL(pointRange, minSuitLength, maxSuitLength, makeCall, alternatives,
             soundHolding, makeAlertableCall)
 import Output ((.+))

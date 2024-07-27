@@ -2,7 +2,7 @@ module Topics.StandardModernPrecision.MafiaResponses(topic) where
 
 import Bids.StandardModernPrecision.BasicBids(oppsPass, smpWrapN)
 import qualified Bids.StandardModernPrecision.OneClub as B
-import Auction(Action)
+import Action(Action)
 import EDSL(suitLength, maxSuitLength)
 import Output((.+), Punct(..))
 import Situation(Situation, situation, (<~))

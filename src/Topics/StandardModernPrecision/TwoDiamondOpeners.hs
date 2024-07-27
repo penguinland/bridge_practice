@@ -1,6 +1,6 @@
 module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 
-import Auction(Action, constrain)
+import Action(Action, constrain)
 import qualified CommonBids as B
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             alternatives, makePass, makeCall, makeAlertableCall)

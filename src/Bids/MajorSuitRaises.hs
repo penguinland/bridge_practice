@@ -10,7 +10,7 @@ module Bids.MajorSuitRaises(
 ) where
 
 
-import Auction(Action)
+import Action(Action)
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, makeCall,
             flatHand, minLoserCount)
 import StandardOpenings(b1H, b1S)
