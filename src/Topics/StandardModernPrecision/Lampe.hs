@@ -1,13 +1,13 @@
 module Topics.StandardModernPrecision.Lampe(topic) where
 
+import Bids.StandardModernPrecision.BasicBids(
+    firstSeatOpener, smpWrapN, smpWrapS)
+import qualified Bids.StandardModernPrecision.Lampe as B
 import CommonBids(noInterference)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import Bids.StandardModernPrecision.BasicBids(
-    firstSeatOpener, smpWrapN, smpWrapS)
-import qualified Bids.StandardModernPrecision.Lampe as B
 
 
 twoClubs :: Situations

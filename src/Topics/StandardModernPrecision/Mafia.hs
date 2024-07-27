@@ -1,13 +1,13 @@
 module Topics.StandardModernPrecision.Mafia(topic) where
 
+import Bids.StandardModernPrecision.BasicBids(smpWrapS)
+import qualified Bids.StandardModernPrecision.OneClub as B
 import EDSL(forbid, minSuitLength, suitLength, balancedHand, equalLength,
             longerThan)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import Bids.StandardModernPrecision.BasicBids(smpWrapS)
-import qualified Bids.StandardModernPrecision.OneClub as B
 
 
 notrump :: Situations

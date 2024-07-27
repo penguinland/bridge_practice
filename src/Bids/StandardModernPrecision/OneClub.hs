@@ -60,12 +60,12 @@ module Bids.StandardModernPrecision.OneClub(
 ) where
 
 import Auction(Action, constrain)
+import Bids.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             balancedHand, makeCall, makeAlertableCall, alternatives, longerThan,
             atLeastAsLong)
 import Output((.+), Punct(..))
 import qualified Terminology as T
-import Bids.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
 
 
 b1C1D :: Action

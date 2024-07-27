@@ -22,6 +22,7 @@ import EDSL(forbid, pointRange, balancedHand, makeCall, makeAlertableCall,
 import Structures(currentBidder)
 import qualified Terminology as T
 
+
 strong1NT :: Action
 strong1NT = do
     balancedHand

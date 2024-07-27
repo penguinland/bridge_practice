@@ -19,9 +19,9 @@ import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
 import Auction(Action, constrain)
+import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, hasTopN,
             balancedHand, makeCall, makeAlertableCall, makePass, alternatives)
-import CommonBids(cannotPreempt)
 import Output(Punct(..), (.+))
 import Situation(Situation, (<~))
 import qualified Terminology as T

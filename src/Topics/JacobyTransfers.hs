@@ -1,9 +1,9 @@
 module Topics.JacobyTransfers(topic) where
 
 import Auction(Action, constrain)
+import qualified CommonBids as B
 import EDSL(forbid, makeCall, makeAlertableCall, makePass, pointRange,
             suitLength, minSuitLength, balancedHand)
-import qualified CommonBids as B
 import Output(Punct(NDash), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T

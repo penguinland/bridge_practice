@@ -1,12 +1,12 @@
 module Topics.ForcingOneNotrump(topic) where
 
+import qualified Bids.ForcingOneNotrump as B
+import CommonBids(setOpener, noInterference)
 import EDSL(suitLength, maxSuitLength, pointRange, makeCall)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import qualified Bids.ForcingOneNotrump as B
-import CommonBids(setOpener, noInterference)
 
 
 bid1NHearts :: Situations

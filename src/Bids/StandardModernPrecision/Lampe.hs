@@ -14,10 +14,10 @@ module Bids.StandardModernPrecision.Lampe(
 
 
 import Auction(Action)
+import Bids.StandardModernPrecision.BasicBids(b1D)
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, makeCall,
             makeAlertableCall, balancedHand, alternatives, forbid, longerThan,
             impliesThat)
-import Bids.StandardModernPrecision.BasicBids(b1D)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
 

@@ -1,12 +1,12 @@
 module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
+import Bids.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
+import qualified Bids.StandardModernPrecision.OneDiamond as B
 import EDSL(maxSuitLength, minSuitLength, pointRange, alternatives)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
-import Bids.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
-import qualified Bids.StandardModernPrecision.OneDiamond as B
 
 
 oneMajor :: Situations

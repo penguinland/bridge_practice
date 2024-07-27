@@ -1,13 +1,13 @@
 module Topics.Stayman(topic) where
 
+import qualified Bids.OneNotrump as B
+import CommonBids(setOpener)
 -- TODO: replace makePass with something more intelligent
 import EDSL(makePass, pointRange, suitLength, maxSuitLength)
-import CommonBids(setOpener)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, stdWrap, wrap, wrapVulDlr, Situations, makeTopic)
-import qualified Bids.OneNotrump as B
 
 
 garbageStayman :: Situations

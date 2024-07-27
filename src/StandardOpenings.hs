@@ -13,9 +13,9 @@ module StandardOpenings(
 -- must specify strength yourself before using them.
 
 import Auction(Action)
+import qualified CommonBids as B
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, forbid,
             longerThan, pointRange, balancedHand, alternatives)
-import qualified CommonBids as B
 import qualified Terminology as T
 
 
