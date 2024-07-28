@@ -356,15 +356,17 @@ topic = makeTopic description "SMP2D" situations
   where
     description = ("SMP " .+ T.Bid 2 T.Diamonds .+ " auctions")
     situations = wrap [ open
-                      -- Responder signs off
-                      , wrap [ wrap [ immediateSignoffSpades34
+                      -- Responder signs off (equiprobable in all suits)
+                      , wrap [ wrap [ immediateSignoffSpades5
+                                    -- Equiprobable in all spade lengths
                                     , immediateSignoffSpades34
-                                    , immediateSignoffSpades5
+                                    , immediateSignoffSpades34
                                     ]
                              , immediateSignoffClubs
                              , immediateSignoffHearts
                              ]
-                      -- Opener passes responder's signoff
+                      -- Opener passes responder's signoff (equiprobable in all
+                      -- suits)
                       , wrap [ passBlackSignoff
                              , passBlackSignoff
                              , passBlackSignoff
