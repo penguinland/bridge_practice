@@ -1,5 +1,6 @@
 module Bids.StandardModernPrecision.TwoDiamonds(
-  b2D  -- Re-exported from BasicBids
+  noDirectOvercall
+, b2D  -- Re-exported from BasicBids
 , b2D2H
 , bP2D2H
 , b2D2H2S
@@ -13,13 +14,24 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 ) where
 
 
-import Action(Action)
+import Action(Action, constrain)
 import Bids.StandardModernPrecision.BasicBids(b2D, lessThanInvitational)
+import CommonBids(cannotPreempt)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
             makeAlertableCall, atLeastAsLong, longerThan, forbid, forEach,
-            balancedHand, soundHolding)
+            balancedHand, soundHolding, makePass, alternatives)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
+
+
+noDirectOvercall :: Action
+noDirectOvercall = do
+    cannotPreempt
+    -- Either you don't have enough strength or enough shape to overcall
+    alternatives [ pointRange 0 10
+                 , pointRange 11 16 >> forEach T.allSuits (`maxSuitLength` 4)
+                 ]
+    makePass
 
 
 -- unexported helper functions

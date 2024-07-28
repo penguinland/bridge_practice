@@ -1,9 +1,9 @@
 module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 
-import Action(Action, constrain)
+import Action(Action)
 import qualified Bids.StandardModernPrecision.TwoDiamonds as B
-import CommonBids(cannotPreempt, setOpener, takeoutDouble)
-import EDSL(forbid, pointRange, suitLength, alternatives, makePass)
+import CommonBids(setOpener, takeoutDouble)
+import EDSL(forbid, suitLength, makePass)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -19,16 +19,6 @@ import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic)
 -- different bids depending on who the dealer is.
 nwOrSeBid :: Action -> Action -> [(Action, T.Direction)]
 nwOrSeBid nw se = [(nw, T.North), (nw, T.West), (se, T.South), (se, T.East)]
-
-
-noDirectOvercall :: Action
-noDirectOvercall = do
-    cannotPreempt
-    alternatives [
-        pointRange 0 10  -- Not enough to overcall
-      , pointRange 11 16 >>  -- Enough to overcall, but no suit
-            constrain "no_suit" ["shape(", ", any 4333 + any 4432)"]]
-    makePass
 
 
 open :: Situations
@@ -50,7 +40,7 @@ immediateSignoffSpades34 = let
             setOpener T.North
             suitLength T.Spades spadeLength
             B.b2D
-            noDirectOvercall
+            B.noDirectOvercall
         explanation =
             "Without the strength for a game contract, sign off in " .+
             T.Bid 2 T.Spades .+ " with a likely fit. " .+
@@ -71,7 +61,7 @@ immediateSignoffSpades5 = let
         action = do
             setOpener T.North
             B.b2D
-            noDirectOvercall
+            B.noDirectOvercall
         explanation =
             "Without the strength for a game contract, sign off in " .+
             T.Bid 2 T.Spades .+ " with a guaranteed fit."
@@ -94,7 +84,7 @@ immediateSignoffClubs = let
         action = do
             setOpener T.North
             B.b2D
-            noDirectOvercall
+            B.noDirectOvercall
         explanation =
             "Without the strength to invite to game, sign off in a club " .+
             "partscore."
@@ -111,10 +101,10 @@ passBlackSignoff = let
         action = do
             setOpener T.South
             B.b2D
-            noDirectOvercall
+            B.noDirectOvercall
             _ <- bid
             forbid $ takeoutDouble suit
-            noDirectOvercall
+            B.noDirectOvercall
         explanation =
             "Partner has less-than-invitational values and is signing off. " .+
             "Just pass. It's possible that sometimes you'll end up in a " .+
@@ -140,7 +130,7 @@ immediateSignoffHearts = let
         action = do
             setOpener T.North
             B.b2D
-            noDirectOvercall
+            B.noDirectOvercall
         explanation =
             "Without the strength to invite to game, sign off in " .+
             bid .+ ". Remember that opener might " .+
@@ -158,9 +148,9 @@ passSignoffHearts = let
         action = do
             setOpener T.South
             B.b2D
-            noDirectOvercall
+            B.noDirectOvercall
             _ <- bid
-            noDirectOvercall
+            B.noDirectOvercall
             forbid B.b2D2H2S
         explanation =
             "Partner has less-than-invitational values and is signing off. " .+
@@ -177,10 +167,10 @@ correctSignoffHearts = let
         action = do
             setOpener T.South
             B.b2D
-            noDirectOvercall
+            B.noDirectOvercall
             suitLength T.Hearts responderHeartLength
             _ <- bid
-            noDirectOvercall
+            B.noDirectOvercall
         explanation =
             "Partner has less-than-invitational values and is signing off. " .+
             "With 4315 shape, though, pull this to " .+
@@ -205,7 +195,7 @@ mixedRaise = let
         action = do
             setOpener T.North
             B.b2D
-            noDirectOvercall
+            B.noDirectOvercall
         explanation =
             "We've got just barely less than invitational values and a " .+
             "likely 9-card major-suit fit. Bid a mixed raise. Partner " .+
@@ -223,7 +213,7 @@ immediateGameSignoff = let
         action = do
             setOpener T.North
             B.b2D
-            noDirectOvercall
+            B.noDirectOvercall
         explanation =
             "We're game-forcing with no interest in slam. When we know the " .+
             "final contract, sign off in it immediately."
