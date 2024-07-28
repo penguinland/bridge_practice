@@ -296,6 +296,7 @@ maximumResponse = let
 --     a slam invite!) (would other game-level rebids be signoff? Probably, but
 --     it's much easier to try 3D before signing off).
 --   - Opener rebids after responder rebids 3D
+--   - Rework setOpener, wrapVulDlr, stdWrap, stdWrapNW, stdWrapSE
 --   - DON'T DO 4C/4D/RKC: that should be a separate topic
 
 
