@@ -314,13 +314,39 @@ gfAnyway = let
                       <~ [T.North, T.West]  -- We're both unpassed hands
 
 
+gfAnywayResponses :: Situations
+gfAnywayResponses = let
+    sit bid = let
+        action = do
+            setOpener T.South
+            B.b2D
+            B.noDirectOvercall
+            B.b2D2N
+            B.noDirectOvercall
+            B.b2D2N3C
+            B.noDirectOvercall
+            B.b2D2N3C3D
+            B.noDirectOvercall
+        explanation =
+            "We have shown a minimum, but partner is game forcing anyway. " .+
+            "Use Smolen-like bids to show partner our major-suit shape: " .+
+            "bid a 3-card major, or " .+ T.Bid 3 T.Notrump .+ " to show " .+
+            "both majors. Partner now knows our strength and shape, and " .+
+            "can use " .+ B.name44Rkc .+ " to place the final contract " .+
+            "(or sign off in " .+ T.Bid 3 T.Notrump .+ ")."
+      in
+        situation "reans" action bid explanation
+  in
+    wrap $ return sit <~ [B.b2D2N3C3D3H, B.b2D2N3C3D3S, B.b2D2N3C3D3N]
+                      <~ T.allVulnerabilities
+                      <~ [T.South, T.East]  -- We're both unpassed hands
+
+
 -- TODO:
 --   - Responder immediately bids a major-suit game (see immediateGameSignoff)
---   - Responder bids 3D over opener's 3C
 --   - Responder signs off over opener's 3C (including in 3N if responder had
 --     a slam invite!) (would other game-level rebids be signoff? Probably, but
 --     it's much easier to try 3D before signing off).
---   - Opener rebids after responder rebids 3D
 --   - Rework setOpener, wrapVulDlr, stdWrap, stdWrapNW, stdWrapSE
 --   - DON'T DO 4C/4D/RKC: that should be a separate topic
 
@@ -344,11 +370,13 @@ topic = makeTopic description "SMP2D" situations
                              , passBlackSignoff
                              , passBlackSignoff
                              , passSignoffHearts
-                             , correctSignoffHearts]
+                             , correctSignoffHearts
+                             ]
                       , mixedRaise
                       , immediateGameSignoff
                       , bid2N
                       , minimumResponse
                       , maximumResponse
                       , gfAnyway
+                      , gfAnywayResponses
                       ]

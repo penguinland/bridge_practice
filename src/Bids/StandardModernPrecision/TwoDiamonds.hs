@@ -10,6 +10,9 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 , b2D2N
 , b2D2N3C
 , b2D2N3C3D
+, b2D2N3C3D3H
+, b2D2N3C3D3S
+, b2D2N3C3D3N
 , b2D2N3D
 , b2D2N3H
 , b2D2N3S
@@ -164,7 +167,7 @@ b2D2N3C = do
     -- You should have the lower half of your strength to not accept an invite.
     alternatives [pointRange 10 12, pointRange 10 13 >> minLoserCount 7]
     makeAlertableCall (T.Bid 3 T.Clubs)
-                      ("minimum strength, likely 10" .+ NDash .+ "12 HCP")
+                      ("minimum, likely 10" .+ NDash .+ "12 HCP")
 
 
 b2D2N3D :: Action
@@ -193,3 +196,21 @@ b2D2N3C3D :: Action
 b2D2N3C3D = do
     pointRange 14 40
     makeAlertableCall (T.Bid 3 T.Diamonds) "artificial ask about majors"
+
+
+b2D2N3C3D3H :: Action
+b2D2N3C3D3H = do
+    suitLength T.Hearts 3
+    makeAlertableCall (T.Bid 3 T.Hearts) "shorter hearts: 4315 shape exactly"
+
+
+b2D2N3C3D3S :: Action
+b2D2N3C3D3S = do
+    suitLength T.Spades 3
+    makeAlertableCall (T.Bid 3 T.Spades) "shorter spades: 3415 shape exactly"
+
+
+b2D2N3C3D3N :: Action
+b2D2N3C3D3N = do
+    forEach T.majorSuits (`suitLength` 4)
+    makeAlertableCall (T.Bid 3 T.Notrump) ("4" .+ NDash .+ "4 in the majors")
