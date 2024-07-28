@@ -243,11 +243,134 @@ bid2N = let
                       <~ [T.North, T.West]  -- We're an unpassed hand
 
 
+minimumResponse :: Situations
+minimumResponse = let
+    sit = let
+        action = do
+            setOpener T.South
+            B.b2D
+            B.noDirectOvercall
+            B.b2D2N
+            B.noDirectOvercall
+        explanation =
+            "Partner has asked us to describe our strength more. We're in " .+
+            "the bottom half of our range, so bid " .+ T.Bid 3 T.Clubs .+
+            ". If partner was only invitational, they'll sign off after " .+
+            "this (possibly by passing!), and if they're game forcing, " .+
+            "they'll relay to ask us about our majors."
+      in
+        situation "min" action B.b2D2N3C explanation
+  in
+    wrap $ return sit <~ T.allVulnerabilities
+                      <~ [T.North, T.West]  -- We're both unpassed hands
+
+
+maximumResponse :: Situations
+maximumResponse = let
+    sit bid = let
+        action = do
+            setOpener T.South
+            B.b2D
+            B.noDirectOvercall
+            B.b2D2N
+            B.noDirectOvercall
+        explanation =
+            "Partner has asked us to describe our strength and majors " .+
+            "more. We're in the top half of our range (we'd accept a game " .+
+            "invite). Bid similar to Smolen: bid our shorter major if we " .+
+            "have one, or " .+ T.Bid 3 T.Diamonds .+ " if they're equal " .+
+            "length. Partner's next bid will either be signing off in " .+
+            T.Bid 3 T.Notrump .+ " or " .+ B.name44Rkc .+ "."
+      in
+        situation "max" action bid explanation
+  in
+    wrap $ return sit <~ [B.b2D2N3D, B.b2D2N3H, B.b2D2N3S]
+                      <~ T.allVulnerabilities
+                      <~ [T.North, T.West]  -- We're both unpassed hands
+
+
+gfAnyway :: Situations
+gfAnyway = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b2D
+            B.noDirectOvercall
+            B.b2D2N
+            B.noDirectOvercall
+            B.b2D2N3C
+            B.noDirectOvercall
+        explanation =
+            "Partner has shown a minimum, but we're game forcing anyway. " .+
+            "Bid " .+ T.Bid 3 T.Diamonds .+ " to re-ask partner about " .+
+            "their major suits. When they reply, you'll know their exact " .+
+            "shape and their strength to within 1 HCP. You'll then know " .+
+            "what the final contract should be, and can use " .+ B.name44Rkc .+
+            " to place it."
+      in
+        situation "reask" action B.b2D2N3C3D explanation
+  in
+    wrap $ return sit <~ T.allVulnerabilities
+                      <~ [T.North, T.West]  -- We're both unpassed hands
+
+
+gfAnywayResponses :: Situations
+gfAnywayResponses = let
+    sit bid = let
+        action = do
+            setOpener T.South
+            B.b2D
+            B.noDirectOvercall
+            B.b2D2N
+            B.noDirectOvercall
+            B.b2D2N3C
+            B.noDirectOvercall
+            B.b2D2N3C3D
+            B.noDirectOvercall
+        explanation =
+            "We have shown a minimum, but partner is game forcing anyway. " .+
+            "Use Smolen-like bids to show partner our major-suit shape: " .+
+            "bid a 3-card major, or " .+ T.Bid 3 T.Notrump .+ " to show " .+
+            "both majors. Partner now knows our strength and shape, and " .+
+            "can use " .+ B.name44Rkc .+ " to place the final contract " .+
+            "(or sign off in " .+ T.Bid 3 T.Notrump .+ ")."
+      in
+        situation "reans" action bid explanation
+  in
+    wrap $ return sit <~ [B.b2D2N3C3D3H, B.b2D2N3C3D3S, B.b2D2N3C3D3N]
+                      <~ T.allVulnerabilities
+                      <~ [T.South, T.East]  -- We're both unpassed hands
+
+
+invSignoff :: Situations
+invSignoff = let
+    sit bid = let
+        action = do
+            setOpener T.North
+            B.b2D
+            B.noDirectOvercall
+            B.b2D2N
+            B.noDirectOvercall
+            B.b2D2N3C
+            B.noDirectOvercall
+        explanation =
+            "We were invitational, but partner has shown a minimum, " .+
+            "indicating that they would not accept an invite to game. " .+
+            "Sign off in partscore."
+      in
+        situation "invso" action bid explanation
+  in
+    wrap $ return sit <~ [B.b2D2N3CP, B.b2D2N3C3H, B.b2D2N3C3S]
+                      <~ T.allVulnerabilities
+                      <~ [T.North, T.West]  -- We're both unpassed hands
+
+
 -- TODO:
 --   - Responder immediately bids a major-suit game (see immediateGameSignoff)
---   - Opener responds to 2N
---   - Responder bids 3D over opener's 3C
---   - Opener rebids after responder rebids 3D
+--   - Responder signs off in 3N over opener's 3C (they had a slam invite)
+--     (would other game-level rebids be signoff? Probably, but it's much easier
+--     to try 3D before signing off).
+--   - Rework setOpener, wrapVulDlr, stdWrap, stdWrapNW, stdWrapSE
 --   - DON'T DO 4C/4D/RKC: that should be a separate topic
 
 
@@ -256,22 +379,30 @@ topic = makeTopic description "SMP2D" situations
   where
     description = ("SMP " .+ T.Bid 2 T.Diamonds .+ " auctions")
     situations = wrap [ open
-                      -- Responder signs off
-                      , wrap [ wrap [ immediateSignoffSpades34
+                      -- Responder signs off (equiprobable in all suits)
+                      , wrap [ wrap [ immediateSignoffSpades5
+                                    -- Equiprobable in all spade lengths
                                     , immediateSignoffSpades34
-                                    , immediateSignoffSpades5
+                                    , immediateSignoffSpades34
                                     ]
                              , immediateSignoffClubs
                              , immediateSignoffHearts
                              ]
-                      -- Opener passes responder's signoff
+                      -- Opener passes responder's signoff (equiprobable in all
+                      -- suits)
                       , wrap [ passBlackSignoff
                              , passBlackSignoff
                              , passBlackSignoff
                              , passBlackSignoff
                              , passSignoffHearts
-                             , correctSignoffHearts]
+                             , correctSignoffHearts
+                             ]
                       , mixedRaise
                       , immediateGameSignoff
                       , bid2N
+                      , minimumResponse
+                      , maximumResponse
+                      , gfAnyway
+                      , gfAnywayResponses
+                      , invSignoff
                       ]

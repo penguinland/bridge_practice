@@ -30,6 +30,7 @@ import qualified Topics.StandardModernPrecision.OneDiamondResponses as Smp1DResp
 import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 import qualified Topics.StandardModernPrecision.Lampe as Lampe
+import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as TwoDiamondOpeners
 
 -- I don't think I ever finished making these topics...
 --import qualified Topics.MinorTransfersScott as MinorTransfers
@@ -51,6 +52,7 @@ topicList = [ StandardOpeners.topic
             , Mafia.topic
             , MafiaResponses.topic
             , Lampe.topic
+            , TwoDiamondOpeners.topic
             ]
 
 topics :: Map Int Topic

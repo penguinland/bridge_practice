@@ -1,5 +1,6 @@
 module Bids.StandardModernPrecision.TwoDiamonds(
-  noDirectOvercall
+  name44Rkc
+, noDirectOvercall
 , b2D  -- Re-exported from BasicBids
 , b2D2H
 , bP2D2H
@@ -7,6 +8,17 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 , b2D2S
 , bP2D2S
 , b2D2N
+, b2D2N3C
+, b2D2N3CP
+, b2D2N3C3D
+, b2D2N3C3H
+, b2D2N3C3S
+, b2D2N3C3D3H
+, b2D2N3C3D3S
+, b2D2N3C3D3N
+, b2D2N3D
+, b2D2N3H
+, b2D2N3S
 , b2D3C
 , bP2D3C
 , b2D3H
@@ -20,9 +32,15 @@ import Bids.StandardModernPrecision.BasicBids(b2D, lessThanInvitational)
 import CommonBids(cannotPreempt)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
             makeAlertableCall, atLeastAsLong, longerThan, forbid, forbidAll,
-            balancedHand, soundHolding, makePass, alternatives, forEach)
-import Output(Punct(..), (.+))
+            balancedHand, soundHolding, makePass, alternatives, forEach,
+            minLoserCount, maxLoserCount)
+import Output(Punct(..), (.+), Commentary)
 import qualified Terminology as T
+
+
+-- This name is too long to write over and over.
+name44Rkc :: Commentary
+name44Rkc = T.Bid 4 T.Clubs .+ "/" .+ T.Bid 4 T.Diamonds .+ "/RKC"
 
 
 noDirectOvercall :: Action
@@ -117,18 +135,17 @@ b2D3H :: Action
 b2D3H = do
     pointRange 7 9
     minSuitLength T.Hearts 5
-    -- TODO: is this actually alertable? Maybe not...
-    makeAlertableCall (T.Bid 3 T.Hearts)
-                      ("mixed raise: 7" .+ NDash .+ "9 HCP, 5 hearts")
+    -- NOTE: is this *not* alertable, per
+    -- https://web2.acbl.org/documentLibrary/play/Alert-Procedures.pdf
+    makeCall $ T.Bid 3 T.Hearts
 
 
 b2D3S :: Action
 b2D3S = do
     pointRange 7 9
     minSuitLength T.Spades 5
-    -- TODO: is this actually alertable? Maybe not...
-    makeAlertableCall (T.Bid 3 T.Spades)
-                      ("mixed raise: 7" .+ NDash .+ "9 HCP, 5 spades")
+    -- NOTE: is this *not* alertable, either
+    makeCall $ T.Bid 3 T.Spades
 
 
 b2D3N :: Action
@@ -146,3 +163,91 @@ b2D2N = do
     forbidAll [b2D3N]
     pointRange 11 40
     makeAlertableCall (T.Bid 2 T.Notrump) "inv+, asks for strength and majors"
+
+
+b2D2N3C :: Action
+b2D2N3C = do
+    -- You should have the lower half of your strength to not accept an invite.
+    alternatives [pointRange 10 12, pointRange 10 13 >> minLoserCount 7]
+    makeAlertableCall (T.Bid 3 T.Clubs)
+                      ("minimum, likely 10" .+ NDash .+ "12 HCP")
+
+
+b2D2N3D :: Action
+b2D2N3D = do
+    forbid b2D2N3C  -- We'd accept an invite to game
+    forEach T.majorSuits (`suitLength` 4)
+    makeAlertableCall (T.Bid 3 T.Diamonds)
+                      ("maximum strength, 4" .+ NDash .+ "4 in the majors")
+
+
+b2D2N3H :: Action
+b2D2N3H = do
+    forbid b2D2N3C  -- We'd accept an invite to game
+    suitLength T.Hearts 3
+    makeAlertableCall (T.Bid 3 T.Hearts) "maximum strength, 4315 shape exactly"
+
+
+b2D2N3S :: Action
+b2D2N3S = do
+    forbid b2D2N3C  -- We'd accept an invite to game
+    suitLength T.Spades 3
+    makeAlertableCall (T.Bid 3 T.Spades) "maximum strength, 3415 shape exactly"
+
+
+b2D2N3C3D :: Action
+b2D2N3C3D = do
+    -- Even if you don't have enough HCPs to be game forcing, if you're shapely
+    -- enough, you might be game forcing anyway.
+    alternatives [ pointRange 14 40
+                 , maxLoserCount 6 >> maxSuitLength T.Diamonds 5
+                 ]
+    makeAlertableCall (T.Bid 3 T.Diamonds) "artificial ask about majors"
+
+
+b2D2N3C3D3H :: Action
+b2D2N3C3D3H = do
+    suitLength T.Hearts 3
+    makeAlertableCall (T.Bid 3 T.Hearts) "shorter hearts: 4315 shape exactly"
+
+
+b2D2N3C3D3S :: Action
+b2D2N3C3D3S = do
+    suitLength T.Spades 3
+    makeAlertableCall (T.Bid 3 T.Spades) "shorter spades: 3415 shape exactly"
+
+
+b2D2N3C3D3N :: Action
+b2D2N3C3D3N = do
+    forEach T.majorSuits (`suitLength` 4)
+    makeAlertableCall (T.Bid 3 T.Notrump) ("4" .+ NDash .+ "4 in the majors")
+
+
+b2D2N3CP :: Action
+b2D2N3CP = do
+    forbid b2D2N3C3D  -- Not game-forcing
+    minSuitLength T.Clubs 4
+    -- Would you risk a 4-3 major-suit fit when you knew about a 4-4 club fit?
+    forEach T.majorSuits (`maxSuitLength` 4)
+    maxSuitLength T.Diamonds 6
+    makePass
+
+
+b2D2N3C3H :: Action
+b2D2N3C3H = do
+    forbid b2D2N3C3D  -- Not game-forcing
+    minSuitLength T.Hearts 5
+    maxSuitLength T.Clubs 3
+    maxSuitLength T.Diamonds 6
+    T.Hearts `atLeastAsLong` T.Spades
+    makeCall $ T.Bid 3 T.Hearts
+
+
+b2D2N3C3S :: Action
+b2D2N3C3S = do
+    forbid b2D2N3C3D  -- Not game-forcing
+    minSuitLength T.Spades 5
+    maxSuitLength T.Clubs 3
+    maxSuitLength T.Diamonds 6
+    T.Spades `longerThan` T.Hearts
+    makeCall $ T.Bid 3 T.Spades

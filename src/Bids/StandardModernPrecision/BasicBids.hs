@@ -1,5 +1,6 @@
 module Bids.StandardModernPrecision.BasicBids(
     lessThanInvitational
+  , invitational
   , firstSeatOpener
   , oppsPass
   -- Opening bids
@@ -23,7 +24,7 @@ import Action(Action, constrain)
 import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, hasTopN,
             balancedHand, makeCall, makeAlertableCall, makePass, alternatives,
-            minLoserCount, forEach, forbidAll)
+            minLoserCount, maxLoserCount, forEach, forbidAll)
 import Output(Punct(..), (.+))
 import Situation(Situation, (<~))
 import qualified Terminology as T
@@ -34,6 +35,14 @@ lessThanInvitational :: Action
 lessThanInvitational = do
     pointRange 0 10
     minLoserCount 9
+
+
+invitational :: Action
+invitational = do
+    pointRange 11 13
+    minLoserCount 7  -- TODO: Is this right? Maybe it should be exactly 8 losers
+    maxLoserCount 8
+
 
 -- Because we're not using the Rule of 20 and its ilk, we're going to skip the
 -- auctions that start with other folks passing for now, and maybe come back to
