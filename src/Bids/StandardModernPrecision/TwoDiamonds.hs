@@ -6,6 +6,7 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 , b2D2H2S
 , b2D2S
 , bP2D2S
+, b2D2N
 , b2D3C
 , bP2D3C
 , b2D3H
@@ -14,12 +15,12 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 ) where
 
 
-import Action(Action, constrain)
+import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b2D, lessThanInvitational)
 import CommonBids(cannotPreempt)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
-            makeAlertableCall, atLeastAsLong, longerThan, forbid, forEach,
-            balancedHand, soundHolding, makePass, alternatives)
+            makeAlertableCall, atLeastAsLong, longerThan, forbid, forbidAll,
+            balancedHand, soundHolding, makePass, alternatives, forEach)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
 
@@ -138,3 +139,10 @@ b2D3N = do
     forEach T.majorSuits (`maxSuitLength` 3)
     maxSuitLength T.Clubs 4
     makeCall $ T.Bid 3 T.Notrump
+
+
+b2D2N :: Action
+b2D2N = do
+    forbidAll [b2D3N]
+    pointRange 11 40
+    makeAlertableCall (T.Bid 2 T.Notrump) "inv+, asks for strength and majors"

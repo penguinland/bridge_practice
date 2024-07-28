@@ -225,9 +225,26 @@ immediateGameSignoff = let
                       <~ [T.North, T.West]
 
 
+bid2N :: Situations
+bid2N = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b2D
+            B.noDirectOvercall
+        explanation =
+            "We're at least invitational, and don't know what the final " .+
+            "contract should be yet. Bid " .+ T.Bid 2 T.Notrump .+ " to " .+
+            "ask partner to describe their hand further."
+      in
+        situation "b2N" action B.b2D2N explanation
+  in
+    wrap $ return sit <~ T.allVulnerabilities
+                      <~ [T.North, T.West]  -- We're an unpassed hand
+
+
 -- TODO:
---   - Responder bids 2N
---   - Responder immediately jumps to game
+--   - Responder immediately bids a major-suit game (see immediateGameSignoff)
 --   - Opener responds to 2N
 --   - Responder bids 3D over opener's 3C
 --   - Opener rebids after responder rebids 3D
@@ -256,103 +273,5 @@ topic = makeTopic description "SMP2D" situations
                              , correctSignoffHearts]
                       , mixedRaise
                       , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
-                      , immediateGameSignoff
+                      , bid2N
                       ]
