@@ -243,10 +243,58 @@ bid2N = let
                       <~ [T.North, T.West]  -- We're an unpassed hand
 
 
+minimumResponse :: Situations
+minimumResponse = let
+    sit = let
+        action = do
+            setOpener T.South
+            B.b2D
+            B.noDirectOvercall
+            B.b2D2N
+            B.noDirectOvercall
+        explanation =
+            "Partner has asked us to describe our strength more. We're in " .+
+            "the bottom half of our range, so bid " .+ T.Bid 3 T.Clubs .+
+            ". If partner was only invitational, they'll sign off after " .+
+            "this (possibly by passing!), and if they're game forcing, " .+
+            "they'll relay to ask us about our majors."
+      in
+        situation "min" action B.b2D2N3C explanation
+  in
+    wrap $ return sit <~ T.allVulnerabilities
+                      <~ [T.North, T.West]  -- We're both unpassed hands
+
+
+maximumResponse :: Situations
+maximumResponse = let
+    sit bid = let
+        action = do
+            setOpener T.South
+            B.b2D
+            B.noDirectOvercall
+            B.b2D2N
+            B.noDirectOvercall
+        explanation =
+            "Partner has asked us to describe our strength and majors " .+
+            "more. We're in the top half of our range (we'd accept a game " .+
+            "invite). Bid similar to Smolen: bid our shorter major if we " .+
+            "have one, or " .+ T.Bid 3 T.Diamonds .+ " if they're equal " .+
+            "length. Partner's next bid will either be signing off in " .+
+            T.Bid 3 T.Notrump .+ " or " .+ B.name44Rkc .+ "."
+      in
+        situation "min" action bid explanation
+  in
+    wrap $ return sit <~ [B.b2D2N3D, B.b2D2N3H, B.b2D2N3S]
+                      <~ T.allVulnerabilities
+                      <~ [T.North, T.West]  -- We're both unpassed hands
+
+
 -- TODO:
 --   - Responder immediately bids a major-suit game (see immediateGameSignoff)
---   - Opener responds to 2N
 --   - Responder bids 3D over opener's 3C
+--   - Responder signs off over opener's 3C (including in 3N if responder had
+--     a slam invite!) (would other game-level rebids be signoff? Probably, but
+--     it's much easier to try 3D before signing off).
 --   - Opener rebids after responder rebids 3D
 --   - DON'T DO 4C/4D/RKC: that should be a separate topic
 
@@ -274,4 +322,6 @@ topic = makeTopic description "SMP2D" situations
                       , mixedRaise
                       , immediateGameSignoff
                       , bid2N
+                      , minimumResponse
+                      , maximumResponse
                       ]

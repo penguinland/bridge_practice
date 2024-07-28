@@ -7,11 +7,16 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 , b2D2S
 , bP2D2S
 , b2D2N
+, b2D2N3C
+, b2D2N3D
+, b2D2N3H
+, b2D2N3S
 , b2D3C
 , bP2D3C
 , b2D3H
 , b2D3S
 , b2D3N
+, name44Rkc
 ) where
 
 
@@ -20,8 +25,9 @@ import Bids.StandardModernPrecision.BasicBids(b2D, lessThanInvitational)
 import CommonBids(cannotPreempt)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
             makeAlertableCall, atLeastAsLong, longerThan, forbid, forbidAll,
-            balancedHand, soundHolding, makePass, alternatives, forEach)
-import Output(Punct(..), (.+))
+            balancedHand, soundHolding, makePass, alternatives, forEach,
+            minLoserCount)
+import Output(Punct(..), (.+), Commentary)
 import qualified Terminology as T
 
 
@@ -146,3 +152,38 @@ b2D2N = do
     forbidAll [b2D3N]
     pointRange 11 40
     makeAlertableCall (T.Bid 2 T.Notrump) "inv+, asks for strength and majors"
+
+
+b2D2N3C :: Action
+b2D2N3C = do
+    -- You should have the lower half of your strength to not accept an invite.
+    alternatives [pointRange 10 12, pointRange 10 13 >> minLoserCount 7]
+    makeAlertableCall (T.Bid 3 T.Clubs)
+                      ("minimum strength, likely 10" .+ NDash .+ "12 HCP")
+
+
+b2D2N3D :: Action
+b2D2N3D = do
+    forbid b2D2N3C  -- We'd accept an invite to game
+    forEach T.majorSuits (`suitLength` 4)
+    makeAlertableCall (T.Bid 3 T.Diamonds)
+                      ("maximum strength, 4" .+ NDash .+ "4 in the majors")
+
+
+b2D2N3H :: Action
+b2D2N3H = do
+    forbid b2D2N3C  -- We'd accept an invite to game
+    suitLength T.Hearts 3
+    makeAlertableCall (T.Bid 3 T.Hearts) "maximum strength, 4315 shape exactly"
+
+
+b2D2N3S :: Action
+b2D2N3S = do
+    forbid b2D2N3C  -- We'd accept an invite to game
+    suitLength T.Spades 3
+    makeAlertableCall (T.Bid 3 T.Spades) "maximum strength, 3415 shape exactly"
+
+
+-- This name is too long to write over and over.
+name44Rkc :: Commentary
+name44Rkc = T.Bid 4 T.Clubs .+ "/" .+ T.Bid 4 T.Diamonds .+ "/RKC"
