@@ -69,7 +69,7 @@ b1D2C = do
     forbid balancedHand
     -- Either you've got 5+ clubs, or you've got 9+ cards in the minors.
     alternatives [ minSuitLength T.Clubs 5
-                 , minSuitLength T.Clubs 4 >> minSuitLength T.Diamonds 5 ]
+                 , suitLength T.Clubs 4 >> minSuitLength T.Diamonds 5 ]
     -- If you've got 9+ cards in the minors, you must be game forcing (if you're
     -- only invitational, start with 2D and rebid 3C).
     minSuitLength T.Diamonds 4 `impliesThat` pointRange 14 40
