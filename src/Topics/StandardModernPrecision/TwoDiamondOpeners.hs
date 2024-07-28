@@ -15,6 +15,13 @@ import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic)
 -- the situations can be self-alerted, too.
 
 
+-- When trying to sign off with less than invitational strength, a new suit
+-- being nonforcing is alertable only if you're an unpassed hand, so we have
+-- different bids depending on who the dealer is.
+nwOrSeBid :: Action -> Action -> [(Action, T.Direction)]
+nwOrSeBid nw se = [(nw, T.North), (nw, T.West), (se, T.South), (se, T.East)]
+
+
 noDirectOvercall :: Action
 noDirectOvercall = do
     cannotPreempt
@@ -186,14 +193,7 @@ immediateSignoffHearts = let
       in
         situation "2H" action bid explanation vul direction
   in
-    -- A new suit being nonforcing is alertable only if you're an unpassed hand,
-    -- so we have different bids depending on who the dealer is.
-    wrap $ return sit <~ [ (B.b2D2H, T.North)
-                         , (B.b2D2H, T.West)
-                         , (B.bP2D2H, T.East)
-                         , (B.bP2D2H, T.South)
-                         ]
-                      <~ T.allVulnerabilities
+    wrap $ return sit <~ nwOrSeBid B.b2D2H B.bP2D2H <~ T.allVulnerabilities
 
 
 passSignoffHearts :: Situations
@@ -212,12 +212,7 @@ passSignoffHearts = let
       in
         situation "2H2S" action (makeCall T.Pass) explanation vul direction
   in
-    wrap $ return sit <~ [ (B.b2D2H, T.South)
-                         , (B.b2D2H, T.East)
-                         , (B.bP2D2H, T.West)
-                         , (B.bP2D2H, T.North)
-                         ]
-                      <~ T.allVulnerabilities
+    wrap $ return sit <~ nwOrSeBid B.bP2D2H B.b2D2H <~ T.allVulnerabilities
 
 
 correctSignoffHearts :: Situations
@@ -240,11 +235,7 @@ correctSignoffHearts = let
       in
         situation "2H2S" action B.b2D2H2S explanation vul direction
   in
-    wrap $ return sit <~ [ (B.b2D2H, T.South)
-                         , (B.b2D2H, T.East)
-                         , (B.bP2D2H, T.West)
-                         , (B.bP2D2H, T.North)
-                         ]
+    wrap $ return sit <~ nwOrSeBid B.bP2D2H B.b2D2H
                       -- We want to commonly show times when responder has just
                       -- 3 hearts (and we're avoiding a 3-3 fit) and times when
                       -- responder has a real heart suit.
