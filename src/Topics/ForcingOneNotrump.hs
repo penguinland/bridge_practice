@@ -2,7 +2,7 @@ module Topics.ForcingOneNotrump(topic) where
 
 import qualified Bids.ForcingOneNotrump as B
 import CommonBids(setOpener, noInterference)
-import EDSL(suitLength, maxSuitLength, pointRange, makeCall)
+import EDSL(suitLength, maxSuitLength, pointRange, makeCall, forEach)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -176,7 +176,7 @@ raise2 = let
             noInterference suit
             suitLength suit 2
             pointRange 6 9
-            mapM_ (`maxSuitLength` 5) . filter (/= suit) $ T.allSuits
+            forEach (filter (/= suit) T.allSuits) (`maxSuitLength` 5)
         explanation =
             "We're not even strong enough to invite to game, we only have " .+
             "2-card support for partner's major, and we don't have our own " .+

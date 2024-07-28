@@ -3,7 +3,7 @@ module Topics.Stayman(topic) where
 import qualified Bids.OneNotrump as B
 import CommonBids(setOpener)
 -- TODO: replace makePass with something more intelligent
-import EDSL(makePass, pointRange, suitLength, maxSuitLength)
+import EDSL(makePass, pointRange, suitLength, maxSuitLength, forEach)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -100,7 +100,7 @@ bothMajors = let
             makePass
             B.b1N2C
             makePass
-            mapM_ (`suitLength` 4) T.majorSuits
+            forEach T.majorSuits (`suitLength` 4)
         explanation =
             "We opened a strong " .+ T.Bid 1 T.Notrump .+ ", and partner " .+
             "has bid Stayman, asking whether we have any major suits. " .+

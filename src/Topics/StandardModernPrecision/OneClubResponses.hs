@@ -6,7 +6,7 @@ import Bids.StandardModernPrecision.BasicBids(
     firstSeatOpener, oppsPass, b1C, smpWrapN, smpWrapS)
 import qualified Bids.StandardModernPrecision.OneClub as B
 import CommonBids(cannotPreempt)
-import EDSL(forbid, maxSuitLength, makePass, pointRange)
+import EDSL(forbid, maxSuitLength, makePass, pointRange, forEach)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -104,7 +104,7 @@ slamSingleSuitModified :: Situations
             firstSeatOpener
             b1C
             oppsPass
-            mapM_ (`maxSuitLength` 4) . filter (/= strain) $ T.allSuits
+            forEach (filter (/= strain) T.allSuits) (`maxSuitLength` 4)
         explanation =
             "You've got at least mild slam interest with 12+ HCP, and a 5+ card\
           \ suit. Bid a natural " .+ T.Bid level strain .+ ",\
@@ -219,7 +219,7 @@ passGameSingleSuit = let
             firstSeatOpener
             b1C
             oppsPass
-            mapM_ (`maxSuitLength` 4) . filter (/= strain) $ T.allSuits
+            forEach (filter (/= strain) T.allSuits) (`maxSuitLength` 4)
         explanation =
             "You're game-forcing with a 5+ card suit. but you're a passed hand,\
           \ so all the slam bids have turned into game bids instead. Bid a\
