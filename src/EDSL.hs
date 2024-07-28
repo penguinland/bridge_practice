@@ -1,7 +1,9 @@
 module EDSL (
   forbid
+, forbidAll
 , alternatives
 , impliesThat
+, forEach
 , makeCall
 , makeAlertableCall
 , makePass
@@ -27,7 +29,7 @@ import Control.Monad.Trans.State.Strict(execState, get, put, modify)
 import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
-import Auction(Action, newAuction, constrain)
+import Action(Action, newAuction, constrain)
 import DealerProg(invert)
 import Output(Showable, toCommentary)
 import Structures((>-), currentBidder)
@@ -42,13 +44,21 @@ forbid action = do
     put (bidding, dealerProg `mappend` invert dealerToInvert)
 
 
+forbidAll :: [Action] -> Action
+forbidAll = mapM_ forbid
+
+
 alternatives :: [Action] -> Action
 -- We use deMorgan's laws. (A || B || C) becomes !(!A && !B && !C)
 alternatives = forbid . mapM_ forbid
 
 
 impliesThat :: Action -> Action -> Action
-impliesThat a b = alternatives [forbid a, b]
+impliesThat ifPart thenPart = alternatives [thenPart, forbid ifPart]
+
+
+forEach :: [a] -> (a -> Action) -> Action
+forEach = flip mapM_
 
 
 makeCall :: T.Call -> Action

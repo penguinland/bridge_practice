@@ -1,6 +1,6 @@
 module Topics.Meckwell(topic) where
 
-import Auction(Action)
+import Action(Action)
 import qualified Bids.Meckwell as B
 import CommonBids(setOpener)
 import EDSL(pointRange, minSuitLength, maxSuitLength, makePass)

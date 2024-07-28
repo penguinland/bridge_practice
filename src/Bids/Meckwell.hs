@@ -13,9 +13,9 @@ module Bids.Meckwell(
 ) where
 
 
-import Auction(Action)
+import Action(Action)
 import EDSL(pointRange, minSuitLength, maxSuitLength, makeCall, alternatives,
-            soundHolding, makeAlertableCall)
+            soundHolding, makeAlertableCall, forEach)
 import Output ((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
@@ -32,7 +32,7 @@ singleSuit :: T.Suit -> Action
 singleSuit suit = do
     minSuitLength suit 6
     soundHolding suit
-    mapM_ (`maxSuitLength` 3) . filter (/= suit) $ T.allSuits
+    forEach (filter (/= suit) T.allSuits) (`maxSuitLength` 3)
 
 
 -- TODO: there should probably be more constraints on suit quality, rather than
@@ -45,14 +45,14 @@ twoSuited a b = do
     -- With a 6-card suit, you might be better off treating your hand as
     -- single-suited, depending on the suit quality. Rather than program all
     -- that nuance in, we limit ourselves to either 5-4 or 5-5 shapes.
-    mapM_ (`minSuitLength` 4) [a, b]
-    mapM_ (`maxSuitLength` 5) [a, b]
+    forEach [a, b] (`minSuitLength` 4)
+    forEach [a, b] (`maxSuitLength` 5)
     alternatives [minSuitLength a 5, minSuitLength b 5]
     -- For simplicity, we also forbid having any type of 3-suited hand. It's
     -- easy enough to say "don't show both minors if you've got a major," but
     -- deciding which minor to show requires nuance that I don't have the
     -- patience to program in right now.
-    mapM_ (`maxSuitLength` 3) . filter (/= a) . filter (/= b) $ T.allSuits
+    forEach (filter (/= a) . filter (/= b) $ T.allSuits) (`maxSuitLength` 3)
 
 
 b1NoX :: Action
@@ -102,7 +102,7 @@ b1NoX2C :: Action
 b1NoX2C = do
     -- If you've got a freak hand, you might be tempted to bid your long suit.
     -- So, forbid those here just to make the bid more obvious.
-    mapM_ (`maxSuitLength` 6) T.allSuits
+    forEach T.allSuits (`maxSuitLength` 6)
     makeAlertableCall (T.Bid 2 T.Clubs) "pass or correct"
 
 
@@ -118,7 +118,7 @@ findMajor minor = do
     maxSuitLength minor 2
     minSuitLength T.Hearts 3
     minSuitLength T.Spades 3
-    mapM_ (`maxSuitLength` 6) T.allSuits
+    forEach T.allSuits (`maxSuitLength` 6)
     makeAlertableCall (T.Bid 2 T.Hearts) "pass or correct"
 
 b1No2C2H :: Action

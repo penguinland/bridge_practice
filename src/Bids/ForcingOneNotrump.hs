@@ -22,11 +22,11 @@ module Bids.ForcingOneNotrump(
 ) where
 
 
-import Auction(Action, withholdBid)
+import Action(Action, withholdBid)
 import qualified Bids.MajorSuitRaises as M
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, impliesThat,
             makeCall, makeAlertableCall, forbid, balancedHand, longerThan,
-            atLeastAsLong, alternatives)
+            atLeastAsLong, alternatives, forEach, forbidAll)
 import StandardOpenings(b1H, b1S)
 import qualified Terminology as T
 
@@ -49,7 +49,7 @@ b1H1N = do
     -- Are weak jump shifts or intermediate jump shifts more standard? I'm
     -- unsure; we need to practice neither one for now.
     -- TODO: remove this when adding support for jump shifts.
-    mapM_ (`maxSuitLength` 6) T.minorSuits
+    forEach T.minorSuits (`maxSuitLength` 6)
     makeAlertableCall (T.Bid 1 T.Notrump) "forcing"
 
 
@@ -62,7 +62,7 @@ b1S1N = do
     maxSuitLength T.Spades 4  -- With 5+ spades, raise partner's suit instead
     suitLength T.Spades 4 `impliesThat` pointRange 6 9
     -- TODO: remove this when we support jump shifts.
-    mapM_ (`maxSuitLength` 6) T.minorSuits
+    forEach T.minorSuits (`maxSuitLength` 6)
     makeAlertableCall (T.Bid 1 T.Notrump) "forcing"
 
 
@@ -78,8 +78,8 @@ jumpShift firstSuit secondSuit = do
     pointRange 18 21
     minSuitLength secondSuit 4
     -- 3-suited hands might require nuance, so ensure this is a 2-suiter.
-    mapM_ (`maxSuitLength` 3) .
-        filter (\s -> s /= firstSuit && s /= secondSuit) $ T.allSuits
+    forEach (filter (/= firstSuit) . filter (/= secondSuit) $ T.allSuits)
+        (`maxSuitLength` 3)
     -- If you've got 6 cards in a minor and 5 in a major, what would you open?
     -- I'm unsure; avoid that scenario.
     maxSuitLength secondSuit 5
@@ -115,7 +115,7 @@ jumpRebid major jumpShifts = do
     pointRange 16 18
     minSuitLength major 6
     maxSuitLength major 7  -- With 8+ cards in the suit, just jump to game.
-    mapM_ forbid jumpShifts
+    forbidAll jumpShifts
     makeCall $ T.Bid 3 major
 
 b1H1N3H :: Action
@@ -127,7 +127,7 @@ b1S1N3S = jumpRebid T.Spades [b1S1N3C, b1S1N3D, b1S1N3H]
 
 rebid :: T.Suit -> [Action] -> Action
 rebid major strongBids = do
-    mapM_ forbid strongBids
+    forbidAll strongBids
     minSuitLength major 6
     -- It's possible some rare, strong hands have slipped through the cracks of
     -- the strong bids. Make sure they don't show up here!
@@ -135,7 +135,7 @@ rebid major strongBids = do
     -- If we're 6-5 in two suits, we'd rebid the second one.
     -- TODO: if we're 6-4, do we rebid the major or not? Does it matter if the
     -- second suit is also a major?
-    mapM_ (`maxSuitLength` 4) . filter (/= major) $ T.allSuits
+    forEach (filter (/= major) T.allSuits) (`maxSuitLength` 4)
     -- TODO: If you're 6-4 with a minor, would you rebid spades or bid your
     -- minor? Avoid these possibilities, as I don't think there is consensus on
     -- the topic.

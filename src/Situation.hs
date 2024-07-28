@@ -9,7 +9,7 @@ module Situation (
 import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
-import Auction(Action, finish, extractLastCall, withholdBid)
+import Action(Action, finish, extractLastCall, withholdBid)
 import DealerProg(DealerProg)
 import Output(Showable, Commentary, toCommentary)
 import Random(pickItem)

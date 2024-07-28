@@ -8,7 +8,7 @@
 -- defined, so suppress the warning.
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Auction (
+module Action (
   Auction
 , Action
 , newAuction
@@ -29,15 +29,17 @@ import qualified Terminology as T
 
 
 type Auction = (Bidding, DealerProg)
+
+
+newAuction :: T.Direction -> Auction
+newAuction dealer = (startBidding dealer, mempty)
+
+
 type Action = State Auction ()
 
 instance Showable Action where
     toLatex = toLatex . extractLastCall
     toHtml = toHtml . extractLastCall
-
-
-newAuction :: T.Direction -> Auction
-newAuction dealer = (startBidding dealer, mempty)
 
 
 finish :: T.Direction -> Action -> Auction

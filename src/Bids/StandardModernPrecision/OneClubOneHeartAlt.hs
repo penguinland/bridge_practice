@@ -38,13 +38,13 @@ module Bids.StandardModernPrecision.OneClubOneHeartAlt(
   , b1C1H2H3S
 ) where
 
-import Auction(Action)
+import Action(Action)
 import Bids.StandardModernPrecision.OneClub(
     b1C, b1C1Hnos, b1C1H1S, b1C1H1N, b1C1H2C, b1C1H2D, b1C1H2H, b1C1H2S,
     tripleFourOneShape)
 import EDSL(forbid, suitLength, minSuitLength, maxSuitLength, balancedHand,
             makeCall, makeAlertableCall, alternatives, longerThan,
-            atLeastAsLong)
+            atLeastAsLong, forEach, forbidAll)
 import qualified Terminology as T
 
 
@@ -57,7 +57,7 @@ b1C1H1S1N :: Action
 b1C1H1S1N = do
     balancedHand
     forbid b1C1H1S2S
-    mapM_ (`maxSuitLength` 4) T.allSuits
+    forEach T.allSuits (`maxSuitLength` 4)
     makeCall (T.Bid 1 T.Notrump)
 
 
@@ -129,7 +129,7 @@ b1C1H2C2S = do
 b1C1H2C2N :: Action
 b1C1H2C2N = do
     maxSuitLength T.Clubs 3  -- TODO: should the max club length be only 2?
-    mapM_ (`maxSuitLength` 4) T.allSuits
+    forEach T.allSuits (`maxSuitLength` 4)
     balancedHand
     forbid b1C1H2C2D
     makeCall (T.Bid 2 T.Notrump)
@@ -137,7 +137,7 @@ b1C1H2C2N = do
 
 b1C1H2C3C :: Action
 b1C1H2C3C = do
-    mapM_ forbid [balancedHand, b1C1H2C2D, b1C1H2C2H, b1C1H2C2N]
+    forbidAll [balancedHand, b1C1H2C2D, b1C1H2C2H, b1C1H2C2N]
     minSuitLength T.Clubs 3
     makeCall (T.Bid 3 T.Clubs)
 
@@ -168,7 +168,7 @@ b1C1H2D2S = do
 b1C1H2D2N :: Action
 b1C1H2D2N = do
     maxSuitLength T.Diamonds 3  -- TODO: is the max Diamonds length actually 2?
-    mapM_ (`maxSuitLength` 4) T.allSuits
+    forEach T.allSuits (`maxSuitLength` 4)
     balancedHand
     forbid b1C1H2D2S
     makeCall (T.Bid 2 T.Notrump)
@@ -184,7 +184,7 @@ b1C1H2D3C = do
 
 b1C1H2D3D :: Action
 b1C1H2D3D = do
-    mapM_ forbid [balancedHand, b1C1H2D2H, b1C1H2D2S, b1C1H2D2N]
+    forbidAll [balancedHand, b1C1H2D2H, b1C1H2D2S, b1C1H2D2N]
     minSuitLength T.Diamonds 3
     makeCall (T.Bid 3 T.Diamonds)
 
@@ -209,16 +209,15 @@ b1C1H2H2S = do
 
 b1C1H2H2N :: Action
 b1C1H2H2N = do
-    mapM_ (`maxSuitLength` 4) T.allSuits
+    forEach T.allSuits (`maxSuitLength` 4)
     balancedHand
-    mapM_ forbid [b1C1H2H2S, b1C1H2H3H]
+    forbidAll [b1C1H2H2S, b1C1H2H3H]
     makeCall (T.Bid 2 T.Notrump)
 
 
 b1C1H2H3C :: Action
 b1C1H2H3C = do
-    forbid b1C1H2H3H
-    mapM_ forbid [b1C1H2H2S, b1C1H2H2N, b1C1H2H3H]
+    forbidAll [b1C1H2H2S, b1C1H2H2N, b1C1H2H3H]
     minSuitLength T.Clubs 5
     T.Clubs `longerThan` T.Diamonds
     makeCall (T.Bid 3 T.Clubs)
@@ -226,8 +225,7 @@ b1C1H2H3C = do
 
 b1C1H2H3D :: Action
 b1C1H2H3D = do
-    forbid b1C1H2H3H
-    mapM_ forbid [b1C1H2H2S, b1C1H2H2N, b1C1H2H3H]
+    forbidAll [b1C1H2H2S, b1C1H2H2N, b1C1H2H3H]
     minSuitLength T.Diamonds 5
     T.Diamonds `atLeastAsLong` T.Clubs
     makeCall (T.Bid 3 T.Diamonds)

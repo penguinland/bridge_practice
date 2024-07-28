@@ -59,11 +59,11 @@ module Bids.StandardModernPrecision.OneClub(
   , tripleFourOneShape  -- For use when defining other bids
 ) where
 
-import Auction(Action, constrain)
+import Action(Action, constrain)
 import Bids.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             balancedHand, makeCall, makeAlertableCall, alternatives, longerThan,
-            atLeastAsLong)
+            atLeastAsLong, forEach, forbidAll)
 import Output((.+), Punct(..))
 import qualified Terminology as T
 
@@ -138,7 +138,7 @@ b1C2Halt :: Action  -- Alternative choice: swap the meanings of b1C1N and b1C2H
 b1C2Halt = do
     pointRange 14 40
     balancedHand
-    mapM_ (`maxSuitLength` 4) T.allSuits
+    forEach T.allSuits (`maxSuitLength` 4)
     makeAlertableCall (T.Bid 2 T.Hearts) "14+ HCP, any 4333 or 4432 shape"
 
 
@@ -146,7 +146,7 @@ b1C1N :: Action
 b1C1N = do
     _slamInterest
     balancedHand
-    mapM_ (`maxSuitLength` 4) T.allSuits
+    forEach T.allSuits (`maxSuitLength` 4)
     makeCall $ T.Bid 1 T.Notrump
 
 
@@ -168,7 +168,7 @@ b1C2Nalt :: Action
 b1C2Nalt = do
     pointRange 12 13
     balancedHand
-    mapM_ (`maxSuitLength` 4) T.allSuits
+    forEach T.allSuits (`maxSuitLength` 4)
     makeAlertableCall (T.Bid 2 T.Notrump)
                       ("12" .+ NDash .+ "13 HCP, any 4333 or 4432 shape")
 
@@ -205,7 +205,7 @@ bP1C1N :: Action
 bP1C1N = do
     _gameForcing
     balancedHand
-    mapM_ (`maxSuitLength` 4) T.allSuits
+    forEach T.allSuits (`maxSuitLength` 4)
     makeCall $ T.Bid 1 T.Notrump
 
 
@@ -249,7 +249,7 @@ _makeJumpBid level suit = do
     minSuitLength suit 5
     -- This should be your longest suit
     -- TODO: if you're 5-5, which suit do you bid first?
-    mapM_ (suit `longerThan`) . filter (/= suit) $ T.allSuits
+    forEach (filter (/= suit) T.allSuits) (suit `longerThan`)
     makeCall $ T.Bid level suit
 
 
@@ -351,7 +351,7 @@ b1C1D1H3H :: Action
 b1C1D1H3H = do
     suitLength T.Hearts 4
     pointRange 5 7
-    mapM_ (`minSuitLength` 2) T.allSuits
+    forEach T.allSuits (`minSuitLength` 2)
     makeCall $ T.Bid 3 T.Hearts
 
 
@@ -427,7 +427,7 @@ b1C1D1S3S :: Action
 b1C1D1S3S = do
     suitLength T.Spades 4
     pointRange 5 7
-    mapM_ (`minSuitLength` 2) T.allSuits
+    forEach T.allSuits (`minSuitLength` 2)
     makeCall $ T.Bid 3 T.Spades
 
 
@@ -500,7 +500,7 @@ b1C1D1S2C = do
 ---------------------
 b1C1H1S :: Action
 b1C1H1S = do
-    mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
+    forbidAll [b1C1H1N, b1C1H2N, b1C1H3N]
     minSuitLength T.Spades 5
     T.Spades `atLeastAsLong` T.Clubs
     T.Spades `atLeastAsLong` T.Diamonds
@@ -533,7 +533,7 @@ b1C1H3N = do
 
 b1C1H2C :: Action
 b1C1H2C = do
-    mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
+    forbidAll [b1C1H1N, b1C1H2N, b1C1H3N]
     minSuitLength T.Clubs 5
     -- Given 5-5 in the minors, start with diamonds, and bid clubs later.
     T.Clubs `longerThan` T.Diamonds
@@ -544,7 +544,7 @@ b1C1H2C = do
 
 b1C1H2D :: Action
 b1C1H2D = do
-    mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
+    forbidAll [b1C1H1N, b1C1H2N, b1C1H3N]
     minSuitLength T.Diamonds 5
     T.Diamonds `atLeastAsLong` T.Clubs
     T.Diamonds `longerThan` T.Hearts
@@ -554,7 +554,7 @@ b1C1H2D = do
 
 b1C1H2H :: Action
 b1C1H2H = do
-    mapM_ forbid [b1C1H1N, b1C1H2N, b1C1H3N]
+    forbidAll [b1C1H1N, b1C1H2N, b1C1H3N]
     minSuitLength T.Hearts 5
     T.Hearts `atLeastAsLong` T.Clubs
     T.Hearts `atLeastAsLong` T.Diamonds
