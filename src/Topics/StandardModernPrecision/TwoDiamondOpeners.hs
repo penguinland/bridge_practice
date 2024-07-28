@@ -342,11 +342,34 @@ gfAnywayResponses = let
                       <~ [T.South, T.East]  -- We're both unpassed hands
 
 
+invSignoff :: Situations
+invSignoff = let
+    sit bid = let
+        action = do
+            setOpener T.North
+            B.b2D
+            B.noDirectOvercall
+            B.b2D2N
+            B.noDirectOvercall
+            B.b2D2N3C
+            B.noDirectOvercall
+        explanation =
+            "We were invitational, but partner has shown a minimum, " .+
+            "indicating that they would not accept an invite to game. " .+
+            "Sign off in partscore."
+      in
+        situation "invso" action bid explanation
+  in
+    wrap $ return sit <~ [B.b2D2N3CP, B.b2D2N3C3H, B.b2D2N3C3S]
+                      <~ T.allVulnerabilities
+                      <~ [T.North, T.West]  -- We're both unpassed hands
+
+
 -- TODO:
 --   - Responder immediately bids a major-suit game (see immediateGameSignoff)
---   - Responder signs off over opener's 3C (including in 3N if responder had
---     a slam invite!) (would other game-level rebids be signoff? Probably, but
---     it's much easier to try 3D before signing off).
+--   - Responder signs off in 3N over opener's 3C (they had a slam invite)
+--     (would other game-level rebids be signoff? Probably, but it's much easier
+--     to try 3D before signing off).
 --   - Rework setOpener, wrapVulDlr, stdWrap, stdWrapNW, stdWrapSE
 --   - DON'T DO 4C/4D/RKC: that should be a separate topic
 
@@ -381,4 +404,5 @@ topic = makeTopic description "SMP2D" situations
                       , maximumResponse
                       , gfAnyway
                       , gfAnywayResponses
+                      , invSignoff
                       ]

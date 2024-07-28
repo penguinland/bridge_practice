@@ -9,7 +9,10 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 , bP2D2S
 , b2D2N
 , b2D2N3C
+, b2D2N3CP
 , b2D2N3C3D
+, b2D2N3C3H
+, b2D2N3C3S
 , b2D2N3C3D3H
 , b2D2N3C3D3S
 , b2D2N3C3D3N
@@ -30,7 +33,7 @@ import CommonBids(cannotPreempt)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
             makeAlertableCall, atLeastAsLong, longerThan, forbid, forbidAll,
             balancedHand, soundHolding, makePass, alternatives, forEach,
-            minLoserCount)
+            minLoserCount, maxLoserCount)
 import Output(Punct(..), (.+), Commentary)
 import qualified Terminology as T
 
@@ -194,7 +197,11 @@ b2D2N3S = do
 
 b2D2N3C3D :: Action
 b2D2N3C3D = do
-    pointRange 14 40
+    -- Even if you don't have enough HCPs to be game forcing, if you're shapely
+    -- enough, you might be game forcing anyway.
+    alternatives [ pointRange 14 40
+                 , maxLoserCount 6 >> maxSuitLength T.Diamonds 5
+                 ]
     makeAlertableCall (T.Bid 3 T.Diamonds) "artificial ask about majors"
 
 
@@ -214,3 +221,33 @@ b2D2N3C3D3N :: Action
 b2D2N3C3D3N = do
     forEach T.majorSuits (`suitLength` 4)
     makeAlertableCall (T.Bid 3 T.Notrump) ("4" .+ NDash .+ "4 in the majors")
+
+
+b2D2N3CP :: Action
+b2D2N3CP = do
+    forbid b2D2N3C3D  -- Not game-forcing
+    minSuitLength T.Clubs 4
+    -- Would you risk a 4-3 major-suit fit when you knew about a 4-4 club fit?
+    forEach T.majorSuits (`maxSuitLength` 4)
+    maxSuitLength T.Diamonds 6
+    makePass
+
+
+b2D2N3C3H :: Action
+b2D2N3C3H = do
+    forbid b2D2N3C3D  -- Not game-forcing
+    minSuitLength T.Hearts 5
+    maxSuitLength T.Clubs 3
+    maxSuitLength T.Diamonds 6
+    T.Hearts `atLeastAsLong` T.Spades
+    makeCall $ T.Bid 3 T.Hearts
+
+
+b2D2N3C3S :: Action
+b2D2N3C3S = do
+    forbid b2D2N3C3D  -- Not game-forcing
+    minSuitLength T.Spades 5
+    maxSuitLength T.Clubs 3
+    maxSuitLength T.Diamonds 6
+    T.Spades `longerThan` T.Hearts
+    makeCall $ T.Bid 3 T.Spades

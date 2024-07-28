@@ -24,7 +24,7 @@ import Action(Action, constrain)
 import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, hasTopN,
             balancedHand, makeCall, makeAlertableCall, makePass, alternatives,
-            minLoserCount, forEach, forbidAll)
+            minLoserCount, maxLoserCount, forEach, forbidAll)
 import Output(Punct(..), (.+))
 import Situation(Situation, (<~))
 import qualified Terminology as T
