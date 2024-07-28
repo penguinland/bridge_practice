@@ -1,5 +1,6 @@
 module Bids.StandardModernPrecision.TwoDiamonds(
-  noDirectOvercall
+  name44Rkc
+, noDirectOvercall
 , b2D  -- Re-exported from BasicBids
 , b2D2H
 , bP2D2H
@@ -8,6 +9,7 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 , bP2D2S
 , b2D2N
 , b2D2N3C
+, b2D2N3C3D
 , b2D2N3D
 , b2D2N3H
 , b2D2N3S
@@ -16,7 +18,6 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 , b2D3H
 , b2D3S
 , b2D3N
-, name44Rkc
 ) where
 
 
@@ -29,6 +30,11 @@ import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
             minLoserCount)
 import Output(Punct(..), (.+), Commentary)
 import qualified Terminology as T
+
+
+-- This name is too long to write over and over.
+name44Rkc :: Commentary
+name44Rkc = T.Bid 4 T.Clubs .+ "/" .+ T.Bid 4 T.Diamonds .+ "/RKC"
 
 
 noDirectOvercall :: Action
@@ -183,6 +189,7 @@ b2D2N3S = do
     makeAlertableCall (T.Bid 3 T.Spades) "maximum strength, 3415 shape exactly"
 
 
--- This name is too long to write over and over.
-name44Rkc :: Commentary
-name44Rkc = T.Bid 4 T.Clubs .+ "/" .+ T.Bid 4 T.Diamonds .+ "/RKC"
+b2D2N3C3D :: Action
+b2D2N3C3D = do
+    pointRange 14 40
+    makeAlertableCall (T.Bid 3 T.Diamonds) "artificial ask about majors"

@@ -282,10 +282,35 @@ maximumResponse = let
             "length. Partner's next bid will either be signing off in " .+
             T.Bid 3 T.Notrump .+ " or " .+ B.name44Rkc .+ "."
       in
-        situation "min" action bid explanation
+        situation "max" action bid explanation
   in
     wrap $ return sit <~ [B.b2D2N3D, B.b2D2N3H, B.b2D2N3S]
                       <~ T.allVulnerabilities
+                      <~ [T.North, T.West]  -- We're both unpassed hands
+
+
+gfAnyway :: Situations
+gfAnyway = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b2D
+            B.noDirectOvercall
+            B.b2D2N
+            B.noDirectOvercall
+            B.b2D2N3C
+            B.noDirectOvercall
+        explanation =
+            "Partner has shown a minimum, but we're game forcing anyway. " .+
+            "Bid " .+ T.Bid 3 T.Diamonds .+ " to re-ask partner about " .+
+            "their major suits. When they reply, you'll know their exact " .+
+            "shape and their strength to within 1 HCP. You'll then know " .+
+            "what the final contract should be, and can use " .+ B.name44Rkc .+
+            " to place it."
+      in
+        situation "reask" action B.b2D2N3C3D explanation
+  in
+    wrap $ return sit <~ T.allVulnerabilities
                       <~ [T.North, T.West]  -- We're both unpassed hands
 
 
@@ -325,4 +350,5 @@ topic = makeTopic description "SMP2D" situations
                       , bid2N
                       , minimumResponse
                       , maximumResponse
+                      , gfAnyway
                       ]
