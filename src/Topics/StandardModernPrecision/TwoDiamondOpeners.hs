@@ -42,16 +42,6 @@ bestFitClubs = do
     forbid $ constrain "s3334" ["shape(", ", 3334)"]  -- maybe bid H instead
 
 
-fitHearts :: Action
-fitHearts = do
-    alternatives [ constrain "h_2d_resp" ["shape(", ", 3343 + 3352)"]
-                 , do maxSuitLength T.Spades   4  -- With 5-4 majors, bid 2S
-                      minSuitLength T.Hearts   4
-                      maxSuitLength T.Diamonds 6
-                      maxSuitLength T.Clubs    4
-                 ]
-
-
 open :: Situations
 open = let
     action = do
@@ -183,67 +173,83 @@ passSignoffClubs = let
 
 immediateSignoffHearts :: Situations
 immediateSignoffHearts = let
-    action = do
-        setOpener T.North
-        B.b2D
-        noDirectOvercall
-        fitHearts
-        pointRange 0 9
-    explanation =
-        "Without the strength to invite to game, sign off in " .+
-        T.Bid 2 T.Hearts .+ ". Remember that opener might " .+
-        "pull the bid to " .+ T.Bid 2 T.Spades .+ " with " .+
-        "exactly 4315 shape."
+    sit (bid, direction) vul = let
+        action = do
+            setOpener T.North
+            B.b2D
+            noDirectOvercall
+        explanation =
+            "Without the strength to invite to game, sign off in " .+
+            bid .+ ". Remember that opener might " .+
+            "pull the bid to " .+ T.Bid 2 T.Spades .+ " with " .+
+            "exactly 4315 shape."
+      in
+        situation "2H" action bid explanation vul direction
   in
-    stdWrap $ situation "2H" action (makeCall $ T.Bid 2 T.Hearts) explanation
+    -- A new suit being nonforcing is alertable only if you're an unpassed hand,
+    -- so we have different bids depending on who the dealer is.
+    wrap $ return sit <~ [ (B.b2D2H, T.North)
+                         , (B.b2D2H, T.West)
+                         , (B.bP2D2H, T.East)
+                         , (B.bP2D2H, T.South)
+                         ]
+                      <~ T.allVulnerabilities
 
 
 passSignoffHearts :: Situations
 passSignoffHearts = let
-    action = do
-        setOpener T.South
-        B.b2D
-        noDirectOvercall
-        fitHearts
-        pointRange 0 9
-        makeAlertableCall (T.Bid 2 T.Hearts) "signoff"
-        forbid $ takeoutDouble T.Clubs
-        noDirectOvercall
-        minSuitLength T.Hearts 4
-    explanation =
-        "Partner has less-than-invitational values and is signing off. " .+
-        "Given that you have 4 hearts, pass."
-  in
-    stdWrap $ situation "2HP" action (makeCall T.Pass) explanation
-
-
-correctSignoffHearts :: Situations
-correctSignoffHearts = let
-    sit heartLength = let
+    sit (bid, direction) vul = let
         action = do
             setOpener T.South
             B.b2D
             noDirectOvercall
-            fitHearts
-            maxSuitLength T.Hearts heartLength
-            -- With 7-9 HCP and 5+ hearts, make a mixed raise instead!
-            alternatives [ pointRange 0 9 >> maxSuitLength T.Hearts 4
-                         , pointRange 0 6]
-            makeAlertableCall (T.Bid 2 T.Hearts) "signoff"
-            forbid $ takeoutDouble T.Clubs
+            _ <- bid
             noDirectOvercall
-            maxSuitLength T.Hearts 3
+            forbid B.b2D2H2S
+        explanation =
+            "Partner has less-than-invitational values and is signing off. " .+
+            "Given that you have 4 hearts, pass."
+      in
+        situation "2H2S" action (makeCall T.Pass) explanation vul direction
+  in
+    wrap $ return sit <~ [ (B.b2D2H, T.South)
+                         , (B.b2D2H, T.East)
+                         , (B.bP2D2H, T.West)
+                         , (B.bP2D2H, T.North)
+                         ]
+                      <~ T.allVulnerabilities
+
+
+correctSignoffHearts :: Situations
+correctSignoffHearts = let
+    sit (bid, direction) responderHeartLength vul = let
+        action = do
+            setOpener T.South
+            B.b2D
+            noDirectOvercall
+            suitLength T.Hearts responderHeartLength
+            _ <- bid
+            noDirectOvercall
         explanation =
             "Partner has less-than-invitational values and is signing off. " .+
             "With 4315 shape, though, pull this to " .+
             T.Bid 2 T.Spades .+ " in case partner only had 3 " .+
-            "hearts (e.g., 3343 or 3352 shape)."
+            "hearts (e.g., 3343 or 3352 shape). Partner, might further " .+
+            "pull this bid to the final contract, now that they know our " .+
+            "exact shape."
       in
-        situation "2H2S" action (makeCall $ T.Bid 2 T.Spades) explanation
+        situation "2H2S" action B.b2D2H2S explanation vul direction
   in
-    -- We want to commonly show times when responder has just 3 hearts (and
-    -- we're avoiding a 3-3 fit) and times when responder has a real heart suit.
-    wrapVulDlr $ return sit <~ [3, 6]
+    wrap $ return sit <~ [ (B.b2D2H, T.South)
+                         , (B.b2D2H, T.East)
+                         , (B.bP2D2H, T.West)
+                         , (B.bP2D2H, T.North)
+                         ]
+                      -- We want to commonly show times when responder has just
+                      -- 3 hearts (and we're avoiding a 3-3 fit) and times when
+                      -- responder has a real heart suit.
+                      <~ [3, 5]
+                      <~ T.allVulnerabilities
 
 
 topic :: Topic

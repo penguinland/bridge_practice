@@ -1,17 +1,19 @@
 module Bids.StandardModernPrecision.TwoDiamonds(
-    b2D  -- Re-exported from BasicBids
-  , b2D2H
-  , bP2D2H
+  b2D  -- Re-exported from BasicBids
+, b2D2H
+, bP2D2H
+, b2D2H2S
 ) where
 
 
 import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b2D, lessThanInvitational)
-import EDSL(minSuitLength, maxSuitLength, makeCall,
+import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall,
             makeAlertableCall, atLeastAsLong)
 import qualified Terminology as T
 
 
+-- unexportedhelper function
 heartsSignoff :: Action
 heartsSignoff = do
     lessThanInvitational
@@ -32,3 +34,8 @@ bP2D2H = do
     -- that's no longer alertable.
     makeCall $ T.Bid 2 T.Hearts
 
+
+b2D2H2S :: Action
+b2D2H2S = do
+    suitLength T.Hearts 3
+    makeAlertableCall (T.Bid 2 T.Spades) "exactly 4315 shape"
