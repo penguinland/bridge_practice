@@ -123,18 +123,17 @@ b2D3H :: Action
 b2D3H = do
     pointRange 7 9
     minSuitLength T.Hearts 5
-    -- TODO: is this actually alertable? Maybe not...
-    makeAlertableCall (T.Bid 3 T.Hearts)
-                      ("mixed raise: 7" .+ NDash .+ "9 HCP, 5 hearts")
+    -- NOTE: is this *not* alertable, per
+    -- https://web2.acbl.org/documentLibrary/play/Alert-Procedures.pdf
+    makeCall $ T.Bid 3 T.Hearts
 
 
 b2D3S :: Action
 b2D3S = do
     pointRange 7 9
     minSuitLength T.Spades 5
-    -- TODO: is this actually alertable? Maybe not...
-    makeAlertableCall (T.Bid 3 T.Spades)
-                      ("mixed raise: 7" .+ NDash .+ "9 HCP, 5 spades")
+    -- NOTE: is this *not* alertable, either
+    makeCall $ T.Bid 3 T.Spades
 
 
 b2D3N :: Action
