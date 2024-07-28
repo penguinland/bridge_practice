@@ -3,8 +3,7 @@ module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 import Action(Action, constrain)
 import qualified Bids.StandardModernPrecision.TwoDiamonds as B
 import CommonBids(cannotPreempt, setOpener, takeoutDouble)
-import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-            alternatives, makePass, makeCall, makeAlertableCall)
+import EDSL(forbid, pointRange, suitLength, alternatives, makePass)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -30,23 +29,6 @@ noDirectOvercall = do
       , pointRange 11 16 >>  -- Enough to overcall, but no suit
             constrain "no_suit" ["shape(", ", any 4333 + any 4432)"]]
     makePass
-
-
-bestFitSpades :: Action
-bestFitSpades = do
-    minSuitLength T.Spades   4
-    maxSuitLength T.Hearts   3
-    maxSuitLength T.Diamonds 6
-    maxSuitLength T.Clubs    3
-
-
-bestFitClubs :: Action
-bestFitClubs = do
-    maxSuitLength T.Spades   3
-    maxSuitLength T.Hearts   3
-    maxSuitLength T.Diamonds 6
-    minSuitLength T.Clubs    4
-    forbid $ constrain "s3334" ["shape(", ", 3334)"]  -- maybe bid H instead
 
 
 open :: Situations
@@ -85,84 +67,71 @@ immediateSignoffSpades34 = let
 
 immediateSignoffSpades5 :: Situations
 immediateSignoffSpades5 = let
-    sit = let
+    sit (bid, direction) vul = let
         action = do
             setOpener T.North
             B.b2D
             noDirectOvercall
-            pointRange 0 6  -- With 7-9 HCP, make a mixed raise!
-            bestFitSpades
-            minSuitLength T.Spades 5
         explanation =
             "Without the strength for a game contract, sign off in " .+
             T.Bid 2 T.Spades .+ " with a guaranteed fit."
       in
-        situation "Sfit" action (makeCall $ T.Bid 2 T.Spades) explanation
+        situation "Sfit" action bid explanation vul direction
   in
     -- Although this can happen when anyone is dealer, it is very rare when East
     -- deals, and generating those hands is difficult for dealer (often
     -- requiring over 1,000,000 hands to be generated). Consequently, we limit
     -- these situations to times when East isn't dealer.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.North, T.South, T.West]
-
-
-passSignoff2Spades :: Situations
-passSignoff2Spades = let
-    sit spadeLength = let
-        action = do
-            setOpener T.South
-            B.b2D
-            noDirectOvercall
-            bestFitSpades
-            alternatives [    suitLength T.Spades 4 >> pointRange 0 9
-                         , minSuitLength T.Spades 5 >> pointRange 0 6
-                         ]
-            makeAlertableCall (T.Bid 2 T.Spades) "signoff"
-            forbid $ takeoutDouble T.Spades
-            noDirectOvercall
-            suitLength T.Spades spadeLength
-        explanation =
-            "Partner has less-than-invitational values and is signing off. " .+
-            "Just pass" .+
-            (if spadeLength == 4 then "." else
-                ", even though you might be in a 7-card fit.")
-      in
-        situation "2SP" action (makeCall T.Pass) explanation
-  in
-    wrapVulDlr $ return sit <~ [3, 4]
+    wrap $ return sit <~ [ (B.bP2D2S, T.South)
+                         , (B.bP2D2S, T.West)
+                         , (B.b2D2S, T.North)]
+                      <~ T.allVulnerabilities
 
 
 immediateSignoffClubs :: Situations
 immediateSignoffClubs = let
-    action = do
-        setOpener T.North
-        B.b2D
-        noDirectOvercall
-        bestFitClubs
-        pointRange 0 9
-    explanation =
-        "Without the strength to invite to game, sign off in a club " .+
-        "partial."
+    sit (bid, direction) vul = let
+        action = do
+            setOpener T.North
+            B.b2D
+            noDirectOvercall
+        explanation =
+            "Without the strength to invite to game, sign off in a club " .+
+            "partscore."
+      in
+        situation "3C" action bid explanation vul direction
   in
-    stdWrap $ situation "3C" action (makeCall $ T.Bid 3 T.Clubs) explanation
+    wrap $ return sit <~ nwOrSeBid B.b2D3C B.bP2D3C
+                      <~ T.allVulnerabilities
 
 
-passSignoffClubs :: Situations
-passSignoffClubs = let
-    action = do
-        setOpener T.South
-        B.b2D
-        noDirectOvercall
-        bestFitClubs
-        pointRange 0 9
-        makeAlertableCall (T.Bid 3 T.Clubs) "signoff"
-        forbid $ takeoutDouble T.Clubs
-        noDirectOvercall
-    explanation =
-        "Partner has less-than-invitational values and is signing off. " .+
-        "Just pass."
+passBlackSignoff :: Situations
+passBlackSignoff = let
+    sit (bid, suit, direction) vul = let
+        action = do
+            setOpener T.South
+            B.b2D
+            noDirectOvercall
+            _ <- bid
+            forbid $ takeoutDouble suit
+            noDirectOvercall
+        explanation =
+            "Partner has less-than-invitational values and is signing off. " .+
+            "Just pass. It's possible that sometimes you'll end up in a " .+
+            "7-card fit."
+      in
+        situation "3CP" action (makePass) explanation vul direction
   in
-    stdWrap $ situation "3CP" action (makeCall T.Pass) explanation
+    wrap $ return sit <~ [ (B.bP2D2S, T.Spades, T.West)
+                         , (B.bP2D2S, T.Spades, T.North)
+                         , (B.b2D2S, T.Spades, T.East)
+                         , (B.b2D2S, T.Spades, T.South)
+                         , (B.bP2D3C, T.Clubs, T.West)
+                         , (B.bP2D3C, T.Clubs, T.North)
+                         , (B.b2D3C, T.Clubs, T.East)
+                         , (B.b2D3C, T.Clubs, T.South)
+                         ]
+                      <~ T.allVulnerabilities
 
 
 immediateSignoffHearts :: Situations
@@ -197,7 +166,7 @@ passSignoffHearts = let
             "Partner has less-than-invitational values and is signing off. " .+
             "Given that you have 4 hearts, pass."
       in
-        situation "2H2S" action (makeCall T.Pass) explanation vul direction
+        situation "2H2S" action (makePass) explanation vul direction
   in
     wrap $ return sit <~ nwOrSeBid B.bP2D2H B.b2D2H <~ T.allVulnerabilities
 
@@ -254,11 +223,12 @@ topic = makeTopic description "SMP2D" situations
     description = ("SMP " .+ T.Bid 2 T.Diamonds .+ " auctions")
     situations = wrap [ open
                       , wrap [ immediateSignoffSpades34
-                             , immediateSignoffSpades5]
-                      , passSignoff2Spades
+                             , immediateSignoffSpades34
+                             , immediateSignoffSpades5
+                             ]
                       , immediateSignoffClubs
-                      , passSignoffClubs
                       , immediateSignoffHearts
+                      , passBlackSignoff
                       , wrap [ passSignoffHearts
                              , correctSignoffHearts]
                       , mixedRaise

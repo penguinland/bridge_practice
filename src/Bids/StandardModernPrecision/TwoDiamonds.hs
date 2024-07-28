@@ -36,6 +36,7 @@ spadesSignoff = do
     forbid b2D3S  -- Prefer a mixed raise
     forbid heartsSignoff
     -- With 3253 shape, I'd sign off in 3C, rather than risk a 6-card fit
+    -- TODO: is the above comment right? Maybe not...
     minSuitLength T.Spades 4
     T.Spades `longerThan` T.Hearts
     maxSuitLength T.Diamonds 6
