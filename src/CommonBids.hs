@@ -18,7 +18,8 @@ import Control.Monad.Trans.State.Strict(get)
 
 import Action(Action, constrain, define)
 import EDSL(forbid, pointRange, balancedHand, makeCall, makeAlertableCall,
-            makePass, suitLength, minSuitLength, maxSuitLength, alternatives)
+            makePass, suitLength, minSuitLength, maxSuitLength, alternatives,
+            forEach)
 import Structures(currentBidder)
 import qualified Terminology as T
 
@@ -71,9 +72,9 @@ weak2 suit = do
 
 cannotPreempt :: Action
 cannotPreempt = do
-    mapM_ (forbid . weak2) [T.Diamonds, T.Hearts, T.Spades]
-    mapM_ (forbid . preempt3) T.allSuits
-    mapM_ (forbid . preempt4) T.allSuits
+    forEach [T.Diamonds, T.Hearts, T.Spades] (forbid . weak2)
+    forEach T.allSuits (forbid . preempt3)
+    forEach T.allSuits (forbid . preempt4)
 
 
 get2LongestSuits :: Action
@@ -145,7 +146,7 @@ setOpener opener = do
 takeoutDouble :: T.Suit -> Action
 takeoutDouble shortSuit = do
     pointRange 11 40
-    mapM_ setSuitLength T.allSuits
+    forEach T.allSuits setSuitLength
   where
     setSuitLength suit =
         if suit == shortSuit
