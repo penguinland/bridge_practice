@@ -30,7 +30,8 @@ spadesSignoff :: Action
 spadesSignoff = do
     lessThanInvitational
     forbid heartsSignoff
-    minSuitLength T.Spades 3
+    -- With 3253 shape, I'd sign off in 3C, rather than risk a 6-card fit
+    minSuitLength T.Spades 4
     T.Spades `longerThan` T.Hearts
     maxSuitLength T.Diamonds 6
     maxSuitLength T.Clubs 4
@@ -43,7 +44,7 @@ clubsSignoff = do
     minSuitLength T.Clubs 3
     maxSuitLength T.Diamonds 6
     maxSuitLength T.Hearts 2
-    maxSuitLength T.Spades 2
+    maxSuitLength T.Spades 3
 
 
 b2D2H :: Action

@@ -61,39 +61,26 @@ open = let
     stdWrap $ situation "Open" action B.b2D explanation
 
 
-immediateSignoffSpades3 :: Situations
-immediateSignoffSpades3 = let
-    action = do
-        setOpener T.North
-        suitLength T.Spades 3
-        B.b2D
-        noDirectOvercall
-        pointRange 0 9
-        bestFitSpades
-        suitLength T.Spades 4
-    explanation =
-        "Without the strength for a game contract, sign off in " .+
-        T.Bid 2 T.Spades .+ " with a likely fit. If you're stuck playing a " .+
-        "4-3 fit, oh well."
+immediateSignoffSpades34 :: Situations
+immediateSignoffSpades34 = let
+    sit (bid, direction) spadeLength vul = let
+        action = do
+            setOpener T.North
+            suitLength T.Spades spadeLength
+            B.b2D
+            noDirectOvercall
+        explanation =
+            "Without the strength for a game contract, sign off in " .+
+            T.Bid 2 T.Spades .+ " with a likely fit. " .+
+            if spadeLength == 3
+                then "If you're stuck playing a 4-3 fit, oh well."
+                else ""
+    in
+        situation "S43" action bid explanation vul direction
   in
-    stdWrap $ situation "S43" action (makeCall $ T.Bid 2 T.Spades) explanation
-
-
-immediateSignoffSpades4 :: Situations
-immediateSignoffSpades4 = let
-    action = do
-        setOpener T.North
-        suitLength T.Spades 4
-        B.b2D
-        noDirectOvercall
-        pointRange 0 9
-        bestFitSpades
-        suitLength T.Spades 4
-    explanation =
-        "Without the strength for a game contract, sign off in " .+
-        T.Bid 2 T.Spades .+ " with a likely fit."
-  in
-    stdWrap $ situation "S44" action (makeCall $ T.Bid 2 T.Spades) explanation
+    wrap $ return sit <~ nwOrSeBid B.b2D2S B.bP2D2S
+                      <~ [3, 4]
+                      <~ T.allVulnerabilities
 
 
 immediateSignoffSpades5 :: Situations
@@ -248,8 +235,7 @@ topic = makeTopic description "SMP2D" situations
   where
     description = ("SMP " .+ T.Bid 2 T.Diamonds .+ " auctions")
     situations = wrap [ open
-                      , wrap [ immediateSignoffSpades3
-                             , immediateSignoffSpades4
+                      , wrap [ immediateSignoffSpades34
                              , immediateSignoffSpades5]
                       , passSignoff2Spades
                       , immediateSignoffClubs
