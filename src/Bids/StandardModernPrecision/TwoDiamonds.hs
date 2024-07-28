@@ -9,13 +9,15 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 , bP2D3C
 , b2D3H
 , b2D3S
+, b2D3N
 ) where
 
 
 import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b2D, lessThanInvitational)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
-            makeAlertableCall, atLeastAsLong, longerThan, forbid)
+            makeAlertableCall, atLeastAsLong, longerThan, forbid, forEach,
+            balancedHand, soundHolding)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
 
@@ -114,3 +116,13 @@ b2D3S = do
     -- TODO: is this actually alertable? Maybe not...
     makeAlertableCall (T.Bid 3 T.Spades)
                       ("mixed raise: 7" .+ NDash .+ "9 HCP, 5 spades")
+
+
+b2D3N :: Action
+b2D3N = do
+    pointRange 14 15
+    soundHolding T.Diamonds
+    balancedHand
+    forEach T.majorSuits (`maxSuitLength` 3)
+    maxSuitLength T.Clubs 4
+    makeCall $ T.Bid 3 T.Notrump

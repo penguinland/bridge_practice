@@ -217,19 +217,152 @@ mixedRaise = let
     wrapVulDlr $ return sit <~ [B.b2D3H, B.b2D3S]
 
 
+immediateGameSignoff :: Situations
+immediateGameSignoff = let
+    sit bid = let
+        action = do
+            setOpener T.North
+            B.b2D
+            noDirectOvercall
+        explanation =
+            "We're game-forcing with no interest in slam. When we know the " .+
+            "final contract, sign off in it immediately."
+      in
+        situation "gfso" action bid explanation
+  in
+    wrap $ return sit <~ [B.b2D3N]
+                      <~ T.allVulnerabilities
+                      <~ [T.North, T.West]
+
+
+-- TODO:
+--   - Responder bids 2N
+--   - Responder immediately jumps to game
+--   - Opener responds to 2N
+--   - Responder bids 3D over opener's 3C
+--   - Opener rebids after responder rebids 3D
+--   - DON'T DO 4C/4D/RKC: that should be a separate topic
+
+
 topic :: Topic
 topic = makeTopic description "SMP2D" situations
   where
     description = ("SMP " .+ T.Bid 2 T.Diamonds .+ " auctions")
     situations = wrap [ open
-                      , wrap [ immediateSignoffSpades34
-                             , immediateSignoffSpades34
-                             , immediateSignoffSpades5
+                      -- Responder signs off
+                      , wrap [ wrap [ immediateSignoffSpades34
+                                    , immediateSignoffSpades34
+                                    , immediateSignoffSpades5
+                                    ]
+                             , immediateSignoffClubs
+                             , immediateSignoffHearts
                              ]
-                      , immediateSignoffClubs
-                      , immediateSignoffHearts
-                      , passBlackSignoff
-                      , wrap [ passSignoffHearts
+                      -- Opener passes responder's signoff
+                      , wrap [ passBlackSignoff
+                             , passBlackSignoff
+                             , passBlackSignoff
+                             , passBlackSignoff
+                             , passSignoffHearts
                              , correctSignoffHearts]
                       , mixedRaise
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
+                      , immediateGameSignoff
                       ]
