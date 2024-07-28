@@ -7,13 +7,16 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 , bP2D2S
 , b2D3C
 , bP2D3C
+, b2D3H
+, b2D3S
 ) where
 
 
 import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b2D, lessThanInvitational)
-import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall,
+import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
             makeAlertableCall, atLeastAsLong, longerThan, forbid)
+import Output(Punct(..), (.+))
 import qualified Terminology as T
 
 
@@ -21,6 +24,7 @@ import qualified Terminology as T
 heartsSignoff :: Action
 heartsSignoff = do
     lessThanInvitational
+    forbid b2D3H  -- Prefer a mixed raise
     minSuitLength T.Hearts 3
     maxSuitLength T.Diamonds 6
     T.Hearts `atLeastAsLong` T.Spades
@@ -29,6 +33,7 @@ heartsSignoff = do
 spadesSignoff :: Action
 spadesSignoff = do
     lessThanInvitational
+    forbid b2D3S  -- Prefer a mixed raise
     forbid heartsSignoff
     -- With 3253 shape, I'd sign off in 3C, rather than risk a 6-card fit
     minSuitLength T.Spades 4
@@ -90,3 +95,21 @@ bP2D3C = do
     -- When you're a passed hand, bidding a new suit is always nonforcing, so
     -- that's no longer alertable.
     makeCall $ T.Bid 3 T.Clubs
+
+
+b2D3H :: Action
+b2D3H = do
+    pointRange 7 9
+    minSuitLength T.Hearts 5
+    -- TODO: is this actually alertable? Maybe not...
+    makeAlertableCall (T.Bid 3 T.Hearts)
+                      ("mixed raise: 7" .+ NDash .+ "9 HCP, 5 hearts")
+
+
+b2D3S :: Action
+b2D3S = do
+    pointRange 7 9
+    minSuitLength T.Spades 5
+    -- TODO: is this actually alertable? Maybe not...
+    makeAlertableCall (T.Bid 3 T.Spades)
+                      ("mixed raise: 7" .+ NDash .+ "9 HCP, 5 spades")

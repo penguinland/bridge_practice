@@ -75,7 +75,7 @@ immediateSignoffSpades34 = let
             if spadeLength == 3
                 then "If you're stuck playing a 4-3 fit, oh well."
                 else ""
-    in
+      in
         situation "S43" action bid explanation vul direction
   in
     wrap $ return sit <~ nwOrSeBid B.b2D2S B.bP2D2S
@@ -230,6 +230,24 @@ correctSignoffHearts = let
                       <~ T.allVulnerabilities
 
 
+mixedRaise :: Situations
+mixedRaise = let
+    sit bid = let
+        action = do
+            setOpener T.North
+            B.b2D
+            noDirectOvercall
+        explanation =
+            "We've got just barely less than invitational values and a " .+
+            "likely 9-card major-suit fit. Bid a mixed raise. Partner " .+
+            "will almost certainly pass, and we've found our fit while " .+
+            "making it harder for the opponents to compete."
+      in
+        situation "mixed" action bid explanation
+  in
+    wrapVulDlr $ return sit <~ [B.b2D3H, B.b2D3S]
+
+
 topic :: Topic
 topic = makeTopic description "SMP2D" situations
   where
@@ -243,4 +261,5 @@ topic = makeTopic description "SMP2D" situations
                       , immediateSignoffHearts
                       , wrap [ passSignoffHearts
                              , correctSignoffHearts]
+                      , mixedRaise
                       ]
