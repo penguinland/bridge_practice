@@ -27,7 +27,6 @@ dependencies:
 - process
 - random
 - transformers
-- wai-middleware-static
 
 library:
   source-dirs: src
@@ -58,6 +57,7 @@ executables:
     - mtl
     - Spock
     - text
+    - wai-middleware-static
 
 tests:
   bridge-practice-test:
