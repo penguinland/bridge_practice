@@ -6,7 +6,8 @@ import EDSL(suitLength, maxSuitLength, pointRange, makeCall, forEach)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, Situations, makeTopic)
+import Topic(Topic, wrap, Situations, makeTopic, stdWrapNW, stdWrapSE,
+             wrapVulNW, wrapVulSE)
 
 
 bid1NHearts :: Situations
@@ -25,8 +26,7 @@ bid1NHearts = let
       in
         situation "H1N" action B.b1H1N explanation
   in
-    -- For us to bid a forcing 1N, we must be an unpassed hand.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.North, T.West]
+    stdWrapNW sit  -- For us to bid a forcing 1N, we must be an unpassed hand.
 
 
 bid1NSpades :: Situations
@@ -44,8 +44,8 @@ bid1NSpades = let
       in
         situation "S1N" action B.b1S1N explanation
   in
-    -- For us to bid a forcing 1N, we must be an unpassed hand.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.North, T.West]
+    stdWrapNW sit  -- For us to bid a forcing 1N, we must be an unpassed hand.
+
 
 rebid2N :: Situations
 rebid2N = let
@@ -64,10 +64,8 @@ rebid2N = let
       in
         situation "rb2N" action B.b1M1N2N explanation
   in
-    wrap $ return sit
+    wrapVulSE $ return sit
         <~ [(B.b1H, B.b1H1N, T.Hearts), (B.b1S, B.b1S1N, T.Spades)]
-        <~ T.allVulnerabilities
-        <~ [T.South, T.East]
 
 
 jumpShift :: Situations
@@ -88,14 +86,12 @@ jumpShift = let
       in
         situation "js" action rebid explanation
   in
-    wrap $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3C, T.Hearts)
-                         , (B.b1H, B.b1H1N, B.b1H1N3D, T.Hearts)
-                         , (B.b1S, B.b1S1N, B.b1S1N3C, T.Spades)
-                         , (B.b1S, B.b1S1N, B.b1S1N3D, T.Spades)
-                         , (B.b1S, B.b1S1N, B.b1S1N3H, T.Spades)
-                         ]
-                      <~ T.allVulnerabilities
-                      <~ [T.South, T.East]
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3C, T.Hearts)
+                              , (B.b1H, B.b1H1N, B.b1H1N3D, T.Hearts)
+                              , (B.b1S, B.b1S1N, B.b1S1N3C, T.Spades)
+                              , (B.b1S, B.b1S1N, B.b1S1N3D, T.Spades)
+                              , (B.b1S, B.b1S1N, B.b1S1N3H, T.Spades)
+                              ]
 
 
 majorReverse :: Situations
@@ -117,7 +113,7 @@ majorReverse = let
       in
         situation "rev" action B.b1H1N2S explanation
   in
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.South, T.East]
+    stdWrapSE sit
 
 
 jumpRebid :: Situations
@@ -136,10 +132,8 @@ jumpRebid = let
       in
         situation "jrb" action rebid explanation
   in
-    wrap $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3H, T.Hearts)
-                         , (B.b1S, B.b1S1N, B.b1S1N3S, T.Spades) ]
-                      <~ T.allVulnerabilities
-                      <~ [T.South, T.East]
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3H, T.Hearts)
+                              , (B.b1S, B.b1S1N, B.b1S1N3S, T.Spades) ]
 
 
 limitRaise3 :: Situations
@@ -161,10 +155,8 @@ limitRaise3 = let
         situation "lr3" action response explanation
   in
     -- For us to bid a forcing 1N, we must be an unpassed hand.
-    wrap $ return sit <~ [ (B.b1H, B.b1H1N, T.Hearts)
-                         , (B.b1S, B.b1S1N, T.Spades) ]
-                      <~ T.allVulnerabilities
-                      <~ [T.North, T.West]
+    wrapVulNW $ return sit <~ [ (B.b1H, B.b1H1N, T.Hearts)
+                              , (B.b1S, B.b1S1N, T.Spades) ]
 
 
 raise2 :: Situations
@@ -192,10 +184,8 @@ raise2 = let
         situation "mr2" action response explanation
   in
     -- For us to bid a forcing 1N, we must be an unpassed hand.
-    wrap $ return sit <~ [ (B.b1H, B.b1H1N, T.Hearts)
-                         , (B.b1S, B.b1S1N, T.Spades) ]
-                      <~ T.allVulnerabilities
-                      <~ [T.North, T.West]
+    wrapVulNW $ return sit <~ [ (B.b1H, B.b1H1N, T.Hearts)
+                              , (B.b1S, B.b1S1N, T.Spades) ]
 
 
 nonjumpRebid :: Situations
@@ -218,10 +208,8 @@ nonjumpRebid = let
       in
         situation "nrb" action rebid explanation
   in
-    wrap $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2H, T.Hearts)
-                         , (B.b1S, B.b1S1N, B.b1S1N2S, T.Spades) ]
-                      <~ T.allVulnerabilities
-                      <~ [T.South, T.East]
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2H, T.Hearts)
+                              , (B.b1S, B.b1S1N, B.b1S1N2S, T.Spades) ]
 
 
 secondSuitRebid :: Situations
@@ -243,14 +231,12 @@ secondSuitRebid = let
       in
         situation "b2nd" action rebid explanation
   in
-    wrap $ return sit <~ [ (B.b1S, B.b1S1N, B.b1S1N2H, T.Spades)
-                         , (B.b1S, B.b1S1N, B.b1S1N2D, T.Spades)
-                         , (B.b1S, B.b1S1N, B.b1S1N2C, T.Spades)
-                         , (B.b1H, B.b1H1N, B.b1H1N2C, T.Hearts)
-                         , (B.b1H, B.b1H1N, B.b1H1N2D, T.Hearts)
-                         ]
-                      <~ T.allVulnerabilities
-                      <~ [T.South, T.East]
+    wrapVulSE $ return sit <~ [ (B.b1S, B.b1S1N, B.b1S1N2H, T.Spades)
+                              , (B.b1S, B.b1S1N, B.b1S1N2D, T.Spades)
+                              , (B.b1S, B.b1S1N, B.b1S1N2C, T.Spades)
+                              , (B.b1H, B.b1H1N, B.b1H1N2C, T.Hearts)
+                              , (B.b1H, B.b1H1N, B.b1H1N2D, T.Hearts)
+                              ]
 
 
 heartsSpadesThird :: Situations
@@ -273,11 +259,9 @@ heartsSpadesThird = let
       in
         situation "b2nd4" action rebid explanation
   in
-    wrap $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2C)
-                         , (B.b1H, B.b1H1N, B.b1H1N2D)
-                         ]
-                      <~ T.allVulnerabilities
-                      <~ [T.South, T.East]
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2C)
+                              , (B.b1H, B.b1H1N, B.b1H1N2D)
+                              ]
 
 
 wantFlannery :: Situations
@@ -307,12 +291,13 @@ wantFlannery = let
       in
         situation "flan" action (makeCall $ T.Bid 2 T.Hearts) explanation
   in
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.South, T.East]
+    stdWrapSE sit
 
 
--- more situations:
---                  opener accepts/rejects invite
---                  responder weak with long suit,
+-- TODO:
+--   - opener accepts/rejects invite
+--   - responder weak with long suit
+--   - responder is a passed hand so 1N is natural (and opener's rebid here)
 
 
 topic :: Topic

@@ -35,7 +35,7 @@ main = let
               , Smp2DOpen.topic
               , Meckwell.topic
               ]
-    topics = [Smp2DOpen.topic]
+    topics = [ForcingOneNotrump.topic]
   in do
     outputLatex 100 topics "test" (mkStdGen 0)
     return ()
