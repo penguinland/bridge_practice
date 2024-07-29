@@ -10,7 +10,7 @@ import Situation(situation, (<~))
 import qualified StandardOpenings as SO
 import Structures(currentBidder)
 import qualified Terminology as T
-import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic, wrap)
+import Topic(Topic, wrap, stdWrap, stdWrapSE, wrapVulDlr, Situations, makeTopic)
 
 
 -- Yes, I realize that many of these Situations lack the nuance of planning your
@@ -224,8 +224,7 @@ pass = let
   in
     -- Some people might be tempted to open light in 3rd or 4th seat, so
     -- restrict this situation to 1st or 2nd.
-    wrap $ return (situation "Pass" action makePass explanation)
-        <~ T.allVulnerabilities <~ [T.South, T.East]
+    stdWrapSE $ situation "Pass" action makePass explanation
 
 topic :: Topic
 topic = makeTopic "standard opening bids" "StdOpen" situations

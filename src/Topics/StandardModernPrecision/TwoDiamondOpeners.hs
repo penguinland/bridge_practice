@@ -7,7 +7,8 @@ import EDSL(forbid, suitLength, makePass)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic)
+import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic,
+             wrapVulNW, wrapVulSE, stdWrapNW, stdWrapSE)
 
 
 -- TODO: Refactor into a proper list of alertable bids, so that the solutions to
@@ -220,9 +221,7 @@ immediateGameSignoff = let
       in
         situation "gfso" action bid explanation
   in
-    wrap $ return sit <~ [B.b2D3N]
-                      <~ T.allVulnerabilities
-                      <~ [T.North, T.West]
+    wrapVulNW $ return sit <~ [B.b2D3N]
 
 
 bid2N :: Situations
@@ -239,8 +238,7 @@ bid2N = let
       in
         situation "b2N" action B.b2D2N explanation
   in
-    wrap $ return sit <~ T.allVulnerabilities
-                      <~ [T.North, T.West]  -- We're an unpassed hand
+    stdWrapNW sit  -- We're both unpassed hands
 
 
 minimumResponse :: Situations
@@ -261,8 +259,7 @@ minimumResponse = let
       in
         situation "min" action B.b2D2N3C explanation
   in
-    wrap $ return sit <~ T.allVulnerabilities
-                      <~ [T.North, T.West]  -- We're both unpassed hands
+    stdWrapSE sit  -- We're both unpassed hands
 
 
 maximumResponse :: Situations
@@ -284,9 +281,7 @@ maximumResponse = let
       in
         situation "max" action bid explanation
   in
-    wrap $ return sit <~ [B.b2D2N3D, B.b2D2N3H, B.b2D2N3S]
-                      <~ T.allVulnerabilities
-                      <~ [T.North, T.West]  -- We're both unpassed hands
+    wrapVulSE $ return sit <~ [B.b2D2N3D, B.b2D2N3H, B.b2D2N3S]
 
 
 gfAnyway :: Situations
@@ -310,8 +305,7 @@ gfAnyway = let
       in
         situation "reask" action B.b2D2N3C3D explanation
   in
-    wrap $ return sit <~ T.allVulnerabilities
-                      <~ [T.North, T.West]  -- We're both unpassed hands
+    stdWrapNW sit
 
 
 gfAnywayResponses :: Situations
@@ -337,9 +331,7 @@ gfAnywayResponses = let
       in
         situation "reans" action bid explanation
   in
-    wrap $ return sit <~ [B.b2D2N3C3D3H, B.b2D2N3C3D3S, B.b2D2N3C3D3N]
-                      <~ T.allVulnerabilities
-                      <~ [T.South, T.East]  -- We're both unpassed hands
+    wrapVulSE $ return sit <~ [B.b2D2N3C3D3H, B.b2D2N3C3D3S, B.b2D2N3C3D3N]
 
 
 invSignoff :: Situations
@@ -360,9 +352,7 @@ invSignoff = let
       in
         situation "invso" action bid explanation
   in
-    wrap $ return sit <~ [B.b2D2N3CP, B.b2D2N3C3H, B.b2D2N3C3S]
-                      <~ T.allVulnerabilities
-                      <~ [T.North, T.West]  -- We're both unpassed hands
+    wrapVulNW $ return sit <~ [B.b2D2N3CP, B.b2D2N3C3H, B.b2D2N3C3S]
 
 
 -- TODO:

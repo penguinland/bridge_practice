@@ -46,5 +46,7 @@ outputLatex numHands topics filename g = do
     template <- readFile "template.tex"
     let doc = replace "%<TOPICS>" topicNames .
               replace "%<PROBLEMS>" problemSet $ template
-    writeFile (filename ++ ".tex") doc
+    let fullFilename = filename ++ ".tex"
+    writeFile fullFilename doc
+    putStrLn("Output written to " ++ fullFilename)
     return doc

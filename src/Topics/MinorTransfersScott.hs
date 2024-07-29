@@ -7,7 +7,8 @@ import EDSL(forbid, makeCall, makeAlertableCall, makePass, pointRange,
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, Situations, wrap, makeTopic)
+import Topic(Topic, makeTopic, wrap, wrapVulNW, wrapVulSE, stdWrapNW,
+             Situations)
 
 
 -- Note that the person initiating the transfer shouldn't have had an
@@ -94,8 +95,7 @@ initiateTransfer = let
       in
         situation "Init" action bid explanation
   in
-    wrap $ return sit
-        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.West, T.North]
+    wrapVulNW $ return sit <~ T.minorSuits
 
 
 completeTransfer :: Situations
@@ -114,8 +114,7 @@ completeTransfer = let
       in
         situation "Complete" action bid explanation
   in
-    wrap $ return sit
-        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.East, T.South]
+    wrapVulSE $ return sit <~ T.minorSuits
 
 
 superacceptTransfer :: Situations
@@ -137,8 +136,7 @@ superacceptTransfer = let
       in
         situation "SupAcc" action bid explanation
   in
-    wrap $ return sit
-        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.East, T.South]
+    wrapVulSE $ return sit <~ T.minorSuits
 
 
 completeSuperacceptAKQ :: Situations
@@ -160,8 +158,7 @@ completeSuperacceptAKQ = let
       in
         situation "3NTAKQ" action bid explanation
   in
-    wrap $ return sit
-        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
+    wrapVulNW $ return sit <~ T.minorSuits
 
 
 completeSuperacceptKQJ10 :: Situations
@@ -185,8 +182,7 @@ completeSuperacceptKQJ10 = let
       in
         situation "3NTKQJ" action bid explanation
   in
-    wrap $ return sit
-        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
+    wrapVulNW $ return sit <~ T.minorSuits
 
 
 completeSuperaccept10CardFit :: Situations
@@ -208,8 +204,7 @@ completeSuperaccept10CardFit = let
       in
         situation "3NT10Fit" action bid explanation
   in
-    wrap $ return sit
-        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
+    wrapVulNW $ return sit <~ T.minorSuits
 
 
 failSuperaccept :: Situations
@@ -232,8 +227,7 @@ failSuperaccept = let
       in
         situation "SupFail" action bid explanation
   in
-    wrap $ return sit
-        <~ T.minorSuits <~ T.allVulnerabilities <~ [T.North, T.West]
+    wrapVulNW $ return sit <~ T.minorSuits
 
 
 notrumpInvite :: Situations
@@ -262,7 +256,7 @@ notrumpInvite = let
       in
         situation "NTInv" action bid explanation
   in
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.North, T.West]
+    stdWrapNW sit
 
 
 topic :: Topic
