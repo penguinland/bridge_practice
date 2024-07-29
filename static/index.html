@@ -20,8 +20,6 @@
                   <table width="600em" border=1 style="table-layout: fixed;">
                     <tr>
                       <td width="33%" height="120ex">
-                        &nbsp;&nbsp;Dealer: <span id="dealer"></span><br/>
-                        &nbsp;&nbsp;Vul: <span id="vulnerability"></span>
                       </td>
                       <td width="33%">
                         <span id="north_hand"></span>
@@ -41,11 +39,18 @@
                     </tr>
                     <tr>
                       <td height="120ex">
+                        &nbsp;&nbsp;Dealer: <span id="dealer"></span><br/>
+                        &nbsp;&nbsp;Vul: <span id="vulnerability"></span>
                       </td>
                       <td>
                         <span id="south_hand"></span>
                       </td>
-                      <td>
+                      <td style="vertical-align: center;">
+                        <center>
+                          <button onclick="displayProblem()">
+                            Next Problem
+                          </button>
+                        </center>
                       </td>
                     </tr>
                   </table>
@@ -60,9 +65,6 @@
                 </td>
               </tr>
             </table>
-            <center>
-              <button onclick="displayProblem()">Next Problem</button>
-            </center>
           </td>
         </tr>
       </table>
