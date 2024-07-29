@@ -53,10 +53,16 @@ wrapVulDlr :: State StdGen (Vulnerability -> Direction -> Situation) ->
     Situations
 wrapVulDlr sit = wrap $ sit <~ allVulnerabilities <~ allDirections
 
+-- By ensuring that only North or West could be dealer, if we make North open
+-- the bidding, we ensure South is an unpassed hand. This is useful when
+-- practicing game-forcing auctions when partner opens the bidding.
 wrapVulNW :: State StdGen (Vulnerability -> Direction -> Situation) ->
     Situations
 wrapVulNW sit = wrap $ sit <~ allVulnerabilities <~ [North, West]
 
+-- By ensuring that only South or East could be dealer, if we make South open
+-- the bidding, we ensure that North is an unpassed hand. This is useful when
+-- practicing game-forcing auctions when we open the bidding.
 wrapVulSE :: State StdGen (Vulnerability -> Direction -> Situation) ->
     Situations
 wrapVulSE sit = wrap $ sit <~ allVulnerabilities <~ [South, East]
