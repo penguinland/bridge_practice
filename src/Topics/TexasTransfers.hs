@@ -8,7 +8,7 @@ import EDSL(makePass, makeCall, suitLength, minSuitLength, maxSuitLength,
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, Situations, makeTopic)
+import Topic(Topic, wrap, wrapVulNW, wrapVulSE, Situations, makeTopic)
 
 
 makeTransferSignoff :: Situations
@@ -34,8 +34,7 @@ makeTransferSignoff = let
     -- with exactly 10 HCP). It's not impossible: it happens once every couple
     -- hundred thousand hands. To speed up program execution, we focus only on
     -- the times when South is an unpassed hand.
-    wrap $ return sit <~ [B.b1N4D, B.b1N4H] <~ T.allVulnerabilities
-                      <~ [T.North, T.West]
+    wrapVulNW $ return sit <~ [B.b1N4D, B.b1N4H]
 
 
 makeTransferSlam :: Situations
@@ -57,8 +56,7 @@ makeTransferSlam = let
         in situation "SI" action bid explanation
   in
     -- Note that South cannot be a passed hand and have interest in slam.
-    wrap $ return sit <~ [B.b1N4D, B.b1N4H] <~ T.allVulnerabilities
-                      <~ [T.North, T.West]
+    wrapVulNW $ return sit <~ [B.b1N4D, B.b1N4H]
 
 
 completeTransfer :: Situations
@@ -78,8 +76,7 @@ completeTransfer = let
   in
     -- Same optimization here: don't have North make a Texas Transfer as a
     -- passed hand.
-    wrap $ return sit <~ [(B.b1N4D, B.b1N4D4H), (B.b1N4H, B.b1N4H4S)]
-                      <~ T.allVulnerabilities <~ [T.South, T.East]
+    wrapVulSE $ return sit <~ [(B.b1N4D, B.b1N4D4H), (B.b1N4H, B.b1N4H4S)]
 
 
 completeTransferDoubleton :: Situations
@@ -101,9 +98,8 @@ completeTransferDoubleton = let
   in
     -- Same optimization here: don't have North make a Texas Transfer as a
     -- passed hand.
-    wrap $ return sit <~ [ (B.b1N4D, B.b1N4D4H, T.Hearts)
-                         , (B.b1N4H, B.b1N4H4S, T.Spades)]
-                      <~ T.allVulnerabilities <~ [T.South, T.East]
+    wrapVulSE $ return sit <~ [ (B.b1N4D, B.b1N4D4H, T.Hearts)
+                              , (B.b1N4H, B.b1N4H4S, T.Spades)]
 
 
 -- WARNING: This situation is rare, and typically requires generating 100,000
@@ -128,9 +124,8 @@ completeTransferSuperfit = let
   in
     -- Same optimization here: don't have North make a Texas Transfer as a
     -- passed hand.
-    wrap $ return sit <~ [ (B.b1N4D, B.b1N4D4H, T.Hearts)
-                         , (B.b1N4H, B.b1N4H4S, T.Spades)]
-                      <~ T.allVulnerabilities <~ [T.South, T.East]
+    wrapVulSE $ return sit <~ [ (B.b1N4D, B.b1N4D4H, T.Hearts)
+                              , (B.b1N4H, B.b1N4H4S, T.Spades)]
 
 
 transferSlamInvite :: Situations
@@ -149,8 +144,7 @@ transferSlamInvite = let
             "investigate slam, and with a minimum, they'll pass."
         in situation "SInv" action bid explanation
   in
-    wrap $ return sit <~ [(B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
-                      <~ T.allVulnerabilities <~ [T.North, T.West]
+    wrapVulNW $ return sit <~ [(B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
 
 
 transferSlamInviteDeclined :: Situations
@@ -175,9 +169,8 @@ transferSlamInviteDeclined = let
             "invite: with a minimum hand and no extra trump length, pass."
         in situation "SInvDec" action makePass explanation
   in
-    wrap $ return sit <~ [(B.b1N2D, B.b1N2D2H, B.b1N2D2H4H, T.Hearts)
-                         ,(B.b1N2H, B.b1N2H2S, B.b1N2H2S4S, T.Spades)]
-                      <~ T.allVulnerabilities <~ [T.South, T.East]
+    wrapVulSE $ return sit <~ [(B.b1N2D, B.b1N2D2H, B.b1N2D2H4H, T.Hearts)
+                              ,(B.b1N2H, B.b1N2H2S, B.b1N2H2S4S, T.Spades)]
 
 
 transferSlamInviteAccepted :: Situations
@@ -205,9 +198,8 @@ transferSlamInviteAccepted = let
             "invistigate slam, your preferred bid might differ)."
         in situation "SInvAcc" action (makeCall $ T.Bid 4 T.Notrump) explanation
   in
-    wrap $ return sit <~ [(B.b1N2D, B.b1N2D2H, B.b1N2D2H4H, T.Hearts)
-                         ,(B.b1N2H, B.b1N2H2S, B.b1N2H2S4S, T.Spades)]
-                      <~ T.allVulnerabilities <~ [T.South, T.East]
+    wrapVulSE $ return sit <~ [(B.b1N2D, B.b1N2D2H, B.b1N2D2H4H, T.Hearts)
+                              ,(B.b1N2H, B.b1N2H2S, B.b1N2H2S4S, T.Spades)]
 
 
 -- TODO: More situations:

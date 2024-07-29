@@ -7,7 +7,8 @@ import EDSL(makePass, pointRange, suitLength, maxSuitLength, forEach)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, stdWrap, wrap, wrapVulDlr, Situations, makeTopic)
+import Topic(Topic, stdWrap, wrap, wrapVulDlr, wrapVulNW, wrapVulSE,
+             Situations, makeTopic)
 
 
 garbageStayman :: Situations
@@ -173,7 +174,7 @@ noFitBalancedSlamInv = let
       in situation "SlINoF" action B.b1N2C2D4N explanation
   in
     -- We're slam invitational; we can't be a passed hand.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.North, T.West]
+    wrapVulNW $ return sit
 
 
 fitInvite :: Situations
@@ -238,9 +239,8 @@ fitSlam = let
       in situation "fitSl" action responderRebid explanation
   in
     -- We're slam invitational; we can't be a passed hand.
-    wrap $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3S)
-                         , (B.b1N2C2S, B.b1N2C2S3H) ]
-                      <~ T.allVulnerabilities <~ [T.North, T.West]
+    wrapVulNW $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3S)
+                              , (B.b1N2C2S, B.b1N2C2S3H) ]
 
 
 wrongMajorGFH :: Situations
@@ -425,10 +425,9 @@ bothMajorsUnbalancedPassed = let
       in situation "bmubup" action opener4S explanation
   in
     -- This version is only for when responder is a passed hand
-    wrap $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C4S)
-                         , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D4S)
-                         ]
-                      <~ T.allVulnerabilities <~ [T.West, T.North]
+    wrapVulNW $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C4S)
+                              , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D4S)
+                              ]
 
 
 bothMajorsUnbalancedUnpassed :: Situations
@@ -457,10 +456,9 @@ bothMajorsUnbalancedUnpassed = let
       in situation "bmubp" action opener4S explanation
   in
     -- This version is only for when responder is a passed hand
-    wrap $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C3S)
-                         , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D3S)
-                         ]
-                      <~ T.allVulnerabilities <~ [T.South, T.East]
+    wrapVulSE $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C3S)
+                              , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D3S)
+                              ]
 
 
 -- TODO eventually, but maybe in separate topics:
