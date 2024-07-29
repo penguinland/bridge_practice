@@ -67,6 +67,24 @@ interest in improving it: it displays everything I need, and doesn't have any
 needlessly complicated frills. If you don't like the web interface, you can make
 your own.
 
+## Code organization
+
+If you're interested in modifying any of the code, here's the rough layout:
+- All the interesting parts are in `src/`:
+  - Files directly in `src/` are the plumbing of how everything works together.
+    The most interesting file is likely `EDSL.hs`, which defines the embedded
+    domain-specific language used to describe bridge hands.
+  - Files in `src/Bids/` define bids using the EDSL.
+  - Files in `src/Topics/` describe `Situations` to practice. Each of these
+    files typically has a corresponding file in `src/Bids/` that goes with it,
+    though some topics involve bids imported from multiple other files.
+- `make_pdf/` and `server/` contain the executables. If you create a new
+  `Topic`, you'll want to add it to one (both?) of those.
+- `static/` contains frontend stuff for the webserver (HTML, JavaScript, maybe
+  CSS eventually).
+- `bridge.tex` needs to be in the same directory as the `.tex` files created by
+  `make_pdf`, or else they won't generate PDFs properly.
+
 ## Bugfixes
 
 If something has gone wrong but you figure out what it was, please send a pull
