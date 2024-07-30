@@ -3,3 +3,8 @@
     border-radius: 10px;
     padding: 10px;
 }
+
+td.top_row {
+    padding-left: 10px;
+    padding-right: 10px;
+}
