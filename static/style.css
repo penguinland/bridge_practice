@@ -1,5 +1,6 @@
-body {
-    color: "DimGrey";
-    background-color: #EEE;
-    line-height: 1.6em;
+.hand {
+    background-color: #E8E8E8;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    padding: 10px;
 }

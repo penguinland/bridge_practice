@@ -21,32 +21,39 @@
             <table border=0 style="table-layout: fixed;" height="500ex">
               <tr>
                 <td style="vertical-align: top;">
-                  <table width="600em" border=1 style="table-layout: fixed;">
+                  <table width="600em" style="table-layout: fixed;">
                     <tr>
                       <td width="33%" height="120ex">
                       </td>
-                      <td width="33%">
+                      <td class="hand" width="33%">
                         <span id="north_hand"></span>
                       </td>
                       <td width="33%">
                       </td>
                     </tr>
                     <tr>
-                      <td height="120ex">
+                      <td class="hand" height="120ex">
                         <span id="west_hand"></span>
                       </td>
                       <td>
+                        <center>
+                          <table style="outline: 1px solid black;">
+                            <tr><td></td><td>N</td><td></td></tr>
+                            <tr><td>W</td><td></td><td>E</td></tr>
+                            <tr><td></td><td>S</td><td></td></tr>
+                          </table>
+                        </center>
                       </td>
-                      <td>
+                      <td class="hand">
                         <span id="east_hand"></span>
                       </td>
                     </tr>
                     <tr>
-                      <td height="120ex">
-                        &nbsp;&nbsp;Dealer: <span id="dealer"></span><br/>
-                        &nbsp;&nbsp;Vul: <span id="vulnerability"></span>
+                      <td height="120ex" style="padding-left: 3ex;">
+                        Dealer: <span id="dealer"></span><br/>
+                        Vul: <span id="vulnerability"></span>
                       </td>
-                      <td>
+                      <td class="hand">
                         <span id="south_hand"></span>
                       </td>
                       <td style="vertical-align: center;">
