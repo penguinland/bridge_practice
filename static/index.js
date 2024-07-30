@@ -38,13 +38,15 @@ getTopics().then(topics => {
             checkbox.checked = true; // Start off with a couple defaults
         }
 
+        const topic_name = document.createElement("span");
+        topic_name.innerHTML = name;
+
+        // Make the text of the checkbox clickable, too.
         const label = document.createElement("label");
-        label.for       = tag_name;
-        label.innerHTML = name;
+        label.appendChild(checkbox);
+        label.appendChild(topic_name);
 
         newline = document.createElement("br")
-
-        topic_section.appendChild(checkbox);
         topic_section.appendChild(label);
         topic_section.appendChild(newline);
     })
