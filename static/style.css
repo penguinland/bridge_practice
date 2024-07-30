@@ -1,0 +1,10 @@
+.hand {
+    background-color: #E8E8E8;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+/* The padding needs to match .hand, or the tables are have uneven sizes. */
+td.hand_size {
+    padding: 10px;
+}

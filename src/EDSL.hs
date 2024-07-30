@@ -50,7 +50,7 @@ forbidAll = mapM_ forbid
 
 alternatives :: [Action] -> Action
 -- We use deMorgan's laws. (A || B || C) becomes !(!A && !B && !C)
-alternatives = forbid . mapM_ forbid
+alternatives = forbid . forbidAll
 
 
 impliesThat :: Action -> Action -> Action
