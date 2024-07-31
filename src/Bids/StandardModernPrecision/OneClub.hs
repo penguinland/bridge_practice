@@ -349,7 +349,7 @@ b1C1D1H2H = do
 
 b1C1D1H3H :: Action
 b1C1D1H3H = do
-    suitLength T.Hearts 4
+    minSuitLength T.Hearts 4
     pointRange 5 7
     forEach T.allSuits (`minSuitLength` 2)
     makeCall $ T.Bid 3 T.Hearts
@@ -425,7 +425,7 @@ b1C1D1S2S = do
 
 b1C1D1S3S :: Action
 b1C1D1S3S = do
-    suitLength T.Spades 4
+    minSuitLength T.Spades 4
     pointRange 5 7
     forEach T.allSuits (`minSuitLength` 2)
     makeCall $ T.Bid 3 T.Spades
