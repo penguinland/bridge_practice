@@ -167,6 +167,7 @@ b1S1N2H = do
 
 
 -- TODO: if you've got a 5-card major and a 6-card minor, what do you open?
+-- TODO: if you've got a 3-suited hand (e.g., 5440 shape), what do you rebid?
 
 
 b1S1N2D :: Action
@@ -176,7 +177,7 @@ b1S1N2D = do
     alternatives [minSuitLength T.Diamonds 5, maxSuitLength T.Spades 5]
     pointRange 0 16
     T.Spades `atLeastAsLong` T.Diamonds
-    T.Diamonds `atLeastAsLong` T.Hearts
+    T.Diamonds `longerThan` T.Hearts
     T.Diamonds `longerThan` T.Clubs
     makeCall $ T.Bid 2 T.Diamonds
 
@@ -188,8 +189,8 @@ b1S1N2C = do
     alternatives [minSuitLength T.Clubs 5, maxSuitLength T.Spades 5]
     pointRange 0 16
     T.Spades `atLeastAsLong` T.Clubs
-    T.Clubs `atLeastAsLong` T.Hearts
-    T.Clubs `atLeastAsLong` T.Diamonds
+    T.Clubs `longerThan` T.Hearts
+    T.Clubs `longerThan` T.Diamonds
     makeCall $ T.Bid 2 T.Clubs
 
 
@@ -211,5 +212,5 @@ b1H1N2C = do
     alternatives [minSuitLength T.Clubs 5, maxSuitLength T.Hearts 5]
     pointRange 0 16
     T.Hearts `atLeastAsLong` T.Clubs
-    T.Clubs `atLeastAsLong` T.Diamonds
+    T.Clubs `longerThan` T.Diamonds
     makeCall $ T.Bid 2 T.Clubs
