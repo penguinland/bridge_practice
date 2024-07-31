@@ -80,8 +80,8 @@ If you're interested in modifying any of the code, here's the rough layout:
     though some topics involve bids imported from multiple other files.
 - `make_pdf/` and `server/` contain the executables. If you create a new
   `Topic`, you'll want to add it to one (both?) of those.
-- `static/` contains frontend stuff for the webserver (HTML, JavaScript, maybe
-  CSS eventually).
+- `static/` contains frontend stuff for the webserver (HTML, JavaScript, and
+  CSS).
 - `bridge.tex` needs to be in the same directory as the `.tex` files created by
   `make_pdf`, or else they won't generate PDFs properly.
 
