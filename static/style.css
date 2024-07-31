@@ -8,3 +8,9 @@
 td.hand_size {
     padding: 10px;
 }
+
+.topic{
+    margin: 1ex;
+    text-indent: -2ex;
+    padding-left: 2ex;
+}

@@ -46,8 +46,9 @@ getTopics().then(topics => {
         label.appendChild(checkbox);
         label.appendChild(topic_name);
 
-        newline = document.createElement("br")
-        topic_section.appendChild(label);
+        newline = document.createElement("p");
+        newline.classList.add("topic");
+        newline.appendChild(label);
         topic_section.appendChild(newline);
     })
 
