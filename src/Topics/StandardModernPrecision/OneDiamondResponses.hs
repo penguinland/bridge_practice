@@ -218,7 +218,7 @@ invertedMinors = let
             oppsPass
         explanation =
             "With less than invitational strength, no 4-card major, but a long\
-           \ diamond suit, jump to " .+ B.b1D3D .+ ", like\
+           \ diamond suit, jump to " .+ T.Bid 3 T.Diamonds .+ ", like\
            \ an inverted minor. Note that you need 6+ cards in the suit to do\
            \ this, since opener might only have a doubleton."
       in
