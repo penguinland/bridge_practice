@@ -1,5 +1,6 @@
 module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
+import Action(extractLastCall)
 import Bids.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
 import qualified Bids.StandardModernPrecision.OneDiamond as B
 import EDSL(maxSuitLength, minSuitLength, pointRange, alternatives)
@@ -100,7 +101,8 @@ reverseFlannery = let
             "With 5 spades, 4 or 5 hearts, and " .+
             (if isInvite then "" else "less than ") .+
             "invitational strength, bid a Reverse Flannery " .+
-            bid .+ ". Partner can then place the final\
+            (T.removeAlert . extractLastCall $ bid) .+
+            ". Partner can then place the final\
           \ contract, bid " .+ T.Bid 3 T.Clubs .+ " (pass or\
           \ correct) with both minors, or bid " .+
             T.Bid 2 T.Notrump .+ " to ask for\

@@ -1,6 +1,6 @@
 module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 
-import Action(Action)
+import Action(Action, extractLastCall)
 import qualified Bids.StandardModernPrecision.TwoDiamonds as B
 import CommonBids(setOpener, takeoutDouble)
 import EDSL(forbid, suitLength, makePass)
@@ -134,7 +134,8 @@ immediateSignoffHearts = let
             B.noDirectOvercall
         explanation =
             "Without the strength to invite to game, sign off in " .+
-            bid .+ ". Remember that opener might " .+
+            (T.removeAlert . extractLastCall $ bid) .+
+            ". Remember that opener might " .+
             "pull the bid to " .+ T.Bid 2 T.Spades .+ " with " .+
             "exactly 4315 shape."
       in
