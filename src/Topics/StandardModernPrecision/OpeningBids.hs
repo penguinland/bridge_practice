@@ -1,7 +1,7 @@
 module Topics.StandardModernPrecision.OpeningBids(topic) where
 
 import qualified Bids.StandardModernPrecision.BasicBids as B
-import Output((.+))
+import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
@@ -51,7 +51,8 @@ oneNotrump = let
     action = do
         B.firstSeatOpener
     explanation =
-        "With a balanced hand and 14-16 HCP, open " .+ T.Bid 1 T.Notrump .+ "."
+        "With a balanced hand and 14" .+ NDash .+ "16 HCP, open " .+
+        T.Bid 1 T.Notrump .+ "."
   in
     B.smpWrapS . return $ situation "1N" action B.b1N explanation
 
