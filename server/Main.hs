@@ -29,7 +29,7 @@ import qualified Topics.StandardModernPrecision.OneClubResponses as Smp1CRespons
 import qualified Topics.StandardModernPrecision.OneDiamondResponses as Smp1DResponses
 import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
-import qualified Topics.StandardModernPrecision.Lampe as Lampe
+--import qualified Topics.StandardModernPrecision.Lampe as Lampe
 import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as TwoDiamondOpeners
 
 -- I don't think I ever finished making these topics...
@@ -51,7 +51,7 @@ topicList = [ StandardOpeners.topic
             , Mafia.topic
             , MafiaResponses.topic
             , Smp1DResponses.topic
-            , Lampe.topic
+            --, Lampe.topic
             , TwoDiamondOpeners.topic
             ]
 
