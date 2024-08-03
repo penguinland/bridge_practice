@@ -38,8 +38,8 @@ newAuction dealer = (startBidding dealer, mempty)
 type Action = State Auction ()
 
 instance Showable Action where
-    toLatex = toLatex . extractLastCall
-    toHtml = toHtml . extractLastCall
+    toLatex = toLatex . T.removeAlert . extractLastCall
+    toHtml = toHtml . T.removeAlert . extractLastCall
 
 
 finish :: T.Direction -> Action -> Auction
