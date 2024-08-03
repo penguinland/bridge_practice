@@ -133,8 +133,8 @@ immediateSignoffHearts = let
             B.b2D
             B.noDirectOvercall
         explanation =
-            "Without the strength to invite to game, sign off in " .+
-            bid .+ ". Remember that opener might " .+
+            "Without the strength to invite to game, sign off in " .+ bid .+
+            ". Remember that opener might " .+
             "pull the bid to " .+ T.Bid 2 T.Spades .+ " with " .+
             "exactly 4315 shape."
       in
@@ -275,9 +275,11 @@ maximumResponse = let
             "Partner has asked us to describe our strength and majors " .+
             "more. We're in the top half of our range (we'd accept a game " .+
             "invite). Bid similar to Smolen: bid our shorter major if we " .+
-            "have one, or " .+ T.Bid 3 T.Diamonds .+ " if they're equal " .+
-            "length. Partner's next bid will either be signing off in " .+
-            T.Bid 3 T.Notrump .+ " or " .+ B.name44Rkc .+ "."
+            "have one, or " .+ T.Bid 3 T.Diamonds .+ " if they're of equal " .+
+            "length. Partner's next bid will either be setting trump at " .+
+            "the 3 level (showing slam interest and triggering a round of " .+
+            "control bidding), signing off in " .+ T.Bid 3 T.Notrump .+
+            ", or " .+ B.name44Rkc .+ "."
       in
         situation "max" action bid explanation
   in

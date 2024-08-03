@@ -120,7 +120,7 @@ b2D = do
 b1D :: Action
 b1D = do
     firstSeatOpener
-    forbidAll [b1C, b1N, b1M T.Hearts, b1M T.Spades, b2C, b2D]
+    forbidAll [b1C, b1N, b1M T.Hearts, b1M T.Spades, b2C, b2D, b2N]
     -- The next line is commented out because if it can be violated, we're gonna
     -- have a bad day. Make sure that it's never violated in the results even if
     -- it's not explicitly required.

@@ -270,12 +270,7 @@ b1C1D3D = _makeJumpBid 3 T.Diamonds
 
 
 _notGameForcing :: Action
-_notGameForcing = do
-    forbid b1C1D2N
-    forbid b1C1D2H
-    forbid b1C1D2S
-    forbid b1C1D3C
-    forbid b1C1D3D
+_notGameForcing = forbidAll [b1C1D2N, b1C1D2H, b1C1D2S, b1C1D3C, b1C1D3D]
 
 
 b1C1D1N :: Action
@@ -311,9 +306,7 @@ b1C1D1S = do
 
 b1C1D2C :: Action
 b1C1D2C = do
-    forbid b1C1D1N
-    forbid b1C1D1H
-    forbid b1C1D1S
+    forbidAll [b1C1D1N, b1C1D1H, b1C1D1S]
     _notGameForcing
     -- Clubs must be longer than diamonds: with equal lengths, bid diamonds.
     T.Clubs `longerThan` T.Diamonds
@@ -325,10 +318,7 @@ b1C1D2C = do
 
 b1C1D2D :: Action
 b1C1D2D = do
-    forbid b1C1D1N
-    forbid b1C1D1H
-    forbid b1C1D1S
-    forbid b1C1D2C
+    forbidAll [b1C1D1N, b1C1D1H, b1C1D1S, b1C1D2C]
     _notGameForcing
     T.Diamonds `atLeastAsLong` T.Clubs
     alternatives [ minSuitLength T.Diamonds 6
@@ -376,9 +366,7 @@ b1C1D1H1S = do
 
 b1C1D1H1N :: Action
 b1C1D1H1N = do
-    forbid b1C1D1H2H
-    forbid b1C1D1H3H
-    forbid b1C1D1H1S
+    forbidAll [b1C1D1H2H, b1C1D1H3H, b1C1D1H1S]
     pointRange 0 5
     makeAlertableCall (T.Bid 1 T.Notrump)
                       ("0" .+ NDash .+ "5 HCP, at most 3 hearts")
@@ -386,10 +374,7 @@ b1C1D1H1N = do
 
 b1C1D1H2D :: Action
 b1C1D1H2D = do
-    forbid b1C1D1H2H
-    forbid b1C1D1H3H
-    forbid b1C1D1H1S
-    forbid b1C1D1H1N
+    forbidAll [b1C1D1H2H, b1C1D1H3H, b1C1D1H1S, b1C1D1H1N]
     suitLength T.Hearts 3
     -- This next line is redundant with forbidding a 1N rebid, but it's nice to
     -- be explicit about it.
@@ -400,11 +385,7 @@ b1C1D1H2D = do
 
 b1C1D1H2C :: Action
 b1C1D1H2C = do
-    forbid b1C1D1H2H
-    forbid b1C1D1H3H
-    forbid b1C1D1H1S
-    forbid b1C1D1H1N
-    forbid b1C1D1H2D
+    forbidAll [b1C1D1H2H, b1C1D1H3H, b1C1D1H1S, b1C1D1H1N, b1C1D1H2D]
     -- There are other splinter bids that haven't been created yet let alone
     -- forbidden here, so just explicitly point out the maximum lengths of the
     -- majors.
@@ -454,9 +435,7 @@ b1C1D1S1N = do
 
 b1C1D1S2D :: Action
 b1C1D1S2D = do
-    forbid b1C1D1S2S
-    forbid b1C1D1S3S
-    forbid b1C1D1S1N
+    forbidAll [b1C1D1S2S, b1C1D1S3S, b1C1D1S1N]
     pointRange 6 7 -- Redundant with forbidding a 1N rebid, but explicit
     suitLength T.Spades 3
     makeAlertableCall (T.Bid 2 T.Diamonds)
@@ -465,11 +444,8 @@ b1C1D1S2D = do
 
 b1C1D1S2H :: Action
 b1C1D1S2H = do
-    forbid b1C1D1S2S
-    forbid b1C1D1S3S
     -- Prefer showing 3-card spade support over your own 5-card heart suit.
-    forbid b1C1D1S2D
-    forbid b1C1D1S2N
+    forbidAll [b1C1D1S2S, b1C1D1S3S, b1C1D1S2D, b1C1D1S2N]
     pointRange 6 7
     -- We need at least 5 hearts, since opener has at most 3 (unless they're
     -- two-suited with both majors and longer spades, but that's rare and we'll
@@ -480,11 +456,7 @@ b1C1D1S2H = do
 
 b1C1D1S2C :: Action
 b1C1D1S2C = do
-    forbid b1C1D1S2S
-    forbid b1C1D1S3S
-    forbid b1C1D1S2H
-    forbid b1C1D1S1N
-    forbid b1C1D1S2D
+    forbidAll [b1C1D1S2S, b1C1D1S3S, b1C1D1S2H, b1C1D1S1N, b1C1D1S2D]
     -- There are other splinter bids that haven't been created yet let alone
     -- forbidden here, so just explicitly point out the maximum lengths of the
     -- majors.
