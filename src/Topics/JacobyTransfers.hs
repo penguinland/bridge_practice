@@ -3,8 +3,7 @@ module Topics.JacobyTransfers(topic) where
 import Action(Action, constrain)
 import qualified Bids.OneNotrump as B
 import CommonBids(setOpener)
-import EDSL(forbid, makeCall, makeAlertableCall,
-            pointRange, suitLength, balancedHand)
+import EDSL(forbid, makeAlertableCall, pointRange, suitLength, balancedHand)
 import Output(Punct(NDash), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -16,24 +15,8 @@ equalMajors :: Action
 equalMajors = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
 
-jacobyTransfer :: T.Suit -> Action
-jacobyTransfer T.Hearts = B.b1N2D
-jacobyTransfer T.Spades = B.b1N2H
-jacobyTransfer _        = error "jacoby transfer to non-major suit"
-
-
 -- TODO: Add separate commentary for 5-4 non-gf hands. Alternately, forbid 5-4
 -- non-gf hands, and add that situation into the Smolen topic.
-
-
-setUpCompletion :: T.Suit -> Action
-setUpCompletion suit = do
-    setOpener T.South
-    B.b1N
-    B.noInterference
-    forbid equalMajors
-    jacobyTransfer suit
-    B.noInterference  -- TODO: Allow overcalls of lower suits
 
 
 initiateTransferWeak :: Situations
@@ -114,7 +97,6 @@ completeTransfer = let
             setOpener T.South
             B.b1N
             B.noInterference
-            forbid equalMajors
             _ <- responderBid
             B.noInterference  -- TODO: Allow overcalls of lower suits
         explanation =
@@ -131,25 +113,29 @@ completeTransfer = let
 
 completeTransferShort :: Situations
 completeTransferShort = let
-    sit suit = let
+    sit (responderBid, openerRebid, suit) = let
         action = do
-            setUpCompletion suit
+            setOpener T.South
+            B.b1N
+            B.noInterference
+            _ <- responderBid
+            B.noInterference  -- TODO: Allow overcalls of lower suits
             suitLength suit 2
         explanation =
             "You have opened a strong " .+ B.b1N .+ ", and partner\
           \ has made a Jacoby transfer, indicating they have at least 5 " .+
-            show suit .+ ". Even though you only have 2-card support, complete\
+            suit .+ ". Even though you only have 2-card support, complete\
           \ the transfer by bidding the next higher suit. You have at least a\
           \ 7-card fit. If partner is very weak, " .+
             T.Bid 2 suit .+ " rates to play better than notrump,\
           \ and you want to be declarer so that your strong hand stays hidden.\
           \ If partner has at least invitational strength, he will make\
           \ another bid to give you options of where to play."
-        bid = makeCall $ T.Bid 2 suit
       in
-        situation "Short" action bid explanation
+        situation "Short" action openerRebid explanation
   in
-    wrapVulDlr $ return sit <~ T.majorSuits
+    wrapVulDlr $ return sit <~ [ (B.b1N2D, B.b1N2D2H, T.Hearts)
+                               , (B.b1N2H, B.b1N2H2S, T.Spades)]
 
 
 majors55inv :: Situations
