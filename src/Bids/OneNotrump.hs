@@ -51,12 +51,12 @@ module Bids.OneNotrump(
 ) where
 
 
-import Action(Action)
+import Action(Action, constrain)
 import qualified Bids.Meckwell as MW
 import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             makeCall, makeAlertableCall, alternatives, longerThan, balancedHand,
-            flatHand, minLoserCount, forEach, forbidAll)
+            flatHand, minLoserCount, forEach, forbidAll, impliesThat)
 import Output((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
@@ -140,6 +140,10 @@ b1N4H4S :: Action
 b1N4H4S = makeCall $ T.Bid 4 T.Spades
 
 
+equalMajors_ :: Action
+equalMajors_ = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
+
+
 jacobyTransfer_ :: T.Suit -> Action
 jacobyTransfer_ suit = do
     suitLength suit 5
@@ -156,10 +160,14 @@ jacobyTransfer_ suit = do
     transferSuit _        = error "Jacoby transfer to non-major suit"
 
 b1N2D :: Action
-b1N2D = jacobyTransfer_ T.Hearts
+b1N2D = do
+    equalMajors_ `impliesThat` invitational
+    jacobyTransfer_ T.Hearts
 
 b1N2H :: Action
-b1N2H = jacobyTransfer_ T.Spades
+b1N2H = do
+    equalMajors_ `impliesThat` gameForcing
+    jacobyTransfer_ T.Spades
 
 
 -- You can superaccept a Jacoby transfer with 4-card support and a maximum.
