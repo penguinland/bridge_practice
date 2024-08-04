@@ -2,8 +2,8 @@ module Topics.JacobyTransfers(topic) where
 
 import Action(Action, constrain)
 import qualified Bids.OneNotrump as B
-import CommonBids(setOpener, cannotPreempt)
-import EDSL(forbid, makeCall, makeAlertableCall, makePass,
+import CommonBids(setOpener)
+import EDSL(forbid, makeCall, makeAlertableCall,
             pointRange, suitLength, minSuitLength, balancedHand)
 import Output(Punct(NDash), (.+))
 import Situation(situation, (<~))
@@ -33,7 +33,7 @@ setUpCompletion suit = do
     B.noInterference
     forbid equalMajors
     jacobyTransfer suit
-    cannotPreempt >> makePass  -- TODO: Allow overcalls of lower suits
+    B.noInterference  -- TODO: Allow overcalls of lower suits
 
 
 initiateTransferWeak :: Situations
