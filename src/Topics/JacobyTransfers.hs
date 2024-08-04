@@ -3,8 +3,8 @@ module Topics.JacobyTransfers(topic) where
 import Action(Action, constrain)
 import qualified Bids.OneNotrump as B
 import CommonBids(setOpener, cannotPreempt)
-import EDSL(forbid, makeCall, makeAlertableCall, makePass, pointRange,
-            suitLength, minSuitLength, balancedHand)
+import EDSL(forbid, forbidAll, makeCall, makeAlertableCall, makePass,
+            pointRange, suitLength, minSuitLength, balancedHand)
 import Output(Punct(NDash), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -22,28 +22,12 @@ equalMajors :: Action
 equalMajors = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
 
-smolen :: T.Suit -> Action  -- The suit is the longer major.
-smolen suit = do
-    let otherSuit = T.otherMajor suit
-    minSuitLength suit 5
-    minSuitLength otherSuit 4
-    pointRange 10 40
-    -- With 5-5 in the majors, make a Jacoby transfer then bid the other suit.
-    -- With 6-6, I guess you do the same? but it never comes up.
-    forbid equalMajors
-    makeAlertableCall
-        (T.Bid 3 otherSuit)
-        ("5+ " ++ show suit ++ ", 4+ " ++ show otherSuit ++ ", game forcing")
-
-
 prepareJacobyTransfer :: T.Suit -> Action
 prepareJacobyTransfer suit = do
     minSuitLength suit 5
     -- Regardless of which suit we plan to transfer into, ensure we could not
-    -- have made a Texas transfer instead.
-    forbid B.b1N4D
-    forbid B.b1N4H
-    forbid (smolen suit)
+    -- have made a Texas transfer or Smolen bid instead.
+    forbidAll [B.b1N4D, B.b1N4H, B.b1N2C2D3H, B.b1N2C2D3S]
 
 
 jacobyTransfer :: T.Suit -> Action
