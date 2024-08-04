@@ -34,14 +34,6 @@ jacobyTransfer _        = error "jacoby transfer to non-major suit"
 -- non-gf hands, and add that situation into the Smolen topic.
 
 
-setUpTransfer :: T.Suit -> Action
-setUpTransfer suit = do
-    setOpener T.North
-    B.b1N
-    B.noInterference
-    prepareJacobyTransfer suit
-
-
 setUpCompletion :: T.Suit -> Action
 setUpCompletion suit = do
     setOpener T.South
@@ -101,26 +93,26 @@ initiateTransferBInv = let
 
 initiateTransferBGf :: Situations
 initiateTransferBGf = let
-    sit suit = let
+    sit (bid, suit) = let
         action = do
-            setUpTransfer suit
+            setOpener T.North
+            B.b1N
+            B.noInterference
             pointRange 10 14
-            forbid equalMajors
             balancedHand
         explanation =
-            "Partner has opened a strong " .+ B.b1N .+ ". You have\
-           \ a balanced hand with game-going but not slam-going strength, and a\
-           \ 5-card major. Make a Jacoby transfer into the suit, then bid " .+
-             T.Bid 3 T.Notrump .+ ". This gives partner the\
-           \ options of passing and playing in notrump with 2-card " .+
-             init (show suit) .+ " support or correcting to " .+
-             T.Bid 4 suit .+ " with a fit, knowing that you\
-           \ belong in game but not slam."
-        bid = jacobyTransfer suit
+            "Partner has opened a strong " .+ B.b1N .+ ". You have " .+
+            "a balanced hand with game-going but not slam-going strength, " .+
+            "and a 5-card major. Make a Jacoby transfer into the suit, " .+
+            "then bid " .+ T.Bid 3 T.Notrump .+ ". This gives partner the " .+
+            "options of passing and playing in notrump with 2-card " .+
+            init (show suit) .+ " support or correcting to " .+
+            T.Bid 4 suit .+ " with a fit, knowing that you " .+
+            "belong in game but not slam."
       in
         situation "InitBGF" action bid explanation
   in
-    wrapVulDlr $ return sit <~ T.majorSuits
+    wrapVulDlr $ return sit <~ [B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
 
 
 completeTransfer :: Situations
