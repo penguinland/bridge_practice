@@ -98,8 +98,8 @@ lessThanInvitational = do
     forbidAll [invitational, gameForcing]
 
 
-texasTransfer :: T.Suit -> Action
-texasTransfer suit = do
+_texasTransfer :: T.Suit -> Action
+_texasTransfer suit = do
     alternatives [gameNoSlam, slamInterest]
     minSuitLength suit 6
     -- If you're 6-4, bid Stayman, and *then* make a Texas Transfer if necessary
@@ -115,10 +115,10 @@ texasTransfer suit = do
     transferSuit _        = error "Texas transfer to non-major suit"
 
 b1N4D :: Action
-b1N4D = texasTransfer T.Hearts
+b1N4D = _texasTransfer T.Hearts
 
 b1N4H :: Action
-b1N4H = texasTransfer T.Spades
+b1N4H = _texasTransfer T.Spades
 
 
 -- Opener should always complete the Texas Transfer: no constraints on that.
@@ -132,7 +132,7 @@ b1N4H4S = makeCall $ T.Bid 4 T.Spades
 jacobyTransfer :: T.Suit -> Action
 jacobyTransfer suit = do
     alternatives [ suitLength suit 5
-                 , minSuitLength suit 6 >> forbid (texasTransfer suit)]
+                 , minSuitLength suit 6 >> forbid (_texasTransfer suit)]
     -- If you're 6-6, which suit to use is a matter of judgment, and you won't
     -- get practice here. Too bad.
     forEach (filter (/= suit) T.allSuits) (suit `longerThan`)
