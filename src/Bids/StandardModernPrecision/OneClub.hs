@@ -60,7 +60,7 @@ module Bids.StandardModernPrecision.OneClub(
 ) where
 
 import Action(Action, constrain)
-import Bids.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
+import Bids.StandardModernPrecision.BasicBids(b1C, oppsPass)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             balancedHand, makeCall, makeAlertableCall, alternatives, longerThan,
             atLeastAsLong, forEach, forbidAll, maxLoserCount, minLoserCount)
@@ -221,7 +221,6 @@ bP1C2S = do
 -----------
 startOfMafia :: Action
 startOfMafia = do
-    firstSeatOpener
     b1C
     oppsPass
     b1C1D
