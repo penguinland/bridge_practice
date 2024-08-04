@@ -1,6 +1,7 @@
 module Topics.JacobyTransfers(topic) where
 
 import Action(Action, constrain)
+import qualified Bids.OneNotrump as B
 import CommonBids(setOpener, cannotPreempt, strong1NT)
 import EDSL(forbid, makeCall, makeAlertableCall, makePass, pointRange,
             suitLength, minSuitLength, balancedHand)
@@ -11,10 +12,6 @@ import Topic(Topic, Situations, wrap, stdWrap, wrapVulDlr, makeTopic)
 
 
 -- syntactic sugar for writing descriptions of solutions
-oneNT :: T.Call
-oneNT = T.Bid 1 T.Notrump
-
-
 transferSuit :: T.Suit -> T.Suit
 transferSuit T.Hearts = T.Diamonds
 transferSuit T.Spades = T.Hearts
@@ -93,7 +90,7 @@ initiateTransferWeak = let
             pointRange 0 7
             forbid equalMajors  -- With 5-5 in the majors, pick the better one.
         explanation =
-            "Partner has opened a strong " .+ oneNT .+ ". You have\
+            "Partner has opened a strong " .+ B.b1N .+ ". You have\
            \ such a weak hand that you have no interest in game, but you do\
            \ have a 5-card major. Playing in it, even if it's a 5-2 fit, is\
            \ more likely to succeed than playing in notrump. Make a Jacoby\
@@ -115,7 +112,7 @@ initiateTransferBInv = let
             forbid equalMajors
             balancedHand
         explanation =
-            "Partner has opened a strong " .+ oneNT .+ ". You have\
+            "Partner has opened a strong " .+ B.b1N .+ ". You have\
            \ a balanced hand with invitational strength, and a 5-card major.\
            \ Make a Jacoby transfer into the suit, then bid " .+
              T.Bid 2 T.Notrump .+ ". This gives partner the\
@@ -138,7 +135,7 @@ initiateTransferBGf = let
             forbid equalMajors
             balancedHand
         explanation =
-            "Partner has opened a strong " .+ oneNT .+ ". You have\
+            "Partner has opened a strong " .+ B.b1N .+ ". You have\
            \ a balanced hand with game-going but not slam-going strength, and a\
            \ 5-card major. Make a Jacoby transfer into the suit, then bid " .+
              T.Bid 3 T.Notrump .+ ". This gives partner the\
@@ -160,7 +157,7 @@ completeTransfer = let
             setUpCompletion suit
             minSuitLength suit 3
         explanation =
-            "You have opened a strong " .+ oneNT .+ ", and partner\
+            "You have opened a strong " .+ B.b1N .+ ", and partner\
           \ has made a Jacoby transfer. Complete the transfer by bidding the\
           \ next higher suit. Partner promises at least 5 cards in that major,\
           \ and will describe their hand further (possibly by passing with a\
@@ -179,7 +176,7 @@ completeTransferShort = let
             setUpCompletion suit
             suitLength suit 2
         explanation =
-            "You have opened a strong " .+ oneNT .+ ", and partner\
+            "You have opened a strong " .+ B.b1N .+ ", and partner\
           \ has made a Jacoby transfer, indicating they have at least 5 " .+
             show suit .+ ". Even though you only have 2-card support, complete\
           \ the transfer by bidding the next higher suit. You have at least a\
@@ -205,7 +202,7 @@ majors55inv = let
         suitLength T.Spades 5
         pointRange 7 9
     explanation =
-        "Partner has opened a strong " .+ oneNT .+ ". With 5" .+ NDash .+ "5 in\
+        "Partner has opened a strong " .+ B.b1N .+ ". With 5" .+ NDash .+ "5 in\
       \ the majors and invitational strength, first make a Jacoby transfer\
       \ into hearts, and then bid " .+ T.Bid 2 T.Spades .+ "\
       \ afterwards. Partner will then have the options of passing " .+
@@ -231,7 +228,7 @@ majors55gf = let
             suitLength T.Spades 5
             pointRange 10 14
         explanation =
-            "Partner has opened a strong " .+ oneNT .+ ". With 5" .+
+            "Partner has opened a strong " .+ B.b1N .+ ". With 5" .+
             NDash .+ "5 in the majors and\
             \ game-forcing strength, first make a Jacoby transfer into spades,\
             \ and then bid " .+ T.Bid 3 T.Hearts .+ " afterwards.\

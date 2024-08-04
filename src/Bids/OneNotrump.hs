@@ -1,6 +1,6 @@
 module Bids.OneNotrump(
     noInterference
-  , b1N  -- Copied from StandardOpenings
+  , b1N  -- re-exported from StandardOpenings
   , b1N2C
   , b1N2C2D
   , b1N2C2D2H
