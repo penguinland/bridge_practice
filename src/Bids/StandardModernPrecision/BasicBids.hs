@@ -20,7 +20,8 @@ import Action(Action, constrain)
 import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, hasTopN,
             balancedHand, makeCall, makeAlertableCall, makePass, alternatives,
-            minLoserCount, maxLoserCount, forEach, forbidAll)
+            minLoserCount, maxLoserCount, forEach, forbidAll, longerThan,
+            atLeastAsLong)
 import Output(Punct(..), (.+))
 import Structures(currentBidder)
 import qualified Terminology as T
@@ -84,6 +85,11 @@ b1M suit = do
     -- If you're a maximum with a 6-card minor and 5-card major, open the minor.
     forEach T.minorSuits (\minor -> forbid (
         pointRange 14 15 >> minSuitLength minor 6 >> suitLength suit 5))
+    -- TODO: would you reverse with 5-5 in the majors and a maximum?
+    -- TODO: these should use `when`, but it doesn't seem to exist yet. Maybe
+    -- upgrade base?
+    if suit == T.Hearts then T.Hearts `longerThan` T.Spades else return ()
+    if suit == T.Spades then T.Spades `atLeastAsLong` T.Hearts else return ()
     makeCall $ T.Bid 1 suit
 
 
