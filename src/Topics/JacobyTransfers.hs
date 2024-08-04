@@ -57,7 +57,7 @@ initiateTransferBInv = let
             "major. Make a Jacoby transfer into the suit, then bid " .+
             T.Bid 2 T.Notrump .+ ". This gives partner the " .+
             "options of playing in notrump with 2-card " .+ init (show suit) .+
-            " support or in " .+ suit .+ " with a fit, and the option " .+
+            " support or in " .+ show suit .+ " with a fit, and the option " .+
             "of playing in partscore with a minimum hand and game with a " .+
             "maximum."
       in
@@ -124,9 +124,9 @@ completeTransferShort = let
         explanation =
             "You have opened a strong " .+ B.b1N .+ ", and partner " .+
             "has made a Jacoby transfer, indicating they have at least 5 " .+
-            suit .+ ". Even though you only have 2-card support, complete " .+
-            "the transfer by bidding the next higher suit. You have at " .+
-            "least a 7-card fit. If partner is very weak, " .+
+            show suit .+ ". Even though you only have 2-card support, " .+
+            "complete the transfer by bidding the next higher suit. You " .+
+            "have at least a 7-card fit. If partner is very weak, " .+
             T.Bid 2 suit .+ " rates to play better than notrump, " .+
             "and you want to be declarer so that your strong hand stays " .+
             "hidden. If partner has at least invitational strength, " .+

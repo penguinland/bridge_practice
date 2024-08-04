@@ -153,7 +153,8 @@ jacobyTransfer_ suit = do
     -- No matter what suit you're trying to transfer to, ensure that you
     -- shouldn't have bid Smolen or a Texas transfer instead.
     forbidAll [b1N2C2D3H, b1N2C2D3S, b1N4D, b1N4H]
-    makeAlertableCall (T.Bid 2 (transferSuit suit)) ("Transfer to " .+ suit)
+    makeAlertableCall (T.Bid 2 (transferSuit suit))
+                      ("Transfer to " .+ show suit)
   where
     transferSuit T.Hearts = T.Diamonds
     transferSuit T.Spades = T.Hearts
