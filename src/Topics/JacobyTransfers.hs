@@ -1,7 +1,7 @@
 module Topics.JacobyTransfers(topic) where
 
 import Action(Action, constrain)
-import qualified CommonBids as B
+import CommonBids(setOpener, cannotPreempt, strong1NT)
 import EDSL(forbid, makeCall, makeAlertableCall, makePass, pointRange,
             suitLength, minSuitLength, balancedHand)
 import Output(Punct(NDash), (.+))
@@ -70,19 +70,19 @@ jacobyTransfer suit = do
 
 setUpTransfer :: T.Suit -> Action
 setUpTransfer suit = do
-    B.setOpener T.North
-    B.strong1NT
-    B.cannotPreempt >> makePass
+    setOpener T.North
+    strong1NT
+    cannotPreempt >> makePass
     prepareJacobyTransfer suit
 
 
 setUpCompletion :: T.Suit -> Action
 setUpCompletion suit = do
-    B.setOpener T.South
-    B.strong1NT
-    B.cannotPreempt >> makePass
+    setOpener T.South
+    strong1NT
+    cannotPreempt >> makePass
     jacobyTransfer suit
-    B.cannotPreempt >> makePass  -- TODO: Allow overcalls of lower suits
+    cannotPreempt >> makePass  -- TODO: Allow overcalls of lower suits
 
 
 initiateTransferWeak :: Situations
@@ -198,9 +198,9 @@ completeTransferShort = let
 majors55inv :: Situations
 majors55inv = let
     action = do
-        B.setOpener T.North
-        B.strong1NT
-        B.cannotPreempt >> makePass
+        setOpener T.North
+        strong1NT
+        cannotPreempt >> makePass
         suitLength T.Hearts 5
         suitLength T.Spades 5
         pointRange 7 9
@@ -224,9 +224,9 @@ majors55gf :: Situations
 majors55gf = let
     sit = let
         action = do
-            B.setOpener T.North
-            B.strong1NT
-            B.cannotPreempt >> makePass
+            setOpener T.North
+            strong1NT
+            cannotPreempt >> makePass
             suitLength T.Hearts 5
             suitLength T.Spades 5
             pointRange 10 14
