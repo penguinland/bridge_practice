@@ -122,15 +122,15 @@ completeTransferShort = let
             B.noInterference  -- TODO: Allow overcalls of lower suits
             suitLength suit 2
         explanation =
-            "You have opened a strong " .+ B.b1N .+ ", and partner\
-          \ has made a Jacoby transfer, indicating they have at least 5 " .+
-            suit .+ ". Even though you only have 2-card support, complete\
-          \ the transfer by bidding the next higher suit. You have at least a\
-          \ 7-card fit. If partner is very weak, " .+
-            T.Bid 2 suit .+ " rates to play better than notrump,\
-          \ and you want to be declarer so that your strong hand stays hidden.\
-          \ If partner has at least invitational strength, he will make\
-          \ another bid to give you options of where to play."
+            "You have opened a strong " .+ B.b1N .+ ", and partner " .+
+            "has made a Jacoby transfer, indicating they have at least 5 " .+
+            suit .+ ". Even though you only have 2-card support, complete " .+
+            "the transfer by bidding the next higher suit. You have at " .+
+            "least a 7-card fit. If partner is very weak, " .+
+            T.Bid 2 suit .+ " rates to play better than notrump, " .+
+            "and you want to be declarer so that your strong hand stays " .+
+            "hidden. If partner has at least invitational strength, " .+
+            "they will make another bid to give you options of where to play."
       in
         situation "Short" action openerRebid explanation
   in
@@ -148,15 +148,15 @@ majors55inv = let
         suitLength T.Spades 5
         pointRange 7 9
     explanation =
-        "Partner has opened a strong " .+ B.b1N .+ ". With 5" .+ NDash .+ "5 in\
-      \ the majors and invitational strength, first make a Jacoby transfer\
-      \ into hearts, and then bid " .+ T.Bid 2 T.Spades .+ "\
-      \ afterwards. Partner will then have the options of passing " .+
-        T.Bid 2 T.Spades .+ " with a minimum hand and a spade\
-      \ fit, bidding " .+ T.Bid 3 T.Hearts .+ " with a minimum\
-      \ hand and no spade fit (in which case a heart fit is guaranteed), or\
-      \ bidding one of the majors at the 4 level with a maximum. This\
-      \ wrong-sides the contract if we end up playing in spades."
+        "Partner has opened a strong " .+ B.b1N .+ ". With 5" .+ NDash .+
+        "5 in the majors and invitational strength, first make a Jacoby " .+
+        "transfer into hearts, and then bid " .+ T.Bid 2 T.Spades .+
+        "afterwards. Partner will then have the options of passing " .+
+        T.Bid 2 T.Spades .+ " with a minimum hand and a spade " .+
+        "fit, bidding " .+ T.Bid 3 T.Hearts .+ " with a minimum " .+
+        "hand and no spade fit (in which case a heart fit is guaranteed), " .+
+        "or bidding one of the majors at the 4 level with a maximum. This " .+
+        "wrong-sides the contract if we end up playing in spades."
   in
     stdWrap $ situation "55Inv" action B.b1N2D explanation
 
