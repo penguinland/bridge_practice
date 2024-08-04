@@ -133,5 +133,7 @@ setOpener opener = do
 -- unexported helper
 _canOpen :: Action
 _canOpen = alternatives [ pointRange 11 40
-                       , pointRange 10 40 >> maxLoserCount 7
-                       ]
+                        , do forbid balancedHand
+                             pointRange 10 40
+                             maxLoserCount 7
+                        ]
