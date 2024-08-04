@@ -3,11 +3,11 @@ module Topics.JacobyTransfers(topic) where
 import Action(Action, constrain)
 import qualified Bids.OneNotrump as B
 import CommonBids(setOpener)
-import EDSL(forbid, makeAlertableCall, pointRange, suitLength, balancedHand)
+import EDSL(forbid, pointRange, suitLength, balancedHand)
 import Output(Punct(NDash), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, Situations, wrap, stdWrap, wrapVulDlr, makeTopic)
+import Topic(Topic, Situations, wrap, stdWrap, stdWrapNW, wrapVulDlr, makeTopic)
 
 
 -- syntactic sugar for writing descriptions of solutions
@@ -157,10 +157,8 @@ majors55inv = let
       \ hand and no spade fit (in which case a heart fit is guaranteed), or\
       \ bidding one of the majors at the 4 level with a maximum. This\
       \ wrong-sides the contract if we end up playing in spades."
-    bid = makeAlertableCall (T.Bid 2 T.Diamonds)
-                            ("Transfer to " ++ show T.Hearts)
   in
-    stdWrap $ situation "55Inv" action bid explanation
+    stdWrap $ situation "55Inv" action B.b1N2D explanation
 
 
 majors55gf :: Situations
@@ -174,21 +172,19 @@ majors55gf = let
             suitLength T.Spades 5
             pointRange 10 14
         explanation =
-            "Partner has opened a strong " .+ B.b1N .+ ". With 5" .+
-            NDash .+ "5 in the majors and\
-            \ game-forcing strength, first make a Jacoby transfer into spades,\
-            \ and then bid " .+ T.Bid 3 T.Hearts .+ " afterwards.\
-            \ Partner will then have the options of which game to bid.\
-            \ This wrong-sides the contract if we end up playing in hearts."
-        bid = makeAlertableCall (T.Bid 2 T.Hearts)
-                                ("Transfer to " ++ show T.Spades)
+            "Partner has opened a strong " .+ B.b1N .+ ". With 5-" .+
+            "5 in the majors and " .+
+            "game-forcing strength, first make a Jacoby transfer into " .+
+            "spades, and then bid " .+ T.Bid 3 T.Hearts .+ " afterwards. " .+
+            "Partner will then have the options of which game to bid. " .+
+            "This wrong-sides the contract if we end up playing in hearts."
       in
-        situation "55GF" action bid explanation
+        situation "55GF" action B.b1N2H explanation
   in
     -- Note that with 5-5 and game-going strength, you would have opened the
     -- bidding if you had a chance. So, you must not have had a chance to bid
     -- before your partner.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North]
+    stdWrapNW sit
 
 
 topic :: Topic
