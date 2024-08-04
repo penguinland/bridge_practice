@@ -247,20 +247,20 @@ b1N2C2S = do
     makeCall $ T.Bid 2 T.Spades
 
 
-b1N2C2D3H :: Action
-b1N2C2D3H = do
+smolen :: T.Suit -> Action
+smolen longMajor = do
+    let shortMajor = T.otherMajor longMajor
     pointRange 10 40
-    suitLength T.Spades 5
-    suitLength T.Hearts 4
-    makeAlertableCall (T.Bid 3 T.Hearts) "Smolen: 5 spades, 4 hearts, GF"
+    suitLength longMajor 5
+    suitLength shortMajor 4
+    makeAlertableCall (T.Bid 3 shortMajor)
+        ("Smolen: 5 " .+ longMajor .+ ", 4 " .+ shortMajor .+ ", GF")
 
+b1N2C2D3H :: Action
+b1N2C2D3H = smolen T.Spades
 
 b1N2C2D3S :: Action
-b1N2C2D3S = do
-    pointRange 10 40
-    suitLength T.Hearts 5
-    suitLength T.Spades 4
-    makeAlertableCall (T.Bid 3 T.Spades) "Smolen: 5 hearts, 4 spades, GF"
+b1N2C2D3S = smolen T.Hearts
 
 
 b1N2C2D2N :: Action
