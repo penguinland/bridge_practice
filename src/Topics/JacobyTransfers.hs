@@ -12,12 +12,6 @@ import Topic(Topic, Situations, wrap, stdWrap, wrapVulDlr, makeTopic)
 
 
 -- syntactic sugar for writing descriptions of solutions
-transferSuit :: T.Suit -> T.Suit
-transferSuit T.Hearts = T.Diamonds
-transferSuit T.Spades = T.Hearts
-transferSuit _        = error "Jacoby-like transfer of non-major suit!"
-
-
 equalMajors :: Action
 equalMajors = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
@@ -31,12 +25,10 @@ prepareJacobyTransfer suit = do
 
 
 jacobyTransfer :: T.Suit -> Action
-jacobyTransfer suit = do
-    prepareJacobyTransfer suit
-    -- Make this simple by leaving out 5-5 hands. They go in another situation.
-    forbid equalMajors
-    makeAlertableCall (T.Bid 2 $ transferSuit suit)
-                      ("Transfer to " ++ show suit)
+jacobyTransfer T.Hearts = B.b1N2D
+jacobyTransfer T.Spades = B.b1N2H
+jacobyTransfer _        = error "jacoby transfer to non-major suit"
+
 
 -- TODO: Add separate commentary for 5-4 non-gf hands. Alternately, forbid 5-4
 -- non-gf hands, and add that situation into the Smolen topic.
@@ -55,52 +47,56 @@ setUpCompletion suit = do
     setOpener T.South
     B.b1N
     B.noInterference
+    forbid equalMajors
     jacobyTransfer suit
     cannotPreempt >> makePass  -- TODO: Allow overcalls of lower suits
 
 
 initiateTransferWeak :: Situations
 initiateTransferWeak = let
-    sit suit = let
+    sit bid = let
         action = do
-            setUpTransfer suit
+            setOpener T.North
+            B.b1N
+            B.noInterference
             pointRange 0 7
             forbid equalMajors  -- With 5-5 in the majors, pick the better one.
         explanation =
-            "Partner has opened a strong " .+ B.b1N .+ ". You have\
-           \ such a weak hand that you have no interest in game, but you do\
-           \ have a 5-card major. Playing in it, even if it's a 5-2 fit, is\
-           \ more likely to succeed than playing in notrump. Make a Jacoby\
-           \ transfer into the suit, then pass and leave partner at the 2\
-           \ level."
-        bid = jacobyTransfer suit
+            "Partner has opened a strong " .+ B.b1N .+ ". You have " .+
+            "such a weak hand that you have no interest in game, but you do " .+
+            "have a 5-card major. Playing in it, even if it's a 5-2 fit, is " .+
+            "more likely to succeed than playing in notrump. Make a Jacoby " .+
+            "transfer into the suit, then pass and leave partner at the 2 " .+
+            "level."
       in
         situation "InitWeak" action bid explanation
   in
-    wrapVulDlr $ return sit <~ T.majorSuits
+    wrapVulDlr $ return sit <~ [B.b1N2D, B.b1N2H]
 
 
 initiateTransferBInv :: Situations
 initiateTransferBInv = let
-    sit suit = let
+    sit (bid, suit) = let
         action = do
-            setUpTransfer suit
+            setOpener T.North
+            B.b1N
+            B.noInterference
             pointRange 8 9
             forbid equalMajors
             balancedHand
         explanation =
-            "Partner has opened a strong " .+ B.b1N .+ ". You have\
-           \ a balanced hand with invitational strength, and a 5-card major.\
-           \ Make a Jacoby transfer into the suit, then bid " .+
-             T.Bid 2 T.Notrump .+ ". This gives partner the\
-           \ options of playing in notrump with 2-card " .+ init (show suit) .+
-             " support or in " .+ show suit .+ " with a fit, and the option of\
-           \ playing in partscore with a minimum hand and game with a maximum."
-        bid = jacobyTransfer suit
+            "Partner has opened a strong " .+ B.b1N .+ ". You have " .+
+            "a balanced hand with invitational strength, and a 5-card " .+
+            "major. Make a Jacoby transfer into the suit, then bid " .+
+            T.Bid 2 T.Notrump .+ ". This gives partner the " .+
+            "options of playing in notrump with 2-card " .+ init (show suit) .+
+            " support or in " .+ suit .+ " with a fit, and the option " .+
+            "of playing in partscore with a minimum hand and game with a " .+
+            "maximum."
       in
         situation "InitBInv" action bid explanation
   in
-    wrapVulDlr $ return sit <~ T.majorSuits
+    wrapVulDlr $ return sit <~ [(B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
 
 
 initiateTransferBGf :: Situations
