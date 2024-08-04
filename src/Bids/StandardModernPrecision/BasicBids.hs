@@ -1,6 +1,7 @@
 module Bids.StandardModernPrecision.BasicBids(
     lessThanInvitational
   , invitational
+  , canOpen
   , firstSeatOpener
   , oppsPass
   -- Opening bids
@@ -49,10 +50,12 @@ invitational = do
 -- Because we're not using the Rule of 20 and its ilk, we're going to skip the
 -- auctions that start with other folks passing for now, and maybe come back to
 -- those later.
+canOpen :: Action
+canOpen = alternatives [ pointRange 11 40
+                               , pointRange 10 40 >> maxLoserCount 7
+                               ]
 firstSeatOpener :: Action
-firstSeatOpener = do
-    pointRange 11 40  -- Open any good 10 count, too. but that's hard to codify
-
+firstSeatOpener = canOpen
 
 oppsPass :: Action
 oppsPass = do
@@ -93,7 +96,7 @@ b1C = do
 
 b1M :: T.Suit -> Action
 b1M suit = do
-    firstSeatOpener
+    canOpen
     forbidAll [b1C, b1N, b2N]
     minSuitLength suit 5
     -- If you're a maximum with a 6-card minor and 5-card major, open the minor.
@@ -104,7 +107,7 @@ b1M suit = do
 
 b2C :: Action
 b2C = do
-    firstSeatOpener
+    canOpen
     forbid b1C
     forEach T.majorSuits (forbid . b1M)
     minSuitLength T.Clubs 6
@@ -113,7 +116,7 @@ b2C = do
 
 b2D :: Action
 b2D = do
-    firstSeatOpener
+    canOpen
     forbid b1C
     constrain "two_diamond_opener" ["shape(", ", 4414 + 4405 + 4315 + 3415)"]
     makeAlertableCall (T.Bid 2 T.Diamonds) "4414, 4315, 3415, or 4405 shape"
@@ -121,7 +124,7 @@ b2D = do
 
 b1D :: Action
 b1D = do
-    firstSeatOpener
+    canOpen
     forbidAll [b1C, b1N, b1M T.Hearts, b1M T.Spades, b2C, b2D, b2N]
     -- The next line is commented out because if it can be violated, we're gonna
     -- have a bad day. Make sure that it's never violated in the results even if
@@ -152,7 +155,3 @@ setOpener opener = do
     if opener == currentBidder bidding
     then canOpen
     else forbid canOpen >> cannotPreempt >> makePass >> setOpener opener
-  where
-    canOpen = alternatives [ pointRange 11 40
-                           , pointRange 10 40 >> maxLoserCount 7
-                           ]
