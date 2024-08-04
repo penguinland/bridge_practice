@@ -21,12 +21,6 @@ transferSuit T.Spades = T.Hearts
 transferSuit _        = error "Jacoby-like transfer of non-major suit!"
 
 
-otherMajor :: T.Suit -> T.Suit
-otherMajor T.Hearts = T.Spades
-otherMajor T.Spades = T.Hearts
-otherMajor _        = error "Other major of non-major suit!"
-
-
 -- Although this topic is about Jacoby transfers, we exclude auctions that would
 -- be better served by a Texas transfer so as not to confuse the learner.
 texasTransfer :: T.Suit -> Action
@@ -43,7 +37,7 @@ equalMajors = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
 smolen :: T.Suit -> Action  -- The suit is the longer major.
 smolen suit = do
-    let otherSuit = otherMajor suit
+    let otherSuit = T.otherMajor suit
     minSuitLength suit 5
     minSuitLength otherSuit 4
     pointRange 10 40
