@@ -109,8 +109,8 @@ noInterference = do
     makeCall T.Pass
 
 
-_texasTransfer :: T.Suit -> Action
-_texasTransfer suit = do
+texasTransfer_ :: T.Suit -> Action
+texasTransfer_ suit = do
     alternatives [gameNoSlam, slamInterest]
     minSuitLength suit 6
     -- If you're 6-4, bid Stayman, and *then* make a Texas Transfer if necessary
@@ -126,10 +126,10 @@ _texasTransfer suit = do
     transferSuit _        = error "Texas transfer to non-major suit"
 
 b1N4D :: Action
-b1N4D = _texasTransfer T.Hearts
+b1N4D = texasTransfer_ T.Hearts
 
 b1N4H :: Action
-b1N4H = _texasTransfer T.Spades
+b1N4H = texasTransfer_ T.Spades
 
 
 -- Opener should always complete the Texas Transfer: no constraints on that.
@@ -140,10 +140,10 @@ b1N4H4S :: Action
 b1N4H4S = makeCall $ T.Bid 4 T.Spades
 
 
-_jacobyTransfer :: T.Suit -> Action
-_jacobyTransfer suit = do
+jacobyTransfer_ :: T.Suit -> Action
+jacobyTransfer_ suit = do
     alternatives [ suitLength suit 5
-                 , minSuitLength suit 6 >> forbid (_texasTransfer suit)]
+                 , minSuitLength suit 6 >> forbid (texasTransfer_ suit)]
     -- If you're 6-6, which suit to use is a matter of judgment, and you won't
     -- get practice here. Too bad.
     forEach (filter (/= suit) T.allSuits) (suit `longerThan`)
@@ -158,10 +158,10 @@ _jacobyTransfer suit = do
     transferSuit _        = error "Jacoby transfer to non-major suit"
 
 b1N2D :: Action
-b1N2D = _jacobyTransfer T.Hearts
+b1N2D = jacobyTransfer_ T.Hearts
 
 b1N2H :: Action
-b1N2H = _jacobyTransfer T.Spades
+b1N2H = jacobyTransfer_ T.Spades
 
 
 -- You can superaccept a Jacoby transfer with 4-card support and a maximum.
@@ -247,20 +247,22 @@ b1N2C2S = do
     makeCall $ T.Bid 2 T.Spades
 
 
-smolen :: T.Suit -> Action
-smolen longMajor = do
+smolen_ :: T.Suit -> Action
+smolen_ longMajor = do
     let shortMajor = T.otherMajor longMajor
     pointRange 10 40
+    -- The suit lengths must be this exactly: with 5-5, make a Jacoby transfer
+    -- then bid the other suit. With 6-4, bid Stayman and then a Texas transfer.
     suitLength longMajor 5
     suitLength shortMajor 4
     makeAlertableCall (T.Bid 3 shortMajor)
         ("Smolen: 5 " .+ longMajor .+ ", 4 " .+ shortMajor .+ ", GF")
 
 b1N2C2D3H :: Action
-b1N2C2D3H = smolen T.Spades
+b1N2C2D3H = smolen_ T.Spades
 
 b1N2C2D3S :: Action
-b1N2C2D3S = smolen T.Hearts
+b1N2C2D3S = smolen_ T.Hearts
 
 
 b1N2C2D2N :: Action
