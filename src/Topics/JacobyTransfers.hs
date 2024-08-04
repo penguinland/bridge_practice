@@ -3,7 +3,7 @@ module Topics.JacobyTransfers(topic) where
 import Action(Action, constrain)
 import qualified Bids.OneNotrump as B
 import CommonBids(setOpener, cannotPreempt)
-import EDSL(forbid, forbidAll, makeCall, makeAlertableCall, makePass,
+import EDSL(forbid, makeCall, makeAlertableCall, makePass,
             pointRange, suitLength, minSuitLength, balancedHand)
 import Output(Punct(NDash), (.+))
 import Situation(situation, (<~))
@@ -14,14 +14,6 @@ import Topic(Topic, Situations, wrap, stdWrap, wrapVulDlr, makeTopic)
 -- syntactic sugar for writing descriptions of solutions
 equalMajors :: Action
 equalMajors = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
-
-
-prepareJacobyTransfer :: T.Suit -> Action
-prepareJacobyTransfer suit = do
-    minSuitLength suit 5
-    -- Regardless of which suit we plan to transfer into, ensure we could not
-    -- have made a Texas transfer or Smolen bid instead.
-    forbidAll [B.b1N4D, B.b1N4H, B.b1N2C2D3H, B.b1N2C2D3S]
 
 
 jacobyTransfer :: T.Suit -> Action
@@ -112,7 +104,7 @@ initiateTransferBGf = let
       in
         situation "InitBGF" action bid explanation
   in
-    wrapVulDlr $ return sit <~ [B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
+    wrapVulDlr $ return sit <~ [(B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
 
 
 completeTransfer :: Situations
