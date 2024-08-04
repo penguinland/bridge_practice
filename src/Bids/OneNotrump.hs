@@ -129,8 +129,8 @@ b1N4H4S :: Action
 b1N4H4S = makeCall $ T.Bid 4 T.Spades
 
 
-jacobyTransfer :: T.Suit -> Action
-jacobyTransfer suit = do
+_jacobyTransfer :: T.Suit -> Action
+_jacobyTransfer suit = do
     alternatives [ suitLength suit 5
                  , minSuitLength suit 6 >> forbid (_texasTransfer suit)]
     -- If you're 6-6, which suit to use is a matter of judgment, and you won't
@@ -144,10 +144,10 @@ jacobyTransfer suit = do
     transferSuit _        = error "Jacoby transfer to non-major suit"
 
 b1N2D :: Action
-b1N2D = jacobyTransfer T.Hearts
+b1N2D = _jacobyTransfer T.Hearts
 
 b1N2H :: Action
-b1N2H = jacobyTransfer T.Spades
+b1N2H = _jacobyTransfer T.Spades
 
 
 -- You can superaccept a Jacoby transfer with 4-card support and a maximum.
