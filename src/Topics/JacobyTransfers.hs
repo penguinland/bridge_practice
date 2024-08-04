@@ -18,16 +18,6 @@ transferSuit T.Spades = T.Hearts
 transferSuit _        = error "Jacoby-like transfer of non-major suit!"
 
 
--- Although this topic is about Jacoby transfers, we exclude auctions that would
--- be better served by a Texas transfer so as not to confuse the learner.
-texasTransfer :: T.Suit -> Action
-texasTransfer suit = do
-    minSuitLength suit 6
-    pointRange 10 15
-    makeAlertableCall (T.Bid 4 $ transferSuit suit)
-                      ("Transfer to " ++ show suit)
-
-
 equalMajors :: Action
 equalMajors = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
@@ -49,7 +39,10 @@ smolen suit = do
 prepareJacobyTransfer :: T.Suit -> Action
 prepareJacobyTransfer suit = do
     minSuitLength suit 5
-    forbid (texasTransfer suit)
+    -- Regardless of which suit we plan to transfer into, ensure we could not
+    -- have made a Texas transfer instead.
+    forbid B.b1N4D
+    forbid B.b1N4H
     forbid (smolen suit)
 
 
