@@ -63,7 +63,7 @@ import Action(Action, constrain)
 import Bids.StandardModernPrecision.BasicBids(b1C, firstSeatOpener, oppsPass)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             balancedHand, makeCall, makeAlertableCall, alternatives, longerThan,
-            atLeastAsLong, forEach, forbidAll)
+            atLeastAsLong, forEach, forbidAll, maxLoserCount, minLoserCount)
 import Output((.+), Punct(..))
 import qualified Terminology as T
 
@@ -333,7 +333,7 @@ b1C1D1H2H :: Action
 b1C1D1H2H = do
     minSuitLength T.Hearts 4
     maxSuitLength T.Hearts 5
-    pointRange 0 4
+    alternatives [pointRange 0 4, pointRange 0 5 >> minLoserCount 11]
     makeCall $ T.Bid 2 T.Hearts
 
 
@@ -342,6 +342,7 @@ b1C1D1H3H = do
     minSuitLength T.Hearts 4
     pointRange 5 7
     forEach T.allSuits (`minSuitLength` 2)
+    maxLoserCount 10
     makeCall $ T.Bid 3 T.Hearts
 
 
@@ -352,6 +353,7 @@ b1C1D1H2N = do
     -- The 2N bid is for hands with a singleton or void, so forbid the
     -- semibalanced response.
     forbid b1C1D1H3H
+    maxLoserCount 10
     makeAlertableCall (T.Bid 2 T.Notrump)
                       ("5" .+ NDash .+ "7 HCP, undisclosed splinter for hearts")
 
@@ -400,7 +402,7 @@ b1C1D1S2S :: Action
 b1C1D1S2S = do
     minSuitLength T.Spades 4
     maxSuitLength T.Spades 5
-    pointRange 0 4
+    alternatives [pointRange 0 4, pointRange 0 5 >> minLoserCount 11]
     makeCall $ T.Bid 2 T.Spades
 
 
@@ -409,6 +411,7 @@ b1C1D1S3S = do
     minSuitLength T.Spades 4
     pointRange 5 7
     forEach T.allSuits (`minSuitLength` 2)
+    maxLoserCount 10
     makeCall $ T.Bid 3 T.Spades
 
 
@@ -419,6 +422,7 @@ b1C1D1S2N = do
     -- The 2N bid is for hands with a singleton or void, so forbid the
     -- semibalanced response.
     forbid b1C1D1S3S
+    maxLoserCount 10
     makeAlertableCall (T.Bid 2 T.Notrump)
                       ("5" .+ NDash .+ "7 HCP, undisclosed splinter for spades")
 
