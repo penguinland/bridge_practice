@@ -1,32 +1,31 @@
 module Topics.StandardModernPrecision.Lampe(topic) where
 
-import Bids.StandardModernPrecision.BasicBids(
-    firstSeatOpener, smpWrapN, smpWrapS)
+import Bids.StandardModernPrecision.BasicBids(setOpener)
 import qualified Bids.StandardModernPrecision.Lampe as B
 import CommonBids(noInterference)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, Situations, makeTopic)
+import Topic(Topic, wrap, wrapVulNW, wrapVulSE, Situations, makeTopic)
 
 
 twoClubs :: Situations
 twoClubs = let
     action = do
-        firstSeatOpener
+        setOpener T.North
         B.b1D
         noInterference T.Diamonds
     explanation =
         "With at least invitational strength and a minor, start with an " .+
         "artificial " .+ T.Bid 2 T.Clubs .+ "."
   in
-    smpWrapN . return $ situation "2C" action B.b1D2C explanation
+    wrapVulNW . return $ situation "2C" action B.b1D2C explanation
 
 
 twoClubsUnbal :: Situations
 twoClubsUnbal = let
     action = do
-        firstSeatOpener
+        setOpener T.South
         B.b1D
         noInterference T.Diamonds
         B.b1D2C
@@ -35,13 +34,13 @@ twoClubsUnbal = let
         "With an unbalanced minimum, rebid an artificial " .+
         T.Bid 2 T.Diamonds .+ "."
   in
-    smpWrapS . return $ situation "2CUnbal" action B.b1D2C2D explanation
+    wrapVulSE . return $ situation "2CUnbal" action B.b1D2C2D explanation
 
 
 twoClubsBal :: Situations
 twoClubsBal = let
     action = do
-        firstSeatOpener
+        setOpener T.South
         B.b1D
         noInterference T.Diamonds
         B.b1D2C
@@ -50,14 +49,14 @@ twoClubsBal = let
         "With a balanced minimum, rebid an artificial " .+
         T.Bid 2 T.Hearts .+ "."
   in
-    smpWrapS . return $ situation "2CBal" action B.b1D2C2H explanation
+    wrapVulSE . return $ situation "2CBal" action B.b1D2C2H explanation
 
 
 twoClubsSS :: Situations
 twoClubsSS = let
     sit answer = let
         action = do
-            firstSeatOpener
+            setOpener T.South
             B.b1D
             noInterference T.Diamonds
             B.b1D2C
@@ -72,10 +71,8 @@ twoClubsSS = let
         situation "2CSS" action answer explanation
   in
     -- For us to bid a forcing 1N, we must be an unpassed hand.
-    wrap $ return sit
+    wrapVulSE $ return sit
         <~ [B.b1D2C2S, B.b1D2C2N, B.b1D2C3C, B.b1D2C3D, B.b1D2C3H, B.b1D2C3S]
-        <~ T.allVulnerabilities
-        <~ [T.South]
 
 
 -- TODO:
@@ -89,14 +86,14 @@ twoClubsSS = let
 twoDiamonds :: Situations
 twoDiamonds = let
     action = do
-        firstSeatOpener
+        setOpener T.North
         B.b1D
         noInterference T.Diamonds
     explanation =
         "With both majors and less than game forcing strength, make a " .+
         "Reverse-Flannery-like " .+ T.Bid 2 T.Diamonds .+ " bid."
   in
-    smpWrapN . return $ situation "2D" action B.b1D2D explanation
+    wrapVulNW . return $ situation "2D" action B.b1D2D explanation
 
 
 topic :: Topic

@@ -1,19 +1,20 @@
 module Topics.StandardModernPrecision.Mafia(topic) where
 
-import Bids.StandardModernPrecision.BasicBids(smpWrapS)
+import Bids.StandardModernPrecision.BasicBids(setOpener)
 import qualified Bids.StandardModernPrecision.OneClub as B
 import EDSL(forbid, minSuitLength, suitLength, balancedHand, equalLength,
             longerThan)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, Situations, makeTopic)
+import Topic(Topic, wrap, wrapVulSE, Situations, makeTopic)
 
 
 notrump :: Situations
 notrump = let
     sit bid = let
         action = do
+            setOpener T.South
             B.startOfMafia
         explanation =
             "With a balanced hand, rebid notrump to show your point range.\
@@ -22,13 +23,14 @@ notrump = let
       in
         situation "xN" action bid explanation
   in
-    smpWrapS $ return sit <~ [B.b1C1D1N, B.b1C1D2N]
+    wrapVulSE $ return sit <~ [B.b1C1D1N, B.b1C1D2N]
 
 
 oneMajor :: Situations
 oneMajor = let
     sit bid = let
         action = do
+            setOpener T.South
             B.startOfMafia
             forbid balancedHand
         explanation =
@@ -37,13 +39,14 @@ oneMajor = let
       in
         situation "1M" action bid explanation
   in
-    smpWrapS $ return sit <~ [B.b1C1D1H, B.b1C1D1S]
+    wrapVulSE $ return sit <~ [B.b1C1D1H, B.b1C1D1S]
 
 
 oneMajorMinor :: Situations
 oneMajorMinor = let
     sit (majorSuit, bid) minorSuit = let
         action = do
+            setOpener T.South
             B.startOfMafia
             forbid balancedHand
             minSuitLength minorSuit 5
@@ -55,7 +58,7 @@ oneMajorMinor = let
       in
         situation "1Mm" action bid explanation
   in
-    smpWrapS $ return sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
+    wrapVulSE $ return sit <~ [(T.Hearts, B.b1C1D1H), (T.Spades, B.b1C1D1S)]
                           <~ T.minorSuits
 
 
@@ -63,6 +66,7 @@ twoMinorSingle :: Situations
 twoMinorSingle = let
     sit (minorSuit, bid) = let
         action = do
+            setOpener T.South
             B.startOfMafia
             forbid balancedHand
             minSuitLength minorSuit 6
@@ -72,13 +76,14 @@ twoMinorSingle = let
       in
         situation "2m" action bid explanation
   in
-    smpWrapS $ return sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
+    wrapVulSE $ return sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
 
 
 twoMinorMinors :: Situations
 twoMinorMinors = let
     sit (minorSuit, bid) = let
         action = do
+            setOpener T.South
             B.startOfMafia
             forbid balancedHand
             suitLength minorSuit 5
@@ -91,13 +96,14 @@ twoMinorMinors = let
       in
         situation "2mm" action bid explanation
   in
-    smpWrapS $ return sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
+    wrapVulSE $ return sit <~ [(T.Clubs, B.b1C1D2C), (T.Diamonds, B.b1C1D2D)]
 
 
 equalMinors :: Situations
 equalMinors = let
     sit = let
         action = do
+            setOpener T.South
             B.startOfMafia
             forbid balancedHand
             T.Clubs `equalLength` T.Diamonds
@@ -109,13 +115,14 @@ equalMinors = let
       in
         situation "2me" action B.b1C1D2D explanation
   in
-    smpWrapS $ return sit
+    wrapVulSE $ return sit
 
 
 bothMajorsLongSpades :: Situations
 bothMajorsLongSpades = let
     sit = let
         action = do
+            setOpener T.South
             B.startOfMafia
             forbid balancedHand
             minSuitLength T.Hearts 4
@@ -127,13 +134,14 @@ bothMajorsLongSpades = let
       in
         situation "2MS" action B.b1C1D1S explanation
   in
-    smpWrapS $ return sit
+    wrapVulSE $ return sit
 
 
 jumpBid :: Situations
 jumpBid = let
     sit bid = let
         action = do
+            setOpener T.South
             B.startOfMafia
         explanation =
             "With an unbalanced hand that is strong enough to\
@@ -143,7 +151,7 @@ jumpBid = let
       in
         situation "J1" action bid explanation
   in
-    smpWrapS $ return sit <~ [B.b1C1D2H, B.b1C1D2S, B.b1C1D3C, B.b1C1D3D]
+    wrapVulSE $ return sit <~ [B.b1C1D2H, B.b1C1D2S, B.b1C1D3C, B.b1C1D3D]
 
 
 topic :: Topic

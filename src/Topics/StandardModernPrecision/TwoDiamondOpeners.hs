@@ -1,18 +1,15 @@
 module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 
 import Action(Action)
+import Bids.StandardModernPrecision.BasicBids(setOpener)
 import qualified Bids.StandardModernPrecision.TwoDiamonds as B
-import CommonBids(setOpener, takeoutDouble)
+import CommonBids(takeoutDouble)
 import EDSL(forbid, suitLength, makePass)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic,
              wrapVulNW, wrapVulSE, stdWrapNW, stdWrapSE)
-
-
--- TODO: Refactor into a proper list of alertable bids, so that the solutions to
--- the situations can be self-alerted, too.
 
 
 -- When trying to sign off with less than invitational strength, a new suit

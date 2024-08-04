@@ -1,18 +1,19 @@
 module Topics.StandardModernPrecision.OneDiamondResponses(topic) where
 
-import Bids.StandardModernPrecision.BasicBids(oppsPass, b1D, smpWrapN)
+import Bids.StandardModernPrecision.BasicBids(oppsPass, b1D, setOpener)
 import qualified Bids.StandardModernPrecision.OneDiamond as B
 import EDSL(maxSuitLength, minSuitLength, pointRange, alternatives)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, Situations, makeTopic)
+import Topic(Topic, wrap, wrapVulNW, Situations, makeTopic)
 
 
 oneMajor :: Situations
 oneMajor = let
     sit bid = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
         explanation =
@@ -21,13 +22,14 @@ oneMajor = let
       in
         situation "1M" action bid explanation
   in
-    smpWrapN $ return sit <~ [B.b1D1H, B.b1D1S]
+    wrapVulNW $ return sit <~ [B.b1D1H, B.b1D1S]
 
 
 twoMinor6M :: Situations
 twoMinor6M = let
     sit (minor, bid) major = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
             minSuitLength minor 6
@@ -41,14 +43,15 @@ twoMinor6M = let
       in
         situation "6m4M" action bid explanation
   in
-    smpWrapN $ return sit <~ [(T.Clubs, B.b1D2C), (T.Diamonds, B.b1D2D)]
-                          <~ [T.Hearts, T.Spades]
+    wrapVulNW $ return sit <~ [(T.Clubs, B.b1D2C), (T.Diamonds, B.b1D2D)]
+                           <~ [T.Hearts, T.Spades]
 
 
 twoMinorLongInv :: Situations
 twoMinorLongInv = let
     sit (minor, bid) = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
             minSuitLength minor 6
@@ -62,13 +65,14 @@ twoMinorLongInv = let
       in
         situation "6mw" action bid explanation
   in
-    smpWrapN $ return sit <~ [(T.Clubs, B.b1D2C), (T.Diamonds, B.b1D2D)]
+    wrapVulNW $ return sit <~ [(T.Clubs, B.b1D2C), (T.Diamonds, B.b1D2D)]
 
 
 twoMinorBothInv :: Situations
 twoMinorBothInv = let
     sit = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
             minSuitLength T.Clubs 4
@@ -87,13 +91,14 @@ twoMinorBothInv = let
       in
         situation "9m" action B.b1D2D explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 reverseFlannery :: Situations
 reverseFlannery = let
     sit (bid, isInvite) = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
         explanation =
@@ -109,13 +114,14 @@ reverseFlannery = let
       in
         situation "RevFl" action bid explanation
   in
-    smpWrapN $ return sit <~ [(B.b1D2H, False), (B.b1D2S, True)]
+    wrapVulNW $ return sit <~ [(B.b1D2H, False), (B.b1D2S, True)]
 
 
 weakMinors54 :: Situations
 weakMinors54 = let
     sit = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
         explanation =
@@ -128,13 +134,14 @@ weakMinors54 = let
       in
         situation "54min" action B.b1D3C explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 weakMinors55 :: Situations
 weakMinors55 = let
     sit = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
         explanation =
@@ -146,13 +153,14 @@ weakMinors55 = let
       in
         situation "55min" action B.b1D4C explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 notrump1 :: Situations
 notrump1 = let
     sit = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
         explanation =
@@ -163,13 +171,14 @@ notrump1 = let
       in
         situation "1N" action B.b1D1N explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 notrump2 :: Situations
 notrump2 = let
     sit = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
         explanation =
@@ -189,13 +198,14 @@ notrump2 = let
       in
         situation "2N" action B.b1D2N explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 notrump3 :: Situations
 notrump3 = let
     sit = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
         explanation =
@@ -207,13 +217,14 @@ notrump3 = let
       in
         situation "3N" action B.b1D3N explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 invertedMinors :: Situations
 invertedMinors = let
     sit = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
         explanation =
@@ -224,13 +235,14 @@ invertedMinors = let
       in
         situation "3d" action B.b1D3D explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 preempt3M :: Situations
 preempt3M = let
     sit bid = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
         explanation =
@@ -241,7 +253,7 @@ preempt3M = let
       in
         situation "3M" action bid explanation
   in
-    smpWrapN $ return sit <~ [B.b1D3H, B.b1D3S]
+    wrapVulNW $ return sit <~ [B.b1D3H, B.b1D3S]
 
 
 -- TODO: uncomment this and get it right when you're more confident of the
@@ -251,6 +263,7 @@ preempt4D :: Situations
 preempt4D = let
     sit = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
         explanation =
@@ -262,7 +275,7 @@ preempt4D = let
       in
         situation "4D" action B.b1D4D explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 -}
 
 
@@ -270,6 +283,7 @@ majorGame :: Situations
 majorGame = let
     sit bid = let
         action = do
+            setOpener T.North
             b1D
             oppsPass
         explanation =
@@ -282,7 +296,7 @@ majorGame = let
       in
         situation "4M" action bid explanation
   in
-    smpWrapN $ return sit <~ [B.b1D4H, B.b1D4S]
+    wrapVulNW $ return sit <~ [B.b1D4H, B.b1D4S]
 
 
 
