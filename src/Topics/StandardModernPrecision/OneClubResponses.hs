@@ -2,34 +2,32 @@ module Topics.StandardModernPrecision.OneClubResponses(
   topic
 , topicExtras) where
 
-import Bids.StandardModernPrecision.BasicBids(
-    firstSeatOpener, oppsPass, b1C, smpWrapN, smpWrapS)
+import Bids.StandardModernPrecision.BasicBids(setOpener, oppsPass, b1C)
 import qualified Bids.StandardModernPrecision.OneClub as B
-import CommonBids(cannotPreempt)
-import EDSL(forbid, maxSuitLength, makePass, pointRange, forEach)
+import EDSL(maxSuitLength, pointRange, forEach)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, Situations, makeTopic)
+import Topic(Topic, wrap, wrapVulNW, wrapVulSE, Situations, makeTopic)
 
 
 oneDiamond :: Situations
 oneDiamond = let
     action = do
-        firstSeatOpener
+        setOpener T.North
         b1C
         oppsPass
     explanation =
         "When game might not be possible opposite a random 17 HCP, start\
       \ with " .+ T.Bid 1 T.Diamonds .+ ". This initiates MaFiA."
   in
-    smpWrapN . return $ situation "1D" action B.b1C1D explanation
+    wrapVulNW . return $ situation "1D" action B.b1C1D explanation
 
 
 oneHeart :: Situations
 oneHeart = let
     action = do
-        firstSeatOpener
+        setOpener T.North
         b1C
         oppsPass
     explanation =
@@ -38,13 +36,13 @@ oneHeart = let
       \ Subsequent bids are natural 5-card suits (and later 4-card suits), not\
       \ MaFiA."
   in
-    smpWrapN . return $ situation "1H" action B.b1C1H explanation
+    wrapVulNW . return $ situation "1H" action B.b1C1H explanation
 
 
 oneHeartNoSpades :: Situations
 oneHeartNoSpades = let
     action = do
-        firstSeatOpener
+        setOpener T.North
         b1C
         oppsPass
     explanation =
@@ -53,13 +51,13 @@ oneHeartNoSpades = let
       \ this kind of hand. Partner's rebid will be a natural 5-card suit, not\
       \ MaFiA."
   in
-    smpWrapN . return $ situation "1Hns" action B.b1C1Hnos explanation
+    wrapVulNW . return $ situation "1Hns" action B.b1C1Hnos explanation
 
 
 oneNotrump :: Situations
 oneNotrump = let
     action = do
-        firstSeatOpener
+        setOpener T.North
         b1C
         oppsPass
     explanation =
@@ -67,13 +65,13 @@ oneNotrump = let
       \ hand with no 5-card suit. Bid a natural " .+ T.Bid 1 T.Notrump .+ ",\
       \ and we'll go from there. Stayman is on, but transfers are not."
   in
-    smpWrapN . return $ situation "1N" action B.b1C1N explanation
+    wrapVulNW . return $ situation "1N" action B.b1C1N explanation
 
 
 oneNotrumpAlt :: Situations
 oneNotrumpAlt = let
     action = do
-        firstSeatOpener
+        setOpener T.North
         b1C
         oppsPass
     explanation =
@@ -85,7 +83,7 @@ oneNotrumpAlt = let
       \ Compared to the naive approach, this never wastes extra bidding room\
       \ and often saves some for control bids after we've found a fit."
   in
-    smpWrapN . return $ situation "1Nalt" action B.b1C1Nalt explanation
+    wrapVulNW . return $ situation "1Nalt" action B.b1C1Nalt explanation
 
 
 slamSingleSuit :: Situations
@@ -101,7 +99,7 @@ slamSingleSuitModified :: Situations
         level = if strain == T.Spades then 1 else 2
         bid = finalAction strain
         action = do
-            firstSeatOpener
+            setOpener T.North
             b1C
             oppsPass
             forEach (filter (/= strain) T.allSuits) (`maxSuitLength` 4)
@@ -114,14 +112,14 @@ slamSingleSuitModified :: Situations
       in
         situation "Slam" action bid explanation
   in
-    ( smpWrapN $ return sit <~ T.allSuits
-    , smpWrapN $ return sit <~ [T.Clubs, T.Diamonds])
+    ( wrapVulNW $ return sit <~ T.allSuits
+    , wrapVulNW $ return sit <~ [T.Clubs, T.Diamonds])
 
 
 twoHeartsBalanced :: Situations
 twoHeartsBalanced = let
     action = do
-        firstSeatOpener
+        setOpener T.North
         b1C
         oppsPass
     explanation =
@@ -135,13 +133,13 @@ twoHeartsBalanced = let
         T.Bid 3 T.Spades .+ " to show that (which should be\
       \ surprising enough for you to recognize/remember)."
   in
-    smpWrapN . return $ situation "2HAlt" action B.b1C2Halt explanation
+    wrapVulNW . return $ situation "2HAlt" action B.b1C2Halt explanation
 
 
 twoNotrumpBalanced :: Situations
 twoNotrumpBalanced = let
     action = do
-        firstSeatOpener
+        setOpener T.North
         b1C
         oppsPass
     explanation =
@@ -153,7 +151,7 @@ twoNotrumpBalanced = let
       \ bid naturally. They're captain of the auction: they'll know whether to\
       \ sign off in game or investigate slam."
   in
-    smpWrapN . return $ situation "2NAlt" action B.b1C2Nalt explanation
+    wrapVulNW . return $ situation "2NAlt" action B.b1C2Nalt explanation
 
 
 oneSpadeGF :: Situations
@@ -171,19 +169,20 @@ oneSpadeGF = let
       \ partner you're interested in slam, too."
     sit (explanation, minHcp, maxHcp) = let
         action = do
-            firstSeatOpener
+            setOpener T.North
             b1C
             oppsPass
             pointRange minHcp maxHcp
       in
         situation "1Sgf" action B.b1C1Sgf explanation
   in
-    smpWrapN $ return sit <~ [(explanationMin, 8, 11), (explanationMax, 12, 40)]
+    wrapVulNW $ return sit <~ [ (explanationMin, 8, 11)
+                              , (explanationMax, 12, 40) ]
 
 twoSpades :: Situations
 twoSpades = let
     action = do
-        firstSeatOpener
+        setOpener T.North
         b1C
         oppsPass
     explanation =
@@ -196,7 +195,7 @@ twoSpades = let
         T.Bid 4 T.Diamonds .+ "/RKC to tell us how high to go and\
       \ what suit is trump."
   in
-    smpWrapN . return $ situation "2S" action B.b1C2S explanation
+    wrapVulNW . return $ situation "2S" action B.b1C2S explanation
 
 
 passGameSingleSuit :: Situations
@@ -211,12 +210,7 @@ passGameSingleSuit = let
         level = if strain `elem` T.majorSuits then 1 else 2
         bid = finalAction strain
         action = do
-            forbid firstSeatOpener
-            cannotPreempt
-            makePass
-            forbid firstSeatOpener
-            oppsPass
-            firstSeatOpener
+            setOpener T.North
             b1C
             oppsPass
             forEach (filter (/= strain) T.allSuits) (`maxSuitLength` 4)
@@ -229,18 +223,13 @@ passGameSingleSuit = let
       in
         situation "PG" action bid explanation
   in
-    smpWrapS $ return sit <~ T.allSuits
+    wrapVulSE $ return sit <~ T.allSuits
 
 
 passOneNotrump :: Situations
 passOneNotrump = let
     action = do
-        forbid firstSeatOpener
-        cannotPreempt
-        makePass
-        forbid firstSeatOpener
-        oppsPass
-        firstSeatOpener
+        setOpener T.North
         b1C
         oppsPass
     explanation =
@@ -250,18 +239,13 @@ passOneNotrump = let
       \ we'll go from there. Stayman is on, but transfers are off (so the\
       \ stronger hand will be declarer more often)."
   in
-    smpWrapS . return $ situation "P1N" action B.bP1C1N explanation
+    wrapVulSE . return $ situation "P1N" action B.bP1C1N explanation
 
 
 passTwoSpades :: Situations
 passTwoSpades = let
     action = do
-        forbid firstSeatOpener
-        cannotPreempt
-        makePass
-        forbid firstSeatOpener
-        oppsPass
-        firstSeatOpener
+        setOpener T.North
         b1C
         oppsPass
     explanation =
@@ -275,7 +259,7 @@ passTwoSpades = let
         T.Bid 4 T.Diamonds .+ "/RKC to indicate how high to go\
       \ and which suit is trump."
   in
-    smpWrapS . return $ situation "P2S" action B.bP1C2S explanation
+    wrapVulSE . return $ situation "P2S" action B.bP1C2S explanation
 
 
 -- TODO: figure out how two-suited hands show slam interest. Which suit do you
