@@ -55,8 +55,9 @@ import Action(Action, constrain)
 import qualified Bids.Meckwell as MW
 import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-            makeCall, makeAlertableCall, alternatives, longerThan, balancedHand,
-            flatHand, minLoserCount, forEach, forbidAll, impliesThat)
+            makeCall, makeAlertableCall, alternatives, balancedHand,
+            longerThan, atLeastAsLong, flatHand, minLoserCount, forEach,
+            forbidAll, impliesThat)
 import Output((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
@@ -147,9 +148,7 @@ equalMajors_ = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 jacobyTransfer_ :: T.Suit -> Action
 jacobyTransfer_ suit = do
     suitLength suit 5
-    -- If you're 6-6, which suit to use is a matter of judgment, and you won't
-    -- get practice here. Too bad.
-    forEach (filter (/= suit) T.allSuits) (suit `longerThan`)
+    forEach (filter (/= suit) T.allSuits) (suit `atLeastAsLong`)
     -- No matter what suit you're trying to transfer to, ensure that you
     -- shouldn't have bid Smolen or a Texas transfer instead.
     forbidAll [b1N2C2D3H, b1N2C2D3S, b1N4D, b1N4H]

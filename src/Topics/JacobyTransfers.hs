@@ -4,7 +4,7 @@ import Action(Action, constrain)
 import qualified Bids.OneNotrump as B
 import CommonBids(setOpener)
 import EDSL(forbid, pointRange, suitLength, balancedHand)
-import Output(Punct(NDash), (.+))
+import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, Situations, wrap, stdWrap, stdWrapNW, wrapVulDlr, makeTopic)
@@ -148,10 +148,10 @@ majors55inv = let
         suitLength T.Spades 5
         pointRange 7 9
     explanation =
-        "Partner has opened a strong " .+ B.b1N .+ ". With 5" .+ NDash .+
-        "5 in the majors and invitational strength, first make a Jacoby " .+
-        "transfer into hearts, and then bid " .+ T.Bid 2 T.Spades .+
-        "afterwards. Partner will then have the options of passing " .+
+        "Partner has opened a strong " .+ B.b1N .+ ". With 5-5 in the " .+
+        "majors and invitational strength, first make a Jacoby transfer " .+
+        "into hearts, and then bid " .+ T.Bid 2 T.Spades .+ " afterwards. " .+
+        "Partner will then have the options of passing " .+
         T.Bid 2 T.Spades .+ " with a minimum hand and a spade " .+
         "fit, bidding " .+ T.Bid 3 T.Hearts .+ " with a minimum " .+
         "hand and no spade fit (in which case a heart fit is guaranteed), " .+
