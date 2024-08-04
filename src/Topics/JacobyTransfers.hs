@@ -4,7 +4,7 @@ import Action(Action, constrain)
 import qualified Bids.OneNotrump as B
 import CommonBids(setOpener)
 import EDSL(forbid, makeCall, makeAlertableCall,
-            pointRange, suitLength, minSuitLength, balancedHand)
+            pointRange, suitLength, balancedHand)
 import Output(Punct(NDash), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -109,21 +109,24 @@ initiateTransferBGf = let
 
 completeTransfer :: Situations
 completeTransfer = let
-    sit suit = let
+    sit (responderBid, openerRebid) = let
         action = do
-            setUpCompletion suit
-            minSuitLength suit 3
+            setOpener T.South
+            B.b1N
+            B.noInterference
+            forbid equalMajors
+            _ <- responderBid
+            B.noInterference  -- TODO: Allow overcalls of lower suits
         explanation =
-            "You have opened a strong " .+ B.b1N .+ ", and partner\
-          \ has made a Jacoby transfer. Complete the transfer by bidding the\
-          \ next higher suit. Partner promises at least 5 cards in that major,\
-          \ and will describe their hand further (possibly by passing with a\
-          \ weak hand) afterward."
-        bid = makeCall $ T.Bid 2 suit
+            "You have opened a strong " .+ B.b1N .+ ", and partner " .+
+            "has made a Jacoby transfer. Complete the transfer by bidding " .+
+            "the next higher suit. Partner promises at least 5 cards in " .+
+            "that major, and will describe their hand further (possibly by " .+
+            "passing with a weak hand) afterward."
       in
-        situation "Complete" action bid explanation
+        situation "Complete" action openerRebid explanation
   in
-    wrapVulDlr $ return sit <~ T.majorSuits
+    wrapVulDlr $ return sit <~ [(B.b1N2D, B.b1N2D2H), (B.b1N2H, B.b1N2H2S)]
 
 
 completeTransferShort :: Situations
