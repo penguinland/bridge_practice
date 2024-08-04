@@ -1,13 +1,13 @@
 module Topics.StandardModernPrecision.MafiaResponses(topic) where
 
-import Bids.StandardModernPrecision.BasicBids(oppsPass, smpWrapN)
+import Bids.StandardModernPrecision.BasicBids(oppsPass, setOpener)
 import qualified Bids.StandardModernPrecision.OneClub as B
 import Action(Action)
 import EDSL(suitLength, maxSuitLength)
 import Output((.+), Punct(..))
 import Situation(Situation, situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, Situations, makeTopic)
+import Topic(Topic, wrap, wrapVulNW, Situations, makeTopic)
 
 
 minSupport :: Situations
@@ -17,6 +17,7 @@ minSupport = let
     sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
     sit (openerBid, responderBid) = let
         action = do
+            setOpener T.North
             B.startOfMafia
             openerBid
             oppsPass
@@ -27,8 +28,8 @@ minSupport = let
       in
         situation "2M" action responderBid explanation
   in
-    smpWrapN $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2H)
-                             , (B.b1C1D1S, B.b1C1D1S2S) ]
+    wrapVulNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2H)
+                              , (B.b1C1D1S, B.b1C1D1S2S) ]
 
 
 maxSupportSemibalanced :: Situations
@@ -38,6 +39,7 @@ maxSupportSemibalanced = let
     sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
     sit (openerBid, responderBid) = let
         action = do
+            setOpener T.North
             B.startOfMafia
             openerBid
             oppsPass
@@ -49,8 +51,8 @@ maxSupportSemibalanced = let
       in
         situation "3MB" action responderBid explanation
   in
-    smpWrapN $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H3H)
-                             , (B.b1C1D1S, B.b1C1D1S3S) ]
+    wrapVulNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H3H)
+                              , (B.b1C1D1S, B.b1C1D1S3S) ]
 
 
 maxSupportUnbalanced :: Situations
@@ -60,6 +62,7 @@ maxSupportUnbalanced = let
     sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
     sit (openerBid, responderBid) = let
         action = do
+            setOpener T.North
             B.startOfMafia
             openerBid
             oppsPass
@@ -76,14 +79,15 @@ maxSupportUnbalanced = let
       in
         situation "3MV" action responderBid explanation
   in
-    smpWrapN $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2N)
-                             , (B.b1C1D1S, B.b1C1D1S2N) ]
+    wrapVulNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2N)
+                              , (B.b1C1D1S, B.b1C1D1S2N) ]
 
 
 brakesHearts :: Situations
 brakesHearts = let
     sit = let
         action = do
+            setOpener T.North
             B.startOfMafia
             B.b1C1D1H
             oppsPass
@@ -99,13 +103,14 @@ brakesHearts = let
       in
         situation "1NH" action B.b1C1D1H1N explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 brakesSpades :: Situations
 brakesSpades = let
     sit = let
         action = do
+            setOpener T.North
             B.startOfMafia
             B.b1C1D1S
             oppsPass
@@ -122,13 +127,14 @@ brakesSpades = let
       in
         situation "1NS" action B.b1C1D1S1N explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 brakesSpadesHearts :: Situations
 brakesSpadesHearts = let
     sit = let
         action = do
+            setOpener T.North
             B.startOfMafia
             B.b1C1D1S
             oppsPass
@@ -148,13 +154,14 @@ brakesSpadesHearts = let
       in
         situation "1NSH" action B.b1C1D1S1N explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 otherMajorHearts :: Situations
 otherMajorHearts = let
     sit = let
         action = do
+            setOpener T.North
             B.startOfMafia
             B.b1C1D1H
             oppsPass
@@ -166,13 +173,14 @@ otherMajorHearts = let
       in
         situation "1S" action B.b1C1D1H1S explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 otherMajorSpades :: Situations
 otherMajorSpades = let
     sit = let
         action = do
+            setOpener T.North
             B.startOfMafia
             B.b1C1D1S
             oppsPass
@@ -187,7 +195,7 @@ otherMajorSpades = let
       in
         situation "2H" action B.b1C1D1S2H explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 threeCardSupport :: Situations
@@ -195,6 +203,7 @@ threeCardSupport = let
     sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
     sit (openerBid, responderBid) = let
         action = do
+            setOpener T.North
             B.startOfMafia
             openerBid
             oppsPass
@@ -208,14 +217,15 @@ threeCardSupport = let
       in
         situation "2D" action responderBid explanation
   in
-    smpWrapN $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2D)
-                           , (B.b1C1D1S, B.b1C1D1S2D) ]
+    wrapVulNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2D)
+                              , (B.b1C1D1S, B.b1C1D1S2D) ]
 
 
 threeCardSupportHearts :: Situations
 threeCardSupportHearts = let
     sit  = let
         action = do
+            setOpener T.North
             B.startOfMafia
             B.b1C1D1S
             oppsPass
@@ -227,7 +237,7 @@ threeCardSupportHearts = let
       in
         situation "2D" action B.b1C1D1S2D explanation
   in
-    smpWrapN $ return sit
+    wrapVulNW $ return sit
 
 
 maxNoMajors :: Situations
@@ -235,6 +245,7 @@ maxNoMajors = let
     sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
     sit (openerBid, responderBid) = let
         action = do
+            setOpener T.North
             B.startOfMafia
             openerBid
             oppsPass
@@ -249,8 +260,8 @@ maxNoMajors = let
       in
         situation "2C" action responderBid explanation
   in
-    smpWrapN $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2C)
-                             , (B.b1C1D1S, B.b1C1D1S2C) ]
+    wrapVulNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2C)
+                              , (B.b1C1D1S, B.b1C1D1S2C) ]
 
 
 topic :: Topic
