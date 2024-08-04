@@ -245,6 +245,5 @@ topic = makeTopic "Jacoby transfers"  "JacTrans" $
          , initiateTransferBGf
          , completeTransfer
          , completeTransferShort
-         -- Combine the rare situations together
          , wrap [majors55gf, majors55inv]
          ]
