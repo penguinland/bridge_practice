@@ -145,29 +145,34 @@ equalMajors_ :: Action
 equalMajors_ = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
 
-jacobyTransfer_ :: T.Suit -> Action
-jacobyTransfer_ suit = do
-    suitLength suit 5
-    forEach (filter (/= suit) T.allSuits) (suit `atLeastAsLong`)
-    -- No matter what suit you're trying to transfer to, ensure that you
-    -- shouldn't have bid Smolen or a Texas transfer instead.
-    forbidAll [b1N2C2D3H, b1N2C2D3S, b1N4D, b1N4H]
-    makeAlertableCall (T.Bid 2 (transferSuit suit))
-                      ("Transfer to " .+ show suit)
-  where
-    transferSuit T.Hearts = T.Diamonds
-    transferSuit T.Spades = T.Hearts
-    transferSuit _        = error "Jacoby transfer to non-major suit"
-
 b1N2D :: Action
 b1N2D = do
+    minSuitLength T.Hearts 5
+    forEach [T.Clubs, T.Diamonds, T.Spades] (T.Hearts `atLeastAsLong`)
+    -- Prefer to bid Smolen or a Texas transfer instead.
+    forbidAll [b1N2C2D3S, b1N4D]
+    -- If you're 5-5 in the majors with invitational strength, transfer to
+    -- hearts and then bid spades. If you're game forcing, transfer to spades
+    -- and then bid hearts. If you're less than invitational, we're not going to
+    -- practice being 5-5 in the majors: just transfer to the better one and
+    -- call that good enough. It's not worth coding up how to pick the better of
+    -- two 5-card majors.
     equalMajors_ `impliesThat` invitational
-    jacobyTransfer_ T.Hearts
+    makeAlertableCall (T.Bid 2 T.Diamonds) "Transfer to hearts"
+
 
 b1N2H :: Action
 b1N2H = do
+    minSuitLength T.Spades 5
+    forEach [T.Clubs, T.Diamonds, T.Hearts] (T.Spades `atLeastAsLong`)
+    -- Prefer to bid Smolen or a Texas transfer instead.
+    forbidAll [b1N2C2D3H, b1N4H]
+    -- If you're 5-5 in the majors with invitational strength, transfer to
+    -- hearts and then bid spades. If you're game forcing, transfer to spades
+    -- and then bid hearts. We don't practice times when we're 5-5 with less
+    -- than invitational strength.
     equalMajors_ `impliesThat` gameForcing
-    jacobyTransfer_ T.Spades
+    makeAlertableCall (T.Bid 2 T.Hearts) "Transfer to spades"
 
 
 -- You can superaccept a Jacoby transfer with 4-card support and a maximum.
