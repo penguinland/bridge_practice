@@ -142,16 +142,14 @@ b1N4H4S = makeCall $ T.Bid 4 T.Spades
 
 jacobyTransfer_ :: T.Suit -> Action
 jacobyTransfer_ suit = do
-    alternatives [ suitLength suit 5
-                 , minSuitLength suit 6 >> forbid (texasTransfer_ suit)]
+    suitLength suit 5
     -- If you're 6-6, which suit to use is a matter of judgment, and you won't
     -- get practice here. Too bad.
     forEach (filter (/= suit) T.allSuits) (suit `longerThan`)
     -- No matter what suit you're trying to transfer to, ensure that you
-    -- shouldn't have bid Smolen instead.
-    forbidAll [b1N2C2D3H, b1N2C2D3S]
-    makeAlertableCall (T.Bid 2 (transferSuit suit))
-                      ("Transfer to " .+ show suit)
+    -- shouldn't have bid Smolen or a Texas transfer instead.
+    forbidAll [b1N2C2D3H, b1N2C2D3S, b1N4D, b1N4H]
+    makeAlertableCall (T.Bid 2 (transferSuit suit)) ("Transfer to " .+ suit)
   where
     transferSuit T.Hearts = T.Diamonds
     transferSuit T.Spades = T.Hearts
