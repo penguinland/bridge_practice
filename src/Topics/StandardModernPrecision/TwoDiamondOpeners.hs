@@ -1,8 +1,9 @@
 module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 
 import Action(Action)
+import Bids.StandardModernPrecision.BasicBids(setOpener)
 import qualified Bids.StandardModernPrecision.TwoDiamonds as B
-import CommonBids(setOpener, takeoutDouble)
+import CommonBids(takeoutDouble)
 import EDSL(forbid, suitLength, makePass)
 import Output((.+))
 import Situation(situation, (<~))
