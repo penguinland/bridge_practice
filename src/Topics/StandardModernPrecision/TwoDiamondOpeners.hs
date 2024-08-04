@@ -12,10 +12,6 @@ import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic,
              wrapVulNW, wrapVulSE, stdWrapNW, stdWrapSE)
 
 
--- TODO: Refactor into a proper list of alertable bids, so that the solutions to
--- the situations can be self-alerted, too.
-
-
 -- When trying to sign off with less than invitational strength, a new suit
 -- being nonforcing is alertable only if you're an unpassed hand, so we have
 -- different bids depending on who the dealer is.
