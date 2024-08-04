@@ -1,5 +1,6 @@
 module Bids.OneNotrump(
-    b1N  -- Copied from StandardOpenings
+    noInterference
+  , b1N  -- Copied from StandardOpenings
   , b1N2C
   , b1N2C2D
   , b1N2C2D2H
@@ -51,6 +52,8 @@ module Bids.OneNotrump(
 
 
 import Action(Action)
+import qualified Bids.Meckwell as MW
+import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             makeCall, makeAlertableCall, alternatives, longerThan, balancedHand,
             flatHand, minLoserCount, forEach, forbidAll)
@@ -98,6 +101,14 @@ lessThanInvitational = do
     forbidAll [invitational, gameForcing]
 
 
+noInterference :: Action
+noInterference = do
+    cannotPreempt
+    -- If the opponents can't bid Meckwell, they probably can't bid anything.
+    forbidAll [MW.b1NoX, MW.b1No2C, MW.b1No2D, MW.b1No2H, MW.b1No2S, MW.b1No2N]
+    makeCall T.Pass
+
+
 _texasTransfer :: T.Suit -> Action
 _texasTransfer suit = do
     alternatives [gameNoSlam, slamInterest]
@@ -136,6 +147,9 @@ _jacobyTransfer suit = do
     -- If you're 6-6, which suit to use is a matter of judgment, and you won't
     -- get practice here. Too bad.
     forEach (filter (/= suit) T.allSuits) (suit `longerThan`)
+    -- No matter what suit you're trying to transfer to, ensure that you
+    -- shouldn't have bid Smolen instead.
+    forbidAll [b1N2C2D3H, b1N2C2D3S]
     makeAlertableCall (T.Bid 2 (transferSuit suit))
                       ("Transfer to " .+ show suit)
   where
