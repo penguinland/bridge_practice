@@ -2,7 +2,7 @@ module Topics.JacobyTransfers(topic) where
 
 import Action(Action, constrain)
 import qualified Bids.OneNotrump as B
-import CommonBids(setOpener, cannotPreempt, strong1NT)
+import CommonBids(setOpener, cannotPreempt)
 import EDSL(forbid, makeCall, makeAlertableCall, makePass, pointRange,
             suitLength, minSuitLength, balancedHand)
 import Output(Punct(NDash), (.+))
@@ -61,16 +61,16 @@ jacobyTransfer suit = do
 setUpTransfer :: T.Suit -> Action
 setUpTransfer suit = do
     setOpener T.North
-    strong1NT
-    cannotPreempt >> makePass
+    B.b1N
+    B.noInterference
     prepareJacobyTransfer suit
 
 
 setUpCompletion :: T.Suit -> Action
 setUpCompletion suit = do
     setOpener T.South
-    strong1NT
-    cannotPreempt >> makePass
+    B.b1N
+    B.noInterference
     jacobyTransfer suit
     cannotPreempt >> makePass  -- TODO: Allow overcalls of lower suits
 
@@ -189,8 +189,8 @@ majors55inv :: Situations
 majors55inv = let
     action = do
         setOpener T.North
-        strong1NT
-        cannotPreempt >> makePass
+        B.b1N
+        B.noInterference
         suitLength T.Hearts 5
         suitLength T.Spades 5
         pointRange 7 9
@@ -215,8 +215,8 @@ majors55gf = let
     sit = let
         action = do
             setOpener T.North
-            strong1NT
-            cannotPreempt >> makePass
+            B.b1N
+            B.noInterference
             suitLength T.Hearts 5
             suitLength T.Spades 5
             pointRange 10 14
