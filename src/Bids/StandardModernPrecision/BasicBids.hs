@@ -15,9 +15,10 @@ module Bids.StandardModernPrecision.BasicBids(
   -- syntactic sugar
   , smpWrapN
   , smpWrapS
+  , setOpener
 ) where
 
-import Control.Monad.Trans.State.Strict(State)
+import Control.Monad.Trans.State.Strict(State, get)
 import System.Random(StdGen)
 
 import Action(Action, constrain)
@@ -27,6 +28,7 @@ import EDSL(forbid, pointRange, suitLength, minSuitLength, hasTopN,
             minLoserCount, maxLoserCount, forEach, forbidAll)
 import Output(Punct(..), (.+))
 import Situation(Situation, (<~))
+import Structures(currentBidder)
 import qualified Terminology as T
 import Topic(wrap, Situations)
 
@@ -141,3 +143,16 @@ smpWrapS sit = wrap $ sit <~ T.allVulnerabilities <~ [T.South]
 smpWrapN :: State StdGen (T.Vulnerability -> T.Direction -> Situation) ->
             Situations
 smpWrapN sit = wrap $ sit <~ T.allVulnerabilities <~ [T.North]
+
+
+-- A replacement for CommonBids.setOpener
+setOpener :: T.Direction -> Action
+setOpener opener = do
+    (bidding, _) <- get
+    if opener == currentBidder bidding
+    then canOpen
+    else forbid canOpen >> cannotPreempt >> makePass >> setOpener opener
+  where
+    canOpen = alternatives [ pointRange 11 40
+                           , pointRange 10 40 >> maxLoserCount 7
+                           ]
