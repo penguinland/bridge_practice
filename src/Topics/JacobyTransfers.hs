@@ -8,7 +8,8 @@ import EDSL(forbid, pointRange, suitLength, balancedHand, flatHand,
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, Situations, wrap, stdWrap, stdWrapNW, wrapVulDlr, makeTopic)
+import Topic(wrap, stdWrap, stdWrapNW, wrapVulDlr, wrapVulNW, Situations,
+             Topic, makeTopic)
 
 
 -- syntactic sugar for writing descriptions of solutions
@@ -17,7 +18,6 @@ equalMajors = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
 
 -- TODO:
---   - 6-card invites (transfer and raise)
 --   - Smolen in a separate topic
 --   - slam invite with a 6-card suit (should this be in Texas transfers?)
 
@@ -332,6 +332,33 @@ noFlatSuperaccept = let
                                , (B.b1N2H, B.b1N2H2S, T.Spades) ]
 
 
+singleSuitedInvite :: Situations
+singleSuitedInvite = let
+    sit (responderBid, openerRebid, responderRebid, suit) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            B.noInterference
+            _ <- responderBid
+            B.noInterference
+            _ <- openerRebid
+            B.noInterference
+        explanation =
+            "Partner opened a strong " .+ B.b1N .+ ". We've got " .+
+            "a single-suited hand with at least 6 " .+ show suit .+ ", so " .+
+            "we know we have a major-suit fit. We transferred to our " .+
+            "suit, and now can raise to the 3 level to show our " .+
+            "invitational strength. Partner will pass with a minimum, " .+
+            "and bid " .+ T.Bid 4 suit .+ " with a maximum."
+      in
+        situation "ssinv" action responderRebid explanation
+  in
+    -- We must be an unpassed hand: if we had a chance to bid earlier, we would
+    -- have bid a weak two.
+    wrapVulNW $ return sit <~ [ (B.b1N2D, B.b1N2D2H, B.b1N2D2H3H, T.Hearts)
+                              , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3S, T.Spades) ]
+
+
 topic :: Topic
 topic = makeTopic "Jacoby transfers"  "JacTrans" $
     wrap [ initiateTransferWeak
@@ -348,4 +375,5 @@ topic = makeTopic "Jacoby transfers"  "JacTrans" $
                 ]
          , rebidMinor
          , superaccept
+         , singleSuitedInvite
          ]

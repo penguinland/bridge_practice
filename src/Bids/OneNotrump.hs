@@ -34,6 +34,7 @@ module Bids.OneNotrump(
   , b1N2D2H2S
   , b1N2D2H3C
   , b1N2D2H3D
+  , b1N2D2H3H
   , b1N2D2H4H
   , b1N2D3H
   , b1N2H
@@ -41,6 +42,7 @@ module Bids.OneNotrump(
   , b1N2H2S3C
   , b1N2H2S3D
   , b1N2H2S3H
+  , b1N2H2S3S
   , b1N2H2S4S
   , b1N2H3S
   , b1N4D
@@ -62,8 +64,8 @@ import qualified Bids.Meckwell as MW
 import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             makeCall, makeAlertableCall, alternatives, balancedHand,
-            longerThan, atLeastAsLong, flatHand, minLoserCount, forEach,
-            forbidAll, impliesThat)
+            longerThan, atLeastAsLong, flatHand, loserCount, minLoserCount,
+            forbidAll, impliesThat, forEach)
 import Output((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
@@ -492,3 +494,26 @@ b1N2H2S3D = do
     forbid balancedHand  -- should be redundant, but just in case
     makeCall $ T.Bid 3 T.Diamonds
 
+
+b1N2D2H3H :: Action
+b1N2D2H3H = do
+    minSuitLength T.Hearts 6
+    invitational
+    loserCount 8
+    -- If you had a second suit, you might consider bidding that instead. That
+    -- would be game-forcing instead of invitational, but with such a shapely
+    -- hand you might upgrade to game-forcing anyway. Avoid these situations.
+    forEach [T.Clubs, T.Diamonds, T.Spades] (`maxSuitLength` 3)
+    makeCall $ T.Bid 3 T.Hearts
+
+
+b1N2H2S3S :: Action
+b1N2H2S3S = do
+    minSuitLength T.Spades 6
+    invitational
+    loserCount 8
+    -- If you had a second suit, you might consider bidding that instead. That
+    -- would be game-forcing instead of invitational, but with such a shapely
+    -- hand you might upgrade to game-forcing anyway. Avoid these situations.
+    forEach [T.Clubs, T.Diamonds, T.Hearts] (`maxSuitLength` 3)
+    makeCall $ T.Bid 3 T.Spades
