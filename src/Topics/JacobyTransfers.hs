@@ -190,6 +190,63 @@ majors55gf = let
     stdWrapNW sit
 
 
+majors55inv2 :: Situations
+majors55inv2 = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b1N
+            B.noInterference
+            B.b1N2D
+            B.noInterference
+            B.b1N2D2H
+            B.noInterference
+        explanation =
+            "Partner has opened a strong " .+ B.b1N .+ ". With 5-" .+
+            "5 in the majors and " .+
+            "game-forcing strength, we first made a Jacoby transfer into " .+
+            "spades, and now bid " .+ T.Bid 2 T.Spades .+ " afterwards. " .+
+            "We definitely have a major-suit fit somewhere: partner has " .+
+            "the options of passing with a spade fit and a minimum, " .+
+            "correcting back to " .+ T.Bid 3 T.Hearts .+ " with a heart " .+
+            "fit and a minimum, or bidding either major-suit game with " .+
+            "that fit and a maximum."
+      in
+        situation "55inv2" action B.b1N2D2H2S explanation
+  in
+    stdWrap sit
+
+
+majors55gf2 :: Situations
+majors55gf2 = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b1N
+            B.noInterference
+            B.b1N2H
+            B.noInterference
+            B.b1N2H2S
+            B.noInterference
+        explanation =
+            "Partner has opened a strong " .+ B.b1N .+ ". With 5-5 in the " .+
+            "majors and game-forcing strength, we started with a Jacoby " .+
+            "transfer into spades, and then bid " .+ T.Bid 3 T.Hearts .+
+            " afterwards. By bidding a new suit at the 3 level, we're " .+
+            "definitely game-forcing, and partner knows we're 5-5 because " .+
+            "if we were only 5-4 we would have bid Stayman/Smolen. They " .+
+            "can choose the trump suit by bidding game now. We'll usually " .+
+            "pass that, but if we've got slam interest, we'll now know " .+
+            "which suit is trump and can investigate further."
+      in
+        situation "55GF2" action B.b1N2H2S3H explanation
+  in
+    -- Note that with 5-5 and game-going strength, you would have opened the
+    -- bidding if you had a chance. So, you must not have had a chance to bid
+    -- before your partner.
+    stdWrapNW sit
+
+
 topic :: Topic
 topic = makeTopic "Jacoby transfers"  "JacTrans" $
     wrap [ initiateTransferWeak
@@ -197,5 +254,5 @@ topic = makeTopic "Jacoby transfers"  "JacTrans" $
          , initiateTransferBGf
          , completeTransfer
          , completeTransferShort
-         , wrap [majors55gf, majors55inv]
+         , wrap [majors55inv, majors55gf, majors55inv2, majors55gf2]
          ]

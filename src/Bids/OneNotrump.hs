@@ -31,10 +31,12 @@ module Bids.OneNotrump(
   , b1N2C2S4S
   , b1N2D
   , b1N2D2H
+  , b1N2D2H2S
   , b1N2D2H4H
   , b1N2D3H
   , b1N2H
   , b1N2H2S
+  , b1N2H2S3H
   , b1N2H2S4S
   , b1N2H3S
   , b1N4D
@@ -418,3 +420,18 @@ b1N2C2H3D3S :: Action
 b1N2C2H3D3S = do
     suitLength T.Spades 4
     makeCall $ T.Bid 3 T.Spades
+
+
+-- Bids showing 5-5 in the majors
+
+b1N2D2H2S :: Action
+b1N2D2H2S = do
+    minSuitLength T.Spades 5
+    invitational
+    makeCall $ T.Bid 2 T.Spades
+
+b1N2H2S3H :: Action
+b1N2H2S3H = do
+    minSuitLength T.Hearts 5
+    gameForcing
+    makeCall $ T.Bid 3 T.Hearts
