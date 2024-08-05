@@ -20,6 +20,7 @@ import Action(Action, constrain, define)
 import EDSL(forbid, pointRange, balancedHand, makeCall, makeAlertableCall,
             makePass, suitLength, minSuitLength, maxSuitLength, alternatives,
             forEach)
+import Output(Punct(..), (.+))
 import Structures(currentBidder)
 import qualified Terminology as T
 
@@ -28,14 +29,14 @@ strong1NT :: Action
 strong1NT = do
     balancedHand
     pointRange 15 17
-    makeAlertableCall (T.Bid 1 T.Notrump) "15-17 HCP"
+    makeAlertableCall (T.Bid 1 T.Notrump) ("15" .+ NDash .+ "17 HCP")
 
 
 weak1NT :: Action
 weak1NT = do
     balancedHand
     pointRange 12 14
-    makeAlertableCall (T.Bid 1 T.Notrump) "12-14 HCP"
+    makeAlertableCall (T.Bid 1 T.Notrump) ("12" .+ NDash .+ "14 HCP")
 
 
 preempt4 :: T.Suit -> Action

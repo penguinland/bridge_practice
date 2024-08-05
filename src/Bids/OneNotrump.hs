@@ -1,5 +1,6 @@
 module Bids.OneNotrump(
-    b1N  -- Copied from StandardOpenings
+    noInterference
+  , b1N  -- re-exported from StandardOpenings
   , b1N2C
   , b1N2C2D
   , b1N2C2D2H
@@ -50,10 +51,13 @@ module Bids.OneNotrump(
 ) where
 
 
-import Action(Action)
+import Action(Action, constrain)
+import qualified Bids.Meckwell as MW
+import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-            makeCall, makeAlertableCall, alternatives, longerThan, balancedHand,
-            flatHand, minLoserCount, forEach, forbidAll)
+            makeCall, makeAlertableCall, alternatives, balancedHand,
+            longerThan, atLeastAsLong, flatHand, minLoserCount, forEach,
+            forbidAll, impliesThat)
 import Output((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
@@ -98,8 +102,16 @@ lessThanInvitational = do
     forbidAll [invitational, gameForcing]
 
 
-texasTransfer :: T.Suit -> Action
-texasTransfer suit = do
+noInterference :: Action
+noInterference = do
+    cannotPreempt
+    -- If the opponents can't bid Meckwell, they probably can't bid anything.
+    forbidAll [MW.b1NoX, MW.b1No2C, MW.b1No2D, MW.b1No2H, MW.b1No2S, MW.b1No2N]
+    makeCall T.Pass
+
+
+texasTransfer_ :: T.Suit -> Action
+texasTransfer_ suit = do
     alternatives [gameNoSlam, slamInterest]
     minSuitLength suit 6
     -- If you're 6-4, bid Stayman, and *then* make a Texas Transfer if necessary
@@ -115,10 +127,10 @@ texasTransfer suit = do
     transferSuit _        = error "Texas transfer to non-major suit"
 
 b1N4D :: Action
-b1N4D = texasTransfer T.Hearts
+b1N4D = texasTransfer_ T.Hearts
 
 b1N4H :: Action
-b1N4H = texasTransfer T.Spades
+b1N4H = texasTransfer_ T.Spades
 
 
 -- Opener should always complete the Texas Transfer: no constraints on that.
@@ -129,25 +141,38 @@ b1N4H4S :: Action
 b1N4H4S = makeCall $ T.Bid 4 T.Spades
 
 
-jacobyTransfer :: T.Suit -> Action
-jacobyTransfer suit = do
-    alternatives [ suitLength suit 5
-                 , minSuitLength suit 6 >> forbid (texasTransfer suit)]
-    -- If you're 6-6, which suit to use is a matter of judgment, and you won't
-    -- get practice here. Too bad.
-    forEach (filter (/= suit) T.allSuits) (suit `longerThan`)
-    makeAlertableCall (T.Bid 2 (transferSuit suit))
-                      ("Transfer to " .+ show suit)
-  where
-    transferSuit T.Hearts = T.Diamonds
-    transferSuit T.Spades = T.Hearts
-    transferSuit _        = error "Jacoby transfer to non-major suit"
+equalMajors_ :: Action
+equalMajors_ = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
+
 
 b1N2D :: Action
-b1N2D = jacobyTransfer T.Hearts
+b1N2D = do
+    minSuitLength T.Hearts 5
+    forEach [T.Clubs, T.Diamonds, T.Spades] (T.Hearts `atLeastAsLong`)
+    -- Prefer to bid Smolen or a Texas transfer instead.
+    forbidAll [b1N2C2D3S, b1N4D]
+    -- If you're 5-5 in the majors with invitational strength, transfer to
+    -- hearts and then bid spades. If you're game forcing, transfer to spades
+    -- and then bid hearts. If you're less than invitational, we're not going to
+    -- practice being 5-5 in the majors: just transfer to the better one and
+    -- call that good enough. It's not worth coding up how to pick the better of
+    -- two 5-card majors.
+    equalMajors_ `impliesThat` invitational
+    makeAlertableCall (T.Bid 2 T.Diamonds) "Transfer to hearts"
+
 
 b1N2H :: Action
-b1N2H = jacobyTransfer T.Spades
+b1N2H = do
+    minSuitLength T.Spades 5
+    forEach [T.Clubs, T.Diamonds, T.Hearts] (T.Spades `atLeastAsLong`)
+    -- Prefer to bid Smolen or a Texas transfer instead.
+    forbidAll [b1N2C2D3H, b1N4H]
+    -- If you're 5-5 in the majors with invitational strength, transfer to
+    -- hearts and then bid spades. If you're game forcing, transfer to spades
+    -- and then bid hearts. We don't practice times when we're 5-5 with less
+    -- than invitational strength.
+    equalMajors_ `impliesThat` gameForcing
+    makeAlertableCall (T.Bid 2 T.Hearts) "Transfer to spades"
 
 
 -- You can superaccept a Jacoby transfer with 4-card support and a maximum.
@@ -233,20 +258,22 @@ b1N2C2S = do
     makeCall $ T.Bid 2 T.Spades
 
 
-b1N2C2D3H :: Action
-b1N2C2D3H = do
+smolen_ :: T.Suit -> Action
+smolen_ longMajor = do
+    let shortMajor = T.otherMajor longMajor
     pointRange 10 40
-    suitLength T.Spades 5
-    suitLength T.Hearts 4
-    makeAlertableCall (T.Bid 3 T.Hearts) "Smolen: 5 spades, 4 hearts, GF"
+    -- The suit lengths must be this exactly: with 5-5, make a Jacoby transfer
+    -- then bid the other suit. With 6-4, bid Stayman and then a Texas transfer.
+    suitLength longMajor 5
+    suitLength shortMajor 4
+    makeAlertableCall (T.Bid 3 shortMajor)
+        ("Smolen: 5 " .+ longMajor .+ ", 4 " .+ shortMajor .+ ", GF")
 
+b1N2C2D3H :: Action
+b1N2C2D3H = smolen_ T.Spades
 
 b1N2C2D3S :: Action
-b1N2C2D3S = do
-    pointRange 10 40
-    suitLength T.Hearts 5
-    suitLength T.Spades 4
-    makeAlertableCall (T.Bid 3 T.Spades) "Smolen: 5 hearts, 4 spades, GF"
+b1N2C2D3S = smolen_ T.Hearts
 
 
 b1N2C2D2N :: Action
