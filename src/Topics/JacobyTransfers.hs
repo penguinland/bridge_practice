@@ -16,8 +16,8 @@ equalMajors = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
 
 -- TODO:
---   - unbalanced game-forcing responder
 --   - superaccept by opener
+--   - 6-card invites (transfer and raise)
 --   - Smolen in a separate topic
 --   - slam invite with a 6-card suit (should this be in Texas transfers?)
 
@@ -185,8 +185,8 @@ majors55gf = let
         situation "55GF" action B.b1N2H explanation
   in
     -- Note that with 5-5 and game-going strength, you would have opened the
-    -- bidding if you had a chance. So, you must not have had a chance to bid
-    -- before your partner.
+    -- bidding if you had a chance (needing only 10 HCP on the rule of 20). So,
+    -- you must not have had a chance to bid before your partner.
     stdWrapNW sit
 
 
@@ -242,9 +242,42 @@ majors55gf2 = let
         situation "55GF2" action B.b1N2H2S3H explanation
   in
     -- Note that with 5-5 and game-going strength, you would have opened the
-    -- bidding if you had a chance. So, you must not have had a chance to bid
-    -- before your partner.
+    -- bidding if you had a chance (needing only 10 HCP on the rule of 20). So,
+    -- you must not have had a chance to bid before your partner.
     stdWrapNW sit
+
+
+rebidMinor :: Situations
+rebidMinor = let
+    sit (responderBid, openerRebid, responderRebid) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            B.noInterference
+            _ <- responderBid
+            B.noInterference
+            _ <- openerRebid
+            B.noInterference
+        explanation =
+            "Partner has opened a strong " .+ B.b1N .+ ". We've got a " .+
+            "game-forcing, two-suited hand including a 5-card major. We " .+
+            "started with a Jacoby transfer into our major, and now it's " .+
+            "time to rebid our minor. Partner can now find the right game: " .+
+            "if they've got a fit in our major suit, they'll rebid that " .+
+            "(likely at the 3 level, so we can get in a round of cue " .+
+            "bidding if we've got slam interest). If we don't have a fit " .+
+            "in either suit, they'll likely bid " .+ T.Bid 3 T.Notrump .+
+            ". If we've got a minor-suit fit, partner might raise our " .+
+            "second suit, but might still bid " .+ T.Bid 3 T.Notrump .+
+            ", if that's likely to be an easier game to make."
+      in
+        situation "55GF2" action responderRebid explanation
+  in
+    wrapVulDlr $ return sit <~ [ (B.b1N2D, B.b1N2D2H, B.b1N2D2H3C)
+                               , (B.b1N2D, B.b1N2D2H, B.b1N2D2H3D)
+                               , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3C)
+                               , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3D)
+                               ]
 
 
 topic :: Topic
@@ -255,4 +288,5 @@ topic = makeTopic "Jacoby transfers"  "JacTrans" $
          , completeTransfer
          , completeTransferShort
          , wrap [majors55inv, majors55gf, majors55inv2, majors55gf2]
+         , rebidMinor
          ]
