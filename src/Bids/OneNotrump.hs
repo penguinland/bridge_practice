@@ -31,10 +31,18 @@ module Bids.OneNotrump(
   , b1N2C2S4S
   , b1N2D
   , b1N2D2H
+  , b1N2D2H2S
+  , b1N2D2H3C
+  , b1N2D2H3D
+  , b1N2D2H3H
   , b1N2D2H4H
   , b1N2D3H
   , b1N2H
   , b1N2H2S
+  , b1N2H2S3C
+  , b1N2H2S3D
+  , b1N2H2S3H
+  , b1N2H2S3S
   , b1N2H2S4S
   , b1N2H3S
   , b1N4D
@@ -56,8 +64,8 @@ import qualified Bids.Meckwell as MW
 import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             makeCall, makeAlertableCall, alternatives, balancedHand,
-            longerThan, atLeastAsLong, flatHand, minLoserCount, forEach,
-            forbidAll, impliesThat)
+            longerThan, atLeastAsLong, flatHand, loserCount, minLoserCount,
+            forbidAll, impliesThat, forEach)
 import Output((.+))
 import StandardOpenings(b1N)
 import qualified Terminology as T
@@ -180,12 +188,14 @@ b1N2D3H :: Action
 b1N2D3H = do
     minSuitLength T.Hearts 4
     pointRange 17 17 -- Do it with a good 16, too, but defining "good" is hard
+    forbid flatHand
     makeCall $ T.Bid 3 T.Hearts
 
 b1N2H3S :: Action
 b1N2H3S = do
     minSuitLength T.Spades 4
     pointRange 17 17 -- Do it with a good 16, too, but defining "good" is hard
+    forbid flatHand
     makeCall $ T.Bid 3 T.Spades
 
 
@@ -417,4 +427,93 @@ b1N2C2H3C3S = do
 b1N2C2H3D3S :: Action
 b1N2C2H3D3S = do
     suitLength T.Spades 4
+    makeCall $ T.Bid 3 T.Spades
+
+
+-- Bids showing 5-5 in the majors
+
+b1N2D2H2S :: Action
+b1N2D2H2S = do
+    minSuitLength T.Spades 5
+    invitational
+    makeCall $ T.Bid 2 T.Spades
+
+b1N2H2S3H :: Action
+b1N2H2S3H = do
+    minSuitLength T.Hearts 5
+    gameForcing
+    makeCall $ T.Bid 3 T.Hearts
+
+-- Unbalanced game-forcing rebids
+
+b1N2D2H3C :: Action
+b1N2D2H3C = do
+    gameForcing
+    minSuitLength T.Clubs 4
+    maxSuitLength T.Spades 3 -- With 4, you should have bid Smolen
+    -- If you're 0544 shape, rebid your better minor. I didn't bother to build a
+    -- way to find the better of two suits of equal length, so just pretend that
+    -- can't happen.
+    T.Clubs `longerThan` T.Diamonds
+    forbid balancedHand  -- should be redundant, but just in case
+    makeCall $ T.Bid 3 T.Clubs
+
+b1N2D2H3D :: Action
+b1N2D2H3D = do
+    gameForcing
+    minSuitLength T.Diamonds 4
+    maxSuitLength T.Spades 3 -- With 4, you should have bid Smolen
+    -- If you're 0544 shape, rebid your better minor. I didn't bother to build a
+    -- way to find the better of two suits of equal length, so just pretend that
+    -- can't happen.
+    T.Diamonds `longerThan` T.Clubs
+    forbid balancedHand  -- should be redundant, but just in case
+    makeCall $ T.Bid 3 T.Diamonds
+
+b1N2H2S3C :: Action
+b1N2H2S3C = do
+    gameForcing
+    minSuitLength T.Clubs 4
+    maxSuitLength T.Hearts 3 -- With 4, you should have bid Smolen
+    -- If you're 0544 shape, rebid your better minor. I didn't bother to build a
+    -- way to find the better of two suits of equal length, so just pretend that
+    -- can't happen.
+    T.Clubs `longerThan` T.Diamonds
+    forbid balancedHand  -- should be redundant, but just in case
+    makeCall $ T.Bid 3 T.Clubs
+
+b1N2H2S3D :: Action
+b1N2H2S3D = do
+    gameForcing
+    minSuitLength T.Diamonds 4
+    maxSuitLength T.Hearts 3 -- With 4, you should have bid Smolen
+    -- If you're 0544 shape, rebid your better minor. I didn't bother to build a
+    -- way to find the better of two suits of equal length, so just pretend that
+    -- can't happen.
+    T.Diamonds `longerThan` T.Clubs
+    forbid balancedHand  -- should be redundant, but just in case
+    makeCall $ T.Bid 3 T.Diamonds
+
+
+b1N2D2H3H :: Action
+b1N2D2H3H = do
+    minSuitLength T.Hearts 6
+    invitational
+    loserCount 8
+    -- If you had a second suit, you might consider bidding that instead. That
+    -- would be game-forcing instead of invitational, but with such a shapely
+    -- hand you might upgrade to game-forcing anyway. Avoid these situations.
+    forEach [T.Clubs, T.Diamonds, T.Spades] (`maxSuitLength` 3)
+    makeCall $ T.Bid 3 T.Hearts
+
+
+b1N2H2S3S :: Action
+b1N2H2S3S = do
+    minSuitLength T.Spades 6
+    invitational
+    loserCount 8
+    -- If you had a second suit, you might consider bidding that instead. That
+    -- would be game-forcing instead of invitational, but with such a shapely
+    -- hand you might upgrade to game-forcing anyway. Avoid these situations.
+    forEach [T.Clubs, T.Diamonds, T.Hearts] (`maxSuitLength` 3)
     makeCall $ T.Bid 3 T.Spades
