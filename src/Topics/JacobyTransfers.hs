@@ -15,8 +15,11 @@ equalMajors :: Action
 equalMajors = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
 
--- TODO: Add separate commentary for 5-4 non-gf hands. Alternately, forbid 5-4
--- non-gf hands, and add that situation into the Smolen topic.
+-- TODO:
+--   - unbalanced game-forcing responder
+--   - superaccept by opener
+--   - Smolen in a separate topic
+--   - slam invite with a 6-card suit (should this be in Texas transfers?)
 
 
 initiateTransferWeak :: Situations
