@@ -3,7 +3,8 @@ module Topics.JacobyTransfers(topic) where
 import Action(Action, constrain)
 import qualified Bids.OneNotrump as B
 import CommonBids(setOpener)
-import EDSL(forbid, pointRange, suitLength, balancedHand)
+import EDSL(forbid, pointRange, suitLength, balancedHand, flatHand,
+            minSuitLength)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -16,7 +17,6 @@ equalMajors = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
 
 -- TODO:
---   - superaccept by opener
 --   - 6-card invites (transfer and raise)
 --   - Smolen in a separate topic
 --   - slam invite with a 6-card suit (should this be in Texas transfers?)
@@ -271,13 +271,65 @@ rebidMinor = let
             "second suit, but might still bid " .+ T.Bid 3 T.Notrump .+
             ", if that's likely to be an easier game to make."
       in
-        situation "55GF2" action responderRebid explanation
+        situation "ubgf" action responderRebid explanation
   in
     wrapVulDlr $ return sit <~ [ (B.b1N2D, B.b1N2D2H, B.b1N2D2H3C)
                                , (B.b1N2D, B.b1N2D2H, B.b1N2D2H3D)
                                , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3C)
                                , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3D)
                                ]
+
+superaccept :: Situations
+superaccept = let
+    sit (responderBid, openerRebid) = let
+        action = do
+            setOpener T.South
+            B.b1N
+            B.noInterference
+            _ <- responderBid
+            B.noInterference
+        explanation =
+            "We've opened a strong " .+ B.b1N .+ ", and partner has made " .+
+            "a Jacoby transfer. We've got at least 4-card support in that " .+
+            "suit and a maximum, so superaccept by completing the transfer " .+
+            "one level higher than usual. This sets the trump suit. If " .+
+            "partner was a minimum, they'll pass, and our 9-card fit " .+
+            "gives the contract decent chances despite not having much " .+
+            "strength. If instead partner was at least invitational, " .+
+            "they'll raise to game, knowing this is the right suit. If " .+
+            "partner has slam interest, they'll start control bidding. " .+
+            "They know we can't confuse a control bid for a second suit " .+
+            "because we've already found our trump fit."
+      in
+        situation "supac" action openerRebid explanation
+  in
+    wrapVulDlr $ return sit <~ [(B.b1N2D, B.b1N2D3H), (B.b1N2H, B.b1N2H3S)]
+
+
+noFlatSuperaccept :: Situations
+noFlatSuperaccept = let
+    sit (responderBid, openerRebid, suit) = let
+        action = do
+            setOpener T.South
+            B.b1N
+            B.noInterference
+            _ <- responderBid
+            B.noInterference
+            pointRange 17 17
+            minSuitLength suit 4
+            flatHand
+        explanation =
+            "We've opened a strong " .+ B.b1N .+ ", and partner has made " .+
+            "a Jacoby transfer. Although we've got a maximum with at least " .+
+            "4-card support in " .+ show suit .+ ", we have a very flat " .+
+            "4333 shape, which will make it very hard to ruff anything in " .+
+            "our hand. Don't superaccept: just complete the transfer " .+
+            "normally."
+      in
+        situation "flatSA" action openerRebid explanation
+  in
+    wrapVulDlr $ return sit <~ [ (B.b1N2D, B.b1N2D2H, T.Hearts)
+                               , (B.b1N2H, B.b1N2H2S, T.Spades) ]
 
 
 topic :: Topic
@@ -287,6 +339,13 @@ topic = makeTopic "Jacoby transfers"  "JacTrans" $
          , initiateTransferBGf
          , completeTransfer
          , completeTransferShort
-         , wrap [majors55inv, majors55gf, majors55inv2, majors55gf2]
+         -- rare situations
+         , wrap [ majors55inv
+                , majors55gf
+                , majors55inv2
+                , majors55gf2
+                , noFlatSuperaccept
+                ]
          , rebidMinor
+         , superaccept
          ]

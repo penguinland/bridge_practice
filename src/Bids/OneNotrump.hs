@@ -186,12 +186,14 @@ b1N2D3H :: Action
 b1N2D3H = do
     minSuitLength T.Hearts 4
     pointRange 17 17 -- Do it with a good 16, too, but defining "good" is hard
+    forbid flatHand
     makeCall $ T.Bid 3 T.Hearts
 
 b1N2H3S :: Action
 b1N2H3S = do
     minSuitLength T.Spades 4
     pointRange 17 17 -- Do it with a good 16, too, but defining "good" is hard
+    forbid flatHand
     makeCall $ T.Bid 3 T.Spades
 
 
