@@ -52,6 +52,12 @@ getTopics().then(topics => {
         topic_section.appendChild(newline);
     })
 
+    setWidth("dlrvul", "Dealer: W  ");
+    // I don't know the widths of the suit symbols; substitute a W.
+    setWidth("top_col1", "W  A K Q J 10 9 8 7");
+    setWidth("top_col2", "W  A K Q J 10 9 8 7");
+    setWidth("top_col3", "W  A K Q J 10 9 8 7");
+
     displayProblem();
 })
 
@@ -180,4 +186,21 @@ function displaySolution() {
     dbg = document.createElement("p")
     dbg.innerHTML = "debug string: " + current_problem.debug_string;
     expl.appendChild(dbg);
+}
+
+function setWidth(elemId, text) {
+    elem = document.getElementById(elemId);
+
+    // Solution for computing width is inspired by
+    // https://stackoverflow.com/a/21015393
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    // Solution for getting default font is inspired by
+    // https://stackoverflow.com/a/7444724
+    context.font = window.getComputedStyle(elem, null).font;
+    const metrics = context.measureText(text);
+
+    elem.style.width = metrics.width + "px";
+    elem.style.minWidth = metrics.width + "px";
+    console.log(metrics.width);
 }
