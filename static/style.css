@@ -2,15 +2,23 @@
     background-color: #E8E8E8;
     border-radius: 10px;
     padding: 10px;
+    height: 10ex;
 }
 
 /* The padding needs to match .hand, or the tables are have uneven sizes. */
 td.hand_size {
     padding: 10px;
+    height: 10ex;
 }
 
-.topic{
+.topic {
     margin: 1ex;
     text-indent: -2ex;
     padding-left: 2ex;
+}
+
+#explanation {
+    width: 15em;
+    min-width: 15em;
+    padding: 0.5ex;
 }

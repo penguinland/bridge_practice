@@ -367,13 +367,8 @@ topic = makeTopic "Jacoby transfers"  "JacTrans" $
          , completeTransfer
          , completeTransferShort
          -- rare situations
-         , wrap [ majors55inv
-                , majors55gf
-                , majors55inv2
-                , majors55gf2
-                , noFlatSuperaccept
-                ]
+         , wrap [majors55inv, majors55gf, majors55inv2, majors55gf2]
          , rebidMinor
-         , superaccept
+         , wrap [superaccept, noFlatSuperaccept]
          , singleSuitedInvite
          ]
