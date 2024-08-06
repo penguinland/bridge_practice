@@ -18,5 +18,7 @@ td.hand_size {
 }
 
 #explanation {
-    width: 17em;
+    width: 15em;
+    min-width: 15em;
+    padding: 0.5ex;
 }
