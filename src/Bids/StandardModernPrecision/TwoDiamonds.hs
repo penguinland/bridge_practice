@@ -160,7 +160,7 @@ b2D3N = do
 
 b2D2N :: Action
 b2D2N = do
-    forbidAll [b2D3N]
+    forbid b2D3N
     pointRange 11 40
     makeAlertableCall (T.Bid 2 T.Notrump) "inv+, asks for strength and majors"
 
