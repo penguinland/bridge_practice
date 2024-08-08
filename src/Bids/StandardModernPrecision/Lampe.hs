@@ -36,6 +36,22 @@ shapeShower2S = do
     makeAlertableCall (T.Bid 2 T.Spades) "5-3 in the minors, either way"
 
 
+_shapeShower2S2N :: Action
+_shapeShower2S2N = makeAlertableCall (T.Bid 2 T.Notrump) "bid your 5-card minor"
+
+
+_shapeShower2S3C :: Action
+_shapeShower2S3C = do
+    suitLength T.Clubs 5
+    makeCall $ T.Bid 3 T.Clubs
+
+
+_shapeShower2S3D :: Action
+_shapeShower2S3D = do
+    suitLength T.Diamonds 5
+    makeCall $ T.Bid 3 T.Diamonds
+
+
 shapeShower2N :: Action
 shapeShower2N = do
     maxSuitLength T.Clubs 1
