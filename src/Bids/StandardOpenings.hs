@@ -1,4 +1,4 @@
-module StandardOpenings(
+module Bids.StandardOpenings(
   b1C
 , b1D
 , b1H

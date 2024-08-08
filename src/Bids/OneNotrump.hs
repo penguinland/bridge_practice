@@ -61,13 +61,13 @@ module Bids.OneNotrump(
 
 import Action(Action, constrain)
 import qualified Bids.Meckwell as MW
+import Bids.StandardOpenings(b1N)
 import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             makeCall, makeAlertableCall, alternatives, balancedHand,
             longerThan, atLeastAsLong, flatHand, loserCount, minLoserCount,
             forbidAll, impliesThat, forEach)
 import Output((.+))
-import StandardOpenings(b1N)
 import qualified Terminology as T
 
 ------------------

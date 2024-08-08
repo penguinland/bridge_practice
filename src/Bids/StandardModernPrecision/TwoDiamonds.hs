@@ -31,7 +31,7 @@ import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b2D, lessThanInvitational)
 import CommonBids(cannotPreempt)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
-            makeAlertableCall, atLeastAsLong, longerThan, forbid, forbidAll,
+            makeAlertableCall, atLeastAsLong, longerThan, forbid,
             balancedHand, soundHolding, makePass, alternatives, forEach,
             minLoserCount, maxLoserCount)
 import Output(Punct(..), (.+), Commentary)

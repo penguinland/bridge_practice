@@ -24,10 +24,10 @@ module Bids.ForcingOneNotrump(
 
 import Action(Action, withholdBid)
 import qualified Bids.MajorSuitRaises as M
+import Bids.StandardOpenings(b1H, b1S)
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, impliesThat,
             makeCall, makeAlertableCall, forbid, balancedHand, longerThan,
             atLeastAsLong, alternatives, forEach, forbidAll)
-import StandardOpenings(b1H, b1S)
 import qualified Terminology as T
 
 

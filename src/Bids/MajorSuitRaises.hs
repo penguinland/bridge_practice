@@ -11,9 +11,9 @@ module Bids.MajorSuitRaises(
 
 
 import Action(Action)
+import Bids.StandardOpenings(b1H, b1S)
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, makeCall,
             flatHand, minLoserCount, forEach)
-import StandardOpenings(b1H, b1S)
 import qualified Terminology as T
 
 
