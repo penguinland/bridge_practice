@@ -63,7 +63,7 @@ twoClubsSS = let
             noInterference T.Diamonds
         explanation =
             "You opened an ambiguous " .+ T.Bid 1 T.Diamonds .+ ", and " .+
-            "partner has shown an invitational or better hand with a minor." .+
+            "partner has shown an invitational or better hand with a minor. " .+
             "With a maximum, make a shape-shower bid immediately. Partner " .+
             "is invitational or better, and this bid indicates you would " .+
             "accept an invitation, so is game-forcing."
@@ -73,6 +73,59 @@ twoClubsSS = let
     -- For us to bid a forcing 1N, we must be an unpassed hand.
     wrapVulSE $ return sit
         <~ [B.b1D2C2S, B.b1D2C2N, B.b1D2C3C, B.b1D2C3D, B.b1D2C3H, B.b1D2C3S]
+
+
+twoClubsUnbalGf :: Situations
+twoClubsUnbalGf = let
+    action = do
+        setOpener T.North
+        B.b1D
+        noInterference T.Diamonds
+        B.b1D2C
+        noInterference T.Diamonds
+        B.b1D2C2D
+        noInterference T.Diamonds
+    explanation =
+        "Partner has an unbalanced minimum, but we're game forcing. Bid " .+
+        "an artificial " .+ B.b1D2C2D2H .+ " to ask partner for a " .+
+        "shape-shower. This will let you find the right suit to play " .+
+        "in, or perhaps " .+ T.Bid 3 T.Notrump .+ "."
+  in
+    wrapVulNW . return $ situation "unbalGF" action B.b1D2C2D2H explanation
+
+
+twoClubsUnbalSS :: Situations
+twoClubsUnbalSS = let
+    sit answer = let
+        action = do
+            setOpener T.South
+            B.b1D
+            noInterference T.Diamonds
+            B.b1D2C
+            noInterference T.Diamonds
+            B.b1D2C2D
+            noInterference T.Diamonds
+            B.b1D2C2D2H
+            noInterference T.Diamonds
+        explanation =
+            "You've shown an unbalanced minimum, but partner is " .+
+            "game-forcing anyway. Make a shape-shower bid, and they can " .+
+            "place the final contract from there."
+      in
+        situation "uGFSS" action answer explanation
+  in
+    -- For us to bid a forcing 1N, we must be an unpassed hand.
+    wrapVulSE $ return sit <~ [ B.b1D2C2D2H2S
+                              , B.b1D2C2D2H2N
+                              , B.b1D2C2D2H3C
+                              , B.b1D2C2D2H3D
+                              -- You're a minimum, and you'd only open 1D with a
+                              -- 5-card suit if you're a maximum. So, the other
+                              -- shape-showers don't exist.
+                              --, B.b1D2C2D2H3H
+                              --, B.b1D2C2D2H3S
+                              ]
+
 
 
 -- TODO:
@@ -104,5 +157,8 @@ topic = makeTopic summary "Lampe" situations
                       , twoClubsUnbal
                       , twoClubsBal
                       , twoClubsSS
+                      , twoClubsUnbalGf
                       , twoDiamonds
+                      , twoClubsUnbalGf
+                      , twoClubsUnbalSS
                       ]

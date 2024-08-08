@@ -2,6 +2,11 @@ module Bids.StandardModernPrecision.Lampe(
     b1D  -- Re-exported from BasicBids
   , b1D2C
   , b1D2C2D
+  , b1D2C2D2H
+  , b1D2C2D2H2S
+  , b1D2C2D2H2N
+  , b1D2C2D2H3C
+  , b1D2C2D2H3D
   , b1D2C2H
   , b1D2C2S
   , b1D2C2N
@@ -17,7 +22,7 @@ import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b1D)
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, makeCall,
             makeAlertableCall, balancedHand, alternatives, forbid, longerThan,
-            impliesThat, forEach)
+            forEach)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
 
@@ -73,32 +78,25 @@ b1D2C :: Action
 b1D2C = do
     pointRange 11 40
     forbid balancedHand
-    -- Your minor must be your longest suit.
-    alternatives . flip map T.minorSuits $ (\suit -> do
-        minSuitLength suit 5
-        suit `longerThan` T.Hearts
-        suit `longerThan` T.Spades
-        )
-    -- If you have a major, you must have a 6-card minor.
-    (alternatives . map (`minSuitLength` 4) $ T.majorSuits) `impliesThat`
-        (alternatives . map (`minSuitLength` 6) $ T.minorSuits)
-    makeAlertableCall (T.Bid 2 T.Clubs) "invitational or better with a minor"
+    -- If you've got a 4-card major, bid that first, and use the canape bids to
+    -- show a 5-card minor afterwards.
+    forEach T.majorSuits (`maxSuitLength` 3)
+    alternatives [minSuitLength T.Clubs 5, minSuitLength T.Diamonds 5]
+    makeAlertableCall (T.Bid 2 T.Clubs) "inv+ with one or both minors"
 
 
 b1D2C2D :: Action
 b1D2C2D = do
-    pointRange 11 13
+    pointRange 10 13
     forbid balancedHand
-    makeAlertableCall (T.Bid 2 T.Diamonds)
-        ("unbalanced 11" .+ NDash .+ "13 HCP")
+    makeAlertableCall (T.Bid 2 T.Diamonds) "unbalanced minimum"
 
 
 b1D2C2H :: Action
 b1D2C2H = do
     pointRange 11 13
     balancedHand
-    makeAlertableCall (T.Bid 2 T.Hearts)
-        ("balanced 11" .+ NDash .+ "13 HCP")
+    makeAlertableCall (T.Bid 2 T.Hearts) ("balanced 11" .+ NDash .+ "13 HCP")
 
 
 b1D2C2S :: Action
@@ -130,6 +128,36 @@ b1D2C3S :: Action
 b1D2C3S = do
     pointRange 14 15
     shapeShower3S
+
+
+b1D2C2D2H :: Action
+b1D2C2D2H = do
+    pointRange 14 40
+    makeAlertableCall (T.Bid 2 T.Hearts) "artificial GF, asks about minors"
+
+
+b1D2C2D2H2S :: Action
+b1D2C2D2H2S = shapeShower2S
+
+b1D2C2D2H2N :: Action
+b1D2C2D2H2N = shapeShower2N
+
+b1D2C2D2H3C :: Action
+b1D2C2D2H3C = shapeShower3C
+
+b1D2C2D2H3D :: Action
+b1D2C2D2H3D = shapeShower3D
+
+-- You'd only open 1D with a 5-card major if you were a maximum, and you've
+-- already shown that you're a minimum. So, the extra shape-shower bids cannot
+-- exist in this sequence.
+{-
+b1D2C2D2H3H :: Action
+b1D2C2D2H3H = shapeShower3H
+
+b1D2C2D2H3S :: Action
+b1D2C2D2H3S = shapeShower3S
+-}
 
 
 b1D2D :: Action
