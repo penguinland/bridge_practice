@@ -116,6 +116,9 @@ majorReverse = let
     stdWrapSE sit
 
 
+-- TODO: there's something wrong in here, where we sometimes are 6-4 in the
+-- majors and should rebid the second one to show more of our hand. I don't have
+-- time to figure it out right now, though.
 jumpRebid :: Situations
 jumpRebid = let
     sit (bid, response, rebid, suit) = let
