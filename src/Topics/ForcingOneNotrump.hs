@@ -116,6 +116,9 @@ majorReverse = let
     stdWrapSE sit
 
 
+-- TODO: there's something wrong in here, where we sometimes are 6-4 in the
+-- majors and should rebid the second one to show more of our hand. I don't have
+-- time to figure it out right now, though.
 jumpRebid :: Situations
 jumpRebid = let
     sit (bid, response, rebid, suit) = let
@@ -127,8 +130,12 @@ jumpRebid = let
             noInterference suit
         explanation =
             "We've got a single-suited hand with at least 6 " .+ show suit .+
-            " and 18+ HCP. Rebid our suit to show the extra length, and " .+
-            "jump to show our extra strength."
+            " and 16" .+ NDash .+ "18 HCP. That's enough to invite to " .+
+            "game, but not enough to outright force to it. Rebid our suit " .+
+            "to show the extra length, and jump to show our extra " .+
+            "strength. Parter might pass with a minimum, raise to game " .+
+            "with extras and 2-card support, or try " .+ T.Bid 3 T.Notrump .+
+            " with extras, support for our suit, but having the other suits."
       in
         situation "jrb" action rebid explanation
   in
@@ -313,4 +320,104 @@ topic = makeTopic ("forcing " .+ T.Bid 1 T.Notrump) "F1N" situations
                              , wrap [jumpRebid, rebid2N, majorReverse]
                              , wrap [wantFlannery, heartsSpadesThird]
                              ]
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
+                      , jumpRebid
                       ]

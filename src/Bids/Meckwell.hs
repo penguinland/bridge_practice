@@ -14,10 +14,10 @@ module Bids.Meckwell(
 
 
 import Action(Action)
+import Bids.StandardOpenings(b1N)
 import EDSL(pointRange, minSuitLength, maxSuitLength, makeCall, alternatives,
             soundHolding, makeAlertableCall, forEach)
 import Output ((.+))
-import StandardOpenings(b1N)
 import qualified Terminology as T
 
 

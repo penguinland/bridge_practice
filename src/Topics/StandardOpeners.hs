@@ -2,12 +2,12 @@ module Topics.StandardOpeners(topic) where
 
 import Control.Monad.Trans.State.Strict(get)
 
+import qualified Bids.StandardOpenings as SO
 import qualified CommonBids as B
 import EDSL(forbid, suitLength, minSuitLength, maxSuitLength, alternatives,
             pointRange, makePass, balancedHand)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
-import qualified StandardOpenings as SO
 import Structures(currentBidder)
 import qualified Terminology as T
 import Topic(Topic, wrap, stdWrap, stdWrapSE, wrapVulDlr, Situations, makeTopic)
@@ -197,6 +197,7 @@ bothMinorsReverse = let
         B.setOpener T.South
         minSuitLength T.Diamonds 5
         minSuitLength T.Clubs 5
+        pointRange 17 40
     explanation =
         "With both minors and enough strength to reverse, open, " .+
         T.Bid 1 T.Clubs .+ ", planning to rebid " .+
