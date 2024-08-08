@@ -14,9 +14,9 @@ module Bids.StandardOpenings(
 
 import Action(Action)
 import CommonBids(strong1NT)
-import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, forbid,
+import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, impliesThat,
             longerThan, pointRange, balancedHand, alternatives, forbidAll,
-            equalLength, atLeastAsLong, forEach, impliesThat)
+            equalLength, atLeastAsLong, forEach)
 import qualified Terminology as T
 
 
@@ -66,23 +66,18 @@ b1H = do
     makeCall (T.Bid 1 T.Hearts)
 
 
--- Helper function, not exported
--- To bid both minors, we need at least 9 cards in them.
-bothMinors :: Action
-bothMinors = alternatives .
-             map (\(a, b) -> do minSuitLength T.Clubs    a
-                                minSuitLength T.Diamonds b) $
-             [(4, 5), (5, 4)]
-
-
 b1D :: Action
 b1D = let
   in do
     forbidAll [b1N, b2N, b2C]
     forEach T.majorSuits (`maxSuitLength` 4)
     minSuitLength T.Diamonds 3
-    alternatives [ bothMinors >> pointRange 0 16  -- Too weak to reverse
-                 , forbid bothMinors >> T.Diamonds `longerThan` T.Clubs ]
+    alternatives [ T.Diamonds `longerThan` T.Clubs
+                 , minSuitLength T.Diamonds 5 -- From the top with 5-5
+                 , do suitLength T.Clubs 5  -- Both minors, too weak to reverse
+                      suitLength T.Diamonds 4
+                      pointRange 0 16
+                 ]
     makeCall (T.Bid 1 T.Diamonds)
 
 
@@ -91,8 +86,8 @@ b1C = do
     forbidAll [b1N, b2N, b2C]
     forEach T.majorSuits (`maxSuitLength` 4)
     minSuitLength T.Clubs 3
-    alternatives [ bothMinors >> pointRange 17 40  -- strong enough to reverse
-                 , forbid bothMinors >> T.Clubs `longerThan` T.Diamonds
+    alternatives [ T.Clubs `longerThan` T.Diamonds
+                   -- Up the line with 3's and 4's
                  , forEach T.minorSuits (`suitLength` 3)
                  , forEach T.minorSuits (`suitLength` 4)
                  ]
