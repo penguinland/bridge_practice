@@ -3,7 +3,7 @@ module Bids.StandardOpenings(
 , b1D
 , b1H
 , b1S
-, b1N
+, b1N  -- re-exported from CommonBids
 , b2N
 , b2C
 ) where
@@ -13,14 +13,15 @@ module Bids.StandardOpenings(
 -- must specify strength yourself before using them.
 
 import Action(Action)
-import qualified CommonBids as B
+import CommonBids(strong1NT)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, forbid,
-            longerThan, pointRange, balancedHand, alternatives)
+            longerThan, pointRange, balancedHand, alternatives, forbidAll,
+            equalLength, atLeastAsLong, forEach, impliesThat)
 import qualified Terminology as T
 
 
 b1N :: Action
-b1N = B.strong1NT
+b1N = strong1NT
 
 
 b2N :: Action
@@ -36,48 +37,33 @@ b2C = do
     makeCall (T.Bid 2 T.Clubs)
 
 
--- Helper function, not exported
-notTooStrong :: Action
-notTooStrong = do
-    forbid b1N
-    forbid b2N
-    forbid b2C
-
-
--- Helper function, not exported
-reverseStrength :: Action
-reverseStrength = pointRange 17 40
-
--- Helper function, not exported
-reverseInMajors :: Action
-reverseInMajors = do
-    minSuitLength T.Hearts 5
-    minSuitLength T.Spades 5
-    reverseStrength
-
 b1S :: Action
 b1S = do
-    notTooStrong
+    forbidAll [b1N, b2N, b2C]
     minSuitLength T.Spades 5
+    T.Spades `atLeastAsLong` T.Hearts
     -- If you're equal length in the majors and have enough points to reverse,
     -- open 1H instead.
-    forbid reverseInMajors
+    (T.Hearts `equalLength` T.Spades) `impliesThat` pointRange 0 16
+    -- If you have 5 spades and a 6-card minor, it's unclear what to do. Avoid
+    -- those entirely.
+    forEach T.minorSuits (`maxSuitLength` 5)
     makeCall (T.Bid 1 T.Spades)
 
 
 b1H :: Action
 b1H = do
-    notTooStrong
+    forbidAll [b1N, b2N, b2C]
     minSuitLength T.Hearts 5
-    alternatives [reverseInMajors, maxSuitLength T.Spades 4]
+    T.Hearts `atLeastAsLong` T.Spades
+    -- NOTE: If you've got 6 hearts, 5 spades, and are not strong enough to
+    -- reverse, I'd probably bid the spades first even though the hearts are
+    -- longer: pretend your hand is 5-5.
+    minSuitLength T.Spades 5 `impliesThat` pointRange 17 40
+    -- If you've got 5 hearts and 6 diamonds, probably bid the hearts. If you've
+    -- got 5 hearts and 6 clubs, it's not as clear-cut. Avoid that for now.
+    maxSuitLength T.Clubs 6
     makeCall (T.Bid 1 T.Hearts)
-
-
--- Helper function, not exported
-noMajor :: Action
-noMajor = do
-    maxSuitLength T.Spades 4
-    maxSuitLength T.Hearts 4
 
 
 -- Helper function, not exported
@@ -95,12 +81,16 @@ bothMinors = alternatives .
                                 minSuitLength T.Diamonds b) $
              [(4, 5), (5, 4)]
 
+-- Helper function, not exported
+reverseStrength :: Action
+reverseStrength = pointRange 17 40
+
 
 b1D :: Action
 b1D = let
   in do
-    notTooStrong
-    noMajor
+    forbidAll [b1N, b2N, b2C]
+    forEach T.majorSuits (`maxSuitLength` 4)
     minSuitLength T.Diamonds 3
     alternatives [ bothMinors >> forbid reverseStrength
                  , forbid bothMinors >> T.Diamonds `longerThan` T.Clubs ]
@@ -109,8 +99,8 @@ b1D = let
 
 b1C :: Action
 b1C = do
-    notTooStrong
-    noMajor
+    forbidAll [b1N, b2N, b2C]
+    forEach T.majorSuits (`maxSuitLength` 4)
     minSuitLength T.Clubs 3
     alternatives [ reverseStrength >> bothMinors
                  , forbid bothMinors >> T.Clubs `longerThan` T.Diamonds
