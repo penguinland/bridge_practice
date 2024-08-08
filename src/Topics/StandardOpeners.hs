@@ -197,6 +197,7 @@ bothMinorsReverse = let
         B.setOpener T.South
         minSuitLength T.Diamonds 5
         minSuitLength T.Clubs 5
+        pointRange 17 40
     explanation =
         "With both minors and enough strength to reverse, open, " .+
         T.Bid 1 T.Clubs .+ ", planning to rebid " .+
