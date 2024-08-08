@@ -67,23 +67,12 @@ b1H = do
 
 
 -- Helper function, not exported
-equalMinors :: Int -> Action
-equalMinors len = do
-    suitLength T.Clubs    len
-    suitLength T.Diamonds len
-
-
--- Helper function, not exported
 -- To bid both minors, we need at least 9 cards in them.
 bothMinors :: Action
 bothMinors = alternatives .
              map (\(a, b) -> do minSuitLength T.Clubs    a
                                 minSuitLength T.Diamonds b) $
              [(4, 5), (5, 4)]
-
--- Helper function, not exported
-reverseStrength :: Action
-reverseStrength = pointRange 17 40
 
 
 b1D :: Action
@@ -92,7 +81,7 @@ b1D = let
     forbidAll [b1N, b2N, b2C]
     forEach T.majorSuits (`maxSuitLength` 4)
     minSuitLength T.Diamonds 3
-    alternatives [ bothMinors >> forbid reverseStrength
+    alternatives [ bothMinors >> pointRange 0 16  -- Too weak to reverse
                  , forbid bothMinors >> T.Diamonds `longerThan` T.Clubs ]
     makeCall (T.Bid 1 T.Diamonds)
 
@@ -102,9 +91,9 @@ b1C = do
     forbidAll [b1N, b2N, b2C]
     forEach T.majorSuits (`maxSuitLength` 4)
     minSuitLength T.Clubs 3
-    alternatives [ reverseStrength >> bothMinors
+    alternatives [ bothMinors >> pointRange 17 40  -- strong enough to reverse
                  , forbid bothMinors >> T.Clubs `longerThan` T.Diamonds
-                 , equalMinors 3
-                 , equalMinors 4
+                 , forEach T.minorSuits (`suitLength` 3)
+                 , forEach T.minorSuits (`suitLength` 4)
                  ]
     makeCall (T.Bid 1 T.Clubs)
