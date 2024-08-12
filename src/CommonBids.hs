@@ -5,6 +5,7 @@ module CommonBids(
 , preempt3
 , weak2
 , cannotPreempt
+, cannotPreempt2H
 , firstSeatOpener
 , secondSeatOpener
 , thirdSeatOpener
@@ -74,6 +75,14 @@ weak2 suit = do
 cannotPreempt :: Action
 cannotPreempt = do
     forEach [T.Diamonds, T.Hearts, T.Spades] (forbid . weak2)
+    forEach T.allSuits (forbid . preempt3)
+    forEach T.allSuits (forbid . preempt4)
+
+
+-- Variant in which 2D has some artificial meaning
+cannotPreempt2H :: Action
+cannotPreempt2H = do
+    forEach [T.Hearts, T.Spades] (forbid . weak2)
     forEach T.allSuits (forbid . preempt3)
     forEach T.allSuits (forbid . preempt4)
 

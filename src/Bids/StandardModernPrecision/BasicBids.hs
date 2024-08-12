@@ -17,7 +17,7 @@ module Bids.StandardModernPrecision.BasicBids(
 import Control.Monad.Trans.State.Strict(get)
 
 import Action(Action, constrain)
-import CommonBids(cannotPreempt)
+import CommonBids(cannotPreempt, cannotPreempt2H)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, hasTopN,
             balancedHand, makeCall, makeAlertableCall, makePass, alternatives,
             minLoserCount, maxLoserCount, forEach, forbidAll, longerThan,
@@ -121,13 +121,15 @@ b1D = do
     makeAlertableCall (T.Bid 1 T.Diamonds) "Could be as short as 2 diamonds"
 
 
--- A replacement for CommonBids.setOpener
+-- A replacement for CommonBids.setOpener. Note that a player with a weak hand
+-- and 6 diamonds might still pass, because they can't open a weak 2D. So, use
+-- cannotPreempt2H instead of the more general version.
 setOpener :: T.Direction -> Action
 setOpener opener = do
     (bidding, _) <- get
     if opener == currentBidder bidding
     then _canOpen
-    else forbid _canOpen >> cannotPreempt >> makePass >> setOpener opener
+    else forbid _canOpen >> cannotPreempt2H >> makePass >> setOpener opener
 
 
 -- unexported helper

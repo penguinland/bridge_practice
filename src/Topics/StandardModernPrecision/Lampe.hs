@@ -3,10 +3,95 @@ module Topics.StandardModernPrecision.Lampe(topic) where
 import Bids.StandardModernPrecision.BasicBids(setOpener)
 import qualified Bids.StandardModernPrecision.Lampe as B
 import CommonBids(noInterference)
-import Output((.+))
+import EDSL(alternatives, minSuitLength, forbid, makeCall)
+import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapVulNW, wrapVulSE, Situations, makeTopic)
+import Topic(Topic, wrap, wrapVulNW, wrapVulSE, Situations, makeTopic,
+             wrapVulDlr)
+
+
+majorSuitImmediateResponse :: Situations
+majorSuitImmediateResponse = let
+    sit answer hasMinor = let
+        longMinor = alternatives [ minSuitLength T.Clubs    5
+                                 , minSuitLength T.Diamonds 5 ]
+        action = do
+            setOpener T.North
+            B.b1D
+            noInterference T.Diamonds
+            if hasMinor then longMinor else forbid longMinor
+        explanation =
+            "Partner opened an ambiguous " .+ T.Bid 1 T.Diamonds .+ ". " .+
+            "Bid your major suit naturally, and we'll go from there. " .+
+            if hasMinor then "You can make a canap" .+ EAcute .+ " bid to " .+
+                             "show your long minor afterwards."
+                        else "" .+ ""  -- Get the types right
+      in
+        situation "1M" action answer explanation
+  in
+    wrapVulDlr $ return sit <~ [B.b1D1H, B.b1D1S] <~ [True, False]
+
+
+clubCanape :: Situations
+clubCanape = let
+    sit (responderBid, openerRebid, responderRebid) = let
+        action = do
+            setOpener T.North
+            B.b1D
+            noInterference T.Diamonds
+            _ <- responderBid
+            noInterference T.Diamonds  -- TODO: forbid 2-suited takeouts, too
+            _ <- openerRebid
+            makeCall T.Pass
+        explanation =
+            "Partner opened an ambiguous " .+ T.Bid 1 T.Diamonds .+ ". " .+
+            "You started by bidding your major suit naturally, but did " .+
+            "not find a fit with partner. XYZ would be on, but instead " .+
+            "make a canap" .+ EAcute .+ " bid to show your long clubs. " .+
+            "Partner will relay to " .+ T.Bid 3 T.Clubs .+ ", after which " .+
+            "you can pass with a weak hand, or bid on with a game-forcing " .+
+            "hand. You already have a very good sense of partner's " .+
+            "strength, so you can't really have an invitational hand any more."
+      in
+        situation "ccan" action responderRebid explanation
+  in
+    wrapVulNW $ return sit <~ [ (B.b1D1H, B.b1D1H1S, B.b1D1H1S2N)
+                              , (B.b1D1H, B.b1D1H1N, B.b1D1H1N2N)
+                              , (B.b1D1S, B.b1D1S1N, B.b1D1S1N2N)
+                              ]
+
+
+diamondCanape :: Situations
+diamondCanape = let
+    sit (responderBid, openerRebid, responderRebid) = let
+        action = do
+            setOpener T.North
+            B.b1D
+            noInterference T.Diamonds
+            _ <- responderBid
+            noInterference T.Diamonds  -- TODO: forbid 2-suited takeouts, too
+            _ <- openerRebid
+            makeCall T.Pass
+        explanation =
+            "Partner opened an ambiguous " .+ T.Bid 1 T.Diamonds .+ ". " .+
+            "You started by bidding your major suit naturally, but did " .+
+            "not find a fit with partner. XYZ would be on, but instead " .+
+            "make a canap" .+ EAcute .+ " bid to show your long diamonds: " .+
+            T.Bid 3 T.Clubs .+ " shows diamonds and a 4-card major, while " .+
+            T.Bid 3 T.Diamonds .+ " shows diamonds and at least a 5-card " .+
+            "major. Both bids are game forcing."
+
+      in
+        situation "dcan" action responderRebid explanation
+  in
+    wrapVulNW $ return sit <~ [ (B.b1D1H, B.b1D1H1S, B.b1D1H1S3C)
+                              , (B.b1D1H, B.b1D1H1N, B.b1D1H1N3C)
+                              , (B.b1D1S, B.b1D1S1N, B.b1D1S1N3C)
+                              , (B.b1D1H, B.b1D1H1S, B.b1D1H1S3D)
+                              , (B.b1D1H, B.b1D1H1N, B.b1D1H1N3D)
+                              , (B.b1D1S, B.b1D1S1N, B.b1D1S1N3D)
+                              ]
 
 
 twoClubs :: Situations
@@ -161,4 +246,6 @@ topic = makeTopic summary "Lampe" situations
                       , twoDiamonds
                       , twoClubsUnbalGf
                       , twoClubsUnbalSS
+                      , majorSuitImmediateResponse
+                      , wrap [clubCanape, diamondCanape]
                       ]
