@@ -3,7 +3,7 @@ module Structures (
 , Bidding
 , currentBidder
 , startBidding
-, (>-)
+, addCall
 , lastCall
 , Deal(..)
 ) where
@@ -82,10 +82,10 @@ startBidding T.East  = Bidding T.East  [[Nothing, Nothing]]
 startBidding T.South = Bidding T.South [[Nothing, Nothing, Nothing]]
 
 
-(>-) :: Bidding -> T.CompleteCall -> Bidding
-(Bidding T.West    bs ) >- c = Bidding T.North    ([Just c]  :bs)
-(Bidding d      (b:bs)) >- c = Bidding (T.next d) ((Just c:b):bs)
-_                       >- _ = error "Missing bidding for current direction"
+addCall :: Bidding -> T.CompleteCall -> Bidding
+addCall (Bidding T.West    bs ) c = Bidding T.North    ([Just c]  :bs)
+addCall (Bidding d      (b:bs)) c = Bidding (T.next d) ((Just c:b):bs)
+addCall _                       _ = error "malformed bidding"
 
 
 lastCall :: Bidding -> T.CompleteCall
