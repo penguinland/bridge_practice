@@ -148,58 +148,58 @@ b1D1S1N3D = b1D1M1X3D_ T.Spades
 
 -- shape-showing helpers
 
-shapeShower2S :: Action
-shapeShower2S = do
+shapeShower2S_ :: Action
+shapeShower2S_ = do
     alternatives [ suitLength T.Clubs 5 >> suitLength T.Diamonds 3
                  , suitLength T.Clubs 3 >> suitLength T.Diamonds 5 ]
     makeAlertableCall (T.Bid 2 T.Spades) "5-3 in the minors, either way"
 
 
-_shapeShower2S2N :: Action
-_shapeShower2S2N = makeAlertableCall (T.Bid 2 T.Notrump) "bid your 5-card minor"
+shapeShower2S2N_ :: Action
+shapeShower2S2N_ = makeAlertableCall (T.Bid 2 T.Notrump) "bid your 5-card minor"
 
 
-_shapeShower2S3C :: Action
-_shapeShower2S3C = do
+shapeShower2S3C_ :: Action
+shapeShower2S3C_ = do
     suitLength T.Clubs 5
     makeCall $ T.Bid 3 T.Clubs
 
 
-_shapeShower2S3D :: Action
-_shapeShower2S3D = do
+shapeShower2S3D_ :: Action
+shapeShower2S3D_ = do
     suitLength T.Diamonds 5
     makeCall $ T.Bid 3 T.Diamonds
 
 
-shapeShower2N :: Action
-shapeShower2N = do
+shapeShower2N_ :: Action
+shapeShower2N_ = do
     maxSuitLength T.Clubs 1
     makeAlertableCall (T.Bid 2 T.Notrump)
         "short clubs, likely either 5 or a bad 6 diamonds, or 4441 shape"
 
 
-shapeShower3C :: Action
-shapeShower3C = do
+shapeShower3C_ :: Action
+shapeShower3C_ = do
     forEach T.minorSuits (`minSuitLength` 4)
     makeAlertableCall (T.Bid 3 T.Clubs) "at least 4-4 in the minors"
 
 
-shapeShower3D :: Action
-shapeShower3D = do
+shapeShower3D_ :: Action
+shapeShower3D_ = do
     minSuitLength T.Diamonds 6
     makeCall $ T.Bid 3 T.Diamonds
 
 
-shapeShower3H :: Action
-shapeShower3H = do
+shapeShower3H_ :: Action
+shapeShower3H_ = do
     minSuitLength T.Diamonds 6
     minSuitLength T.Hearts 5
     T.Diamonds `longerThan` T.Hearts
     makeCall $ T.Bid 3 T.Hearts
 
 
-shapeShower3S :: Action
-shapeShower3S = do
+shapeShower3S_ :: Action
+shapeShower3S_ = do
     minSuitLength T.Diamonds 6
     minSuitLength T.Spades 5
     T.Diamonds `longerThan` T.Spades
@@ -237,32 +237,32 @@ b1D2C2H = do
 b1D2C2S :: Action
 b1D2C2S = do
     pointRange 14 15
-    shapeShower2S
+    shapeShower2S_
 
 b1D2C2N :: Action
 b1D2C2N = do
     pointRange 14 15
-    shapeShower2N
+    shapeShower2N_
 
 b1D2C3C :: Action
 b1D2C3C = do
     pointRange 14 15
-    shapeShower3C
+    shapeShower3C_
 
 b1D2C3D :: Action
 b1D2C3D = do
     pointRange 14 15
-    shapeShower3D
+    shapeShower3D_
 
 b1D2C3H :: Action
 b1D2C3H = do
     pointRange 14 15
-    shapeShower3H
+    shapeShower3H_
 
 b1D2C3S :: Action
 b1D2C3S = do
     pointRange 14 15
-    shapeShower3S
+    shapeShower3S_
 
 
 b1D2C2D2H :: Action
@@ -272,26 +272,26 @@ b1D2C2D2H = do
 
 
 b1D2C2D2H2S :: Action
-b1D2C2D2H2S = shapeShower2S
+b1D2C2D2H2S = shapeShower2S_
 
 b1D2C2D2H2N :: Action
-b1D2C2D2H2N = shapeShower2N
+b1D2C2D2H2N = shapeShower2N_
 
 b1D2C2D2H3C :: Action
-b1D2C2D2H3C = shapeShower3C
+b1D2C2D2H3C = shapeShower3C_
 
 b1D2C2D2H3D :: Action
-b1D2C2D2H3D = shapeShower3D
+b1D2C2D2H3D = shapeShower3D_
 
 -- You'd only open 1D with a 5-card major if you were a maximum, and you've
 -- already shown that you're a minimum. So, the extra shape-shower bids cannot
 -- exist in this sequence.
 {-
 b1D2C2D2H3H :: Action
-b1D2C2D2H3H = shapeShower3H
+b1D2C2D2H3H = shapeShower3H_
 
 b1D2C2D2H3S :: Action
-b1D2C2D2H3S = shapeShower3S
+b1D2C2D2H3S = shapeShower3S_
 -}
 
 

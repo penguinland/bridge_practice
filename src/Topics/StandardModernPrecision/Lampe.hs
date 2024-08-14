@@ -244,7 +244,6 @@ topic = makeTopic summary "Lampe" situations
                       , twoClubsSS
                       , twoClubsUnbalGf
                       , twoDiamonds
-                      , twoClubsUnbalGf
                       , twoClubsUnbalSS
                       , majorSuitImmediateResponse
                       , wrap [clubCanape, diamondCanape]
