@@ -82,10 +82,10 @@ startBidding T.East  = Bidding T.East  [[Nothing, Nothing]]
 startBidding T.South = Bidding T.South [[Nothing, Nothing, Nothing]]
 
 
-addCall :: Bidding -> T.CompleteCall -> Bidding
-addCall (Bidding T.West    bs ) c = Bidding T.North    ([Just c]  :bs)
-addCall (Bidding d      (b:bs)) c = Bidding (T.next d) ((Just c:b):bs)
-addCall _                       _ = error "malformed bidding"
+addCall :: T.CompleteCall -> Bidding -> Bidding
+addCall c (Bidding T.West    bs ) = Bidding T.North    ([Just c]  :bs)
+addCall c (Bidding d      (b:bs)) = Bidding (T.next d) ((Just c:b):bs)
+addCall _ _                       = error "malformed bidding"
 
 
 lastCall :: Bidding -> T.CompleteCall

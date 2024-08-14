@@ -62,11 +62,11 @@ forEach = flip mapM_
 
 
 makeCall :: T.Call -> Action
-makeCall call = modify $ first (`addCall` T.CompleteCall call Nothing)
+makeCall call = modify $ first (addCall $ T.CompleteCall call Nothing)
 
 makeAlertableCall :: Showable a => T.Call -> a -> Action
 makeAlertableCall call alert =
-    modify $ first (`addCall` T.CompleteCall call (Just . toCommentary $ alert))
+    modify $ first (addCall $ T.CompleteCall call (Just . toCommentary $ alert))
 
 
 makePass :: Action
