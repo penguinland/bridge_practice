@@ -31,8 +31,9 @@ module Bids.Jacoby2N(
 
 import Action(Action)
 import Bids.StandardOpenings(b1H, b1S)
-import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, makeCall,
-            flatHand, minLoserCount, forEach)
+import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
+            pointRange, soundHolding, maxLoserCount, forbidAll)
+import Output((.+))
 import qualified Terminology as T
 
 
