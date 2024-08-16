@@ -18,11 +18,17 @@ module Bids.StandardModernPrecision.Lampe(
   , b1D2C2D
   , b1D2C2D2H
   , b1D2C2D2H2S
+  , b1D2C2D2H2S2N
+  , b1D2C2D2H2S2N3C
+  , b1D2C2D2H2S2N3D
   , b1D2C2D2H2N
   , b1D2C2D2H3C
   , b1D2C2D2H3D
   , b1D2C2H
   , b1D2C2S
+  , b1D2C2S2N
+  , b1D2C2S2N3C
+  , b1D2C2S2N3D
   , b1D2C2N
   , b1D2C3C
   , b1D2C3D
@@ -155,6 +161,7 @@ shapeShower2S_ = do
     makeAlertableCall (T.Bid 2 T.Spades) "5-3 in the minors, either way"
 
 
+-- TODO: when would you use this, and when would you not?
 shapeShower2S2N_ :: Action
 shapeShower2S2N_ = makeAlertableCall (T.Bid 2 T.Notrump) "bid your 5-card minor"
 
@@ -239,6 +246,15 @@ b1D2C2S = do
     pointRange 14 15
     shapeShower2S_
 
+b1D2C2S2N :: Action
+b1D2C2S2N = shapeShower2S2N_
+
+b1D2C2S2N3C :: Action
+b1D2C2S2N3C = shapeShower2S3C_
+
+b1D2C2S2N3D :: Action
+b1D2C2S2N3D = shapeShower2S3D_
+
 b1D2C2N :: Action
 b1D2C2N = do
     pointRange 14 15
@@ -273,6 +289,15 @@ b1D2C2D2H = do
 
 b1D2C2D2H2S :: Action
 b1D2C2D2H2S = shapeShower2S_
+
+b1D2C2D2H2S2N :: Action
+b1D2C2D2H2S2N = shapeShower2S2N_
+
+b1D2C2D2H2S2N3C :: Action
+b1D2C2D2H2S2N3C = shapeShower2S3C_
+
+b1D2C2D2H2S2N3D :: Action
+b1D2C2D2H2S2N3D = shapeShower2S3D_
 
 b1D2C2D2H2N :: Action
 b1D2C2D2H2N = shapeShower2N_
