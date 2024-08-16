@@ -67,13 +67,16 @@ data Punct = NDash
            | MDash
            | OpenQuote
            | CloseQuote
+           | EAcute
 
 instance Showable Punct where
     toLatex NDash = "--"
     toLatex MDash = "---"
     toLatex OpenQuote = "``"
     toLatex CloseQuote = "''"
+    toLatex EAcute = "\\'e"
     toHtml NDash = "&ndash;"
     toHtml MDash = "&mdash;"
     toHtml OpenQuote = "&#x201C;"
     toHtml CloseQuote = "&#x201D;"
+    toHtml EAcute = "&eacute;"

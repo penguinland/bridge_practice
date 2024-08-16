@@ -9,6 +9,7 @@ import qualified Topics.TexasTransfers as TexasTransfers
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
 import qualified Topics.StandardModernPrecision.OneClubResponses as Smp1CResponses
 import qualified Topics.StandardModernPrecision.OneDiamondResponses as Smp1DResponses
+import qualified Topics.StandardModernPrecision.Lampe as Lampe
 import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
@@ -35,7 +36,7 @@ main = let
               , Smp2DOpen.topic
               , Meckwell.topic
               ]
-    topics = [ForcingOneNotrump.topic]
+    topics = [Lampe.topic]
   in do
     outputLatex 100 topics "test" (mkStdGen 0)
     return ()
