@@ -101,6 +101,9 @@ b1H2N4D = openerSideSuit_ T.Diamonds
 -- TODO: what should we do about that? Is there ever a time when you "reverse"
 -- to 4S?
 
+sideSuitRebidsH_ :: [Action]
+sideSuitRebidsH_ = [b1H2N4C, b1H2N4D]
+
 b1S2N4C :: Action
 b1S2N4C = openerSideSuit_ T.Clubs
 
@@ -109,6 +112,9 @@ b1S2N4D = openerSideSuit_ T.Diamonds
 
 b1S2N4H :: Action
 b1S2N4H = openerSideSuit_ T.Hearts
+
+sideSuitRebidsS_ :: [Action]
+sideSuitRebidsS_ = [b1S2N4C, b1S2N4D, b1S2N4H]
 
 
 -- Show shortness if you can't show length.
@@ -119,58 +125,64 @@ openerShortness_ shortSuit preferredBids = do
     makeAlertableCall (T.Bid 3 shortSuit) ("shortness in " .+ show shortSuit)
 
 b1H2N3C :: Action
-b1H2N3C = openerShortness_ T.Clubs [b1H2N4C, b1H2N4D]
+b1H2N3C = openerShortness_ T.Clubs sideSuitRebidsH_
 
 b1H2N3D :: Action
-b1H2N3D = openerShortness_ T.Diamonds [b1H2N4C, b1H2N4D]
+b1H2N3D = openerShortness_ T.Diamonds sideSuitRebidsH_
 
 b1H2N3S :: Action
-b1H2N3S = openerShortness_ T.Spades [b1H2N4C, b1H2N4D]
+b1H2N3S = openerShortness_ T.Spades sideSuitRebidsH_
 
 b1S2N3C :: Action
-b1S2N3C = openerShortness_ T.Clubs [b1S2N4C, b1S2N4D, b1S2N4H]
+b1S2N3C = openerShortness_ T.Clubs sideSuitRebidsS_
 
 b1S2N3D :: Action
-b1S2N3D = openerShortness_ T.Diamonds [b1S2N4C, b1S2N4D, b1S2N4H]
+b1S2N3D = openerShortness_ T.Diamonds sideSuitRebidsS_
 
 b1S2N3H :: Action
-b1S2N3H = openerShortness_ T.Hearts [b1S2N4C, b1S2N4D, b1S2N4H]
+b1S2N3H = openerShortness_ T.Hearts sideSuitRebidsS_
+
+shapelyRebidsH_ :: [Action]
+shapelyRebidsH_ = [b1H2N4C, b1H2N4D, b1H2N3C, b1H2N3D, b1H2N3S]
+
+shapelyRebidsS_ :: [Action]
+shapelyRebidsS_ = [b1S2N4C, b1S2N4D, b1S2N4H, b1S2N3C, b1S2N3D, b1S2N3S]
 
 
 -- If you can't show length or shortness, show strength
 b1H2N4H :: Action
 b1H2N4H = do
-    forbidAll [b1H2N4C, b1H2N4D, b1H2N3C, b1H2N3D, b1H2N3S]
+    forbidAll shapelyRebidsH_
     pointRange 0 13
     makeCall $ T.Bid 4 T.Hearts
 
 b1H2N3N :: Action
 b1H2N3N = do
-    forbidAll [b1H2N4C, b1H2N4D, b1H2N3C, b1H2N3D, b1H2N3S]
+    forbidAll shapelyRebidsH_
     pointRange 14 15
     makeCall $ T.Bid 3 T.Notrump
 
 b1H2N3H :: Action
 b1H2N3H = do
-    forbidAll [b1H2N4C, b1H2N4D, b1H2N3C, b1H2N3D, b1H2N3S]
+    forbidAll shapelyRebidsH_
     pointRange 16 40
     makeCall $ T.Bid 3 T.Hearts
 
 
 b1S2N4S :: Action
 b1S2N4S = do
-    forbidAll [b1S2N4C, b1S2N4D, b1S2N4H, b1S2N3C, b1S2N3D, b1S2N3H]
+    forbidAll shapelyRebidsS_
     pointRange 0 13
     makeCall $ T.Bid 4 T.Spades
 
 b1S2N3N :: Action
 b1S2N3N = do
-    forbidAll [b1S2N4C, b1S2N4D, b1S2N4H, b1S2N3C, b1S2N3D, b1S2N3H]
+    forbidAll shapelyRebidsS_
     pointRange 14 15
     makeCall $ T.Bid 3 T.Notrump
 
 b1S2N3S :: Action
 b1S2N3S = do
-    forbidAll [b1S2N4C, b1S2N4D, b1S2N4H, b1S2N3C, b1S2N3D, b1S2N3H]
+    forbidAll shapelyRebidsS_
     pointRange 16 40
     makeCall $ T.Bid 3 T.Spades
