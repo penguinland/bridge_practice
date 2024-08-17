@@ -45,7 +45,8 @@ singleton = let
             "partner decide whether to sign off in " .+ T.Bid 4 suit .+
             ", or start control bidding to investigate slam. If you play " .+
             "Serious or Frivolous " .+ T.Bid 3 T.Notrump .+ ", they might " .+
-            "also bid that."
+            "also bid that. If partner tries signing off, we can look for " .+
+            "slam anyway if we have enough extra strength."
       in
         situation "sing" action singletonBid explanation
   in
@@ -59,8 +60,36 @@ singleton = let
                               ]
 
 
+sideSuit :: Situations
+sideSuit = let
+    sit (openerBid, j2ntBid, singletonBid, suit) = let
+        action = do
+            setOpener T.South
+            _ <- openerBid
+            noInterference suit
+            _ <- j2ntBid
+            noInterference suit
+        explanation =
+            "Partner has bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". We " .+
+            "have a good 5-card side suit, so bid it at the 4 level. " .+
+            "Partner can then decide whether to sign off in " .+ T.Bid 4 suit .+
+            ", or investigate slam. Even if they decide to sign off, we " .+
+            "can investigate slam ourselves if we have enough extra strength."
+      in
+        situation "side" action singletonBid explanation
+  in
+    -- Partner must be an unpassed hand to be game-forcing.
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N4C, T.Hearts)
+                              , (B.b1H, B.b1H2N, B.b1H2N4D, T.Hearts)
+                              , (B.b1S, B.b1S2N, B.b1S2N4C, T.Spades)
+                              , (B.b1S, B.b1S2N, B.b1S2N4D, T.Spades)
+                              , (B.b1S, B.b1S2N, B.b1S2N4H, T.Spades)
+                              ]
+
+
 topic :: Topic
 topic = makeTopic ("Jacoby ".+ T.Bid 2 T.Notrump)  "J2NT" $
     wrap [ j2nt
          , singleton
+         , sideSuit
          ]
