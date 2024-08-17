@@ -1,4 +1,4 @@
-module Bids.Jacoby2N(
+module Bids.Jacoby2NT(
     b1H  -- Re-exported from StandardOpenings
   , b1H2N
   , b1H2N3C
