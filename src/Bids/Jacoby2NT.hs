@@ -196,7 +196,7 @@ shapelyRebidsH_ :: [Action]
 shapelyRebidsH_ = [b1H2N4C, b1H2N4D, b1H2N3C, b1H2N3D, b1H2N3S]
 
 shapelyRebidsS_ :: [Action]
-shapelyRebidsS_ = [b1S2N4C, b1S2N4D, b1S2N4H, b1S2N3C, b1S2N3D, b1S2N3S]
+shapelyRebidsS_ = [b1S2N4C, b1S2N4D, b1S2N4H, b1S2N3C, b1S2N3D, b1S2N3H]
 
 
 -- If you can't show length or shortness, show strength
