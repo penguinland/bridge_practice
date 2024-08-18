@@ -44,5 +44,5 @@ main = let
   in do
     -- outputLatex returns a copy of the contents of the file it wrote, but we
     -- ignore that.
-    _ <- outputLatex 100 topics "test" (mkStdGen 2)
+    _ <- outputLatex 100 topics "test" (mkStdGen 0)
     return ()
