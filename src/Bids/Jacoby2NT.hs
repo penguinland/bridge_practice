@@ -4,6 +4,10 @@ module Bids.Jacoby2NT(
   , b1H2N3C
   , b1H2N3D
   , b1H2N3H
+  , b1H2N3H3S
+  , b1H2N3H4C
+  , b1H2N3H4D
+  , b1H2N3H4H
   , b1H2N3S
   , b1H2N3N
   , b1H2N3N4C
@@ -23,6 +27,10 @@ module Bids.Jacoby2NT(
   , b1S2N3D
   , b1S2N3H
   , b1S2N3S
+  , b1S2N3S4C
+  , b1S2N3S4D
+  , b1S2N3S4H
+  , b1S2N3S4S
   , b1S2N3N
   , b1S2N3N4C
   , b1S2N3N4D
@@ -331,3 +339,63 @@ b1S2N3N4H = do
     forbid $ hasControl T.Diamonds
     hasControl T.Hearts
     makeCall $ T.Bid 4 T.Hearts
+
+
+-- Control bids over 3M
+
+b1H2N3H3S :: Action
+b1H2N3H3S = do
+    hasControl T.Spades
+    makeCall $ T.Bid 3 T.Spades
+
+
+b1H2N3H4C :: Action
+b1H2N3H4C = do
+    forbid b1H2N3H3S
+    hasControl T.Clubs
+    makeCall $ T.Bid 4 T.Clubs
+
+
+b1H2N3H4D :: Action
+b1H2N3H4D = do
+    forbid b1H2N3H3S
+    forbid b1H2N3H4C
+    hasControl T.Diamonds
+    makeCall $ T.Bid 4 T.Diamonds
+
+
+b1H2N3H4H :: Action
+b1H2N3H4H = do
+    forbid b1H2N3H3S
+    forbid b1H2N3H4C
+    forbid b1H2N3H4H
+    makeCall $ T.Bid 4 T.Hearts
+
+
+b1S2N3S4C :: Action
+b1S2N3S4C = do
+    hasControl T.Clubs
+    makeCall $ T.Bid 4 T.Clubs
+
+
+b1S2N3S4D :: Action
+b1S2N3S4D = do
+    forbid b1S2N3S4C
+    hasControl T.Diamonds
+    makeCall $ T.Bid 4 T.Diamonds
+
+
+b1S2N3S4H :: Action
+b1S2N3S4H = do
+    forbid b1S2N3S4C
+    forbid b1S2N3S4D
+    hasControl T.Hearts
+    makeCall $ T.Bid 4 T.Hearts
+
+
+b1S2N3S4S :: Action
+b1S2N3S4S = do
+    forbid b1S2N3S4C
+    forbid b1S2N3S4D
+    forbid b1S2N3S4H
+    makeCall $ T.Bid 4 T.Spades

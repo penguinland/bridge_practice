@@ -248,6 +248,39 @@ semibalMedSlam = let
            ]
 
 
+semibalMaxSlam :: Situations
+semibalMaxSlam = let
+    sit (openerBid, j2ntBid, openerRebid, responderRebid, suit) = let
+        action = do
+            setOpener T.North
+            _ <- openerBid
+            noInterference suit
+            _ <- j2ntBid
+            noInterference suit
+            _ <- openerRebid
+            noInterference suit
+        explanation =
+            "We bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". Partner has shown " .+
+            "a very strong, semibalanced hand with definite slam interest. " .+
+            "Make a control bid to investigate slam. If you play Serious " .+
+            "or Frivolous " .+ T.Bid 3 T.Notrump .+ ", you might bid that, " .+
+            "instead."
+      in
+        situation "sbmaxcb" action responderRebid explanation
+  in
+    -- Partner must be an unpassed hand to be game-forcing.
+    wrapVulNW $ return sit
+        <~ [ (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H3S,  T.Hearts)
+           , (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4C,  T.Hearts)
+           , (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4D,  T.Hearts)
+           , (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4H,  T.Hearts)
+           , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4C,  T.Spades)
+           , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4D,  T.Spades)
+           , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4H,  T.Spades)
+           , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4S,  T.Spades)
+           ]
+
+
 topic :: Topic
 topic = makeTopic ("Jacoby ".+ T.Bid 2 T.Notrump)  "J2NT" $
     wrap [ j2nt
@@ -255,5 +288,5 @@ topic = makeTopic ("Jacoby ".+ T.Bid 2 T.Notrump)  "J2NT" $
          , sideSuit
          , wrap [semibalancedMin, semibalancedMed, semibalancedMax]
          , semibalSignoff
-         , wrap [semibalMinSlam, semibalMedSlam]
+         , wrap [semibalMinSlam, semibalMedSlam, semibalMaxSlam]
          ]
