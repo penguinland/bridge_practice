@@ -62,7 +62,7 @@ singleton = let
 
 sideSuit :: Situations
 sideSuit = let
-    sit (openerBid, j2ntBid, singletonBid, suit) = let
+    sit (openerBid, j2ntBid, sideBid, suit) = let
         action = do
             setOpener T.South
             _ <- openerBid
@@ -76,7 +76,7 @@ sideSuit = let
             ", or investigate slam. Even if they decide to sign off, we " .+
             "can investigate slam ourselves if we have enough extra strength."
       in
-        situation "side" action singletonBid explanation
+        situation "side" action sideBid explanation
   in
     -- Partner must be an unpassed hand to be game-forcing.
     wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N4C, T.Hearts)
@@ -87,9 +87,83 @@ sideSuit = let
                               ]
 
 
+semibalancedMin :: Situations
+semibalancedMin = let
+    sit (openerBid, j2ntBid, openerRebid, suit) = let
+        action = do
+            setOpener T.South
+            _ <- openerBid
+            noInterference suit
+            _ <- j2ntBid
+            noInterference suit
+        explanation =
+            "Partner has bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". We " .+
+            "don't have length or shortness in a side suit to show, and " .+
+            "are a minimum opener. Bid game directly to show this. Partner " .+
+            "will likely pass, but might investigate slam with a monster."
+      in
+        situation "sbmin" action openerRebid explanation
+  in
+    -- Partner must be an unpassed hand to be game-forcing.
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, T.Hearts)
+                              , (B.b1S, B.b1S2N, B.b1S2N4S, T.Spades)
+                              ]
+
+
+semibalancedMed :: Situations
+semibalancedMed = let
+    sit (openerBid, j2ntBid, openerRebid, suit) = let
+        action = do
+            setOpener T.South
+            _ <- openerBid
+            noInterference suit
+            _ <- j2ntBid
+            noInterference suit
+        explanation =
+            "Partner has bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". We " .+
+            "don't have length or shortness in a side suit to show, but " .+
+            "we have a little extra strength we haven't shown yet. Bid " .+
+            openerRebid .+ " to show this. Partner might sign off in " .+
+            "game, but might start control bidding with slam interest."
+      in
+        situation "sbmed" action openerRebid explanation
+  in
+    -- Partner must be an unpassed hand to be game-forcing.
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N3N, T.Hearts)
+                              , (B.b1S, B.b1S2N, B.b1S2N3N, T.Spades)
+                              ]
+
+
+semibalancedMax :: Situations
+semibalancedMax = let
+    sit (openerBid, j2ntBid, openerRebid, suit) = let
+        action = do
+            setOpener T.South
+            _ <- openerBid
+            noInterference suit
+            _ <- j2ntBid
+            noInterference suit
+        explanation =
+            "Partner has bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". We " .+
+            "don't have length or shortness in a side suit to show, but " .+
+            "we have enough extra strength to be interested in slam " .+
+            "opposite partner's game force. Bid " .+ openerRebid .+ ", " .+
+            "prompting partner to start control bidding (they might also " .+
+            "bid Serious or Frivolous " .+ T.Bid 3 T.Notrump .+ ", if you " .+
+            "play one of those)."
+      in
+        situation "sbmax" action openerRebid explanation
+  in
+    -- Partner must be an unpassed hand to be game-forcing.
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N3H, T.Hearts)
+                              , (B.b1S, B.b1S2N, B.b1S2N3S, T.Spades)
+                              ]
+
+
 topic :: Topic
 topic = makeTopic ("Jacoby ".+ T.Bid 2 T.Notrump)  "J2NT" $
     wrap [ j2nt
          , singleton
          , sideSuit
+         , wrap [semibalancedMin, semibalancedMed, semibalancedMax]
          ]
