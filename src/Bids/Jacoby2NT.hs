@@ -38,7 +38,8 @@ import Output((.+))
 import qualified Terminology as T
 
 
--- First start with splinter bids; prefer them over J2NT.
+-- First start with splinter bids; prefer them over J2NT. If you have multiple
+-- singletons, bid the cheapest one.
 splinter_ :: T.Suit -> T.Suit -> T.Call -> Action
 splinter_ trump shortness bid = do
     minSuitLength trump 4
@@ -48,22 +49,40 @@ splinter_ trump shortness bid = do
                            (init $ show shortness) .+ " shortness")
 
 b1H3S :: Action
-b1H3S = splinter_ T.Hearts T.Spades (T.Bid 3 T.Spades)
+b1H3S = do
+    T.Spades `atMostAsLong` T.Clubs
+    T.Spades `atMostAsLong` T.Diamonds
+    splinter_ T.Hearts T.Spades (T.Bid 3 T.Spades)
 
 b1H4C :: Action
-b1H4C = splinter_ T.Hearts T.Clubs (T.Bid 4 T.Clubs)
+b1H4C = do
+    T.Clubs `shorterThan` T.Spades
+    T.Clubs `atMostAsLong` T.Diamonds
+    splinter_ T.Hearts T.Clubs (T.Bid 4 T.Clubs)
 
 b1H4D :: Action
-b1H4D = splinter_ T.Hearts T.Diamonds (T.Bid 4 T.Diamonds)
+b1H4D = do
+    T.Diamonds `shorterThan` T.Spades
+    T.Diamonds `shorterThan` T.Clubs
+    splinter_ T.Hearts T.Diamonds (T.Bid 4 T.Diamonds)
 
 b1S4C :: Action
-b1S4C = splinter_ T.Spades T.Clubs (T.Bid 4 T.Clubs)
+b1S4C = do
+    T.Clubs `atMostAsLong` T.Diamonds
+    T.Clubs `atMostAsLong` T.Hearts
+    splinter_ T.Spades T.Clubs (T.Bid 4 T.Clubs)
 
 b1S4D :: Action
-b1S4D = splinter_ T.Spades T.Diamonds (T.Bid 4 T.Diamonds)
+b1S4D = do
+    T.Diamonds `shorterThan` T.Clubs
+    T.Diamonds `atMostAsLong` T.Hearts
+    splinter_ T.Spades T.Diamonds (T.Bid 4 T.Diamonds)
 
 b1S4H :: Action
-b1S4H = splinter_ T.Spades T.Hearts (T.Bid 4 T.Hearts)
+b1S4H = do
+    T.Hearts `shorterThan` T.Clubs
+    T.Hearts `shorterThan` T.Diamonds
+    splinter_ T.Spades T.Hearts (T.Bid 4 T.Hearts)
 
 
 -- Define J2NT itself
