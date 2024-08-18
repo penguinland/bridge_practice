@@ -23,10 +23,11 @@ import ProblemSet(outputLatex)
 
 main :: IO ()
 main = let
-    topics' = [ StandardOpeners.topic
+    _topics = [ StandardOpeners.topic
               , ForcingOneNotrump.topic
               , MajorSuitRaises.topic
               , JacobyTransfers.topic
+              , Stayman.topic
               , TexasTransfers.topic
               , SmpOpenings.topic
               , Smp1CResponses.topic
@@ -37,8 +38,11 @@ main = let
               , Smp2DOpen.topic
               , Meckwell.topic
               , Jacoby2NT.topic
+              , Lampe.topic
               ]
     topics = [Jacoby2NT.topic]
   in do
-    outputLatex 100 topics "test" (mkStdGen 0)
+    -- outputLatex returns a copy of the contents of the file it wrote, but we
+    -- ignore that.
+    _ <- outputLatex 100 topics "test" (mkStdGen 0)
     return ()
