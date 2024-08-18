@@ -32,7 +32,8 @@ module Bids.Jacoby2NT(
 import Action(Action)
 import Bids.StandardOpenings(b1H, b1S)
 import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
-            pointRange, soundHolding, maxLoserCount, forbidAll)
+            pointRange, soundHolding, maxLoserCount, forbidAll, shorterThan,
+            atMostAsLong)
 import Output((.+))
 import qualified Terminology as T
 
@@ -117,7 +118,8 @@ sideSuitRebidsS_ :: [Action]
 sideSuitRebidsS_ = [b1S2N4C, b1S2N4D, b1S2N4H]
 
 
--- Show shortness if you can't show length.
+-- Show shortness if you can't show length. If you have two singletons (or two
+-- voids), bid the lower one.
 openerShortness_ :: T.Suit -> [Action] -> Action
 openerShortness_ shortSuit preferredBids = do
     forbidAll preferredBids
@@ -125,22 +127,40 @@ openerShortness_ shortSuit preferredBids = do
     makeAlertableCall (T.Bid 3 shortSuit) ("shortness in " .+ show shortSuit)
 
 b1H2N3C :: Action
-b1H2N3C = openerShortness_ T.Clubs sideSuitRebidsH_
+b1H2N3C = do
+    T.Clubs `atMostAsLong` T.Diamonds
+    T.Clubs `atMostAsLong` T.Spades
+    openerShortness_ T.Clubs sideSuitRebidsH_
 
 b1H2N3D :: Action
-b1H2N3D = openerShortness_ T.Diamonds sideSuitRebidsH_
+b1H2N3D = do
+    T.Diamonds `shorterThan` T.Clubs
+    T.Diamonds `atMostAsLong` T.Spades
+    openerShortness_ T.Diamonds sideSuitRebidsH_
 
 b1H2N3S :: Action
-b1H2N3S = openerShortness_ T.Spades sideSuitRebidsH_
+b1H2N3S = do
+    T.Spades `shorterThan` T.Clubs
+    T.Spades `shorterThan` T.Diamonds
+    openerShortness_ T.Spades sideSuitRebidsH_
 
 b1S2N3C :: Action
-b1S2N3C = openerShortness_ T.Clubs sideSuitRebidsS_
+b1S2N3C = do
+    T.Clubs `atMostAsLong` T.Diamonds
+    T.Clubs `atMostAsLong` T.Hearts
+    openerShortness_ T.Clubs sideSuitRebidsS_
 
 b1S2N3D :: Action
-b1S2N3D = openerShortness_ T.Diamonds sideSuitRebidsS_
+b1S2N3D = do
+    T.Diamonds `shorterThan` T.Clubs
+    T.Diamonds `atMostAsLong` T.Hearts
+    openerShortness_ T.Diamonds sideSuitRebidsS_
 
 b1S2N3H :: Action
-b1S2N3H = openerShortness_ T.Hearts sideSuitRebidsS_
+b1S2N3H = do
+    T.Hearts `shorterThan` T.Clubs
+    T.Hearts `shorterThan` T.Diamonds
+    openerShortness_ T.Hearts sideSuitRebidsS_
 
 shapelyRebidsH_ :: [Action]
 shapelyRebidsH_ = [b1H2N4C, b1H2N4D, b1H2N3C, b1H2N3D, b1H2N3S]
