@@ -15,13 +15,17 @@ async function getTopics() {
     return await getJson("/topics");
 }
 
-async function getSituation() {
+function collectTopics() {
     const checkboxes = document.getElementsByName("topics");
     const indices = Array.prototype.slice.call(checkboxes)
         .filter(ch => ch.checked == true)
         .map(t => t.value)
         .join(",");
-    return await getJson("/situation?topics=" + indices);
+    return indices;
+}
+
+async function getSituation(topics) {
+    return await getJson("/situation?topics=" + topics);
 }
 
 // Create checkbox options for each topic the server supports.
@@ -60,7 +64,9 @@ getTopics().then(topics => {
     setWidth("top_col2", "W  A K Q J 10 9 8 7");
     setWidth("top_col3", "W  A K Q J 10 9 8 7");
 
-    displayProblem();
+    const current_topics = collectTopics();
+    getSituation(current_topics).then(displayProblem);
+    cacheProblem(current_topics);
 })
 
 var footnote_value;
@@ -137,26 +143,57 @@ function clear(id) {
 }
 
 var current_problem = null;
+var next_problem = null;
+var topics_for_next_problem = "";
 
-async function displayProblem () {
-    getSituation().then(problem => {
-        current_problem = problem;
-        console.log(problem);
-        displayBidding(problem.bidding, false);
-        setValue("dealer", problem.deal.dealer);
-        setValue("vulnerability", problem.deal.vulnerability);
-        displayHand(problem.deal.south_hand, "south_hand");
-        clear("west_hand");
-        clear("east_hand");
-        clear("north_hand");
+async function cacheProblem(topics) {
+    getSituation(topics).then(problem => {
+        console.log("caching next problem...");
+        next_problem = problem;
+        topics_for_next_problem = topics;
+    });
+}
 
-        show_ans = document.createElement("button");
-        show_ans.innerHTML = "Show Answer";
-        show_ans.onclick = displaySolution;
-        expl = clear("explanation");
-        expl.appendChild(show_ans);
-        expl.style = "";
-    })
+
+async function nextProblem() {
+    // If the user has changed which topics are checked, throw out the cached
+    // problem.
+    current_topics = collectTopics();
+    if (topics_for_next_problem !== current_topics) {
+        next_problem = null;
+    }
+
+    // If we have a cached problem, use that.
+    if (next_problem != null) {
+        console.log("using cached problem...");
+        displayProblem(next_problem);
+    } else {
+        console.log("getting new problem in real time...");
+        getSituation(current_topics).then(displayProblem);
+    }
+
+    // Get ready for next time.
+    cacheProblem(current_topics);
+}
+
+
+async function displayProblem(problem) {
+    current_problem = problem;
+    console.log(problem);
+    displayBidding(problem.bidding, false);
+    setValue("dealer", problem.deal.dealer);
+    setValue("vulnerability", problem.deal.vulnerability);
+    displayHand(problem.deal.south_hand, "south_hand");
+    clear("west_hand");
+    clear("east_hand");
+    clear("north_hand");
+
+    show_ans = document.createElement("button");
+    show_ans.innerHTML = "Show Answer";
+    show_ans.onclick = displaySolution;
+    expl = clear("explanation");
+    expl.appendChild(show_ans);
+    expl.style = "";
 }
 
 function displayHand(hand, id) {
