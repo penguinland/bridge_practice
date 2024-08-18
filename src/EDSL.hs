@@ -14,6 +14,7 @@ module EDSL (
 , minSuitLength
 , maxSuitLength
 , hasTopN
+, hasControl
 , soundHolding
 , longerThan
 , shorterThan
@@ -109,6 +110,11 @@ hasTopN suit range minCount = do
     constrain (join "_" [show suit, show minCount, "of", "top", show range])
               ["top" ++ show range ++ "(", ", " ++ show suit ++
                ") >= " ++ show minCount]
+
+
+-- Shows the ace/king/singleton/void
+hasControl :: T.Suit -> Action
+hasControl suit = alternatives [hasTopN suit 2 1, maxSuitLength suit 1]
 
 
 -- A sound pre-empt has 2 of the top 3 or 3 of the top 5 cards in the suit.
