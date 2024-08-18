@@ -281,6 +281,14 @@ semibalMaxSlam = let
            ]
 
 
+-- TODO:
+-- - follow-ups after opener rebids a 5-card side suit
+-- - follow-ups after opener rebids a singleton
+-- - what if hearts are trump and opener has a 5-card spade suit?
+-- - what if hearts are trump, opener rebids 3N, and responder has slam interest
+--     but no minor-suit control?
+
+
 topic :: Topic
 topic = makeTopic ("Jacoby ".+ T.Bid 2 T.Notrump)  "J2NT" $
     wrap [ j2nt
