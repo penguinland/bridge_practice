@@ -270,14 +270,17 @@ semibalMaxSlam = let
   in
     -- Partner must be an unpassed hand to be game-forcing.
     wrapVulNW $ return sit
+        -- Although it's possible to have no controls and want to rebid 4M, it
+        -- is exceedingly unlikely. Skip those situations because they're so
+        -- rare.
         <~ [ (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H3S,  T.Hearts)
            , (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4C,  T.Hearts)
            , (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4D,  T.Hearts)
-           , (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4H,  T.Hearts)
+           --, (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4H,  T.Hearts)
            , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4C,  T.Spades)
            , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4D,  T.Spades)
            , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4H,  T.Spades)
-           , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4S,  T.Spades)
+           --, (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4S,  T.Spades)
            ]
 
 

@@ -51,8 +51,8 @@ module Bids.Jacoby2NT(
 import Action(Action)
 import Bids.StandardOpenings(b1H, b1S)
 import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
-            pointRange, soundHolding, minLoserCount, maxLoserCount, forbidAll,
-            shorterThan, atMostAsLong, forEach, hasControl, forbid)
+            pointRange, soundHolding, maxLoserCount, forbid, forbidAll,
+            shorterThan, atMostAsLong, forEach, hasControl)
 import Output((.+))
 import qualified Terminology as T
 
@@ -212,42 +212,42 @@ shapelyRebidsS_ = [b1S2N4C, b1S2N4D, b1S2N4H, b1S2N3C, b1S2N3D, b1S2N3H]
 b1H2N4H :: Action
 b1H2N4H = do
     forbidAll shapelyRebidsH_
-    pointRange 0 13
+    pointRange 0 14
     makeCall $ T.Bid 4 T.Hearts
 
 
 b1H2N3N :: Action
 b1H2N3N = do
     forbidAll shapelyRebidsH_
-    pointRange 14 15
+    pointRange 15 16
     makeCall $ T.Bid 3 T.Notrump
 
 
 b1H2N3H :: Action
 b1H2N3H = do
     forbidAll shapelyRebidsH_
-    pointRange 16 40
+    pointRange 17 40
     makeCall $ T.Bid 3 T.Hearts
 
 
 b1S2N4S :: Action
 b1S2N4S = do
     forbidAll shapelyRebidsS_
-    pointRange 0 13
+    pointRange 0 14
     makeCall $ T.Bid 4 T.Spades
 
 
 b1S2N3N :: Action
 b1S2N3N = do
     forbidAll shapelyRebidsS_
-    pointRange 14 15
+    pointRange 15 16
     makeCall $ T.Bid 3 T.Notrump
 
 
 b1S2N3S :: Action
 b1S2N3S = do
     forbidAll shapelyRebidsS_
-    pointRange 16 40
+    pointRange 17 40
     makeCall $ T.Bid 3 T.Spades
 
 
@@ -255,25 +255,25 @@ b1S2N3S = do
 
 b1H2N4HP :: Action
 b1H2N4HP = do
-    minLoserCount 6
+    pointRange 0 16
     makeCall T.Pass
 
 
 b1S2N4SP :: Action
 b1S2N4SP = do
-    minLoserCount 6
+    pointRange 0 16
     makeCall T.Pass
 
 
 b1H2N3N4H :: Action
 b1H2N3N4H = do
-    minLoserCount 7
+    pointRange 0 14
     makeCall $ T.Bid 4 T.Hearts
 
 
 b1S2N3N4S :: Action
 b1S2N3N4S = do
-    minLoserCount 7
+    pointRange 0 14
     makeCall $ T.Bid 4 T.Spades
 
 -- Slam investigations
@@ -364,11 +364,13 @@ b1H2N3H4D = do
     makeCall $ T.Bid 4 T.Diamonds
 
 
+-- WARNING: it is exceedingly rare to not have control in any side suit! Maybe
+-- don't use this, because it doesn't come up often enough.
 b1H2N3H4H :: Action
 b1H2N3H4H = do
     forbid b1H2N3H3S
     forbid b1H2N3H4C
-    forbid b1H2N3H4H
+    forbid b1H2N3H4D
     makeCall $ T.Bid 4 T.Hearts
 
 
@@ -393,6 +395,8 @@ b1S2N3S4H = do
     makeCall $ T.Bid 4 T.Hearts
 
 
+-- WARNING: it is exceedingly rare to not have control in any side suit! Maybe
+-- don't use this, because it doesn't come up often enough.
 b1S2N3S4S :: Action
 b1S2N3S4S = do
     forbid b1S2N3S4C
