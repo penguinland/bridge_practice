@@ -4,6 +4,7 @@ module Main where
 import Control.Monad.Trans(liftIO)
 import Data.Aeson(Value, object, (.=))
 import Data.Aeson.Key(fromString)
+import Data.Containers.ListUtils(nubOrd)
 import Data.Either.Extra(maybeToEither, mapLeft)
 import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.List.Utils(join, split)
@@ -107,6 +108,13 @@ data MyAppState = IoRng (IORef StdGen)
 
 main :: IO ()
 main = do
+    -- First, assert that all IDs for topics are unique: otherwise, we're gonna
+    -- have really subtle bugs that will be hard to figure out.
+    -- TODO: consider making this a compile-time assertion instead, possibly via
+    -- https://stackoverflow.com/a/6654903
+    if ((length topicList) /= (length . nubOrd . map fst $ topicList))
+        then error "duplicate topic indices!?"
+        else return ()
     rng <- getStdGen
     ref <- newIORef rng
     spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref)
