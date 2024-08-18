@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
+import Control.Monad(when)
 import Control.Monad.Trans(liftIO)
 import Data.Aeson(Value, object, (.=))
 import Data.Aeson.Key(fromString)
@@ -63,6 +64,16 @@ topicList = [ (10, StandardOpeners.topic)
             , (56, TwoDiamondOpeners.topic)
             ]
 
+-- Make a way to assert that all IDs for topics are unique: otherwise, we're
+-- gonna have really subtle bugs that will be hard to figure out.
+-- TODO: consider making this a compile-time assertion instead, possibly via
+-- https://stackoverflow.com/a/6654903
+assertUniqueIndices :: IO()
+assertUniqueIndices = let
+    indices = map fst topicList
+  in
+    when (indices /= nubOrd indices) (error "duplicate topic indices!?")
+
 topics :: Map Int Topic
 topics = fromList topicList
 
@@ -108,13 +119,7 @@ data MyAppState = IoRng (IORef StdGen)
 
 main :: IO ()
 main = do
-    -- First, assert that all IDs for topics are unique: otherwise, we're gonna
-    -- have really subtle bugs that will be hard to figure out.
-    -- TODO: consider making this a compile-time assertion instead, possibly via
-    -- https://stackoverflow.com/a/6654903
-    if ((length topicList) /= (length . nubOrd . map fst $ topicList))
-        then error "duplicate topic indices!?"
-        else return ()
+    assertUniqueIndices
     rng <- getStdGen
     ref <- newIORef rng
     spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref)
