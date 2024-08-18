@@ -6,9 +6,11 @@ module Bids.Jacoby2NT(
   , b1H2N3H
   , b1H2N3S
   , b1H2N3N
+  , b1H2N3N4H
   , b1H2N4C
   , b1H2N4D
   , b1H2N4H
+  , b1H2N4HP
   , b1H3S
   , b1H4C
   , b1H4D
@@ -19,10 +21,12 @@ module Bids.Jacoby2NT(
   , b1S2N3H
   , b1S2N3S
   , b1S2N3N
+  , b1S2N3N4S
   , b1S2N4C
   , b1S2N4D
   , b1S2N4H
   , b1S2N4S
+  , b1S2N4SP
   , b1S4C
   , b1S4D
   , b1S4H
@@ -32,8 +36,8 @@ module Bids.Jacoby2NT(
 import Action(Action)
 import Bids.StandardOpenings(b1H, b1S)
 import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
-            pointRange, soundHolding, maxLoserCount, forbidAll, shorterThan,
-            atMostAsLong)
+            pointRange, soundHolding, minLoserCount, maxLoserCount, forbidAll,
+            shorterThan, atMostAsLong)
 import Output((.+))
 import qualified Terminology as T
 
@@ -225,3 +229,29 @@ b1S2N3S = do
     forbidAll shapelyRebidsS_
     pointRange 16 40
     makeCall $ T.Bid 3 T.Spades
+
+
+-- Signoffs by responder
+b1H2N4HP :: Action
+b1H2N4HP = do
+    minLoserCount 6
+    makeCall T.Pass
+
+
+b1S2N4SP :: Action
+b1S2N4SP = do
+    minLoserCount 6
+    makeCall T.Pass
+
+
+b1H2N3N4H :: Action
+b1H2N3N4H = do
+    minLoserCount 7
+    makeCall $ T.Bid 4 T.Hearts
+
+
+b1S2N3N4S :: Action
+b1S2N3N4S = do
+    minLoserCount 7
+    makeCall $ T.Bid 4 T.Spades
+

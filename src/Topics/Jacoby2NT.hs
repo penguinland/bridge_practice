@@ -160,10 +160,38 @@ semibalancedMax = let
                               ]
 
 
+semibalSignoff :: Situations
+semibalSignoff = let
+    sit (openerBid, j2ntBid, openerRebid, responderSignoff, suit) = let
+        action = do
+            setOpener T.North
+            _ <- openerBid
+            noInterference suit
+            _ <- j2ntBid
+            noInterference suit
+            _ <- openerRebid
+            noInterference suit
+        explanation =
+            "We bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". Partner has shown " .+
+            "neither unusual shape nor enough extra strength for us to be " .+
+            "interested in slam. Just sign off in game."
+      in
+        situation "sbso" action responderSignoff explanation
+  in
+    -- Partner must be an unpassed hand to be game-forcing.
+    wrapVulNW $ return sit
+        <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, B.b1H2N4HP,  T.Hearts)
+           , (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4H, T.Hearts)
+           , (B.b1S, B.b1S2N, B.b1S2N4S, B.b1S2N4SP,  T.Spades)
+           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4S, T.Spades)
+           ]
+
+
 topic :: Topic
 topic = makeTopic ("Jacoby ".+ T.Bid 2 T.Notrump)  "J2NT" $
     wrap [ j2nt
          , singleton
          , sideSuit
          , wrap [semibalancedMin, semibalancedMed, semibalancedMax]
+         , semibalSignoff
          ]
