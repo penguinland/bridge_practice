@@ -3,8 +3,10 @@ module ProblemSet(
 , outputLatex
 ) where
 
+import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(runState, get)
 import Data.List.Utils(join, replace)
+import System.IO(hFlush, stdout)
 import System.Random(StdGen)
 
 import Output(toLatex)
@@ -30,6 +32,7 @@ generate n topics g = let
         instantiate ref situation
     (sitInst, g') = runState makeInst g
   in do
+    when (n `mod` 10 == 0) (putStr "." >> hFlush stdout)
     maybeSit <- sitInst
     case maybeSit of
         Nothing -> generate n topics g'  -- Try again
