@@ -287,6 +287,8 @@ semibalMaxSlam = let
 -- - what if hearts are trump and opener has a 5-card spade suit?
 -- - what if hearts are trump, opener rebids 3N, and responder has slam interest
 --     but no minor-suit control?
+-- - what if opener has 5 spades and 6 hearts? Do you rebid 4S, or show a
+--     singleton at the 3 level?
 
 
 topic :: Topic
