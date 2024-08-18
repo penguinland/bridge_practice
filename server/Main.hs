@@ -1,7 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
+import Control.Monad(when)
 import Control.Monad.Trans(liftIO)
+import Data.Aeson(Value, object, (.=))
+import Data.Aeson.Key(fromString)
+import Data.Containers.ListUtils(nubOrd)
 import Data.Either.Extra(maybeToEither, mapLeft)
 import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.List.Utils(join, split)
@@ -35,37 +39,53 @@ import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as TwoDiamondO
 
 -- I don't think I ever finished making these topics...
 --import qualified Topics.MinorTransfersScott as MinorTransfers
---import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 
 
-topicList :: [Topic]
-topicList = [ StandardOpeners.topic
-            , MajorSuitRaises.topic
-            , ForcingOneNotrump.topic
-            , JacobyTransfers.topic
-            , Stayman.topic
-            , TexasTransfers.topic
-            , Meckwell.topic
-            , Jacoby2NT.topic
-            , SmpOpenings.topic
-            , Smp1CResponses.topic
-            , Smp1CResponses.topicExtras
-            , Mafia.topic
-            , MafiaResponses.topic
-            , Smp1DResponses.topic
-            , Lampe.topic
-            , TwoDiamondOpeners.topic
+-- The list is the order to display topics on the website. The int is a unique
+-- ID for the topic when requesting a situation. That way, you can add new
+-- topics to the middle of the list without messing up anyone using the website.
+topicList :: [(Int, Topic)]
+topicList = [ (10, StandardOpeners.topic)
+            , (11, MajorSuitRaises.topic)
+            , (12, ForcingOneNotrump.topic)
+            , (13, JacobyTransfers.topic)
+            , (14, Stayman.topic)
+            , (15, TexasTransfers.topic)
+            , (16, Meckwell.topic)
+            , (17, Jacoby2NT.topic)
+            , (50, SmpOpenings.topic)
+            , (51, Smp1CResponses.topic)
+            , (52, Smp1CResponses.topicExtras)
+            , (53, Mafia.topic)
+            , (54, MafiaResponses.topic)
+            , (55, Smp1DResponses.topic)
+            , (70, Lampe.topic)
+            , (56, TwoDiamondOpeners.topic)
             ]
 
-topics :: Map Int Topic
-topics = fromList . enumerate $ topicList
-  where
-    -- I'm surprised this isn't defined in a popular, standard location.
-    enumerate :: [a] -> [(Int, a)]
-    enumerate = zipWith (,) [0..]
 
-topicNames :: Map Int String
-topicNames = fmap (toHtml . topicName) topics
+-- If topic indices aren't unique, we're gonna have really subtle bugs that will
+-- be hard to figure out.
+-- TODO: consider making this a compile-time assertion instead, possibly via
+-- https://stackoverflow.com/a/6654903
+assertUniqueTopicIndices :: IO()
+assertUniqueTopicIndices = let
+    indices = map fst topicList
+  in
+    when (indices /= nubOrd indices) (error "duplicate topic indices!?")
+
+
+topics :: Map Int Topic
+topics = fromList topicList
+
+
+topicNames :: [Value]
+topicNames = map toObject topicList
+  where
+    toObject (id, topic) =
+        object [ fromString "index" .= id
+               , fromString "name"  .= (toHtml . topicName $ topic)
+               ]
 
 
 getTopic :: Int -> Either Int Topic
@@ -101,6 +121,7 @@ data MyAppState = IoRng (IORef StdGen)
 
 main :: IO ()
 main = do
+    assertUniqueTopicIndices
     rng <- getStdGen
     ref <- newIORef rng
     spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref)
