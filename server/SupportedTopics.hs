@@ -1,7 +1,7 @@
 module SupportedTopics(
-  assertUniqueTopicIndices
-, topicNames
-, findTopics
+    assertUniqueTopicIndices
+  , topicNames
+  , findTopics
 ) where
 
 import Control.Monad(when)
