@@ -205,14 +205,46 @@ semibalMinSlam = let
             if suit == T.Hearts  -- Acknowledge that Kickback exists.
             then "(If you use a bid other than " .+ responderRebid .+ " to " .+
                  "investigate slam, use that instead.)"
-            else ""
+            else "" .+ ""
       in
-        situation "sbso" action responderRebid explanation
+        situation "sbminbw" action responderRebid explanation
   in
     -- Partner must be an unpassed hand to be game-forcing.
     wrapVulNW $ return sit
         <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, B.b1H2N4H4N,  T.Hearts)
            , (B.b1S, B.b1S2N, B.b1S2N4S, B.b1S2N4S4N,  T.Spades)
+           ]
+
+
+semibalMedSlam :: Situations
+semibalMedSlam = let
+    sit (openerBid, j2ntBid, openerRebid, responderRebid, suit) = let
+        action = do
+            setOpener T.North
+            _ <- openerBid
+            noInterference suit
+            _ <- j2ntBid
+            noInterference suit
+            _ <- openerRebid
+            noInterference suit
+        explanation =
+            "We bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". Partner has shown " .+
+            "a semibalanced hand slightly stronger than a minimum, and " .+
+            "we've got enough extra strength to be interested in slam " .+
+            "opposite that. Make a control bid."
+      in
+        situation "sbmedcb" action responderRebid explanation
+  in
+    -- Partner must be an unpassed hand to be game-forcing.
+    wrapVulNW $ return sit
+        <~ [ (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4C,  T.Hearts)
+           , (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4D,  T.Hearts)
+           -- Should there be one for control bidding spades when hearts are
+           -- trump? It's very unlikely, and maybe you should just go straight
+           -- to asking about keycards instead...
+           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4C,  T.Spades)
+           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4D,  T.Spades)
+           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4H,  T.Spades)
            ]
 
 
@@ -223,4 +255,5 @@ topic = makeTopic ("Jacoby ".+ T.Bid 2 T.Notrump)  "J2NT" $
          , sideSuit
          , wrap [semibalancedMin, semibalancedMed, semibalancedMax]
          , semibalSignoff
+         , wrap [semibalMinSlam, semibalMedSlam]
          ]

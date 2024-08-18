@@ -6,6 +6,8 @@ module Bids.Jacoby2NT(
   , b1H2N3H
   , b1H2N3S
   , b1H2N3N
+  , b1H2N3N4C
+  , b1H2N3N4D
   , b1H2N3N4H
   , b1H2N4C
   , b1H2N4D
@@ -22,6 +24,9 @@ module Bids.Jacoby2NT(
   , b1S2N3H
   , b1S2N3S
   , b1S2N3N
+  , b1S2N3N4C
+  , b1S2N3N4D
+  , b1S2N3N4H
   , b1S2N3N4S
   , b1S2N4C
   , b1S2N4D
@@ -39,7 +44,7 @@ import Action(Action)
 import Bids.StandardOpenings(b1H, b1S)
 import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
             pointRange, soundHolding, minLoserCount, maxLoserCount, forbidAll,
-            shorterThan, atMostAsLong, forEach)
+            shorterThan, atMostAsLong, forEach, hasControl, forbid)
 import Output((.+))
 import qualified Terminology as T
 
@@ -275,8 +280,54 @@ b1H2N4H4N = do
 
 b1S2N4S4N :: Action
 b1S2N4S4N = do
-    forbid b1H2N4SP
+    forbid b1S2N4SP
     -- Don't bid Blackwood with a void
     forEach T.allSuits (`minSuitLength` 1)
     makeCall $ T.Bid 4 T.Notrump
 
+
+-- Control bids over 3N
+
+b1H2N3N4C :: Action
+b1H2N3N4C = do
+    forbid b1H2N3N4H
+    hasControl T.Clubs
+    makeCall $ T.Bid 4 T.Clubs
+
+
+b1H2N3N4D :: Action
+b1H2N3N4D = do
+    forbid b1H2N3N4H
+    forbid $ hasControl T.Clubs
+    hasControl T.Diamonds
+    makeCall $ T.Bid 4 T.Diamonds
+
+
+-- TODO: if hearts are trump, you have slam interest after opener's 3N rebid,
+-- but you don't have control in either minor, should you show a spade
+-- control, or go straight to asking for keycards? I'm unsure, so skipping that
+-- entirely for now...
+
+
+b1S2N3N4C :: Action
+b1S2N3N4C = do
+    forbid b1S2N3N4S
+    hasControl T.Clubs
+    makeCall $ T.Bid 4 T.Clubs
+
+
+b1S2N3N4D :: Action
+b1S2N3N4D = do
+    forbid b1S2N3N4S
+    forbid $ hasControl T.Clubs
+    hasControl T.Diamonds
+    makeCall $ T.Bid 4 T.Diamonds
+
+
+b1S2N3N4H :: Action
+b1S2N3N4H = do
+    forbid b1S2N3N4S
+    forbid $ hasControl T.Clubs
+    forbid $ hasControl T.Diamonds
+    hasControl T.Hearts
+    makeCall $ T.Bid 4 T.Hearts
