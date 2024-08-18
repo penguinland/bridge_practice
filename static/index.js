@@ -27,15 +27,17 @@ async function getSituation() {
 // Create checkbox options for each topic the server supports.
 getTopics().then(topics => {
     const topic_section = document.getElementById("topic_list")
-    Object.entries(topics).forEach(([index, name]) => {
+    var count = 0;
+    topics.forEach(([index, name]) => {
         const tag_name = "topic_" + index;
         const checkbox = document.createElement("input");
         checkbox.type  = "checkbox"
         checkbox.id    = tag_name;
         checkbox.name  = "topics";
         checkbox.value = index;
-        if (index < 4) {
+        if (count < 4) {
             checkbox.checked = true; // Start off with a couple defaults
+            count++;
         }
 
         const topic_name = document.createElement("span");

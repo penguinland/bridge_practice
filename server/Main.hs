@@ -2,6 +2,7 @@
 module Main where
 
 import Control.Monad.Trans(liftIO)
+import Data.Bifunctor(second)
 import Data.Either.Extra(maybeToEither, mapLeft)
 import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.List.Utils(join, split)
@@ -38,34 +39,33 @@ import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as TwoDiamondO
 --import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 
 
-topicList :: [Topic]
-topicList = [ StandardOpeners.topic
-            , MajorSuitRaises.topic
-            , ForcingOneNotrump.topic
-            , JacobyTransfers.topic
-            , Stayman.topic
-            , TexasTransfers.topic
-            , Meckwell.topic
-            , Jacoby2NT.topic
-            , SmpOpenings.topic
-            , Smp1CResponses.topic
-            , Smp1CResponses.topicExtras
-            , Mafia.topic
-            , MafiaResponses.topic
-            , Smp1DResponses.topic
-            , Lampe.topic
-            , TwoDiamondOpeners.topic
+-- The list is the order to display topics on the website. The int is a unique
+-- ID for the topic when requesting a situation. That way, you can add new
+-- topics to the middle of the list without messing up anyone using the website.
+topicList :: [(Int, Topic)]
+topicList = [ (11, StandardOpeners.topic)
+            , (12, MajorSuitRaises.topic)
+            , (13, ForcingOneNotrump.topic)
+            , (14, JacobyTransfers.topic)
+            , (15, Stayman.topic)
+            , (16, TexasTransfers.topic)
+            , (17, Meckwell.topic)
+            , (18, Jacoby2NT.topic)
+            , (19, SmpOpenings.topic)
+            , (20, Smp1CResponses.topic)
+            , (21, Smp1CResponses.topicExtras)
+            , (22, Mafia.topic)
+            , (23, MafiaResponses.topic)
+            , (24, Smp1DResponses.topic)
+            , (25, Lampe.topic)
+            , (26, TwoDiamondOpeners.topic)
             ]
 
 topics :: Map Int Topic
-topics = fromList . enumerate $ topicList
-  where
-    -- I'm surprised this isn't defined in a popular, standard location.
-    enumerate :: [a] -> [(Int, a)]
-    enumerate = zipWith (,) [0..]
+topics = fromList topicList
 
-topicNames :: Map Int String
-topicNames = fmap (toHtml . topicName) topics
+topicNames :: [(Int, String)]
+topicNames = map (second $ toHtml . topicName) topicList
 
 
 getTopic :: Int -> Either Int Topic
