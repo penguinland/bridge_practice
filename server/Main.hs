@@ -2,7 +2,9 @@
 module Main where
 
 import Control.Monad.Trans(liftIO)
-import Data.Bifunctor(second)
+import Data.Aeson(object, (.=))
+import Data.Aeson.Key(fromString)
+import Data.Aeson.Types(Value)
 import Data.Either.Extra(maybeToEither, mapLeft)
 import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.List.Utils(join, split)
@@ -64,8 +66,13 @@ topicList = [ (10, StandardOpeners.topic)
 topics :: Map Int Topic
 topics = fromList topicList
 
-topicNames :: [(Int, String)]
-topicNames = map (second $ toHtml . topicName) topicList
+topicNames :: [Value]
+topicNames = map toObject topicList
+  where
+    toObject (id, topic) =
+        object [ fromString "index" .= id
+               , fromString "name"  .= (toHtml . topicName $ topic)
+               ]
 
 
 getTopic :: Int -> Either Int Topic

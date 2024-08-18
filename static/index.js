@@ -28,20 +28,20 @@ async function getSituation() {
 getTopics().then(topics => {
     const topic_section = document.getElementById("topic_list")
     var count = 0;
-    topics.forEach(([index, name]) => {
-        const tag_name = "topic_" + index;
+    topics.forEach(topic => {
+        const tag_name = "topic_" + topic.index;
         const checkbox = document.createElement("input");
         checkbox.type  = "checkbox"
         checkbox.id    = tag_name;
         checkbox.name  = "topics";
-        checkbox.value = index;
+        checkbox.value = topic.index;
         if (count < 4) {
             checkbox.checked = true; // Start off with a couple defaults
             count++;
         }
 
         const topic_name = document.createElement("span");
-        topic_name.innerHTML = name;
+        topic_name.innerHTML = topic.name;
 
         // Make the text of the checkbox clickable, too.
         const label = document.createElement("label");
