@@ -11,6 +11,7 @@ module Bids.Jacoby2NT(
   , b1H2N4D
   , b1H2N4H
   , b1H2N4HP
+  , b1H2N4H4N
   , b1H3S
   , b1H4C
   , b1H4D
@@ -27,6 +28,7 @@ module Bids.Jacoby2NT(
   , b1S2N4H
   , b1S2N4S
   , b1S2N4SP
+  , b1S2N4S4N
   , b1S4C
   , b1S4D
   , b1S4H
@@ -37,7 +39,7 @@ import Action(Action)
 import Bids.StandardOpenings(b1H, b1S)
 import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
             pointRange, soundHolding, minLoserCount, maxLoserCount, forbidAll,
-            shorterThan, atMostAsLong)
+            shorterThan, atMostAsLong, forEach)
 import Output((.+))
 import qualified Terminology as T
 
@@ -193,17 +195,20 @@ shapelyRebidsS_ = [b1S2N4C, b1S2N4D, b1S2N4H, b1S2N3C, b1S2N3D, b1S2N3S]
 
 
 -- If you can't show length or shortness, show strength
+
 b1H2N4H :: Action
 b1H2N4H = do
     forbidAll shapelyRebidsH_
     pointRange 0 13
     makeCall $ T.Bid 4 T.Hearts
 
+
 b1H2N3N :: Action
 b1H2N3N = do
     forbidAll shapelyRebidsH_
     pointRange 14 15
     makeCall $ T.Bid 3 T.Notrump
+
 
 b1H2N3H :: Action
 b1H2N3H = do
@@ -218,11 +223,13 @@ b1S2N4S = do
     pointRange 0 13
     makeCall $ T.Bid 4 T.Spades
 
+
 b1S2N3N :: Action
 b1S2N3N = do
     forbidAll shapelyRebidsS_
     pointRange 14 15
     makeCall $ T.Bid 3 T.Notrump
+
 
 b1S2N3S :: Action
 b1S2N3S = do
@@ -232,6 +239,7 @@ b1S2N3S = do
 
 
 -- Signoffs by responder
+
 b1H2N4HP :: Action
 b1H2N4HP = do
     minLoserCount 6
@@ -254,4 +262,21 @@ b1S2N3N4S :: Action
 b1S2N3N4S = do
     minLoserCount 7
     makeCall $ T.Bid 4 T.Spades
+
+-- Slam investigations
+
+b1H2N4H4N :: Action
+b1H2N4H4N = do
+    forbid b1H2N4HP
+    -- Don't bid Blackwood with a void
+    forEach T.allSuits (`minSuitLength` 1)
+    makeCall $ T.Bid 4 T.Notrump
+
+
+b1S2N4S4N :: Action
+b1S2N4S4N = do
+    forbid b1H2N4SP
+    -- Don't bid Blackwood with a void
+    forEach T.allSuits (`minSuitLength` 1)
+    makeCall $ T.Bid 4 T.Notrump
 

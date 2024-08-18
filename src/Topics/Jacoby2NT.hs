@@ -187,6 +187,35 @@ semibalSignoff = let
            ]
 
 
+semibalMinSlam :: Situations
+semibalMinSlam = let
+    sit (openerBid, j2ntBid, openerRebid, responderRebid, suit) = let
+        action = do
+            setOpener T.North
+            _ <- openerBid
+            noInterference suit
+            _ <- j2ntBid
+            noInterference suit
+            _ <- openerRebid
+            noInterference suit
+        explanation =
+            "We bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". Partner has shown " .+
+            "a semibalanced minimum, but we've got enough extra strength " .+
+            "to be interested in slam anyway. Bid on! " .+
+            if suit == T.Hearts  -- Acknowledge that Kickback exists.
+            then "(If you use a bid other than " .+ responderRebid .+ " to " .+
+                 "investigate slam, use that instead.)"
+            else ""
+      in
+        situation "sbso" action responderRebid explanation
+  in
+    -- Partner must be an unpassed hand to be game-forcing.
+    wrapVulNW $ return sit
+        <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, B.b1H2N4H4N,  T.Hearts)
+           , (B.b1S, B.b1S2N, B.b1S2N4S, B.b1S2N4S4N,  T.Spades)
+           ]
+
+
 topic :: Topic
 topic = makeTopic ("Jacoby ".+ T.Bid 2 T.Notrump)  "J2NT" $
     wrap [ j2nt
