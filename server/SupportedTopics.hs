@@ -1,4 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
 module SupportedTopics(
   assertUniqueTopicIndices
 , topicNames
@@ -6,22 +5,14 @@ module SupportedTopics(
 ) where
 
 import Control.Monad(when)
-import Control.Monad.Trans(liftIO)
 import Data.Aeson(Value, object, (.=))
 import Data.Aeson.Key(fromString)
 import Data.Containers.ListUtils(nubOrd)
 import Data.Either.Extra(maybeToEither, mapLeft)
-import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
-import Data.Text(pack)
-import Network.Wai.Middleware.Static(staticPolicy, addBase)
-import System.Random(StdGen, getStdGen)
-import Web.Spock(SpockM, file, text, get, root, (<//>), spock, runSpock, json, getState, middleware, param)
-import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
 import Output(toHtml)
-import ProblemSet(generate)
 import Topic(Topic, topicName)
 
 import qualified Topics.StandardOpeners as StandardOpeners
@@ -86,8 +77,8 @@ topics = fromList topicList
 topicNames :: [Value]
 topicNames = map toObject topicList
   where
-    toObject (id, topic) =
-        object [ fromString "index" .= id
+    toObject (index, topic) =
+        object [ fromString "index" .= index
                , fromString "name"  .= (toHtml . topicName $ topic)
                ]
 
@@ -117,35 +108,3 @@ findTopics indices = let
     formatError = ("Unknown indices: " ++) . join "," . map show
   in
     mapLeft formatError results
-
-
-data MySession = EmptySession
-data MyAppState = IoRng (IORef StdGen)
-
-
-main :: IO ()
-main = do
-    assertUniqueTopicIndices
-    rng <- getStdGen
-    ref <- newIORef rng
-    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref)
-    runSpock 8765 (spock spockCfg app)
-
-
-app :: SpockM () MySession MyAppState ()
-app = do
-    -- NOTE: these first two are relative to the current working directory when
-    -- you execute the program! So, you need to run it from the right place.
-    middleware (staticPolicy (addBase "static"))
-    get root $ file "text/html" "static/index.html"
-    get "topics" $ json topicNames
-    get ("situation") $ do
-        requested <- param "topics"
-        case maybe (Left "no topics selected") findTopics requested of
-            Left err -> text . pack $ err
-            Right topics -> do
-                (IoRng ioRng) <- getState
-                rng <- liftIO . readIORef $ ioRng
-                (sitInstList, rng') <- liftIO $ generate 1 topics rng
-                liftIO . writeIORef ioRng $ rng'
-                json . head $ sitInstList

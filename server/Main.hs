@@ -1,24 +1,16 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Control.Monad(when)
 import Control.Monad.Trans(liftIO)
-import Data.Aeson(Value, object, (.=))
-import Data.Aeson.Key(fromString)
-import Data.Containers.ListUtils(nubOrd)
-import Data.Either.Extra(maybeToEither, mapLeft)
 import Data.IORef(IORef, newIORef, readIORef, writeIORef)
-import Data.List.Utils(join, split)
-import Data.Map(Map, fromList, (!?))
 import Data.Text(pack)
 import Network.Wai.Middleware.Static(staticPolicy, addBase)
 import System.Random(StdGen, getStdGen)
-import Web.Spock(SpockM, file, text, get, root, (<//>), spock, runSpock, json, getState, middleware, param)
+import Web.Spock(SpockM, file, text, get, root, spock, runSpock, json,
+                 getState, middleware, param)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
-import Output(toHtml)
 import ProblemSet(generate)
-import Topic(Topic, topicName)
 
 import SupportedTopics(assertUniqueTopicIndices, topicNames, findTopics)
 
