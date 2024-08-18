@@ -39,7 +39,6 @@ import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as TwoDiamondO
 
 -- I don't think I ever finished making these topics...
 --import qualified Topics.MinorTransfersScott as MinorTransfers
---import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 
 
 -- The list is the order to display topics on the website. The int is a unique
@@ -64,18 +63,21 @@ topicList = [ (10, StandardOpeners.topic)
             , (56, TwoDiamondOpeners.topic)
             ]
 
--- Make a way to assert that all IDs for topics are unique: otherwise, we're
--- gonna have really subtle bugs that will be hard to figure out.
+
+-- If topic indices aren't unique, we're gonna have really subtle bugs that will
+-- be hard to figure out.
 -- TODO: consider making this a compile-time assertion instead, possibly via
 -- https://stackoverflow.com/a/6654903
-assertUniqueIndices :: IO()
-assertUniqueIndices = let
+assertUniqueTopicIndices :: IO()
+assertUniqueTopicIndices = let
     indices = map fst topicList
   in
     when (indices /= nubOrd indices) (error "duplicate topic indices!?")
 
+
 topics :: Map Int Topic
 topics = fromList topicList
+
 
 topicNames :: [Value]
 topicNames = map toObject topicList
@@ -119,7 +121,7 @@ data MyAppState = IoRng (IORef StdGen)
 
 main :: IO ()
 main = do
-    assertUniqueIndices
+    assertUniqueTopicIndices
     rng <- getStdGen
     ref <- newIORef rng
     spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref)
