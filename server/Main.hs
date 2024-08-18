@@ -43,22 +43,22 @@ import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as TwoDiamondO
 -- ID for the topic when requesting a situation. That way, you can add new
 -- topics to the middle of the list without messing up anyone using the website.
 topicList :: [(Int, Topic)]
-topicList = [ (11, StandardOpeners.topic)
-            , (12, MajorSuitRaises.topic)
-            , (13, ForcingOneNotrump.topic)
-            , (14, JacobyTransfers.topic)
-            , (15, Stayman.topic)
-            , (16, TexasTransfers.topic)
-            , (17, Meckwell.topic)
-            , (18, Jacoby2NT.topic)
-            , (19, SmpOpenings.topic)
-            , (20, Smp1CResponses.topic)
-            , (21, Smp1CResponses.topicExtras)
-            , (22, Mafia.topic)
-            , (23, MafiaResponses.topic)
-            , (24, Smp1DResponses.topic)
-            , (25, Lampe.topic)
-            , (26, TwoDiamondOpeners.topic)
+topicList = [ (10, StandardOpeners.topic)
+            , (11, MajorSuitRaises.topic)
+            , (12, ForcingOneNotrump.topic)
+            , (13, JacobyTransfers.topic)
+            , (14, Stayman.topic)
+            , (15, TexasTransfers.topic)
+            , (16, Meckwell.topic)
+            , (17, Jacoby2NT.topic)
+            , (50, SmpOpenings.topic)
+            , (51, Smp1CResponses.topic)
+            , (52, Smp1CResponses.topicExtras)
+            , (53, Mafia.topic)
+            , (54, MafiaResponses.topic)
+            , (55, Smp1DResponses.topic)
+            , (70, Lampe.topic)
+            , (56, TwoDiamondOpeners.topic)
             ]
 
 topics :: Map Int Topic
