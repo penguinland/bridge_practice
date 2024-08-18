@@ -2,9 +2,8 @@
 module Main where
 
 import Control.Monad.Trans(liftIO)
-import Data.Aeson(object, (.=))
+import Data.Aeson(Value, object, (.=))
 import Data.Aeson.Key(fromString)
-import Data.Aeson.Types(Value)
 import Data.Either.Extra(maybeToEither, mapLeft)
 import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.List.Utils(join, split)
