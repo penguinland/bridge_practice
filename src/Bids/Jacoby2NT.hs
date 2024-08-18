@@ -364,11 +364,13 @@ b1H2N3H4D = do
     makeCall $ T.Bid 4 T.Diamonds
 
 
+-- WARNING: it is exceedingly rare to not have control in any side suit! Maybe
+-- don't use this, because it doesn't come up often enough.
 b1H2N3H4H :: Action
 b1H2N3H4H = do
     forbid b1H2N3H3S
     forbid b1H2N3H4C
-    forbid b1H2N3H4H
+    forbid b1H2N3H4D
     makeCall $ T.Bid 4 T.Hearts
 
 
@@ -393,6 +395,8 @@ b1S2N3S4H = do
     makeCall $ T.Bid 4 T.Hearts
 
 
+-- WARNING: it is exceedingly rare to not have control in any side suit! Maybe
+-- don't use this, because it doesn't come up often enough.
 b1S2N3S4S :: Action
 b1S2N3S4S = do
     forbid b1S2N3S4C
