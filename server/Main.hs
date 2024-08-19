@@ -35,7 +35,7 @@ app = do
     middleware (staticPolicy (addBase "static"))
     get root $ file "text/html" "static/index.html"
     get "topics" $ json topicNames
-    get ("situation") $ do
+    get "situation" $ do
         requested <- param "topics"
         case maybe (Left "no topics selected") findTopics requested of
             Left err -> text . pack $ err
