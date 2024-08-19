@@ -2,7 +2,7 @@ module Topics.MajorSuitRaises(topic) where
 
 import qualified Bids.MajorSuitRaises as B
 import CommonBids(setOpener, noInterference)
-import Output((.+))
+import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, wrapVulDlr, wrapVulNW, Situations, makeTopic)
@@ -60,15 +60,15 @@ blast3N = let
             _ <- opening
             noInterference suit
         explanation =
-            "With 13-15 HCP, you probably want to be in game but not slam " .+
-            "when partner opens the bidding. You've got an 8-card fit in " .+
-            "partner's major, but with your 4333 shape, you're unlikely to " .+
-            "ruff anything in the short hand, so will likely take the same " .+
-            "number of tricks in notrump as you would in " .+ show suit .+
-            ". Offer " .+ T.Bid 3 T.Notrump .+ " to show this: partner can " .+
-            "pass with a balanced minimum, correct to " .+ T.Bid 4 suit .+
-            " with an unbalanced minimum, and invesigate slam if they have " .+
-            "a very strong hand."
+            "With 13" .+ NDash .+ "15 HCP, you probably want to be in game " .+
+            "but not slam when partner opens the bidding. You've got an " .+
+            "8-card fit in partner's major, but with your 4333 shape, " .+
+            "you're unlikely to ruff anything in the short hand, so will " .+
+            "likely take the same number of tricks in notrump as you " .+
+            "would in " .+ show suit .+ ". Offer " .+ T.Bid 3 T.Notrump .+
+            " to show this: partner can pass with a balanced minimum, " .+
+            "correct to " .+ T.Bid 4 suit .+ " with an unbalanced minimum, " .+
+            "and invesigate slam if they have a very strong hand."
       in
         situation "3N" action response explanation
   in
