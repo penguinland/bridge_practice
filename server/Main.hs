@@ -43,6 +43,7 @@ app = do
             Right topics -> do
                 (IoRng ioRng) <- getState
                 rng <- liftIO . readIORef $ ioRng
-                (sitInstList, rng') <- liftIO $ runStateT (generate 1 topics) rng
+                (sitInstList, rng') <- liftIO $
+                    runStateT (generate 1 topics) rng
                 liftIO . writeIORef ioRng $ rng'
                 json . head $ sitInstList
