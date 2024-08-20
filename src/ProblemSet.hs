@@ -41,9 +41,9 @@ generate n topics g = let
             return (d:rest, g'')
 
 
-outputLatex :: Int -> [Topic] -> String -> StdGen -> IO String
+outputLatex :: Int -> [Topic] -> String -> StdGen -> IO (String, StdGen)
 outputLatex numHands topics filename g = do
-    (problems, _) <- generate numHands topics g
+    (problems, g') <- generate numHands topics g
     let topicNames = join ", " . map (toLatex . topicName) $ topics
         problemSet = join "\n" . map toLatex $ problems
     template <- readFile "template.tex"
@@ -52,4 +52,4 @@ outputLatex numHands topics filename g = do
     let fullFilename = filename ++ ".tex"
     writeFile fullFilename doc
     putStrLn("Output written to " ++ fullFilename)
-    return doc
+    return (doc, g')
