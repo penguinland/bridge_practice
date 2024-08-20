@@ -46,6 +46,7 @@ outputLatex :: Int -> [Topic] -> String -> StateT StdGen IO String
 outputLatex numHands topics filename = do
     g <- get
     (problems, g') <- lift $ generate numHands topics g
+    put g'
     let topicNames = join ", " . map (toLatex . topicName) $ topics
         problemSet = join "\n" . map toLatex $ problems
     template <- lift $ readFile "template.tex"
@@ -54,5 +55,4 @@ outputLatex numHands topics filename = do
     let fullFilename = filename ++ ".tex"
     lift $ writeFile fullFilename doc
     lift $ putStrLn ("Output written to " ++ fullFilename)
-    put g'
     return doc
