@@ -5,7 +5,7 @@ module ProblemSet(
 
 import Control.Monad(when)
 import Control.Monad.Trans.Class(lift)
-import Control.Monad.Trans.State.Strict(runState, get, put, StateT)
+import Control.Monad.Trans.State.Strict(runState, get, put, StateT, State)
 import Data.List.Utils(join, replace)
 import System.IO(hFlush, stdout)
 import System.Random(StdGen)
@@ -25,6 +25,7 @@ reference topic sit g = topic ++ "." ++ sit ++ " " ++ show g
 generate :: Int -> [Topic] -> StdGen -> IO ([SituationInstance], StdGen)
 generate 0 _      g = return ([], g)
 generate n topics g = let
+    makeInst :: State StdGen (IO (Maybe SituationInstance))
     makeInst = do
         topic <- pickItem topics
         gen <- get
