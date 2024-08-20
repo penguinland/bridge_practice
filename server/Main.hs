@@ -2,6 +2,7 @@
 module Main where
 
 import Control.Monad.Trans(liftIO)
+import Control.Monad.Trans.State.Strict(runStateT)
 import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.Text(pack)
 import Network.Wai.Middleware.Static(staticPolicy, addBase)
@@ -42,6 +43,6 @@ app = do
             Right topics -> do
                 (IoRng ioRng) <- getState
                 rng <- liftIO . readIORef $ ioRng
-                (sitInstList, rng') <- liftIO $ generate 1 topics rng
+                (sitInstList, rng') <- liftIO $ runStateT (generate 1 topics) rng
                 liftIO . writeIORef ioRng $ rng'
                 json . head $ sitInstList
