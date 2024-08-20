@@ -30,7 +30,7 @@ addStack = mapStateT (return . runIdentity)
 generate :: Int -> [Topic] -> StateT StdGen IO [SituationInstance]
 generate 0 _      = return []
 generate n topics = do
-    topic <- addStack $ pickItem topics
+    topic <- pickItem topics
     gen <- get
     situation <- addStack $ choose topic
     let ref = reference (refName topic) (sitRef situation) gen
