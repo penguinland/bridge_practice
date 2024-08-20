@@ -1,3 +1,4 @@
+import Control.Monad.Trans.State.Strict(runStateT)
 import System.Random(mkStdGen)
 
 import qualified Topics.JacobyTransfers as JacobyTransfers
@@ -44,5 +45,5 @@ main = let
   in do
     -- outputLatex returns a copy of the contents of the file it wrote, but we
     -- ignore that.
-    _ <- outputLatex 100 topics "test" (mkStdGen 0)
+    _ <- runStateT (outputLatex 100 topics "test") (mkStdGen 0)
     return ()

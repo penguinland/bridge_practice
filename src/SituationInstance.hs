@@ -4,7 +4,8 @@ module SituationInstance (
 ) where
 
 
-import Control.Monad.Trans.State.Strict(State, state)
+import Control.Monad.Trans.Class(lift)
+import Control.Monad.Trans.State.Strict(StateT, state)
 import Data.Aeson(ToJSON, toJSON)
 import Data.Bifunctor(first)
 import Data.List.Utils(join)
@@ -39,16 +40,8 @@ instance ToJSON SituationInstance where
         ]
 
 
--- TODO: Find a way to make this cleaner. Monad transformers might be a relevant
--- thing here?
-instantiate :: String -> Situation ->
-        State StdGen (IO (Maybe SituationInstance))
+instantiate :: String -> Situation -> StateT StdGen IO (Maybe SituationInstance)
 instantiate reference (Situation _ b dl c s v dn) = do
     n <- state (first fromIntegral . genWord64)
-    let instantiate' :: IO (Maybe SituationInstance)
-        instantiate' = do
-            maybeDeal <- eval dn v dl n
-            -- This do notation takes care of the IO monad, and the binds take
-            -- care of the Maybe monad.
-            return (SituationInstance b c s <$> maybeDeal <*> Just reference)
-    return instantiate'
+    maybeDeal <- lift $ eval dn v dl n
+    return (SituationInstance b c s <$> maybeDeal <*> pure reference)

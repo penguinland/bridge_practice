@@ -2,6 +2,7 @@
 module Main where
 
 import Control.Monad.Trans(liftIO)
+import Control.Monad.Trans.State.Strict(runStateT)
 import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.Text(pack)
 import Network.Wai.Middleware.Static(staticPolicy, addBase)
@@ -35,13 +36,14 @@ app = do
     middleware (staticPolicy (addBase "static"))
     get root $ file "text/html" "static/index.html"
     get "topics" $ json topicNames
-    get ("situation") $ do
+    get "situation" $ do
         requested <- param "topics"
         case maybe (Left "no topics selected") findTopics requested of
             Left err -> text . pack $ err
             Right topics -> do
                 (IoRng ioRng) <- getState
                 rng <- liftIO . readIORef $ ioRng
-                (sitInstList, rng') <- liftIO $ generate 1 topics rng
+                (sitInstList, rng') <- liftIO $
+                    runStateT (generate 1 topics) rng
                 liftIO . writeIORef ioRng $ rng'
                 json . head $ sitInstList
