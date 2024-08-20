@@ -4,7 +4,8 @@ module ProblemSet(
 ) where
 
 import Control.Monad(when)
-import Control.Monad.Trans.State.Strict(runState, get)
+import Control.Monad.Trans.Class(lift)
+import Control.Monad.Trans.State.Strict(runState, get, put, StateT)
 import Data.List.Utils(join, replace)
 import System.IO(hFlush, stdout)
 import System.Random(StdGen)
@@ -41,15 +42,17 @@ generate n topics g = let
             return (d:rest, g'')
 
 
-outputLatex :: Int -> [Topic] -> String -> StdGen -> IO (String, StdGen)
-outputLatex numHands topics filename g = do
-    (problems, g') <- generate numHands topics g
+outputLatex :: Int -> [Topic] -> String -> StateT StdGen IO String
+outputLatex numHands topics filename = do
+    g <- get
+    (problems, g') <- lift $ generate numHands topics g
     let topicNames = join ", " . map (toLatex . topicName) $ topics
         problemSet = join "\n" . map toLatex $ problems
-    template <- readFile "template.tex"
+    template <- lift $ readFile "template.tex"
     let doc = replace "%<TOPICS>" topicNames .
               replace "%<PROBLEMS>" problemSet $ template
     let fullFilename = filename ++ ".tex"
-    writeFile fullFilename doc
-    putStrLn("Output written to " ++ fullFilename)
-    return (doc, g')
+    lift $ writeFile fullFilename doc
+    lift $ putStrLn ("Output written to " ++ fullFilename)
+    put g'
+    return doc
