@@ -235,7 +235,8 @@ fitSlam = let
             "Partner opened a strong " .+ T.Bid 1 T.Notrump .+ ", we bid " .+
             "Stayman, and found a major-suit fit. Show at least mild slam " .+
             "interest by bidding the other major at the 3 level! Partner " .+
-            "will start control bidding."
+            "will start control bidding. If you play Serious or Frivolous " .+
+            T.Bid 3 T.Notrump .+ ", partner might also bid that."
       in situation "fitSl" action responderRebid explanation
   in
     -- We're slam invitational; we can't be a passed hand.
