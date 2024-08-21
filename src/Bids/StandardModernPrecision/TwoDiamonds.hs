@@ -24,6 +24,8 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 , b2D3H
 , b2D3S
 , b2D3N
+, b2D4H
+, b2D4S
 ) where
 
 
@@ -156,6 +158,28 @@ b2D3N = do
     forEach T.majorSuits (`maxSuitLength` 3)
     maxSuitLength T.Clubs 4
     makeCall $ T.Bid 3 T.Notrump
+
+
+b2D4H :: Action
+b2D4H = do
+    pointRange 14 15
+    minSuitLength T.Hearts 5
+    -- If we have a double fit, you might consider looking for slam. Let's avoid
+    -- those possibilities.
+    maxSuitLength T.Spades 3
+    maxSuitLength T.Clubs 2
+    makeCall $ T.Bid 4 T.Hearts
+
+
+b2D4S :: Action
+b2D4S = do
+    pointRange 14 15
+    minSuitLength T.Spades 5
+    -- If we have a double fit, you might consider looking for slam. Let's avoid
+    -- those possibilities.
+    maxSuitLength T.Hearts 3
+    maxSuitLength T.Clubs 2
+    makeCall $ T.Bid 4 T.Spades
 
 
 b2D2N :: Action

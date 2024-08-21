@@ -218,7 +218,7 @@ immediateGameSignoff = let
       in
         situation "gfso" action bid explanation
   in
-    wrapVulNW $ return sit <~ [B.b2D3N]
+    wrapVulNW $ return sit <~ [B.b2D3N, B.b2D4H, B.b2D4S]
 
 
 bid2N :: Situations
