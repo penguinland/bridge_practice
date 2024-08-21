@@ -33,7 +33,7 @@ import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b2D, lessThanInvitational)
 import CommonBids(cannotPreempt)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
-            makeAlertableCall, atLeastAsLong, longerThan, forbid,
+            makeAlertableCall, atLeastAsLong, longerThan, forbid, forbidAll,
             balancedHand, soundHolding, makePass, alternatives, forEach,
             minLoserCount, maxLoserCount)
 import Output(Punct(..), (.+), Commentary)
@@ -184,7 +184,8 @@ b2D4S = do
 
 b2D2N :: Action
 b2D2N = do
-    forbid b2D3N
+    -- If you know the final contract, jump to it immediately.
+    forbidAll [b2D3N, b2D4H, b2D4S]
     pointRange 11 40
     makeAlertableCall (T.Bid 2 T.Notrump) "inv+, asks for strength and majors"
 
