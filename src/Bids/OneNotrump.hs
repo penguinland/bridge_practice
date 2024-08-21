@@ -66,7 +66,7 @@ import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             makeCall, makeAlertableCall, alternatives, balancedHand,
             longerThan, atLeastAsLong, flatHand, loserCount, minLoserCount,
-            forbidAll, impliesThat, forEach)
+            forbidAll, impliesThat, forEach, hasTopN)
 import Output((.+))
 import qualified Terminology as T
 
@@ -450,6 +450,7 @@ b1N2D2H3C :: Action
 b1N2D2H3C = do
     gameForcing
     minSuitLength T.Clubs 4
+    hasTopN T.Clubs 4 2  -- Don't do it with a bad side suit
     maxSuitLength T.Spades 3 -- With 4, you should have bid Smolen
     -- If you're 0544 shape, rebid your better minor. I didn't bother to build a
     -- way to find the better of two suits of equal length, so just pretend that
@@ -462,6 +463,7 @@ b1N2D2H3D :: Action
 b1N2D2H3D = do
     gameForcing
     minSuitLength T.Diamonds 4
+    hasTopN T.Diamonds 4 2  -- Don't do it with a bad side suit
     maxSuitLength T.Spades 3 -- With 4, you should have bid Smolen
     -- If you're 0544 shape, rebid your better minor. I didn't bother to build a
     -- way to find the better of two suits of equal length, so just pretend that
@@ -474,6 +476,7 @@ b1N2H2S3C :: Action
 b1N2H2S3C = do
     gameForcing
     minSuitLength T.Clubs 4
+    hasTopN T.Clubs 4 2  -- Don't do it with a bad side suit
     maxSuitLength T.Hearts 3 -- With 4, you should have bid Smolen
     -- If you're 0544 shape, rebid your better minor. I didn't bother to build a
     -- way to find the better of two suits of equal length, so just pretend that
@@ -486,6 +489,7 @@ b1N2H2S3D :: Action
 b1N2H2S3D = do
     gameForcing
     minSuitLength T.Diamonds 4
+    hasTopN T.Diamonds 4 2  -- Don't do it with a bad side suit
     maxSuitLength T.Hearts 3 -- With 4, you should have bid Smolen
     -- If you're 0544 shape, rebid your better minor. I didn't bother to build a
     -- way to find the better of two suits of equal length, so just pretend that
