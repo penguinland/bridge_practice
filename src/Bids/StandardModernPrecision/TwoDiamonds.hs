@@ -24,6 +24,8 @@ module Bids.StandardModernPrecision.TwoDiamonds(
 , b2D3H
 , b2D3S
 , b2D3N
+, b2D4H
+, b2D4S
 ) where
 
 
@@ -31,7 +33,7 @@ import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b2D, lessThanInvitational)
 import CommonBids(cannotPreempt)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
-            makeAlertableCall, atLeastAsLong, longerThan, forbid,
+            makeAlertableCall, atLeastAsLong, longerThan, forbid, forbidAll,
             balancedHand, soundHolding, makePass, alternatives, forEach,
             minLoserCount, maxLoserCount)
 import Output(Punct(..), (.+), Commentary)
@@ -133,7 +135,7 @@ bP2D3C = do
 
 b2D3H :: Action
 b2D3H = do
-    pointRange 7 9
+    pointRange 7 10
     minSuitLength T.Hearts 5
     -- NOTE: is this *not* alertable, per
     -- https://web2.acbl.org/documentLibrary/play/Alert-Procedures.pdf
@@ -142,7 +144,7 @@ b2D3H = do
 
 b2D3S :: Action
 b2D3S = do
-    pointRange 7 9
+    pointRange 7 10
     minSuitLength T.Spades 5
     -- NOTE: is this *not* alertable, either
     makeCall $ T.Bid 3 T.Spades
@@ -158,9 +160,32 @@ b2D3N = do
     makeCall $ T.Bid 3 T.Notrump
 
 
+b2D4H :: Action
+b2D4H = do
+    pointRange 14 15
+    minSuitLength T.Hearts 5
+    -- If we have a double fit, you might consider looking for slam. Let's avoid
+    -- those possibilities.
+    maxSuitLength T.Spades 3
+    maxSuitLength T.Clubs 2
+    makeCall $ T.Bid 4 T.Hearts
+
+
+b2D4S :: Action
+b2D4S = do
+    pointRange 14 15
+    minSuitLength T.Spades 5
+    -- If we have a double fit, you might consider looking for slam. Let's avoid
+    -- those possibilities.
+    maxSuitLength T.Hearts 3
+    maxSuitLength T.Clubs 2
+    makeCall $ T.Bid 4 T.Spades
+
+
 b2D2N :: Action
 b2D2N = do
-    forbid b2D3N
+    -- If you know the final contract, jump to it immediately.
+    forbidAll [b2D3N, b2D4H, b2D4S]
     pointRange 11 40
     makeAlertableCall (T.Bid 2 T.Notrump) "inv+, asks for strength and majors"
 

@@ -41,7 +41,7 @@ main = let
               , Jacoby2NT.topic
               , Lampe.topic
               ]
-    topics = [Jacoby2NT.topic]
+    topics = [Smp2DOpen.topic]
   in do
     -- outputLatex returns a copy of the contents of the file it wrote, but we
     -- ignore that.
