@@ -135,7 +135,7 @@ bP2D3C = do
 
 b2D3H :: Action
 b2D3H = do
-    pointRange 7 9
+    pointRange 7 10
     minSuitLength T.Hearts 5
     -- NOTE: is this *not* alertable, per
     -- https://web2.acbl.org/documentLibrary/play/Alert-Procedures.pdf
@@ -144,7 +144,7 @@ b2D3H = do
 
 b2D3S :: Action
 b2D3S = do
-    pointRange 7 9
+    pointRange 7 10
     minSuitLength T.Spades 5
     -- NOTE: is this *not* alertable, either
     makeCall $ T.Bid 3 T.Spades
