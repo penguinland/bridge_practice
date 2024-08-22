@@ -11,6 +11,8 @@ import Data.Containers.ListUtils(nubOrd)
 import Data.Either.Extra(maybeToEither, mapLeft)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
+import Data.Tuple.Extra((&&&))
+import Data.Tuple.Utils(fst3, thd3)
 
 import Output(toHtml)
 import Topic(Topic, topicName)
@@ -39,23 +41,24 @@ import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as TwoDiamondO
 -- The list is the order to display topics on the website. The int is a unique
 -- ID for the topic when requesting a situation. That way, you can add new
 -- topics to the middle of the list without messing up anyone using the website.
-topicList :: [(Int, Topic)]
-topicList = [ (10, StandardOpeners.topic)
-            , (11, MajorSuitRaises.topic)
-            , (12, ForcingOneNotrump.topic)
-            , (13, JacobyTransfers.topic)
-            , (14, Stayman.topic)
-            , (15, TexasTransfers.topic)
-            , (16, Meckwell.topic)
-            , (17, Jacoby2NT.topic)
-            , (50, SmpOpenings.topic)
-            , (51, Smp1CResponses.topic)
-            , (52, Smp1CResponses.topicExtras)
-            , (53, Mafia.topic)
-            , (54, MafiaResponses.topic)
-            , (55, Smp1DResponses.topic)
-            , (70, Lampe.topic)
-            , (56, TwoDiamondOpeners.topic)
+-- The boolean is whether this topic should be selected by default.
+topicList :: [(Int, Bool, Topic)]
+topicList = [ (10, True,  StandardOpeners.topic)
+            , (11, True,  MajorSuitRaises.topic)
+            , (12, True,  ForcingOneNotrump.topic)
+            , (13, True,  JacobyTransfers.topic)
+            , (14, True,  Stayman.topic)
+            , (15, False, TexasTransfers.topic)
+            , (16, False, Meckwell.topic)
+            , (17, True,  Jacoby2NT.topic)
+            , (50, False, SmpOpenings.topic)
+            , (51, False, Smp1CResponses.topic)
+            , (52, False, Smp1CResponses.topicExtras)
+            , (53, False, Mafia.topic)
+            , (54, False, MafiaResponses.topic)
+            , (55, False, Smp1DResponses.topic)
+            , (70, False, Lampe.topic)
+            , (56, False, TwoDiamondOpeners.topic)
             ]
 
 
@@ -65,21 +68,22 @@ topicList = [ (10, StandardOpeners.topic)
 -- https://stackoverflow.com/a/6654903
 assertUniqueTopicIndices :: IO()
 assertUniqueTopicIndices = let
-    indices = map fst topicList
+    indices = map fst3 topicList
   in
     when (indices /= nubOrd indices) (error "duplicate topic indices!?")
 
 
 topics :: Map Int Topic
-topics = fromList topicList
+topics = fromList . map (fst3 &&& thd3) $ topicList
 
 
 topicNames :: [Value]
 topicNames = map toObject topicList
   where
-    toObject (index, topic) =
-        object [ fromString "index" .= index
-               , fromString "name"  .= (toHtml . topicName $ topic)
+    toObject (index, selectByDefault, topic) =
+        object [ fromString "index"             .= index
+               , fromString "select_by_default" .= selectByDefault
+               , fromString "name"              .= (toHtml . topicName $ topic)
                ]
 
 
