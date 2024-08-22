@@ -44,7 +44,7 @@ minorAndMajor = let
         explanation =
             "With a two-suited hand with " .+ show suit .+ " and a major, " .+
             "start by bidding the minor. Partner will pass with a fit, or " .+
-            "bid " .+ T.Bid 2 T.Hearts .+ " with the majors, which you can " .+
+            "bid " .+ T.Bid 2 T.Hearts .+ " with the majors, which we can " .+
             "pass or correct to " .+ T.Bid 2 T.Spades .+ "."
         in situation "min" action bid explanation
   in
@@ -63,8 +63,8 @@ double = let
         explanation =
             "A double shows either a hand with 1 long minor, or else a " .+
             "hand with both majors. Partner will relay to " .+
-            T.Bid 2 T.Clubs .+ ", which you can either pass or correct. " .+
-            "When you have both majors, correct to " .+ T.Bid 2 T.Hearts .+
+            T.Bid 2 T.Clubs .+ ", which we can either pass or correct. " .+
+            "When we have both majors, correct to " .+ T.Bid 2 T.Hearts .+
             ", which partner can then either pass or correct to spades."
         in situation "dbl" action B.b1NoX explanation
   in
@@ -83,8 +83,8 @@ relayAfterDouble = let
             responderCannotBid
         explanation =
             "Partner has either one long minor or both majors. No matter " .+
-            "what you have, relay to " .+ T.Bid 2 T.Clubs .+ " to find out " .+
-            "what kind of hand partner has. Do this even if you have " .+
+            "what we have, relay to " .+ T.Bid 2 T.Clubs .+ " to find out " .+
+            "what kind of hand partner has. Do this even if we have " .+
             "absolutely no strength: leaving the opponents in " .+
             T.Bid 1 T.Notrump .+ " doubled is never the right choice."
         in situation "Xrelay" action B.b1NoX2C explanation
@@ -104,7 +104,7 @@ doubleBothMajors = let
             B.b1NoX2C
             makePass
         explanation =
-            "Now that partner has relayed to ask what your hand shape is, " .+
+            "Now that partner has relayed to ask what our hand shape is, " .+
             "bid " .+ T.Bid 2 T.Hearts .+ " to show both majors. Partner " .+
             "will pass or correct to spades."
         in situation "bmaj" action B.b1NoX2C2H explanation
@@ -121,7 +121,7 @@ bothMinors = let
             B.b1N
         explanation =
             "With both minors, bid an unusual-like " .+ T.Bid 2 T.Notrump .+
-            ". Partner will bid their favorite minor, and you'll pass."
+            ". Partner will bid their favorite minor, and we'll pass."
         in situation "bmin" action B.b1No2N explanation
   in
     -- Ensure we're not dealer.
@@ -138,10 +138,10 @@ findMajor = let
             responderCannotBid
         explanation =
             "Partner has shown a two-suited hand with " .+ show suit .+
-            " and a major. You don't have a " .+ (init . show $ suit) .+
+            " and a major. We don't have a " .+ (init . show $ suit) .+
             " fit, so bid " .+ T.Bid 2 T.Hearts .+ ", which partner can " .+
-            "pass or correct. It's possible you'll end up in only a 7-card " .+
-            "fit, if your hands are particularly mismatched."
+            "pass or correct. It's possible we'll end up in only a 7-card " .+
+            "fit, if our hands are particularly mismatched."
         in situation "majpoc" action response explanation
   in
     -- Ensure partner is not dealer.

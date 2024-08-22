@@ -24,10 +24,10 @@ garbageStayman = let
             "have less than invitational strength, but we have both majors " .+
             "and diamonds. Bid Garbage Stayman! Partner will think it's " .+
             OpenQuote .+ "normal" .+ CloseQuote .+ " Stayman, and bid " .+
-            "accordingly. Pass whatever partner does: if you find an 8-card " .+
+            "accordingly. Pass whatever partner does: if we find an 8-card " .+
             "major fit, that will likely play better than stopping in " .+
             T.Bid 1 T.Notrump .+ ". and if partner has neither major, " .+
-            "they're likely to have diamonds for you. It's possible partner " .+
+            "they're likely to have diamonds for us. It's possible partner " .+
             "has 3325 shape and gets stuck without a trump fit, but that's " .+
             "unlikely. On average, this will be better than passing " .+
             T.Bid 1 T.Notrump .+ "."
@@ -47,7 +47,7 @@ nongarbageStayman = let
         explanation =
             "Partner has opened a strong " .+ T.Bid 1 T.Notrump .+ ". We " .+
             "have a 4-card major and at least invitational strength. Bid " .+
-            "Stayman, and see if you've got a major-suit fit."
+            "Stayman, and see if we've got a major-suit fit."
       in situation "stmn" action B.b1N2C explanation
   in
     stdWrap sit

@@ -20,17 +20,17 @@ makeTransferSignoff = let
             makePass
             B.gameNoSlam
         explanation =
-            "Partner has opened " .+ T.Bid 1 T.Notrump .+ ", and you've " .+
+            "Partner has opened " .+ T.Bid 1 T.Notrump .+ ", and we've " .+
             "got a 6-card major and a game-forcing hand with no interest " .+
-            "in slam. Make a Texas Transfer by bidding 1 below your suit. " .+
-            "Partner will complete the transfer by bidding your suit, and " .+
-            "then you can pass. You're guaranteed a trump fit because " .+
+            "in slam. Make a Texas Transfer by bidding 1 below our suit. " .+
+            "Partner will complete the transfer by bidding our suit, and " .+
+            "then we can pass. We're guaranteed a trump fit because " .+
             "partner should have at least a doubleton in every suit."
         in situation "SO" action bid explanation
   in
     -- Optimization to make the code faster: it is exceedingly rare for South to
     -- make a Texas Transfer as a passed hand (to be unable to open the bidding
-    -- on the Rule of 20 with a 6-card suit and 10+ HCP, you'll need 6332 shape
+    -- on the Rule of 20 with a 6-card suit and 10+ HCP, we'd need 6332 shape
     -- with exactly 10 HCP). It's not impossible: it happens once every couple
     -- hundred thousand hands. To speed up program execution, we focus only on
     -- the times when South is an unpassed hand.
@@ -46,13 +46,13 @@ makeTransferSlam = let
             makePass
             B.slamInterest
         explanation =
-            "Partner has opened " .+ T.Bid 1 T.Notrump .+ ", and you've " .+
+            "Partner has opened " .+ T.Bid 1 T.Notrump .+ ", and we've " .+
             "got a 6-card major and definite slam interest. " .+
-            "Make a Texas Transfer by bidding 1 below your suit. " .+
-            "Partner will complete the transfer by bidding your suit, and " .+
-            "then you can investigate slam with whatever systems you and " .+
-            "partner have agreed on. You're guaranteed a trump fit because " .+
-            "partner should have at least a doubleton in every suit."
+            "Make a Texas Transfer by bidding 1 below our suit. " .+
+            "Partner will complete the transfer by bidding our suit, and " .+
+            "then we can investigate slam with whatever conventions you " .+
+            "and partner have agreed on. We're guaranteed a trump fit " .+
+            "because partner should have at least a doubleton in every suit."
         in situation "SI" action bid explanation
   in
     -- Note that South cannot be a passed hand and have interest in slam.
@@ -138,7 +138,7 @@ transferSlamInvite = let
             minSuitLength suit 6
             B.slamInvite
         explanation =
-            "Partner has opened " .+ T.Bid 1 T.Notrump .+ ", and you've " .+
+            "Partner has opened " .+ T.Bid 1 T.Notrump .+ ", and we've " .+
             "got a 6-card major and a slam invite. Make a Jacoby transfer, " .+
             "then raise to game. If partner is a maximum, they'll " .+
             "investigate slam, and with a minimum, they'll pass."

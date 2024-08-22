@@ -60,11 +60,11 @@ blast3N = let
             _ <- opening
             noInterference suit
         explanation =
-            "With 13" .+ NDash .+ "15 HCP, you probably want to be in game " .+
-            "but not slam when partner opens the bidding. You've got an " .+
-            "8-card fit in partner's major, but with your 4333 shape, " .+
-            "you're unlikely to ruff anything in the short hand, so will " .+
-            "likely take the same number of tricks in notrump as you " .+
+            "With 13" .+ NDash .+ "15 HCP, we probably want to be in game " .+
+            "but not slam when partner opens the bidding. We've got an " .+
+            "8-card fit in partner's major, but with our 4333 shape, " .+
+            "we're unlikely to ruff anything in the short hand, so will " .+
+            "likely take the same number of tricks in notrump as we " .+
             "would in " .+ show suit .+ ". Offer " .+ T.Bid 3 T.Notrump .+
             " to show this: partner can pass with a balanced minimum, " .+
             "correct to " .+ T.Bid 4 suit .+ " with an unbalanced minimum, " .+
