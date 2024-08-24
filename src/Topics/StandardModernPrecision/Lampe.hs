@@ -23,9 +23,9 @@ majorSuitImmediateResponse = let
             if hasMinor then longMinor else forbid longMinor
         explanation =
             "Partner opened an ambiguous " .+ T.Bid 1 T.Diamonds .+ ". " .+
-            "Bid your major suit naturally, and we'll go from there. " .+
-            if hasMinor then "You can make a canap" .+ EAcute .+ " bid to " .+
-                             "show your long minor afterwards."
+            "Bid our major suit naturally, and we'll go from there. " .+
+            if hasMinor then "We can make a canap" .+ EAcute .+ " bid to " .+
+                             "show our long minor afterwards."
                         else "" .+ ""  -- Get the types right
       in
         situation "1M" action answer explanation
@@ -46,13 +46,13 @@ clubCanape = let
             makeCall T.Pass
         explanation =
             "Partner opened an ambiguous " .+ T.Bid 1 T.Diamonds .+ ". " .+
-            "You started by bidding your major suit naturally, but did " .+
+            "We started by bidding our major suit naturally, but did " .+
             "not find a fit with partner. XYZ would be on, but instead " .+
-            "make a canap" .+ EAcute .+ " bid to show your long clubs. " .+
+            "make a canap" .+ EAcute .+ " bid to show our long clubs. " .+
             "Partner will relay to " .+ T.Bid 3 T.Clubs .+ ", after which " .+
-            "you can pass with a weak hand, or bid on with a game-forcing " .+
-            "hand. You already have a very good sense of partner's " .+
-            "strength, so you can't really have an invitational hand any more."
+            "we can pass with a weak hand, or bid on with a game-forcing " .+
+            "hand. We already have a very good sense of partner's " .+
+            "strength, so we can't really have an invitational hand any more."
       in
         situation "ccan" action responderRebid explanation
   in
@@ -75,9 +75,9 @@ diamondCanape = let
             makeCall T.Pass
         explanation =
             "Partner opened an ambiguous " .+ T.Bid 1 T.Diamonds .+ ". " .+
-            "You started by bidding your major suit naturally, but did " .+
+            "We started by bidding our major suit naturally, but did " .+
             "not find a fit with partner. XYZ would be on, but instead " .+
-            "make a canap" .+ EAcute .+ " bid to show your long diamonds: " .+
+            "make a canap" .+ EAcute .+ " bid to show our long diamonds: " .+
             T.Bid 3 T.Clubs .+ " shows diamonds and a 4-card major, while " .+
             T.Bid 3 T.Diamonds .+ " shows diamonds and at least a 5-card " .+
             "major. Both bids are game forcing."
@@ -147,10 +147,10 @@ twoClubsSS = let
             B.b1D2C
             noInterference T.Diamonds
         explanation =
-            "You opened an ambiguous " .+ T.Bid 1 T.Diamonds .+ ", and " .+
+            "We opened an ambiguous " .+ T.Bid 1 T.Diamonds .+ ", and " .+
             "partner has shown an invitational or better hand with a minor. " .+
             "With a maximum, make a shape-shower bid immediately. Partner " .+
-            "is invitational or better, and this bid indicates you would " .+
+            "is invitational or better, and this bid indicates we would " .+
             "accept an invitation, so is game-forcing."
       in
         situation "2CSS" action answer explanation
@@ -173,7 +173,7 @@ twoClubsUnbalGf = let
     explanation =
         "Partner has an unbalanced minimum, but we're game forcing. Bid " .+
         "an artificial " .+ B.b1D2C2D2H .+ " to ask partner for a " .+
-        "shape-shower. This will let you find the right suit to play " .+
+        "shape-shower. This will let us find the right suit to play " .+
         "in, or perhaps " .+ T.Bid 3 T.Notrump .+ "."
   in
     wrapVulNW . return $ situation "unbalGF" action B.b1D2C2D2H explanation
@@ -193,7 +193,7 @@ twoClubsUnbalSS = let
             B.b1D2C2D2H
             noInterference T.Diamonds
         explanation =
-            "You've shown an unbalanced minimum, but partner is " .+
+            "We've shown an unbalanced minimum, but partner is " .+
             "game-forcing anyway. Make a shape-shower bid, and they can " .+
             "place the final contract from there."
       in
@@ -204,8 +204,8 @@ twoClubsUnbalSS = let
                               , B.b1D2C2D2H2N
                               , B.b1D2C2D2H3C
                               , B.b1D2C2D2H3D
-                              -- You're a minimum, and you'd only open 1D with a
-                              -- 5-card suit if you're a maximum. So, the other
+                              -- We're a minimum, and we only open 1D with a
+                              -- 5-card suit if were a maximum. So, the other
                               -- shape-showers don't exist.
                               --, B.b1D2C2D2H3H
                               --, B.b1D2C2D2H3S

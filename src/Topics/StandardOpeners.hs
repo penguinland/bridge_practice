@@ -25,7 +25,7 @@ oneNotrump = let
     explanation =
         "With 15 to 17 HCP and a balanced hand, open a strong " .+
         T.Bid 1 T.Notrump .+ ". No need to plan a second bid;\
-      \ partner is now captain of the auction and will take over for you."
+      \ partner is now captain of the auction and will take over for us."
   in
     stdWrap $ situation "1N" action SO.b1N explanation
 
@@ -37,7 +37,7 @@ twoNotrump = let
     explanation =
         "With 20 to 21 HCP and a balanced hand, open " .+
         T.Bid 2 T.Notrump .+ ". No need to plan a second bid;\
-      \ partner is now captain of the auction and will take over for you."
+      \ partner is now captain of the auction and will take over for us."
   in
     stdWrap $ situation "2N" action SO.b2N explanation
 
@@ -103,7 +103,7 @@ oneDiamond = let
     explanation =
         "With no 5-card major and a hand unsuitable for opening \
       \ notrump, open " .+ T.Bid 1 T.Diamonds .+ " when \
-      \ diamonds is your only minor."
+      \ diamonds is our only minor."
   in
     stdWrap $ situation "1D1Suit" action SO.b1D explanation
 
@@ -119,9 +119,9 @@ oneDiamond3Cards = let
     explanation =
         "With no 5-card major and a hand unsuitable for opening \
       \ notrump, open " .+ T.Bid 1 T.Diamonds .+ " when \
-      \ diamonds is your only minor, even if you only have 3 of them. The \
-      \ only time you'd open " .+ T.Bid 1 T.Diamonds .+ " with a 3-card suit \
-      \ in standard openings is when your shape is exactly 4=4=3=2."
+      \ diamonds is our only minor, even if we only have 3 of them. The \
+      \ only time we'd open " .+ T.Bid 1 T.Diamonds .+ " with a 3-card suit \
+      \ in standard openings is when our shape is exactly 4=4=3=2."
   in
     stdWrap $ situation "1D4432" action SO.b1D explanation
 
@@ -134,7 +134,7 @@ oneClub = let
         minSuitLength T.Clubs 4
     explanation =
         "With no 5-card major and a hand unsuitable for opening  notrump,\
-      \ open " .+ T.Bid 1 T.Clubs .+ " when  clubs is your only minor."
+      \ open " .+ T.Bid 1 T.Clubs .+ " when  clubs is our only minor."
   in
     stdWrap $ situation "1C1Suit" action SO.b1C explanation
 
@@ -149,7 +149,7 @@ oneClubEqualMinors = let
         explanation =
             "With no 5-card major and a hand unsuitable for opening \
           \ notrump, open " .+ T.Bid 1 T.Clubs .+ " when \
-          \ your minors are of equal, short length. As the saying goes, " .+
+          \ our minors are of equal, short length. As the saying goes, " .+
             OpenQuote .+ "up the line with 3s and 4s, from the top with 5s " .+
             "or mores." .+ CloseQuote
       in
@@ -182,8 +182,8 @@ bothMinorsNoReverseShortD = let
         "With both minors but not enough strength to reverse, open " .+
         T.Bid 1 T.Diamonds .+ ", planning to rebid " .+
         T.Bid 2 T.Clubs .+ " next turn. This is even the case\
-      \ when your clubs are longer than your diamonds! Bidding clubs first\
-      \ and diamonds second is a reverse (responder can't go back to your\
+      \ when our clubs are longer than our diamonds! Bidding clubs first\
+      \ and diamonds second is a reverse (responder can't go back to our\
       \ first suit without going to the 3 level), and cannot be bid without\
       \ enough strength to make a 3-level contract viable when partner has\
       \ a minimum."
@@ -220,7 +220,7 @@ pass = let
         alternatives [balancedHand >> pointRange 8 10,
                       B.cannotPreempt >> pointRange 7 9]
     explanation =
-        "You don't have the strength to open, and you don't have the shape " .+
+        "We don't have the strength to open, and we don't have the shape " .+
         "to preempt. Just pass."
   in
     -- Some people might be tempted to open light in 3rd or 4th seat, so

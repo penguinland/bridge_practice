@@ -32,8 +32,8 @@ initiateTransferWeak = let
             pointRange 0 7
             forbid equalMajors  -- With 5-5 in the majors, pick the better one.
         explanation =
-            "Partner has opened a strong " .+ B.b1N .+ ". You have " .+
-            "such a weak hand that you have no interest in game, but you do " .+
+            "Partner has opened a strong " .+ B.b1N .+ ". We have " .+
+            "such a weak hand that we have no interest in game, but we do " .+
             "have a 5-card major. Playing in it, even if it's a 5-2 fit, is " .+
             "more likely to succeed than playing in notrump. Make a Jacoby " .+
             "transfer into the suit, then pass and leave partner at the 2 " .+
@@ -55,7 +55,7 @@ initiateTransferBInv = let
             forbid equalMajors
             balancedHand
         explanation =
-            "Partner has opened a strong " .+ B.b1N .+ ". You have " .+
+            "Partner has opened a strong " .+ B.b1N .+ ". We have " .+
             "a balanced hand with invitational strength, and a 5-card " .+
             "major. Make a Jacoby transfer into the suit, then bid " .+
             T.Bid 2 T.Notrump .+ ". This gives partner the " .+
@@ -79,14 +79,13 @@ initiateTransferBGf = let
             pointRange 10 14
             balancedHand
         explanation =
-            "Partner has opened a strong " .+ B.b1N .+ ". You have " .+
+            "Partner has opened a strong " .+ B.b1N .+ ". We have " .+
             "a balanced hand with game-going but not slam-going strength, " .+
             "and a 5-card major. Make a Jacoby transfer into the suit, " .+
             "then bid " .+ T.Bid 3 T.Notrump .+ ". This gives partner the " .+
             "options of passing and playing in notrump with 2-card " .+
-            init (show suit) .+ " support or correcting to " .+
-            T.Bid 4 suit .+ " with a fit, knowing that you " .+
-            "belong in game but not slam."
+            init (show suit) .+ " support or correcting to " .+ T.Bid 4 suit .+
+            " with a fit, knowing that we belong in game but not slam."
       in
         situation "InitBGF" action bid explanation
   in
@@ -103,7 +102,7 @@ completeTransfer = let
             _ <- responderBid
             B.noInterference  -- TODO: Allow overcalls of lower suits
         explanation =
-            "You have opened a strong " .+ B.b1N .+ ", and partner " .+
+            "We have opened a strong " .+ B.b1N .+ ", and partner " .+
             "has made a Jacoby transfer. Complete the transfer by bidding " .+
             "the next higher suit. Partner promises at least 5 cards in " .+
             "that major, and will describe their hand further (possibly by " .+
@@ -125,15 +124,15 @@ completeTransferShort = let
             B.noInterference  -- TODO: Allow overcalls of lower suits
             suitLength suit 2
         explanation =
-            "You have opened a strong " .+ B.b1N .+ ", and partner " .+
+            "We have opened a strong " .+ B.b1N .+ ", and partner " .+
             "has made a Jacoby transfer, indicating they have at least 5 " .+
-            show suit .+ ". Even though you only have 2-card support, " .+
-            "complete the transfer by bidding the next higher suit. You " .+
+            show suit .+ ". Even though we only have 2-card support, " .+
+            "complete the transfer by bidding the next higher suit. We " .+
             "have at least a 7-card fit. If partner is very weak, " .+
             T.Bid 2 suit .+ " rates to play better than notrump, " .+
-            "and you want to be declarer so that your strong hand stays " .+
+            "and we want to be declarer so that our strong hand stays " .+
             "hidden. If partner has at least invitational strength, " .+
-            "they will make another bid to give you options of where to play."
+            "they will make another bid to give us options of where to play."
       in
         situation "Short" action openerRebid explanation
   in
@@ -184,9 +183,9 @@ majors55gf = let
       in
         situation "55GF" action B.b1N2H explanation
   in
-    -- Note that with 5-5 and game-going strength, you would have opened the
-    -- bidding if you had a chance (needing only 10 HCP on the rule of 20). So,
-    -- you must not have had a chance to bid before your partner.
+    -- Note that with 5-5 and game-going strength, we would have opened the
+    -- bidding if we had a chance (needing only 10 HCP on the rule of 20). So,
+    -- we must not have had a chance to bid before partner.
     stdWrapNW sit
 
 
@@ -241,9 +240,9 @@ majors55gf2 = let
       in
         situation "55GF2" action B.b1N2H2S3H explanation
   in
-    -- Note that with 5-5 and game-going strength, you would have opened the
-    -- bidding if you had a chance (needing only 10 HCP on the rule of 20). So,
-    -- you must not have had a chance to bid before your partner.
+    -- Note that with 5-5 and game-going strength, we would have opened the
+    -- bidding if we had a chance (needing only 10 HCP on the rule of 20). So,
+    -- we must not have had a chance to bid before partner.
     stdWrapNW sit
 
 

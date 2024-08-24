@@ -13,7 +13,7 @@ import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic,
 
 
 -- When trying to sign off with less than invitational strength, a new suit
--- being nonforcing is alertable only if you're an unpassed hand, so we have
+-- being nonforcing is alertable only if we're an unpassed hand, so we have
 -- different bids depending on who the dealer is.
 nwOrSeBid :: Action -> Action -> [(Action, T.Direction)]
 nwOrSeBid nw se = [(nw, T.North), (nw, T.West), (se, T.South), (se, T.East)]
@@ -43,7 +43,7 @@ immediateSignoffSpades34 = let
             "Without the strength for a game contract, sign off in " .+
             T.Bid 2 T.Spades .+ " with a likely fit. " .+
             if spadeLength == 3
-                then "If you're stuck playing a 4-3 fit, oh well."
+                then "If we're stuck playing a 4-3 fit, oh well."
                 else ""
       in
         situation "S43" action bid explanation vul direction
@@ -105,7 +105,7 @@ passBlackSignoff = let
             B.noDirectOvercall
         explanation =
             "Partner has less-than-invitational values and is signing off. " .+
-            "Just pass. It's possible that sometimes you'll end up in a " .+
+            "Just pass. It's possible that sometimes we'll end up in a " .+
             "7-card fit."
       in
         situation "3CP" action (makePass) explanation vul direction
@@ -152,7 +152,7 @@ passSignoffHearts = let
             forbid B.b2D2H2S
         explanation =
             "Partner has less-than-invitational values and is signing off. " .+
-            "Given that you have 4 hearts, pass."
+            "Given that we have 4 hearts, pass."
       in
         situation "2H2S" action (makePass) explanation vul direction
   in
@@ -297,8 +297,8 @@ gfAnyway = let
         explanation =
             "Partner has shown a minimum, but we're game forcing anyway. " .+
             "Bid " .+ T.Bid 3 T.Diamonds .+ " to re-ask partner about " .+
-            "their major suits. When they reply, you'll know their exact " .+
-            "shape and their strength to within 1 HCP. You'll then know " .+
+            "their major suits. When they reply, we'll know their exact " .+
+            "shape and their strength to within 1 HCP. We'll then know " .+
             "what the final contract should be, and can use " .+ B.name44Rkc .+
             " to place it."
       in

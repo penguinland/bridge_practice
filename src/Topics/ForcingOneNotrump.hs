@@ -18,10 +18,10 @@ bid1NHearts = let
             B.b1H
             noInterference T.Hearts
         explanation =
-            "Partner has opened " .+ T.Bid 1 T.Hearts .+ ". You don't have " .+
+            "Partner has opened " .+ T.Bid 1 T.Hearts .+ ". We don't have " .+
             "a heart fit, don't have 4 spades, and aren't strong enough to " .+
             "force to game. Bid a forcing " .+ T.Bid 1 T.Notrump .+ ". " .+
-            "Partner will rebid naturally, and you'll likely stop in some " .+
+            "Partner will rebid naturally, and we'll likely stop in some " .+
             "partscore."
       in
         situation "H1N" action B.b1H1N explanation
@@ -37,10 +37,10 @@ bid1NSpades = let
             B.b1S
             noInterference T.Spades
         explanation =
-            "Partner has opened " .+ T.Bid 1 T.Spades .+ ". You don't have " .+
+            "Partner has opened " .+ T.Bid 1 T.Spades .+ ". We don't have " .+
             "a spade fit and aren't strong enough to force to game. Bid a " .+
             "forcing " .+ T.Bid 1 T.Notrump .+ ". Partner will rebid " .+
-            "naturally, and you'll likely stop in some partscore."
+            "naturally, and we'll likely stop in some partscore."
       in
         situation "S1N" action B.b1S1N explanation
   in
@@ -156,7 +156,7 @@ limitRaise3 = let
             "We've got 3-card support for partner's major, and strength for " .+
             "a limit raise. Start with a forcing " .+ T.Bid 1 T.Notrump .+
             ", planning to then jump to 3 of partner's major. If they've " .+
-            "got a minimum, they'll pass your second bid, and if they've " .+
+            "got a minimum, they'll pass our second bid, and if they've " .+
             "got a little extra, they'll bid game."
       in
         situation "lr3" action response explanation
