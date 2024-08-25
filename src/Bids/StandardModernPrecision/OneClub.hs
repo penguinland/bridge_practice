@@ -13,6 +13,11 @@ module Bids.StandardModernPrecision.OneClub(
   , b1C2H
   , b1C2Halt
   , b1C2S
+  , b1C2S2N
+  , b1C2S2N3C
+  , b1C2S2N3D
+  , b1C2S2N3H
+  , b1C2S2N3S
   , b1C2Nalt
   , bP1C1H
   , bP1C1S
@@ -54,6 +59,11 @@ module Bids.StandardModernPrecision.OneClub(
   , b1C1H2D
   , b1C1H2H
   , b1C1H2S
+  , b1C1H2S2N
+  , b1C1H2S2N3C
+  , b1C1H2S2N3D
+  , b1C1H2S2N3H
+  , b1C1H2S2N3S
   , b1C1H2N
   , b1C1H3N
   , tripleFourOneShape  -- For use when defining other bids
@@ -160,7 +170,7 @@ b1C1Nalt = do
 b1C2S :: Action
 b1C2S = do
     _slamInterest
-    constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
+    tripleFourOneShape
     makeAlertableCall (T.Bid 2 T.Spades) "12+ HCP, any 4441 shape"
 
 
@@ -541,3 +551,44 @@ b1C1H2S :: Action
 b1C1H2S = do
     tripleFourOneShape
     makeAlertableCall (T.Bid 2 T.Spades) "any 4441 hand"
+
+
+b1C1H2S2N :: Action
+b1C1H2S2N :: Action
+    makeAlertableCall (T.Bid 2 T.Notrump) "what is your singleton?"
+
+
+b1C1H2S2N3C :: Action
+    suitLength T.Clubs 1
+    makeAlertableCall (T.Bid 3 T.Clubs) "singleton club"
+
+
+b1C1H2S2N3D :: Action
+    suitLength T.Diamonds 1
+    makeAlertableCall (T.Bid 3 T.Clubs) "singleton diamond"
+
+
+b1C1H2S2N3H :: Action
+    suitLength T.Hearts 1
+    makeAlertableCall (T.Bid 3 T.Clubs) "singleton heart"
+
+
+b1C1H2S2N3S :: Action
+    suitLength T.Spades 1
+    makeAlertableCall (T.Bid 3 T.Clubs) "singleton spade"
+
+
+b1C2S2N :: Action
+b1C2S2N = b1C1H2S2N
+
+b1C2S2N3C :: Action
+b1C2S2N3C = b1C1H2S2N3C
+
+b1C2S2N3D :: Action
+b1C2S2N3D = b1C1H2S2N3D
+
+b1C2S2N3H :: Action
+b1C2S2N3H = b1C1H2S2N3H
+
+b1C2S2N3S :: Action
+b1C2S2N3S = b1C1H2S2N3S
