@@ -94,37 +94,35 @@ bidSingleton = let
       in
         wrap $ return inner <~ answers <~ dealers
   in
-    wrap $ return sit <~ [ (do B.b1C
-                               oppsPass
-                               B.b1C1H
-                               oppsPass
-                               B.b1C1H2S
-                               oppsPass
-                               B.b1C1H2S2N
-                               oppsPass
-                           , [ B.b1C1H2S2N3C, B.b1C1H2S2N3D
-                             , B.b1C1H2S2N3H, B.b1C1H2S2N3S ]
-                           , T.South, [T.South, T.East])
-                         , (do B.b1C
-                               oppsPass
-                               B.b1C2S
-                               oppsPass
-                               B.b1C2S2N
-                               oppsPass
-                           , [ B.b1C2S2N3C, B.b1C2S2N3D
-                             , B.b1C2S2N3H, B.b1C2S2N3S ]
-                           , T.North, [T.North, T.West])
-                         , (do B.b1C
-                               oppsPass
-                               B.bP1C2S
-                               oppsPass
-                               B.b1C2S2N
-                               oppsPass
-                           , [ B.b1C2S2N3C, B.b1C2S2N3D
-                             , B.b1C2S2N3H, B.b1C2S2N3S ]
-                           , T.North, [T.South, T.East])
-                         ]
-                      <~ T.allVulnerabilities
+    wrap $ return sit
+        <~ [ (do B.b1C
+                 oppsPass
+                 B.b1C1H
+                 oppsPass
+                 B.b1C1H2S
+                 oppsPass
+                 B.b1C1H2S2N
+                 oppsPass
+             , [B.b1C1H2S2N3C, B.b1C1H2S2N3D , B.b1C1H2S2N3H, B.b1C1H2S2N3S]
+             , T.South, [T.South, T.East])
+           , (do B.b1C
+                 oppsPass
+                 B.b1C2S
+                 oppsPass
+                 B.b1C2S2N
+                 oppsPass
+             , [B.b1C2S2N3C, B.b1C2S2N3D , B.b1C2S2N3H, B.b1C2S2N3S]
+             , T.North, [T.North, T.West])
+           , (do B.b1C
+                 oppsPass
+                 B.bP1C2S
+                 oppsPass
+                 B.b1C2S2N
+                 oppsPass
+             , [B.b1C2S2N3C, B.b1C2S2N3D , B.b1C2S2N3H, B.b1C2S2N3S]
+             , T.North, [T.South, T.East])
+           ]
+        <~ T.allVulnerabilities
 
 
 singletonInPartnerSuit :: Situations
