@@ -68,6 +68,10 @@ b1No2C2D :: Action
 b1No2C2D = makeAlertableCall (T.Bid 2 T.Diamonds) "what is your suit?"
 
 
+b1No2C2D :: Action
+b1No2C2D = makeAlertableCall (T.Bid 2 T.Diamonds) "what is your suit?"
+
+
 b1No2D :: Action
 b1No2D = do
     pointsToCompete
