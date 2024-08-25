@@ -10,6 +10,9 @@ module Bids.Meckwell(
   , b1No2H
   , b1No2S
   , b1No2N
+  -- Export these helpers for other defenses against 1N, too
+  , singleSuit
+  , twoSuited
 ) where
 
 
