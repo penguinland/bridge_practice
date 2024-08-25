@@ -228,7 +228,7 @@ pass = let
     stdWrapSE $ situation "Pass" action makePass explanation
 
 topic :: Topic
-topic = makeTopic "standard opening bids" "StdOpen" situations
+topic = makeTopic "SAYC opening bids" "StdOpen" situations
   where
     situations = wrap [ oneNotrump
                       , twoNotrump
