@@ -2,11 +2,12 @@ module Bids.Cappelletti(
     b1N
   , b1NoX
   , b1No2C
+  , b1No2C2D
   , b1No2D
   , b1No2H
-  , b1No2Ho2N
+  , b1No2H2N
   , b1No2S
-  , b1No2So2N
+  , b1No2S2N
   , b1No2N
 ) where
 
@@ -50,6 +51,10 @@ b1No2C = do
     makeAlertableCall (T.Bid 2 T.Clubs) "single-suited hand"
 
 
+b1No2C2D :: Action
+b1No2C2D = makeAlertableCall (T.Bid 2 T.Diamonds) "what is your suit?"
+
+
 b1No2D :: Action
 b1No2D = do
     pointsToCompete
@@ -82,16 +87,16 @@ b1No2N = do
     makeAlertableCall (T.Bid 2 T.Notrump) "both minors"
 
 
-b1No2Ho2N :: Action
-b1No2Ho2N = do
+b1No2H2N :: Action
+b1No2H2N = do
     maxSuitLength T.Hearts 2
     minSuitLength T.Clubs 3
     minSuitLength T.Diamonds 3
     makeAlertableCall (T.Bid 2 T.Notrump) "what is your minor?"
 
 
-b1No2So2N :: Action
-b1No2So2N = do
+b1No2S2N :: Action
+b1No2S2N = do
     maxSuitLength T.Spades 2
     minSuitLength T.Clubs 3
     minSuitLength T.Diamonds 3
