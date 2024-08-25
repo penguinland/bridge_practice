@@ -57,10 +57,10 @@ topicList = [ (10, True,  StandardOpeners.topic)
             , (52, False, Smp1CResponses.topicExtras)
             , (53, False, Mafia.topic)
             , (54, False, MafiaResponses.topic)
+            , (57, False, TripleFourOne.topic)
             , (55, False, Smp1DResponses.topic)
             , (70, False, Lampe.topic)
             , (56, False, TwoDiamondOpeners.topic)
-            , (57, False, TripleFourOne.topic)
             ]
 
 
