@@ -30,10 +30,14 @@ module Bids.StandardModernPrecision.OneClub(
   , b1C1H
   , b1C1Hnos
   , b1C1H1S
+  , b1C1H1S3C
   , b1C1H1N
   , b1C1H2C
+  , b1C1H2C3D
   , b1C1H2D
+  , b1C1H2D3H
   , b1C1H2H
+  , b1C1H2H3S
   , b1C1H2S
   , b1C1H2S2N
   , b1C1H2S2N3C
@@ -44,12 +48,16 @@ module Bids.StandardModernPrecision.OneClub(
   , b1C1H3N
   , b1C1S
   , b1C1Sgf
+  , b1C1S3C
   , b1C1N
   , b1C1Nalt
   , b1C2C
+  , b1C2C3D
   , b1C2D
+  , b1C2D3H
   , b1C2H
   , b1C2Halt
+  , b1C2H3S
   , b1C2S
   , b1C2S2N
   , b1C2S2N3C
@@ -592,3 +600,49 @@ b1C2S2N3H = b1C1H2S2N3H
 
 b1C2S2N3S :: Action
 b1C2S2N3S = b1C1H2S2N3S
+
+
+-- Cheapest jump-shift showing 4441 with a singleton in partner's suit
+
+b1C1H1S3C :: Action
+b1C1H1S3C = do
+    tripleFourOneShape
+    suitLength T.Spades 1
+    makeAlertableCall (T.Bid 3 T.Clubs) "1444 shape with singleton spade"
+
+
+b1C1H2C3D :: Action
+b1C1H2C3D = do
+    tripleFourOneShape
+    suitLength T.Clubs 1
+    makeAlertableCall (T.Bid 3 T.Diamonds) "4441 shape with singleton club"
+
+
+b1C1H2D3H :: Action
+b1C1H2D3H = do
+    tripleFourOneShape
+    suitLength T.Diamonds 1
+    makeAlertableCall (T.Bid 3 T.Hearts) "4414 shape with singleton diamond"
+
+
+b1C1H2H3S :: Action
+b1C1H2H3S = do
+    tripleFourOneShape
+    suitLength T.Hearts 1
+    makeAlertableCall (T.Bid 3 T.Spades) "4144 shape with singleton heart"
+
+
+b1C1S3C :: Action
+b1C1S3C = b1C1H1S3C
+
+b1C2C3D :: Action
+b1C2C3D = b1C1H2C3D
+
+b1C2D3H :: Action
+b1C2D3H = b1C1H2D3H
+
+-- TODO: if you're using the alternative responses, how do you show a 4144 shape
+-- over 1C-1N? Presumably it's 1C-1N-3C. Is it worth having a topic just for
+-- this one change?
+b1C2H3S :: Action
+b1C2H3S = b1C1H2H3S
