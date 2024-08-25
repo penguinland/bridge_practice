@@ -130,7 +130,7 @@ bidSingleton = let
 topic :: Topic
 topic = makeTopic description "SMP4441" situations
   where
-    description = "SMP 4441 hands"
+    description = ("SMP 4441 hands in " .+ T.Bid 1 T.Clubs .+ " auctions")
     situations = wrap [ showAny4441
                       , relay
                       , bidSingleton
