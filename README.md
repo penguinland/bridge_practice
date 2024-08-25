@@ -1,11 +1,14 @@
 # bridge-practice
 
-This is definitely not consumer ready! but if you're comfortable writing code,
-it should be straightforward to set everything up.
+There are two ways to use this: you can generate pairs of PDFs (one with a list
+of problems and one with a list of solutions), or you can run a webserver (which
+shows a single problem and a button to show the solution, and another button
+which lets you get a new problem).
 
-There are two ways to use this: you can generate pairs of PDFs (one of problems
-and one of solutions), or you can run a webserver (which shows a problem and a
-button to show the solution, and which lets you get a new problem).
+There is probably a demo of this running at
+https://bidding.coolthingoftheday.com (uptime not guaranteed!). If you want to
+generate PDFs or run your own web interface and you're comfortable writing code,
+it should hopefully be straightforward to set everything up.
 
 ## Format
 
