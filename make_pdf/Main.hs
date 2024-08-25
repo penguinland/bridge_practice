@@ -14,6 +14,7 @@ import qualified Topics.StandardModernPrecision.Lampe as Lampe
 import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
+import qualified Topics.StandardModernPrecision.TripleFourOne as TripleFourOne
 import qualified Topics.MajorSuitRaises as MajorSuitRaises
 import qualified Topics.Meckwell as Meckwell
 import qualified Topics.Jacoby2NT as Jacoby2NT
@@ -40,8 +41,9 @@ main = let
               , Meckwell.topic
               , Jacoby2NT.topic
               , Lampe.topic
+              , TripleFourOne.topic
               ]
-    topics = [Smp2DOpen.topic]
+    topics = [TripleFourOne.topic]
   in do
     -- outputLatex returns a copy of the contents of the file it wrote, but we
     -- ignore that.
