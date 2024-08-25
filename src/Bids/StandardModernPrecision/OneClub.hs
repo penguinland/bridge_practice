@@ -51,6 +51,7 @@ module Bids.StandardModernPrecision.OneClub(
   , b1C1S3C
   , b1C1N
   , b1C1Nalt
+  , b1C1Nalt3C
   , b1C2C
   , b1C2C3D
   , b1C2D
@@ -66,6 +67,7 @@ module Bids.StandardModernPrecision.OneClub(
   , b1C2S2N3S
   , b1C2Nalt
   , bP1C1H
+  , bP1C1H2S
   , bP1C1S
   , bP1C1N
   , bP1C2C
@@ -608,28 +610,28 @@ b1C1H1S3C :: Action
 b1C1H1S3C = do
     tripleFourOneShape
     suitLength T.Spades 1
-    makeAlertableCall (T.Bid 3 T.Clubs) "1444 shape with singleton spade"
+    makeAlertableCall (T.Bid 3 T.Clubs) "1444 shape with a singleton spade"
 
 
 b1C1H2C3D :: Action
 b1C1H2C3D = do
     tripleFourOneShape
     suitLength T.Clubs 1
-    makeAlertableCall (T.Bid 3 T.Diamonds) "4441 shape with singleton club"
+    makeAlertableCall (T.Bid 3 T.Diamonds) "4441 shape with a singleton club"
 
 
 b1C1H2D3H :: Action
 b1C1H2D3H = do
     tripleFourOneShape
     suitLength T.Diamonds 1
-    makeAlertableCall (T.Bid 3 T.Hearts) "4414 shape with singleton diamond"
+    makeAlertableCall (T.Bid 3 T.Hearts) "4414 shape with a singleton diamond"
 
 
 b1C1H2H3S :: Action
 b1C1H2H3S = do
     tripleFourOneShape
     suitLength T.Hearts 1
-    makeAlertableCall (T.Bid 3 T.Spades) "4144 shape with singleton heart"
+    makeAlertableCall (T.Bid 3 T.Spades) "4144 shape with a singleton heart"
 
 
 b1C1S3C :: Action
@@ -641,8 +643,17 @@ b1C2C3D = b1C1H2C3D
 b1C2D3H :: Action
 b1C2D3H = b1C1H2D3H
 
--- TODO: if you're using the alternative responses, how do you show a 4144 shape
--- over 1C-1N? Presumably it's 1C-1N-3C. Is it worth having a topic just for
--- this one change?
 b1C2H3S :: Action
 b1C2H3S = b1C1H2H3S
+
+b1C1Nalt3C :: Action
+b1C1Nalt3C = do
+    tripleFourOneShape
+    suitLength T.Hearts 1
+    makeAlertableCall (T.Bid 3 T.Clubs) "4144 shape with a singleton heart"
+
+bP1C1H2S :: Action
+bP1C1H2S = do
+    tripleFourOneShape
+    suitLength T.Hearts 1
+    makeAlertableCall (T.Bid 2 T.Spades) "4144 shape with a singleton heart"

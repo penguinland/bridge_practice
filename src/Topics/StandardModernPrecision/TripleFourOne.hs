@@ -127,6 +127,55 @@ bidSingleton = let
                       <~ T.allVulnerabilities
 
 
+singletonInPartnerSuit :: Situations
+singletonInPartnerSuit = let
+    sit (action, lastTwoBids, opener, dealers) vul = let
+        explanation =
+            "Partner has bid their primary suit, but we have a 4441 " .+
+            "shape with a singleton in it. Make the cheapest possible " .+
+            "jump-shift to show this. Partner now knows our exact shape, " .+
+            "and can use " .+ name44Rkc .+ " to place the contract."
+        inner (partnerBid, ourBid) dealer = let
+            action' = do
+                setOpener opener
+                _ <- action
+                _ <- partnerBid
+                oppsPass
+          in
+            situation "pdsing" action' ourBid explanation vul dealer
+      in
+        wrap $ return inner <~ lastTwoBids <~ dealers
+  in
+    wrap $ return sit <~ [ (do B.b1C
+                               oppsPass
+                               B.b1C1H
+                               oppsPass
+                           , [ (B.b1C1H1S, B.b1C1H1S3C)
+                             , (B.b1C1H2C, B.b1C1H2C3D)
+                             , (B.b1C1H2D, B.b1C1H2D3H)
+                             , (B.b1C1H2H, B.b1C1H2H3S)
+                             ], T.North, [T.North, T.West])
+                         , (do B.b1C
+                               oppsPass
+                           -- TODO: We're using the standard responses, not the
+                           -- modified ones. Is it worth making a whole separate
+                           -- topic for the modified version? Not sure.
+                           , [ (B.b1C1S, B.b1C1S3C)
+                             , (B.b1C2C, B.b1C2C3D)
+                             , (B.b1C2D, B.b1C2D3H)
+                             , (B.b1C2H, B.b1C2H3S)
+                             ], T.South, [T.South, T.East])
+                         , (do B.b1C
+                               oppsPass
+                           , [ (B.bP1C1H, B.b1C1H2S)
+                             , (B.bP1C1S, B.b1C1S3C)
+                             , (B.bP1C2C, B.b1C2C3D)
+                             , (B.bP1C2D, B.b1C2D3H)
+                             ], T.South, [T.North, T.West])
+                         ]
+                      <~ T.allVulnerabilities
+
+
 topic :: Topic
 topic = makeTopic description "SMP4441" situations
   where
@@ -134,4 +183,5 @@ topic = makeTopic description "SMP4441" situations
     situations = wrap [ showAny4441
                       , relay
                       , bidSingleton
+                      , singletonInPartnerSuit
                       ]
