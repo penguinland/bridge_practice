@@ -1,9 +1,47 @@
 module Bids.StandardModernPrecision.OneClub(
     b1C  -- Copied from BasicBids
-  -- Responses to 1C
   , b1C1D
+  , startOfMafia
+  , b1C1D1H
+  , b1C1D1H1S
+  , b1C1D1H1N
+  , b1C1D1H2C
+  , b1C1D1H2D
+  , b1C1D1H2H
+  , b1C1D1H2N
+  , b1C1D1H3H
+  -- TODO: jumps and double jumps in MaFiA
+  , b1C1D1S
+  , b1C1D1S1N
+  , b1C1D1S2C
+  , b1C1D1S2D
+  , b1C1D1S2H
+  , b1C1D1S2S
+  , b1C1D1S2N
+  , b1C1D1S3S
+  , b1C1D1N
+  , b1C1D2C
+  , b1C1D2D
+  , b1C1D2H
+  , b1C1D2S
+  , b1C1D2N
+  , b1C1D3C
+  , b1C1D3D
   , b1C1H
   , b1C1Hnos
+  , b1C1H1S
+  , b1C1H1N
+  , b1C1H2C
+  , b1C1H2D
+  , b1C1H2H
+  , b1C1H2S
+  , b1C1H2S2N
+  , b1C1H2S2N3C
+  , b1C1H2S2N3D
+  , b1C1H2S2N3H
+  , b1C1H2S2N3S
+  , b1C1H2N
+  , b1C1H3N
   , b1C1S
   , b1C1Sgf
   , b1C1N
@@ -25,47 +63,6 @@ module Bids.StandardModernPrecision.OneClub(
   , bP1C2C
   , bP1C2D
   , bP1C2S  -- Note that the auction P-1C-2H cannot occur!
-  -- rebids after 1C-1D
-  , startOfMafia
-  , b1C1D1H
-  , b1C1D1S
-  , b1C1D1N
-  , b1C1D2C
-  , b1C1D2D
-  , b1C1D2H
-  , b1C1D2S
-  , b1C1D2N
-  , b1C1D3C
-  , b1C1D3D
-  -- rebids after 1C-1D-1M
-  , b1C1D1H1S
-  , b1C1D1H1N
-  , b1C1D1H2C
-  , b1C1D1H2D
-  , b1C1D1H2H
-  , b1C1D1H2N
-  , b1C1D1H3H
-  , b1C1D1S1N
-  , b1C1D1S2C
-  , b1C1D1S2D
-  , b1C1D1S2H
-  , b1C1D1S2S
-  , b1C1D1S2N
-  , b1C1D1S3S
-  -- TODO: jumps and double jumps in MaFiA
-  , b1C1H1S
-  , b1C1H1N
-  , b1C1H2C
-  , b1C1H2D
-  , b1C1H2H
-  , b1C1H2S
-  , b1C1H2S2N
-  , b1C1H2S2N3C
-  , b1C1H2S2N3D
-  , b1C1H2S2N3H
-  , b1C1H2S2N3S
-  , b1C1H2N
-  , b1C1H3N
   , tripleFourOneShape  -- For use when defining other bids
 ) where
 
