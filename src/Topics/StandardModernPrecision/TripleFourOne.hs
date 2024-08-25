@@ -3,11 +3,10 @@ module Topics.StandardModernPrecision.TripleFourOne(topic) where
 import Bids.StandardModernPrecision.BasicBids(setOpener, oppsPass)
 import Bids.StandardModernPrecision.TwoDiamonds(name44Rkc)
 import qualified Bids.StandardModernPrecision.OneClub as B
-import EDSL(maxSuitLength, pointRange, forEach)
-import Output(Punct(..), (.+))
+import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapVulNW, wrapVulSE, Situations, makeTopic)
+import Topic(Topic, wrap, Situations, makeTopic)
 
 
 showAny4441 :: Situations
@@ -22,9 +21,9 @@ showAny4441 = let
                 setOpener opener
                 action
           in
-            wrap situation "any" action' bid explanation vul dealer
+            situation "any" action' answer explanation vul dealer
       in
-        wrap inner <~ dealers
+        wrap $ return inner <~ dealers
   in
     wrap $ return sit <~ [ (do B.b1C
                                oppsPass
@@ -37,6 +36,7 @@ showAny4441 = let
                          , (do B.b1C
                                oppsPass
                            , B.bP1C2S, T.North, [T.South, T.East])
+                         ]
                       <~ T.allVulnerabilities
 
 

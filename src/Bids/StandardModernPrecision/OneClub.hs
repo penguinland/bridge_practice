@@ -551,26 +551,29 @@ b1C1H2S = do
 
 
 b1C1H2S2N :: Action
-b1C1H2S2N :: Action
-    makeAlertableCall (T.Bid 2 T.Notrump) "what is your singleton?"
+b1C1H2S2N = makeAlertableCall (T.Bid 2 T.Notrump) "what is your singleton?"
 
 
 b1C1H2S2N3C :: Action
+b1C1H2S2N3C = do
     suitLength T.Clubs 1
     makeAlertableCall (T.Bid 3 T.Clubs) "singleton club"
 
 
 b1C1H2S2N3D :: Action
+b1C1H2S2N3D = do
     suitLength T.Diamonds 1
     makeAlertableCall (T.Bid 3 T.Clubs) "singleton diamond"
 
 
 b1C1H2S2N3H :: Action
+b1C1H2S2N3H = do
     suitLength T.Hearts 1
     makeAlertableCall (T.Bid 3 T.Clubs) "singleton heart"
 
 
 b1C1H2S2N3S :: Action
+b1C1H2S2N3S = do
     suitLength T.Spades 1
     makeAlertableCall (T.Bid 3 T.Clubs) "singleton spade"
 
