@@ -231,10 +231,10 @@ secondSuitRebid = let
             maxSuitLength firstSuit 5  -- Don't worry about 6-5 or 6-4 shapes
         explanation =
             "We've opened our major, and partner has bid a forcing " .+
-            T.Bid 1 T.Notrump .+ ". We're too weak to rebid " .+
-            T.Bid 2 T.Notrump .+ ", and can't rebid " .+ show firstSuit .+
-            " with only a 5-card suit. Bid our longest other suit. " .+
-            "Sometimes it might only be a 3-card suit."
+            T.Bid 1 T.Notrump .+ ". We're too weak (or too unbalanced) to " .+
+            "rebid " .+ T.Bid 2 T.Notrump .+ ", and can't rebid " .+
+            show firstSuit .+ " with only a 5-card suit. Bid our longest " .+
+            "other suit. Sometimes it might only be a 3-card suit."
       in
         situation "b2nd" action rebid explanation
   in
