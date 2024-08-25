@@ -1,29 +1,24 @@
 module Bids.StandardModernPrecision.OneClub(
     b1C  -- Copied from BasicBids
-  -- Responses to 1C
   , b1C1D
-  , b1C1H
-  , b1C1Hnos
-  , b1C1S
-  , b1C1Sgf
-  , b1C1N
-  , b1C1Nalt
-  , b1C2C
-  , b1C2D
-  , b1C2H
-  , b1C2Halt
-  , b1C2S
-  , b1C2Nalt
-  , bP1C1H
-  , bP1C1S
-  , bP1C1N
-  , bP1C2C
-  , bP1C2D
-  , bP1C2S  -- Note that the auction P-1C-2H cannot occur!
-  -- rebids after 1C-1D
   , startOfMafia
   , b1C1D1H
+  , b1C1D1H1S
+  , b1C1D1H1N
+  , b1C1D1H2C
+  , b1C1D1H2D
+  , b1C1D1H2H
+  , b1C1D1H2N
+  , b1C1D1H3H
+  -- TODO: jumps and double jumps in MaFiA
   , b1C1D1S
+  , b1C1D1S1N
+  , b1C1D1S2C
+  , b1C1D1S2D
+  , b1C1D1S2H
+  , b1C1D1S2S
+  , b1C1D1S2N
+  , b1C1D1S3S
   , b1C1D1N
   , b1C1D2C
   , b1C1D2D
@@ -32,30 +27,52 @@ module Bids.StandardModernPrecision.OneClub(
   , b1C1D2N
   , b1C1D3C
   , b1C1D3D
-  -- rebids after 1C-1D-1M
-  , b1C1D1H1S
-  , b1C1D1H1N
-  , b1C1D1H2C
-  , b1C1D1H2D
-  , b1C1D1H2H
-  , b1C1D1H2N
-  , b1C1D1H3H
-  , b1C1D1S1N
-  , b1C1D1S2C
-  , b1C1D1S2D
-  , b1C1D1S2H
-  , b1C1D1S2S
-  , b1C1D1S2N
-  , b1C1D1S3S
-  -- TODO: jumps and double jumps in MaFiA
+  , b1C1H
+  , b1C1Hnos
   , b1C1H1S
+  , b1C1H1S3C
   , b1C1H1N
   , b1C1H2C
+  , b1C1H2C3D
   , b1C1H2D
+  , b1C1H2D3H
   , b1C1H2H
+  , b1C1H2H3S
   , b1C1H2S
+  , b1C1H2S2N
+  , b1C1H2S2N3C
+  , b1C1H2S2N3D
+  , b1C1H2S2N3H
+  , b1C1H2S2N3S
   , b1C1H2N
   , b1C1H3N
+  , b1C1S
+  , b1C1Sgf
+  , b1C1S3C
+  , b1C1N
+  , b1C1Nalt
+  , b1C1Nalt3C
+  , b1C2C
+  , b1C2C3D
+  , b1C2D
+  , b1C2D3H
+  , b1C2H
+  , b1C2Halt
+  , b1C2H3S
+  , b1C2S
+  , b1C2S2N
+  , b1C2S2N3C
+  , b1C2S2N3D
+  , b1C2S2N3H
+  , b1C2S2N3S
+  , b1C2Nalt
+  , bP1C1H
+  , bP1C1H2S
+  , bP1C1S
+  , bP1C1N
+  , bP1C2C
+  , bP1C2D
+  , bP1C2S  -- Note that the auction P-1C-2H cannot occur!
   , tripleFourOneShape  -- For use when defining other bids
 ) where
 
@@ -160,7 +177,7 @@ b1C1Nalt = do
 b1C2S :: Action
 b1C2S = do
     _slamInterest
-    constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
+    tripleFourOneShape
     makeAlertableCall (T.Bid 2 T.Spades) "12+ HCP, any 4441 shape"
 
 
@@ -212,8 +229,8 @@ bP1C1N = do
 bP1C2S :: Action
 bP1C2S = do
     _gameForcing
-    constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
-    makeAlertableCall (T.Bid 2 T.Spades) "Game forcing, any 4441 shape"
+    tripleFourOneShape
+    makeAlertableCall (T.Bid 2 T.Spades) "game forcing, any 4441 shape"
 
 
 -----------
@@ -541,3 +558,102 @@ b1C1H2S :: Action
 b1C1H2S = do
     tripleFourOneShape
     makeAlertableCall (T.Bid 2 T.Spades) "any 4441 hand"
+
+
+b1C1H2S2N :: Action
+b1C1H2S2N = makeAlertableCall (T.Bid 2 T.Notrump) "what is your singleton?"
+
+
+b1C1H2S2N3C :: Action
+b1C1H2S2N3C = do
+    suitLength T.Clubs 1
+    makeAlertableCall (T.Bid 3 T.Clubs) "singleton club"
+
+
+b1C1H2S2N3D :: Action
+b1C1H2S2N3D = do
+    suitLength T.Diamonds 1
+    makeAlertableCall (T.Bid 3 T.Diamonds) "singleton diamond"
+
+
+b1C1H2S2N3H :: Action
+b1C1H2S2N3H = do
+    suitLength T.Hearts 1
+    makeAlertableCall (T.Bid 3 T.Hearts) "singleton heart"
+
+
+b1C1H2S2N3S :: Action
+b1C1H2S2N3S = do
+    suitLength T.Spades 1
+    makeAlertableCall (T.Bid 3 T.Spades) "singleton spade"
+
+
+b1C2S2N :: Action
+b1C2S2N = b1C1H2S2N
+
+b1C2S2N3C :: Action
+b1C2S2N3C = b1C1H2S2N3C
+
+b1C2S2N3D :: Action
+b1C2S2N3D = b1C1H2S2N3D
+
+b1C2S2N3H :: Action
+b1C2S2N3H = b1C1H2S2N3H
+
+b1C2S2N3S :: Action
+b1C2S2N3S = b1C1H2S2N3S
+
+
+-- Cheapest jump-shift showing 4441 with a singleton in partner's suit
+
+b1C1H1S3C :: Action
+b1C1H1S3C = do
+    tripleFourOneShape
+    suitLength T.Spades 1
+    makeAlertableCall (T.Bid 3 T.Clubs) "1444 shape with a singleton spade"
+
+
+b1C1H2C3D :: Action
+b1C1H2C3D = do
+    tripleFourOneShape
+    suitLength T.Clubs 1
+    makeAlertableCall (T.Bid 3 T.Diamonds) "4441 shape with a singleton club"
+
+
+b1C1H2D3H :: Action
+b1C1H2D3H = do
+    tripleFourOneShape
+    suitLength T.Diamonds 1
+    makeAlertableCall (T.Bid 3 T.Hearts) "4414 shape with a singleton diamond"
+
+
+b1C1H2H3S :: Action
+b1C1H2H3S = do
+    tripleFourOneShape
+    suitLength T.Hearts 1
+    makeAlertableCall (T.Bid 3 T.Spades) "4144 shape with a singleton heart"
+
+
+b1C1S3C :: Action
+b1C1S3C = b1C1H1S3C
+
+b1C2C3D :: Action
+b1C2C3D = b1C1H2C3D
+
+b1C2D3H :: Action
+b1C2D3H = b1C1H2D3H
+
+b1C2H3S :: Action
+b1C2H3S = b1C1H2H3S
+
+b1C1Nalt3C :: Action
+b1C1Nalt3C = do
+    tripleFourOneShape
+    suitLength T.Hearts 1
+    makeAlertableCall (T.Bid 3 T.Clubs) "4144 shape with a singleton heart"
+
+bP1C1H2S :: Action
+bP1C1H2S = do
+    tripleFourOneShape
+    suitLength T.Hearts 1
+    makeAlertableCall (T.Bid 2 T.Spades) "4144 shape with a singleton heart"
