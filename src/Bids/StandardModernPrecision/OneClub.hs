@@ -219,8 +219,8 @@ bP1C1N = do
 bP1C2S :: Action
 bP1C2S = do
     _gameForcing
-    constrain "triple41" ["shape(", ", 4441 + 4414 + 4144 + 1444)"]
-    makeAlertableCall (T.Bid 2 T.Spades) "Game forcing, any 4441 shape"
+    tripleFourOneShape
+    makeAlertableCall (T.Bid 2 T.Spades) "game forcing, any 4441 shape"
 
 
 -----------
