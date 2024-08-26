@@ -25,7 +25,7 @@ penaltyDouble = let
             setOpener T.East
             B.b1N
         explanation =
-            "LHO has opened a weak notrump, and you've got a fair amount " .+
+            "RHO has opened a weak notrump, and we got a fair amount " .+
             "of strength behind them. Let's make a penalty double."
         in situation "majpoc" action B.b1NoX explanation
   in
