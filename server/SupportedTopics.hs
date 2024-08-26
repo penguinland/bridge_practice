@@ -24,6 +24,7 @@ import qualified Topics.JacobyTransfers as JacobyTransfers
 import qualified Topics.Stayman as Stayman
 import qualified Topics.TexasTransfers as TexasTransfers
 import qualified Topics.Meckwell as Meckwell
+import qualified Topics.Cappelletti as Cappelletti
 import qualified Topics.Jacoby2NT as Jacoby2NT
 
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
@@ -51,6 +52,7 @@ topicList = [ (10, True,  StandardOpeners.topic)
             , (14, True,  Stayman.topic)
             , (15, False, TexasTransfers.topic)
             , (16, False, Meckwell.topic)
+            , (18, False, Cappelletti.topic)
             , (17, True,  Jacoby2NT.topic)
             , (50, False, SmpOpenings.topic)
             , (51, False, Smp1CResponses.topic)

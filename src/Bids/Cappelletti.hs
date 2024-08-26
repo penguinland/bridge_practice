@@ -15,7 +15,7 @@ module Bids.Cappelletti(
 import Action(Action)
 import Bids.Meckwell(singleSuit, twoSuited)
 import EDSL(pointRange, minSuitLength, maxSuitLength, alternatives, forbid,
-            makeCall, makeAlertableCall, balancedHand)
+            makeCall, makeAlertableCall, balancedHand, forEach)
 import Output ((.+), Punct(..))
 import qualified Terminology as T
 
@@ -27,7 +27,7 @@ b1N = do
     makeAlertableCall (T.Bid 1 T.Notrump) ("12" .+ NDash .+ "14")
 
 
--- What's the right minimum strength to bid Meckwell? It kinda depends on the
+-- What's the right minimum strength to bid Cappelletti? It kinda depends on the
 -- vulnerability and where in the hand this strength is located. Let's guess 10
 -- is a pretty decent minimum, but I'm open to changing it later.
 pointsToCompete :: Action
@@ -37,6 +37,18 @@ pointsToCompete = pointRange 10 40
 b1NoX :: Action
 b1NoX = do
     pointRange 16 40
+    -- If you could make either a penalty double or a different bid, the right
+    -- choice probably depends on the vulnerability and the quality of your
+    -- suit(s). For now, skip all of that and just suppose that you couldn't
+    -- have bid anything else.
+    forEach T.allSuits (forbid . singleSuit)
+    forEach [ (T.Clubs, T.Diamonds)
+            , (T.Clubs, T.Hearts)
+            , (T.Clubs, T.Spades)
+            , (T.Diamonds, T.Hearts)
+            , (T.Diamonds, T.Spades)
+            , (T.Hearts, T.Spades)
+            ] (\(a, b) -> forbid $ twoSuited a b)
     makeCall T.Double
 
 
@@ -48,7 +60,8 @@ b1No2C = do
     pointsToCompete
     forbid b1NoX
     alternatives . map singleSuit $ T.allSuits
-    makeAlertableCall (T.Bid 2 T.Clubs) "single-suited hand"
+    makeAlertableCall (T.Bid 2 T.Clubs)
+                      "single-suited hand (not necessarily clubs)"
 
 
 b1No2C2D :: Action
