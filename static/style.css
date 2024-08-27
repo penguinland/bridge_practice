@@ -22,3 +22,7 @@ td.hand_size {
     min-width: 15em;
     padding: 0.5ex;
 }
+
+#auction {
+    width: 18em;
+}
