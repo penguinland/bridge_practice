@@ -14,17 +14,14 @@ module Bids.Cappelletti(
 
 import Action(Action)
 import Bids.Meckwell(singleSuit, twoSuited)
+import CommonBids(weak1NT)
 import EDSL(pointRange, minSuitLength, maxSuitLength, alternatives, forbid,
-            makeCall, makeAlertableCall, balancedHand, forEach)
-import Output ((.+), Punct(..))
+            makeCall, makeAlertableCall, forEach)
 import qualified Terminology as T
 
 
 b1N :: Action
-b1N = do
-    balancedHand
-    pointRange 12 14
-    makeAlertableCall (T.Bid 1 T.Notrump) ("12" .+ NDash .+ "14")
+b1N = weak1NT
 
 
 -- What's the right minimum strength to bid Cappelletti? It kinda depends on the

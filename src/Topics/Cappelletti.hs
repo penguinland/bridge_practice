@@ -71,10 +71,26 @@ singleSuitedRelay = let
     wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.South, T.East]
 
 
+twoDiamonds :: Situations
+twoDiamonds = let
+    sit = let
+        action = do
+            setOpener T.East
+            B.b1N
+        explanation =
+            "RHO has opened a weak notrump. We have both majors, and can " .+
+            "show that by bidding " .+ B.b1No2D .+ ". Partner will bid " .+
+            "their favorite major, and we'll play there."
+        in situation "sing" action B.b1No2D explanation
+  in
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+
+
 topic :: Topic
 topic = makeTopic "Cappelletti over weak notrump" "Cap1N" situations
   where
     situations = wrap [ penaltyDouble
                       , singleSuited
                       , singleSuitedRelay
+                      , twoDiamonds
                       ]
