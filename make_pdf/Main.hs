@@ -17,6 +17,7 @@ import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 import qualified Topics.StandardModernPrecision.TripleFourOne as TripleFourOne
 import qualified Topics.MajorSuitRaises as MajorSuitRaises
 import qualified Topics.Meckwell as Meckwell
+import qualified Topics.Cappelletti as Cappelletti
 import qualified Topics.Jacoby2NT as Jacoby2NT
 import qualified Topics.ForcingOneNotrump as ForcingOneNotrump
 
@@ -39,11 +40,12 @@ main = let
               , Smp1DResponses.topic
               , Smp2DOpen.topic
               , Meckwell.topic
+              , Cappelletti.topic
               , Jacoby2NT.topic
               , Lampe.topic
               , TripleFourOne.topic
               ]
-    topics = [TripleFourOne.topic]
+    topics = [Cappelletti.topic]
   in do
     -- outputLatex returns a copy of the contents of the file it wrote, but we
     -- ignore that.
