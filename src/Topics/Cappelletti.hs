@@ -71,8 +71,8 @@ singleSuitedRelay = let
     wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.South, T.East]
 
 
-twoDiamonds :: Situations
-twoDiamonds = let
+bothMajors :: Situations
+bothMajors = let
     sit = let
         action = do
             setOpener T.East
@@ -86,8 +86,8 @@ twoDiamonds = let
     wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
 
 
-major :: Situations
-major = let
+majorMinor :: Situations
+majorMinor = let
     sit bid = let
         action = do
             setOpener T.East
@@ -104,12 +104,28 @@ major = let
                       <~ [T.West, T.North, T.East]
 
 
+bothMinors :: Situations
+bothMinors = let
+    sit = let
+        action = do
+            setOpener T.East
+            B.b1N
+        explanation =
+            "RHO has opened a weak notrump. We have both minors, and can " .+
+            "show that by bidding an Unusual-like " .+ B.b1No2N .+ ". " .+
+            "Partner will bid their favorite minor, and we'll play there."
+        in situation "bmin" action B.b1No2N explanation
+  in
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+
+
 topic :: Topic
 topic = makeTopic "Cappelletti over weak notrump" "Cap1N" situations
   where
     situations = wrap [ penaltyDouble
                       , singleSuited
                       , singleSuitedRelay
-                      , twoDiamonds
-                      , major
+                      , bothMajors
+                      , majorMinor
+                      , bothMinors
                       ]
