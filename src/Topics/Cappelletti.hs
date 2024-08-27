@@ -104,6 +104,26 @@ majorMinor = let
                       <~ [T.West, T.North, T.East]
 
 
+relayToFindMinor :: Situations
+relayToFindMinor = let
+    sit (overcall, answer) = let
+        action = do
+            setOpener T.West
+            B.b1N
+            _ <- overcall
+            responderCannotBid
+        explanation =
+            "LHO has opened a weak notrump, and partner has shown a two-" .+
+            "suited hand with a major and a minor. We don't have support " .+
+            "for their major, so should bid " .+ answer .+ " to prompt them " .+
+            "to bid their minor, which should hopefully be a better contract."
+        in situation "Mm" action answer explanation
+  in
+    wrap $ return sit <~ [(B.b1No2H, B.b1No2H2N), (B.b1No2S, B.b1No2S2N)]
+                      <~ T.allVulnerabilities
+                      <~ [T.West, T.South, T.East]
+
+
 bothMinors :: Situations
 bothMinors = let
     sit = let
@@ -127,5 +147,6 @@ topic = makeTopic "Cappelletti over weak notrump" "Cap1N" situations
                       , singleSuitedRelay
                       , bothMajors
                       , majorMinor
+                      , relayToFindMinor
                       , bothMinors
                       ]
