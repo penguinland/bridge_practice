@@ -1,21 +1,21 @@
 module Topics.Cappelletti(topic) where
 
+import Action(Action)
 import qualified Bids.Cappelletti as B
 import CommonBids(setOpener)
+import EDSL(pointRange, forEach, minSuitLength, maxSuitLength, makePass)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
 
 
-{-
 responderCannotBid :: Action
 responderCannotBid = do
     pointRange 0 7                           -- No jumping to 3N, etc.
     forEach T.majorSuits (`maxSuitLength` 4) -- No transfers
     minSuitLength T.Clubs 2                  -- Avoid Garbage Stayman
     makePass
--}
 
 
 penaltyDouble :: Situations
@@ -25,7 +25,7 @@ penaltyDouble = let
             setOpener T.East
             B.b1N
         explanation =
-            "RHO has opened a weak notrump, and we got a fair amount " .+
+            "RHO has opened a weak notrump, and we've got a fair amount " .+
             "of strength behind them. Let's make a penalty double."
         in situation "majpoc" action B.b1NoX explanation
   in
@@ -33,8 +33,48 @@ penaltyDouble = let
     wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
 
 
+singleSuited :: Situations
+singleSuited = let
+    sit = let
+        action = do
+            setOpener T.East
+            B.b1N
+        explanation =
+            "RHO has opened a weak notrump. Bid " .+ B.b1No2C .+ " to show " .+
+            "a single-suited hand. Partner will relay to " .+
+            T.Bid 2 T.Diamonds .+ ", which you can pass or correct to your " .+
+            "suit."
+        in situation "sing" action B.b1No2C explanation
+  in
+    -- Although it's possible to make this bid as a passed hand, it is extremely
+    -- unlikely. As a performance optimization, let's just practice this when
+    -- we're an unpassed hand.
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+
+
+singleSuitedRelay :: Situations
+singleSuitedRelay = let
+    sit = let
+        action = do
+            setOpener T.West
+            B.b1N
+            B.b1No2C
+            responderCannotBid
+        explanation =
+            "LHO has opened a weak notrump, and partner showed a " .+
+            "single-suited hand. Relay to " .+ B.b1No2C2D .+ " to ask " .+
+            "what partner's suit is: they will pass or correct to it."
+        in situation "sing" action B.b1No2C2D explanation
+  in
+    -- We're going to continue with the optimization that the Cappelletti bidder
+    -- should be an unpassed hand.
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.South, T.East]
+
+
 topic :: Topic
 topic = makeTopic "Cappelletti over weak notrump" "Cap1N" situations
   where
     situations = wrap [ penaltyDouble
+                      , singleSuited
+                      , singleSuitedRelay
                       ]
