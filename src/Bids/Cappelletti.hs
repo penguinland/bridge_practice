@@ -86,7 +86,7 @@ b1No2S = do
     pointsToCompete
     forbid b1NoX
     alternatives . map (twoSuited T.Spades) $ T.minorSuits
-    makeAlertableCall (T.Bid 2 T.Hearts) "spades and a minor"
+    makeAlertableCall (T.Bid 2 T.Spades) "spades and a minor"
 
 
 b1No2N :: Action

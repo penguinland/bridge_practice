@@ -27,7 +27,7 @@ penaltyDouble = let
         explanation =
             "RHO has opened a weak notrump, and we've got a fair amount " .+
             "of strength behind them. Let's make a penalty double."
-        in situation "majpoc" action B.b1NoX explanation
+        in situation "pdbl" action B.b1NoX explanation
   in
     -- Ensure we're not dealer: we'd have opened the bidding.
     wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
@@ -64,7 +64,7 @@ singleSuitedRelay = let
             "LHO has opened a weak notrump, and partner showed a " .+
             "single-suited hand. Relay to " .+ B.b1No2C2D .+ " to ask " .+
             "what partner's suit is: they will pass or correct to it."
-        in situation "sing" action B.b1No2C2D explanation
+        in situation "2dRel" action B.b1No2C2D explanation
   in
     -- We're going to continue with the optimization that the Cappelletti bidder
     -- should be an unpassed hand.
@@ -81,9 +81,27 @@ twoDiamonds = let
             "RHO has opened a weak notrump. We have both majors, and can " .+
             "show that by bidding " .+ B.b1No2D .+ ". Partner will bid " .+
             "their favorite major, and we'll play there."
-        in situation "sing" action B.b1No2D explanation
+        in situation "bmaj" action B.b1No2D explanation
   in
     wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+
+
+major :: Situations
+major = let
+    sit bid = let
+        action = do
+            setOpener T.East
+            B.b1N
+        explanation =
+            "RHO has opened a weak notrump. We have a two-suited hand with " .+
+            "a major and a minor. Bid our major suit. If partner wants to " .+
+            "learn our minor, they can bid " .+ T.Bid 2 T.Notrump .+ " to " .+
+            "prompt us to bid it."
+        in situation "Mm" action bid explanation
+  in
+    wrap $ return sit <~ [B.b1No2H, B.b1No2S]
+                      <~ T.allVulnerabilities
+                      <~ [T.West, T.North, T.East]
 
 
 topic :: Topic
@@ -93,4 +111,5 @@ topic = makeTopic "Cappelletti over weak notrump" "Cap1N" situations
                       , singleSuited
                       , singleSuitedRelay
                       , twoDiamonds
+                      , major
                       ]
