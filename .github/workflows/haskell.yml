@@ -6,28 +6,42 @@ permissions:
   contents: read
 
 jobs:
-  runhaskell-linux:
-    name: Build on Linux
-    runs-on: ubuntu-latest
+  runhaskell:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: haskell-actions/setup@v2
+      - name: Set up environment
+        id: setup-haskell-stack
+        uses: haskell-actions/setup@v2
+      - name: Check out code
+        uses: actions/checkout@v4
         with:
           ghc-version: '9.2.5'
           # cabal-version: 'latest'. Omitted, but defaults to 'latest'
           enable-stack: true
           stack-version: 'latest'
-      - run: stack build
-
-  runhaskell-mac:
-    name: Build on Mac
-    runs-on: macOS-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: haskell-actions/setup@v2
+      - name: Use cache
+        uses: actions/cache@v4
         with:
-          ghc-version: '9.2.5'
-          # cabal-version: 'latest'. Omitted, but defaults to 'latest'
-          enable-stack: true
-          stack-version: 'latest'
-      - run: stack build
+          key: ${{ matrix.os }}_${{ env.snapshot }}_${{ github.head_ref }}
+          restore-keys: |
+            ${{ matrix.os }}_${{ env.snapshot }}_${{ github.head_ref }}
+            ${{ matrix.os }}_${{ env.snapshot }}_${{ github.base_ref }}
+            ${{ matrix.os }}_${{ env.snapshot }}_
+            ${{ matrix.os }}_${{ env.snapshot }}
+          path: |
+            ${{ steps.setup-haskell-stack.outputs.stack-root }}
+            .stack-work
+            */.stack-work
+      - name: Build project
+        shell: bash
+        run: |
+          set -ex
+          ghc --version
+          stack --version
+          stack build
