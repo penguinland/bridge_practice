@@ -111,3 +111,6 @@ b1No2S2N = do
     minSuitLength T.Clubs 3
     minSuitLength T.Diamonds 3
     makeAlertableCall (T.Bid 2 T.Notrump) "what is your minor?"
+
+-- TODO: Should we also include bids for when advancer suspects they've got a
+-- longer suit than overcaller and goes off-script? Maybe not; that's very rare.

@@ -1,0 +1,47 @@
+name: Haskell CI
+
+on: [pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  runhaskell:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+    steps:
+      - name: Set up environment
+        id: setup-haskell-stack
+        uses: haskell-actions/setup@v2.7
+        with:
+          ghc-version: '9.2.5'
+          # cabal-version: 'latest'. Omitted, but defaults to 'latest'
+          enable-stack: true
+          stack-version: 'latest'
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Use cache
+        uses: actions/cache@v4
+        with:
+          key: ${{ matrix.os }}_${{ env.snapshot }}_${{ github.head_ref }}
+          restore-keys: |
+            ${{ matrix.os }}_${{ env.snapshot }}_${{ github.head_ref }}
+            ${{ matrix.os }}_${{ env.snapshot }}_${{ github.base_ref }}
+            ${{ matrix.os }}_${{ env.snapshot }}_
+            ${{ matrix.os }}_${{ env.snapshot }}
+          path: |
+            ${{ steps.setup-haskell-stack.outputs.stack-root }}
+            .stack-work
+            */.stack-work
+      - name: Build project
+        shell: bash
+        run: |
+          set -ex
+          ghc --version
+          stack --version
+          stack build
