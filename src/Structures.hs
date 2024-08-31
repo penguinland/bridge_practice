@@ -70,6 +70,9 @@ instance ToJSON Bidding where
         appendPrompt (row@([_, _, _, _]):rows) = [challenge] : row : rows
         appendPrompt (first:rest)              = (challenge : first) : rest
 
+instance T.SuitBid Bidding where
+    suitBid = T.suitBid . lastCall
+
 
 currentBidder :: Bidding -> T.Direction
 currentBidder (Bidding d _) = d

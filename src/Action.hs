@@ -41,6 +41,9 @@ instance Showable Action where
     toLatex = toLatex . T.removeAlert . extractLastCall
     toHtml = toHtml . T.removeAlert . extractLastCall
 
+instance T.SuitBid Action where
+    suitBid = T.suitBid . extractLastCall
+
 
 finish :: T.Direction -> Action -> Auction
 finish firstBidder = flip execState (newAuction firstBidder)
