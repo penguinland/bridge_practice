@@ -53,6 +53,8 @@ instance T.SuitBid (State Auction a) where
     suitBid = T.suitBid . extractLastCall
 
 
+-- This isn't the more specific type `Action -> T.CompleteCall` in order to get
+-- SuitBid to work; see the "awkward trick alert" above.
 finish :: T.Direction -> State Auction a -> Auction
 finish firstBidder = flip execState (newAuction firstBidder)
 
@@ -85,6 +87,8 @@ withholdBid action = do
     put (bidding, dealerProg `mappend` dealerToWithhold)
 
 
+-- This isn't the more specific type `Action -> T.CompleteCall` in order to get
+-- SuitBid to work; see the "awkward trick alert" above.
 extractLastCall :: (State Auction a) -> T.CompleteCall
 extractLastCall =
     -- It doesn't matter who was dealer: use North just to extract the bidding
