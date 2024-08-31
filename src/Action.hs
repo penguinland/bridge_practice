@@ -41,7 +41,14 @@ instance Showable Action where
     toLatex = toLatex . T.removeAlert . extractLastCall
     toHtml = toHtml . T.removeAlert . extractLastCall
 
--- TODO: explain this
+-- AWKWARD TRICK ALERT: Unless you specify the types explicitly, options passed
+-- to `<~` come out as the more general `State Auction a` instead of the more
+-- specific `Action`. In order to use `suitBid` with them, we need this instance
+-- (and all functions it uses, including `extractLastCall` and `finish`) to have
+-- this more general type.
+-- TODO: There's probably some way to convince the type checker to generalize
+-- less, which possibly involves changing `Action` from a `type` to something
+-- else (`newtype`?). See if you can figure it out...
 instance T.SuitBid (State Auction a) where
     suitBid = T.suitBid . extractLastCall
 
