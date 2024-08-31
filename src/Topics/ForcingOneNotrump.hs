@@ -49,13 +49,13 @@ bid1NSpades = let
 
 rebid2N :: Situations
 rebid2N = let
-    sit (opening, response, suit) = let
+    sit (opening, response) = let
         action = do
             setOpener T.South
             _ <- opening
-            noInterference suit
+            noInterference . T.suitBid $ opening
             _ <- response
-            noInterference suit
+            noInterference . T.suitBid $ opening
         explanation =
             "We opened our major, which partner hasn't (yet?) supported. " .+
             "With a balanced 18" .+ NDash .+ "19 count, now bid " .+
@@ -64,8 +64,7 @@ rebid2N = let
       in
         situation "rb2N" action B.b1M1N2N explanation
   in
-    wrapVulSE $ return sit
-        <~ [(B.b1H, B.b1H1N, T.Hearts), (B.b1S, B.b1S1N, T.Spades)]
+    wrapVulSE $ return sit <~ [(B.b1H, B.b1H1N), (B.b1S, B.b1S1N)]
 
 
 jumpShift :: Situations

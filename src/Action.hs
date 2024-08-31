@@ -41,11 +41,12 @@ instance Showable Action where
     toLatex = toLatex . T.removeAlert . extractLastCall
     toHtml = toHtml . T.removeAlert . extractLastCall
 
-instance T.SuitBid Action where
+-- TODO: explain this
+instance T.SuitBid (State Auction a) where
     suitBid = T.suitBid . extractLastCall
 
 
-finish :: T.Direction -> Action -> Auction
+finish :: T.Direction -> State Auction a -> Auction
 finish firstBidder = flip execState (newAuction firstBidder)
 
 
@@ -77,7 +78,7 @@ withholdBid action = do
     put (bidding, dealerProg `mappend` dealerToWithhold)
 
 
-extractLastCall :: Action -> T.CompleteCall
+extractLastCall :: (State Auction a) -> T.CompleteCall
 extractLastCall =
     -- It doesn't matter who was dealer: use North just to extract the bidding
     -- from the action.
