@@ -98,7 +98,7 @@ otherMajor _      = error "otherMajor of non-major"
 
 
 class SuitBid a where
-    suitBid :: a -> String
+    suitBid :: a -> Suit
 
 
 data Call = Pass | Double | Redouble | Bid Int Suit deriving Eq
@@ -114,7 +114,7 @@ instance Showable Call where
     toHtml (Bid l s) = show l ++ toHtml s
 
 instance SuitBid Call where
-    suitBid (Bid _ s) = show s
+    suitBid (Bid _ s) = s
     suitBid _         = error "cannot get suit from non-bid call"
 
 
