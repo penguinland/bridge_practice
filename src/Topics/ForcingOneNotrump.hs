@@ -69,13 +69,13 @@ rebid2N = let
 
 jumpShift :: Situations
 jumpShift = let
-    sit (opening, response, rebid, firstSuit) = let
+    sit (opening, response, rebid) = let
         action = do
             setOpener T.South
             _ <- opening
-            noInterference firstSuit
+            noInterference . T.suitBid $ opening
             _ <- response
-            noInterference firstSuit
+            noInterference . T.suitBid $ opening
         explanation =
             "We opened our major, which partner hasn't (yet?) supported. " .+
             "With 18+ HCP and a two-suited hand whose second suit is lower " .+
@@ -85,11 +85,11 @@ jumpShift = let
       in
         situation "js" action rebid explanation
   in
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3C, T.Hearts)
-                              , (B.b1H, B.b1H1N, B.b1H1N3D, T.Hearts)
-                              , (B.b1S, B.b1S1N, B.b1S1N3C, T.Spades)
-                              , (B.b1S, B.b1S1N, B.b1S1N3D, T.Spades)
-                              , (B.b1S, B.b1S1N, B.b1S1N3H, T.Spades)
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3C)
+                              , (B.b1H, B.b1H1N, B.b1H1N3D)
+                              , (B.b1S, B.b1S1N, B.b1S1N3C)
+                              , (B.b1S, B.b1S1N, B.b1S1N3D)
+                              , (B.b1S, B.b1S1N, B.b1S1N3H)
                               ]
 
 
@@ -120,7 +120,8 @@ majorReverse = let
 -- time to figure it out right now, though.
 jumpRebid :: Situations
 jumpRebid = let
-    sit (bid, response, rebid, suit) = let
+    sit (bid, response, rebid) = let
+        suit = T.suitBid bid
         action = do
             setOpener T.South
             _ <- bid
@@ -138,13 +139,14 @@ jumpRebid = let
       in
         situation "jrb" action rebid explanation
   in
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3H, T.Hearts)
-                              , (B.b1S, B.b1S1N, B.b1S1N3S, T.Spades) ]
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3H)
+                              , (B.b1S, B.b1S1N, B.b1S1N3S) ]
 
 
 limitRaise3 :: Situations
 limitRaise3 = let
-    sit (opening, response, suit) = let
+    sit (opening, response) = let
+        suit = T.suitBid opening
         action = do
             setOpener T.North
             _ <- opening
@@ -161,13 +163,13 @@ limitRaise3 = let
         situation "lr3" action response explanation
   in
     -- For us to bid a forcing 1N, we must be an unpassed hand.
-    wrapVulNW $ return sit <~ [ (B.b1H, B.b1H1N, T.Hearts)
-                              , (B.b1S, B.b1S1N, T.Spades) ]
+    wrapVulNW $ return sit <~ [(B.b1H, B.b1H1N), (B.b1S, B.b1S1N)]
 
 
 raise2 :: Situations
 raise2 = let
-    sit (opening, response, suit) = let
+    sit (opening, response) = let
+        suit = T.suitBid opening
         action = do
             setOpener T.North
             _ <- opening
@@ -190,13 +192,13 @@ raise2 = let
         situation "mr2" action response explanation
   in
     -- For us to bid a forcing 1N, we must be an unpassed hand.
-    wrapVulNW $ return sit <~ [ (B.b1H, B.b1H1N, T.Hearts)
-                              , (B.b1S, B.b1S1N, T.Spades) ]
+    wrapVulNW $ return sit <~ [(B.b1H, B.b1H1N), (B.b1S, B.b1S1N)]
 
 
 nonjumpRebid :: Situations
 nonjumpRebid = let
-    sit (bid, response, rebid, suit) = let
+    sit (bid, response, rebid) = let
+        suit = T.suitBid bid
         action = do
             setOpener T.South
             _ <- bid
@@ -214,13 +216,14 @@ nonjumpRebid = let
       in
         situation "nrb" action rebid explanation
   in
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2H, T.Hearts)
-                              , (B.b1S, B.b1S1N, B.b1S1N2S, T.Spades) ]
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2H)
+                              , (B.b1S, B.b1S1N, B.b1S1N2S) ]
 
 
 secondSuitRebid :: Situations
 secondSuitRebid = let
-    sit (bid, response, rebid, firstSuit) = let
+    sit (bid, response, rebid) = let
+        firstSuit = T.suitBid bid
         action = do
             setOpener T.South
             _ <- bid
@@ -237,11 +240,11 @@ secondSuitRebid = let
       in
         situation "b2nd" action rebid explanation
   in
-    wrapVulSE $ return sit <~ [ (B.b1S, B.b1S1N, B.b1S1N2H, T.Spades)
-                              , (B.b1S, B.b1S1N, B.b1S1N2D, T.Spades)
-                              , (B.b1S, B.b1S1N, B.b1S1N2C, T.Spades)
-                              , (B.b1H, B.b1H1N, B.b1H1N2C, T.Hearts)
-                              , (B.b1H, B.b1H1N, B.b1H1N2D, T.Hearts)
+    wrapVulSE $ return sit <~ [ (B.b1S, B.b1S1N, B.b1S1N2H)
+                              , (B.b1S, B.b1S1N, B.b1S1N2D)
+                              , (B.b1S, B.b1S1N, B.b1S1N2C)
+                              , (B.b1H, B.b1H1N, B.b1H1N2C)
+                              , (B.b1H, B.b1H1N, B.b1H1N2D)
                               ]
 
 
