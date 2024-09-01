@@ -10,7 +10,8 @@ import Topic(wrap, wrapVulNW, wrapVulSE, Situations, Topic, makeTopic)
 
 j2nt :: Situations
 j2nt = let
-    sit (openerBid, j2ntBid, suit) = let
+    sit (openerBid, j2ntBid) = let
+        suit = T.suitBid openerBid
         action = do
             setOpener T.North
             _ <- openerBid
@@ -25,13 +26,13 @@ j2nt = let
         situation "j2n" action j2ntBid explanation
   in
     -- We must be an unpassed hand to be game-forcing.
-    wrapVulNW $ return sit <~ [ (B.b1H, B.b1H2N, T.Hearts)
-                              , (B.b1S, B.b1S2N, T.Spades) ]
+    wrapVulNW $ return sit <~ [(B.b1H, B.b1H2N), (B.b1S, B.b1S2N)]
 
 
 singleton :: Situations
 singleton = let
-    sit (openerBid, j2ntBid, singletonBid, suit) = let
+    sit (openerBid, j2ntBid, singletonBid) = let
+        suit = T.suitBid openerBid
         action = do
             setOpener T.South
             _ <- openerBid
@@ -51,18 +52,19 @@ singleton = let
         situation "sing" action singletonBid explanation
   in
     -- Partner must be an unpassed hand to be game-forcing.
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N3C, T.Hearts)
-                              , (B.b1H, B.b1H2N, B.b1H2N3D, T.Hearts)
-                              , (B.b1H, B.b1H2N, B.b1H2N3S, T.Hearts)
-                              , (B.b1S, B.b1S2N, B.b1S2N3C, T.Spades)
-                              , (B.b1S, B.b1S2N, B.b1S2N3D, T.Spades)
-                              , (B.b1S, B.b1S2N, B.b1S2N3H, T.Spades)
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N3C)
+                              , (B.b1H, B.b1H2N, B.b1H2N3D)
+                              , (B.b1H, B.b1H2N, B.b1H2N3S)
+                              , (B.b1S, B.b1S2N, B.b1S2N3C)
+                              , (B.b1S, B.b1S2N, B.b1S2N3D)
+                              , (B.b1S, B.b1S2N, B.b1S2N3H)
                               ]
 
 
 sideSuit :: Situations
 sideSuit = let
-    sit (openerBid, j2ntBid, sideBid, suit) = let
+    sit (openerBid, j2ntBid, sideBid) = let
+        suit = T.suitBid openerBid
         action = do
             setOpener T.South
             _ <- openerBid
@@ -79,17 +81,18 @@ sideSuit = let
         situation "side" action sideBid explanation
   in
     -- Partner must be an unpassed hand to be game-forcing.
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N4C, T.Hearts)
-                              , (B.b1H, B.b1H2N, B.b1H2N4D, T.Hearts)
-                              , (B.b1S, B.b1S2N, B.b1S2N4C, T.Spades)
-                              , (B.b1S, B.b1S2N, B.b1S2N4D, T.Spades)
-                              , (B.b1S, B.b1S2N, B.b1S2N4H, T.Spades)
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N4C)
+                              , (B.b1H, B.b1H2N, B.b1H2N4D)
+                              , (B.b1S, B.b1S2N, B.b1S2N4C)
+                              , (B.b1S, B.b1S2N, B.b1S2N4D)
+                              , (B.b1S, B.b1S2N, B.b1S2N4H)
                               ]
 
 
 semibalancedMin :: Situations
 semibalancedMin = let
-    sit (openerBid, j2ntBid, openerRebid, suit) = let
+    sit (openerBid, j2ntBid, openerRebid) = let
+        suit = T.suitBid openerBid
         action = do
             setOpener T.South
             _ <- openerBid
@@ -105,14 +108,15 @@ semibalancedMin = let
         situation "sbmin" action openerRebid explanation
   in
     -- Partner must be an unpassed hand to be game-forcing.
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, T.Hearts)
-                              , (B.b1S, B.b1S2N, B.b1S2N4S, T.Spades)
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N4H)
+                              , (B.b1S, B.b1S2N, B.b1S2N4S)
                               ]
 
 
 semibalancedMed :: Situations
 semibalancedMed = let
-    sit (openerBid, j2ntBid, openerRebid, suit) = let
+    sit (openerBid, j2ntBid, openerRebid) = let
+        suit = T.suitBid openerBid
         action = do
             setOpener T.South
             _ <- openerBid
@@ -129,14 +133,15 @@ semibalancedMed = let
         situation "sbmed" action openerRebid explanation
   in
     -- Partner must be an unpassed hand to be game-forcing.
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N3N, T.Hearts)
-                              , (B.b1S, B.b1S2N, B.b1S2N3N, T.Spades)
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N3N)
+                              , (B.b1S, B.b1S2N, B.b1S2N3N)
                               ]
 
 
 semibalancedMax :: Situations
 semibalancedMax = let
-    sit (openerBid, j2ntBid, openerRebid, suit) = let
+    sit (openerBid, j2ntBid, openerRebid) = let
+        suit = T.suitBid openerBid
         action = do
             setOpener T.South
             _ <- openerBid
@@ -155,14 +160,15 @@ semibalancedMax = let
         situation "sbmax" action openerRebid explanation
   in
     -- Partner must be an unpassed hand to be game-forcing.
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N3H, T.Hearts)
-                              , (B.b1S, B.b1S2N, B.b1S2N3S, T.Spades)
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N3H)
+                              , (B.b1S, B.b1S2N, B.b1S2N3S)
                               ]
 
 
 semibalSignoff :: Situations
 semibalSignoff = let
-    sit (openerBid, j2ntBid, openerRebid, responderSignoff, suit) = let
+    sit (openerBid, j2ntBid, openerRebid, responderSignoff) = let
+        suit = T.suitBid openerBid
         action = do
             setOpener T.North
             _ <- openerBid
@@ -180,16 +186,17 @@ semibalSignoff = let
   in
     -- Partner must be an unpassed hand to be game-forcing.
     wrapVulNW $ return sit
-        <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, B.b1H2N4HP,  T.Hearts)
-           , (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4H, T.Hearts)
-           , (B.b1S, B.b1S2N, B.b1S2N4S, B.b1S2N4SP,  T.Spades)
-           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4S, T.Spades)
+        <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, B.b1H2N4HP)
+           , (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4H)
+           , (B.b1S, B.b1S2N, B.b1S2N4S, B.b1S2N4SP)
+           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4S)
            ]
 
 
 semibalMinSlam :: Situations
 semibalMinSlam = let
-    sit (openerBid, j2ntBid, openerRebid, responderRebid, suit) = let
+    sit (openerBid, j2ntBid, openerRebid, responderRebid) = let
+        suit = T.suitBid openerBid
         action = do
             setOpener T.North
             _ <- openerBid
@@ -211,14 +218,15 @@ semibalMinSlam = let
   in
     -- Partner must be an unpassed hand to be game-forcing.
     wrapVulNW $ return sit
-        <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, B.b1H2N4H4N,  T.Hearts)
-           , (B.b1S, B.b1S2N, B.b1S2N4S, B.b1S2N4S4N,  T.Spades)
+        <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, B.b1H2N4H4N)
+           , (B.b1S, B.b1S2N, B.b1S2N4S, B.b1S2N4S4N)
            ]
 
 
 semibalMedSlam :: Situations
 semibalMedSlam = let
-    sit (openerBid, j2ntBid, openerRebid, responderRebid, suit) = let
+    sit (openerBid, j2ntBid, openerRebid, responderRebid) = let
+        suit = T.suitBid openerBid
         action = do
             setOpener T.North
             _ <- openerBid
@@ -237,20 +245,21 @@ semibalMedSlam = let
   in
     -- Partner must be an unpassed hand to be game-forcing.
     wrapVulNW $ return sit
-        <~ [ (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4C,  T.Hearts)
-           , (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4D,  T.Hearts)
+        <~ [ (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4C)
+           , (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4D)
            -- Should there be one for control bidding spades when hearts are
            -- trump? It's very unlikely, and maybe you should just go straight
            -- to asking about keycards instead...
-           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4C,  T.Spades)
-           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4D,  T.Spades)
-           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4H,  T.Spades)
+           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4C)
+           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4D)
+           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4H)
            ]
 
 
 semibalMaxSlam :: Situations
 semibalMaxSlam = let
-    sit (openerBid, j2ntBid, openerRebid, responderRebid, suit) = let
+    sit (openerBid, j2ntBid, openerRebid, responderRebid) = let
+        suit = T.suitBid openerBid
         action = do
             setOpener T.North
             _ <- openerBid
@@ -273,14 +282,14 @@ semibalMaxSlam = let
         -- Although it's possible to have no controls and want to rebid 4M, it
         -- is exceedingly unlikely. Skip those situations because they're so
         -- rare.
-        <~ [ (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H3S,  T.Hearts)
-           , (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4C,  T.Hearts)
-           , (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4D,  T.Hearts)
-           --, (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4H,  T.Hearts)
-           , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4C,  T.Spades)
-           , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4D,  T.Spades)
-           , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4H,  T.Spades)
-           --, (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4S,  T.Spades)
+        <~ [ (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H3S)
+           , (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4C)
+           , (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4D)
+           --, (B.b1H, B.b1H2N, B.b1H2N3H, B.b1H2N3H4H)
+           , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4C)
+           , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4D)
+           , (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4H)
+           --, (B.b1S, B.b1S2N, B.b1S2N3S, B.b1S2N3S4S)
            ]
 
 
