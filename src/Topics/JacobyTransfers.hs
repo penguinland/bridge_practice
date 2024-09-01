@@ -115,7 +115,8 @@ completeTransfer = let
 
 completeTransferShort :: Situations
 completeTransferShort = let
-    sit (responderBid, openerRebid, suit) = let
+    sit (responderBid, openerRebid) = let
+        suit = T.suitBid openerRebid
         action = do
             setOpener T.South
             B.b1N
@@ -136,8 +137,7 @@ completeTransferShort = let
       in
         situation "Short" action openerRebid explanation
   in
-    wrapVulDlr $ return sit <~ [ (B.b1N2D, B.b1N2D2H, T.Hearts)
-                               , (B.b1N2H, B.b1N2H2S, T.Spades)]
+    wrapVulDlr $ return sit <~ [(B.b1N2D, B.b1N2D2H), (B.b1N2H, B.b1N2H2S)]
 
 
 majors55inv :: Situations
@@ -307,7 +307,8 @@ superaccept = let
 
 noFlatSuperaccept :: Situations
 noFlatSuperaccept = let
-    sit (responderBid, openerRebid, suit) = let
+    sit (responderBid, openerRebid) = let
+        suit = T.suitBid openerRebid
         action = do
             setOpener T.South
             B.b1N
@@ -327,13 +328,13 @@ noFlatSuperaccept = let
       in
         situation "flatSA" action openerRebid explanation
   in
-    wrapVulDlr $ return sit <~ [ (B.b1N2D, B.b1N2D2H, T.Hearts)
-                               , (B.b1N2H, B.b1N2H2S, T.Spades) ]
+    wrapVulDlr $ return sit <~ [(B.b1N2D, B.b1N2D2H), (B.b1N2H, B.b1N2H2S)]
 
 
 singleSuitedInvite :: Situations
 singleSuitedInvite = let
-    sit (responderBid, openerRebid, responderRebid, suit) = let
+    sit (responderBid, openerRebid, responderRebid) = let
+        suit = T.suitBid openerRebid
         action = do
             setOpener T.North
             B.b1N
@@ -354,8 +355,8 @@ singleSuitedInvite = let
   in
     -- We must be an unpassed hand: if we had a chance to bid earlier, we would
     -- have bid a weak two.
-    wrapVulNW $ return sit <~ [ (B.b1N2D, B.b1N2D2H, B.b1N2D2H3H, T.Hearts)
-                              , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3S, T.Spades) ]
+    wrapVulNW $ return sit <~ [ (B.b1N2D, B.b1N2D2H, B.b1N2D2H3H)
+                              , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3S) ]
 
 
 topic :: Topic
