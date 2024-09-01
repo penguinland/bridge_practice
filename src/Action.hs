@@ -41,8 +41,21 @@ instance Showable Action where
     toLatex = toLatex . T.removeAlert . extractLastCall
     toHtml = toHtml . T.removeAlert . extractLastCall
 
+-- AWKWARD TRICK ALERT: Unless you specify the types explicitly, options passed
+-- to `<~` come out as the more general `State Auction a` instead of the more
+-- specific `Action`. In order to use `suitBid` with them, we need this instance
+-- (and all functions it uses, including `extractLastCall` and `finish`) to have
+-- this more general type.
+-- TODO: There's probably some way to convince the type checker to generalize
+-- less, which possibly involves changing `Action` from a `type` to something
+-- else (`newtype`?). See if you can figure it out...
+instance T.SuitBid (State Auction a) where
+    suitBid = T.suitBid . extractLastCall
 
-finish :: T.Direction -> Action -> Auction
+
+-- This isn't the more specific type `T.Direction -> Action -> T.CompleteCall`
+-- in order to get SuitBid to work; see the "awkward trick alert" above.
+finish :: T.Direction -> State Auction a -> Auction
 finish firstBidder = flip execState (newAuction firstBidder)
 
 
@@ -74,7 +87,9 @@ withholdBid action = do
     put (bidding, dealerProg `mappend` dealerToWithhold)
 
 
-extractLastCall :: Action -> T.CompleteCall
+-- This isn't the more specific type `Action -> T.CompleteCall` in order to get
+-- SuitBid to work; see the "awkward trick alert" above.
+extractLastCall :: State Auction a -> T.CompleteCall
 extractLastCall =
     -- It doesn't matter who was dealer: use North just to extract the bidding
     -- from the action.

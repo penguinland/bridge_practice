@@ -8,6 +8,7 @@ module Terminology (
 , majorSuits
 , otherMinor
 , otherMajor
+, SuitBid(..)
 , Call(..)
 , CompleteCall(..)
 , removeAlert
@@ -96,6 +97,10 @@ otherMajor Spades = Hearts
 otherMajor _      = error "otherMajor of non-major"
 
 
+class SuitBid a where
+    suitBid :: a -> Suit
+
+
 data Call = Pass | Double | Redouble | Bid Int Suit deriving Eq
 
 instance Showable Call where
@@ -107,6 +112,10 @@ instance Showable Call where
     toHtml Double    = "Dbl"
     toHtml Redouble  = "Rdb"
     toHtml (Bid l s) = show l ++ toHtml s
+
+instance SuitBid Call where
+    suitBid (Bid _ s) = s
+    suitBid _         = error "cannot get suit from non-bid call"
 
 
 -- A complete call is a call with an optional alerted explanation.
@@ -128,6 +137,9 @@ instance ToJSON CompleteCall where
         jsonA = maybe [] (singleton . (fromString "alert" .=) . toHtml) a
       in
         object $ jsonC:jsonA
+
+instance SuitBid CompleteCall where
+    suitBid (CompleteCall c _) = suitBid c
 
 
 removeAlert :: CompleteCall -> Call
