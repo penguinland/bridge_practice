@@ -74,14 +74,14 @@ noMajor = let
 
 oneMajor :: Situations
 oneMajor = let
-    sit (bid, shortSuit) = let
+    sit bid = let
         action = do
             setOpener T.South
             B.b1N
             makePass
             B.b1N2C
             makePass
-            maxSuitLength shortSuit 3
+            maxSuitLength (T.otherMajor . T.suitBid $ bid) 3
         explanation =
             "We opened a strong " .+ T.Bid 1 T.Notrump .+ ", and partner " .+
             "has bid Stayman, asking whether we have any major suits. " .+
@@ -89,7 +89,7 @@ oneMajor = let
             "the auction; they'll know what to do next."
       in situation "1Maj" action bid explanation
   in
-    wrapVulDlr $ return sit <~ [(B.b1N2C2H, T.Spades), (B.b1N2C2S, T.Hearts)]
+    wrapVulDlr $ return sit <~ [B.b1N2C2H, B.b1N2C2S]
 
 
 bothMajors :: Situations
@@ -349,7 +349,7 @@ bothMajorsGF = let
 
 inv54 :: Situations
 inv54 = let
-    sit (bid, suit) = let
+    sit bid = let
         action = do
             setOpener T.North
             B.b1N
@@ -363,14 +363,14 @@ inv54 = let
             "an invitational hand and 5-4 in the majors, we bid Stayman, " .+
             "hoping to find a fit with partner, but they don't have a " .+
             "4-card major. Bid our 5-card major to show our hand. If " .+
-            "partner has a minimum, they can pass with 3 " .+ show suit .+
-            " or bid " .+ T.Bid 2 T.Notrump .+ " if we still don't have a " .+
-            "fit, and if they have a maximum they can either raise us to " .+
-            "game with a fit or " .+ T.Bid 3 T.Notrump .+ " without one."
+            "partner has a minimum, they can pass with 3 " .+
+            (show . T.suitBid $ bid) .+ " or bid " .+ T.Bid 2 T.Notrump .+
+            " if we still don't have a fit, and if they have a maximum " .+
+            "they can either raise us to game with a fit or " .+
+            T.Bid 3 T.Notrump .+ " without one."
       in situation "inv54" action bid explanation
   in
-    wrapVulDlr $ return sit <~ [ (B.b1N2C2D2H, T.Hearts)
-                               , (B.b1N2C2D2S, T.Spades) ]
+    wrapVulDlr $ return sit <~ [B.b1N2C2D2H, B.b1N2C2D2S]
 
 
 noFitUnbalancedGF :: Situations
