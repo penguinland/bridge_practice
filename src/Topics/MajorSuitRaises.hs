@@ -10,11 +10,11 @@ import Topic(Topic, wrap, wrapVulDlr, wrapVulNW, Situations, makeTopic)
 
 simpleRaise :: Situations
 simpleRaise = let
-    sit (opening, response, suit) = let
+    sit (opening, response) = let
         action = do
             setOpener T.North
             _ <- opening
-            noInterference suit
+            noInterference $ T.suitBid opening
         explanation =
             "With at least 3-card support for partner's suit but no " .+
             "interest in game, raise partner's suit to the 2 level. " .+
@@ -24,17 +24,16 @@ simpleRaise = let
       in
         situation "simpR" action response explanation
   in
-    wrapVulDlr $ return sit <~ [ (B.b1H, B.b1H2H, T.Hearts)
-                               , (B.b1S, B.b1S2S, T.Spades)]
+    wrapVulDlr $ return sit <~ [(B.b1H, B.b1H2H), (B.b1S, B.b1S2S)]
 
 
 limitRaise :: Situations
 limitRaise = let
-    sit (opening, response, suit) = let
+    sit (opening, response) = let
         action = do
             setOpener T.North
             _ <- opening
-            noInterference suit
+            noInterference $ T.suitBid opening
         explanation =
             -- Don't mention needing at least 4-card support here: we're not
             -- assuming that we're playing 2/1, so might not fold the 3-card
@@ -48,13 +47,13 @@ limitRaise = let
   in
     -- You should be an unpassed hand to make a limit raise; otherwise, consider
     -- using Drury.
-    wrapVulNW $ return sit <~ [ (B.b1H, B.b1H3H, T.Hearts)
-                              , (B.b1S, B.b1S3S, T.Spades)]
+    wrapVulNW $ return sit <~ [(B.b1H, B.b1H3H), (B.b1S, B.b1S3S)]
 
 
 blast3N :: Situations
 blast3N = let
-    sit (opening, response, suit) = let
+    sit (opening, response) = let
+        suit = T.suitBid opening
         action = do
             setOpener T.North
             _ <- opening
@@ -73,8 +72,7 @@ blast3N = let
         situation "3N" action response explanation
   in
     -- You should be an unpassed hand to be game-forcing.
-    wrapVulNW $ return sit
-        <~ [(B.b1H, B.b1H3N, T.Hearts), (B.b1S, B.b1S3N, T.Spades)]
+    wrapVulNW $ return sit <~ [(B.b1H, B.b1H3N), (B.b1S, B.b1S3N)]
 
 
 topic :: Topic
