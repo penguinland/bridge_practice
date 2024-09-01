@@ -81,14 +81,14 @@ completeTransfer = let
 
 completeTransferDoubleton :: Situations
 completeTransferDoubleton = let
-    sit (partnerBid, ourBid, suit) = let
+    sit (partnerBid, ourBid) = let
         action = do
             setOpener T.South
             B.b1N
             makePass
             _ <- partnerBid  -- Make the linter happy
             makePass
-            suitLength suit 2
+            suitLength (T.suitBid ourBid) 2
         explanation =
             "We have opened " .+ T.Bid 1 T.Notrump .+ ", and partner has " .+
             "made a Texas Transfer. Complete the transfer, and see what " .+
@@ -98,22 +98,21 @@ completeTransferDoubleton = let
   in
     -- Same optimization here: don't have North make a Texas Transfer as a
     -- passed hand.
-    wrapVulSE $ return sit <~ [ (B.b1N4D, B.b1N4D4H, T.Hearts)
-                              , (B.b1N4H, B.b1N4H4S, T.Spades)]
+    wrapVulSE $ return sit <~ [(B.b1N4D, B.b1N4D4H), (B.b1N4H, B.b1N4H4S)]
 
 
 -- WARNING: This situation is rare, and typically requires generating 100,000
 -- boards. Use it sparingly.
 completeTransferSuperfit :: Situations
 completeTransferSuperfit = let
-    sit (partnerBid, ourBid, suit) = let
+    sit (partnerBid, ourBid) = let
         action = do
             setOpener T.South
             B.b1N
             makePass
             _ <- partnerBid  -- Make the linter happy
             makePass
-            suitLength suit 5
+            suitLength (T.suitBid ourBid) 5
         explanation =
             "We have opened " .+ T.Bid 1 T.Notrump .+ ", and partner has " .+
             "made a Texas Transfer. Complete the transfer, and see what " .+
@@ -124,8 +123,7 @@ completeTransferSuperfit = let
   in
     -- Same optimization here: don't have North make a Texas Transfer as a
     -- passed hand.
-    wrapVulSE $ return sit <~ [ (B.b1N4D, B.b1N4D4H, T.Hearts)
-                              , (B.b1N4H, B.b1N4H4S, T.Spades)]
+    wrapVulSE $ return sit <~ [(B.b1N4D, B.b1N4D4H), (B.b1N4H, B.b1N4H4S)]
 
 
 transferSlamInvite :: Situations
@@ -149,7 +147,7 @@ transferSlamInvite = let
 
 transferSlamInviteDeclined :: Situations
 transferSlamInviteDeclined = let
-    sit (transferBid, acceptBid, raiseBid, suit) = let
+    sit (transferBid, acceptBid, raiseBid) = let
         action = do
             setOpener T.South
             B.b1N
@@ -161,7 +159,7 @@ transferSlamInviteDeclined = let
             _ <- raiseBid
             makePass
             pointRange 15 15
-            maxSuitLength suit 3
+            maxSuitLength (T.suitBid acceptBid) 3
         explanation =
             "We opened " .+ T.Bid 1 T.Notrump .+ ", partner made a Jacoby " .+
             "transfer, and after we completed it, partner raised to game " .+
@@ -169,13 +167,13 @@ transferSlamInviteDeclined = let
             "invite: with a minimum hand and no extra trump length, pass."
         in situation "SInvDec" action makePass explanation
   in
-    wrapVulSE $ return sit <~ [(B.b1N2D, B.b1N2D2H, B.b1N2D2H4H, T.Hearts)
-                              ,(B.b1N2H, B.b1N2H2S, B.b1N2H2S4S, T.Spades)]
+    wrapVulSE $ return sit <~ [(B.b1N2D, B.b1N2D2H, B.b1N2D2H4H)
+                              ,(B.b1N2H, B.b1N2H2S, B.b1N2H2S4S)]
 
 
 transferSlamInviteAccepted :: Situations
 transferSlamInviteAccepted = let
-    sit (transferBid, acceptBid, raiseBid, suit) = let
+    sit (transferBid, acceptBid, raiseBid) = let
         action = do
             setOpener T.South
             B.b1N
@@ -187,7 +185,7 @@ transferSlamInviteAccepted = let
             _ <- raiseBid
             makePass
             pointRange 17 17
-            minSuitLength suit 3
+            minSuitLength (T.suitBid acceptBid) 3
         explanation =
             "We opened " .+ T.Bid 1 T.Notrump .+ ", partner made a Jacoby " .+
             "transfer, and after we completed it, partner raised to game " .+
@@ -198,8 +196,8 @@ transferSlamInviteAccepted = let
             "invistigate slam, your preferred bid might differ)."
         in situation "SInvAcc" action (makeCall $ T.Bid 4 T.Notrump) explanation
   in
-    wrapVulSE $ return sit <~ [(B.b1N2D, B.b1N2D2H, B.b1N2D2H4H, T.Hearts)
-                              ,(B.b1N2H, B.b1N2H2S, B.b1N2H2S4S, T.Spades)]
+    wrapVulSE $ return sit <~ [(B.b1N2D, B.b1N2D2H, B.b1N2D2H4H)
+                              ,(B.b1N2H, B.b1N2H2S, B.b1N2H2S4S)]
 
 
 -- TODO: More situations:
