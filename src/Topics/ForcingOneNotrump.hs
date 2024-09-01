@@ -240,11 +240,11 @@ secondSuitRebid = let
       in
         situation "b2nd" action rebid explanation
   in
-    wrapVulSE $ return sit <~ [ (B.b1S, B.b1S1N, B.b1S1N2H)
-                              , (B.b1S, B.b1S1N, B.b1S1N2D)
-                              , (B.b1S, B.b1S1N, B.b1S1N2C)
-                              , (B.b1H, B.b1H1N, B.b1H1N2C)
+    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2C)
                               , (B.b1H, B.b1H1N, B.b1H1N2D)
+                              , (B.b1S, B.b1S1N, B.b1S1N2C)
+                              , (B.b1S, B.b1S1N, B.b1S1N2D)
+                              , (B.b1S, B.b1S1N, B.b1S1N2H)
                               ]
 
 
