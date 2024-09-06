@@ -13,8 +13,8 @@ module Bids.DONT(
 
 import Action(Action)
 import Bids.Meckwell(singleSuit, twoSuited, b1N)
-import EDSL(pointRange, minSuitLength, maxSuitLength, alternatives, forbid,
-            makeCall, makeAlertableCall, forEach)
+import EDSL(pointRange, alternatives, makeCall, makeAlertableCall, forEach,
+            atLeastAsLong)
 import qualified Terminology as T
 
 
@@ -42,7 +42,7 @@ b1NoX2C = makeAlertableCall (T.Bid 2 T.Clubs) "pass or correct"
 b1No2C :: Action
 b1No2C = do
     pointsToCompete
-    alternatives . map (twoSuited T.Clubs) $ [T.Diamonds, T.Hearts, T.Spades]
+    alternatives $ map (twoSuited T.Clubs) [T.Diamonds, T.Hearts, T.Spades]
     makeAlertableCall (T.Bid 2 T.Clubs) "clubs and another suit"
 
 
@@ -56,7 +56,7 @@ b1No2C2D = do
 b1No2D :: Action
 b1No2D = do
     pointsToCompete
-    alternatives . map (twoSuited T.Diamonds) T.majorSuits
+    alternatives $ map (twoSuited T.Diamonds) T.majorSuits
     makeAlertableCall (T.Bid 2 T.Diamonds) "diamonds and a major"
 
 
@@ -76,5 +76,5 @@ b1No2H = do
 b1No2S :: Action
 b1No2S = do
     pointsToCompete
-    singleSuited T.Spades
+    singleSuit T.Spades
     makeCall $ T.Bid 2 T.Spades
