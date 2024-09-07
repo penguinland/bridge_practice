@@ -22,16 +22,20 @@ import qualified Terminology as T
 -- What's the right minimum strength to bid DONT? It kinda depends on the
 -- vulnerability and where in the hand this strength is located. Let's guess 10
 -- is a pretty decent minimum, but I'm open to changing it later.
+minPointsToCompete :: Int
+minPointsToCompete = 10
+
 pointsToCompete :: Action
-pointsToCompete = pointRange 10 40
+pointsToCompete = pointRange minPointsToCompete 40
 
 
 b1NoX :: Action
 b1NoX = do
     pointsToCompete
-    -- If you're single-suited with spades, when would you bid 2S and when X?
-    -- Avoid the choice for now.
-    alternatives $ map singleSuit [T.Clubs, T.Diamonds, T.Hearts]
+    -- If you're single-suited with spades, bid 2S with a minimum, and
+    -- double-then-bid with extras.
+    forbid b1No2S
+    alternatives $ map singleSuit T.allSuits
     makeAlertableCall T.Double "single-suited hand"
 
 
@@ -76,5 +80,7 @@ b1No2H = do
 b1No2S :: Action
 b1No2S = do
     pointsToCompete
+    -- If you've got extra strength, double and then bid 2S afterward.
+    pointRange 0 (minPointsToCompete + 2)
     singleSuit T.Spades
     makeCall $ T.Bid 2 T.Spades
