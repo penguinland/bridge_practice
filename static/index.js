@@ -195,13 +195,23 @@ async function displayProblem(problem) {
 }
 
 function displayHand(hand, id) {
+    function displayHolding(suit, holding) {
+        return "<tr><td><center>" + suit + "</center></td><td>" +
+            holding + "</td></tr>";
+    }
+
+    function red(symbol) {
+        return "<span style='color: red'>" + symbol + "</span>";
+    }
+
     elem = document.getElementById(id);
-    elem.innerHTML = "&spades;&nbsp;&nbsp;" + hand.spades + "<br/>" +
-                     "<span style='color: red'>&hearts;</span>&nbsp;&nbsp;" +
-                         hand.hearts + "<br/>" +
-                     "<span style='color: red'>&diams;</span>&nbsp;&nbsp;" +
-                         hand.diamonds + "<br/>" +
-                     "&clubs;&nbsp;&nbsp;" + hand.clubs;
+    elem.innerHTML = (
+        "<table style='border-spacing: 0; border-collapse: collapse;'>" +
+        displayHolding(    "&spades;",  hand.spades) +
+        displayHolding(red("&hearts;"), hand.hearts) +
+        displayHolding(red("&diams;"),  hand.diamonds) +
+        displayHolding(    "&clubs;",   hand.clubs) +
+        "</table>");
     elem.style = "word-spacing:-0.1em;"
 }
 
