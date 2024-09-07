@@ -205,11 +205,12 @@ function displayHand(hand, id) {
     }
 
     elem = document.getElementById(id);
-    elem.innerHTML = ("<table style='padding=0px;'>" +
-        displayHolding("&spades;",      hand.spades) +
+    elem.innerHTML = (
+        "<table style='border-spacing: 0; border-collapse: collapse;'>" +
+        displayHolding(    "&spades;",  hand.spades) +
         displayHolding(red("&hearts;"), hand.hearts) +
         displayHolding(red("&diams;"),  hand.diamonds) +
-        displayHolding("&clubs;",       hand.clubs) +
+        displayHolding(    "&clubs;",   hand.clubs) +
         "</table>");
     elem.style = "word-spacing:-0.1em;"
 }
