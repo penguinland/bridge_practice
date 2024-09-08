@@ -15,6 +15,16 @@ jobs:
           - macos-latest
           - ubuntu-latest
     steps:
+      - name: Cache third-party libraries
+        uses: actions/cache@v4
+        with:
+          key: ${{ matrix.os }}_${{ env.snapshot }}
+          restore-keys: |
+            ${{ matrix.os }}_${{ env.snapshot }}_${{ github.head_ref }}
+            ${{ matrix.os }}_${{ env.snapshot }}
+          path: |
+            ~/.stack
+            ~/.local/bin
       - name: Check out code
         uses: actions/checkout@v4
       - name: Build project
