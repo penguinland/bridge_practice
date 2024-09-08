@@ -21,7 +21,6 @@ jobs:
           key: ${{ matrix.os }}_${{ env.snapshot }}
           restore-keys: |
             ${{ matrix.os }}_${{ env.snapshot }}_${{ github.head_ref }}
-            ${{ matrix.os }}_${{ env.snapshot }}
           path: |
             ~/.stack
             ~/.local/bin
