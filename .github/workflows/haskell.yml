@@ -18,7 +18,9 @@ jobs:
       - name: Cache third-party libraries
         uses: actions/cache@v4
         with:
-          key: ${{ matrix.os }}
+          key: ${{ matrix.os }}-
+          restore-keys: |
+            ${{ matrix.os }}-
           path: |
             ~/.stack
             ~/.local/bin
