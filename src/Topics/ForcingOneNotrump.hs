@@ -153,6 +153,9 @@ limitRaise3 = let
             noInterference suit
             suitLength suit 3
             pointRange 10 12
+            -- Don't be tempted to bid your own ridiculously long suit
+            forEach T.allSuits (`maxSuitLength` 6)
+            forEach T.majorSuits (`maxSuitLength` 5)
         explanation =
             "We've got 3-card support for partner's major, and strength for " .+
             "a limit raise. Start with a forcing " .+ T.Bid 1 T.Notrump .+
