@@ -7,7 +7,7 @@ import EDSL(pointRange, minSuitLength, maxSuitLength, makePass, forEach)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapVulDlr, stdWrap, Situations, makeTopic)
+import Topic(Topic, wrap, Situations, makeTopic)
 
 
 responderCannotBid :: Action
@@ -18,19 +18,57 @@ responderCannotBid = do
     makePass
 
 
-double :: Situations
-double = let
+doubleNoSpades :: Situations
+doubleNoSpades = let
     sit = let
         action = do
             setOpener T.East
             B.b1N
+            maxSuitLength T.Spades 5
         explanation =
             "We've got a single-suited hand. Double to show this. Partner " .+
             "will relay to " .+ T.Bid 2 T.Clubs .+ ", which we can pass or " .+
             "correct to whatever our suit is."
         in situation "dbl" action B.b1NoX explanation
   in
-    stdWrap sit
+    -- It is tremendously unlikely that you'd be a passed hand and want to make
+    -- this bid: you probably should have opened the bidding (either at the 1
+    -- level or bidding a weak 2). So, make sure we're an unpassed hand.
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+
+
+doubleSpades :: Situations
+doubleSpades = let
+    sit = let
+        action = do
+            setOpener T.East
+            B.b1N
+            minSuitLength T.Spades 6
+        explanation =
+            "We've got a single-suited hand with spades, and a little " .+
+            "more than the bare minimum to bid over LHO's notrump. Double " .+
+            "to show a single-suited hand, and when partner finds out our " .+
+            "suit is spades, they'll know we're not a minimum because we " .+
+            "didn't merely bid " .+ T.Bid 2 T.Spades .+ " right away."
+        in situation "dblS" action B.b1NoX explanation
+  in
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+
+
+spades :: Situations
+spades = let
+    sit = let
+        action = do
+            setOpener T.East
+            B.b1N
+        explanation =
+            "We've got a single-suited hand with spades, and just the bare " .+
+            "minimum to interfere over the opponents' notrump auction. " .+
+            "Instead of doubling to show a single-suited hand, bid the " .+
+            "spades naturally."
+        in situation "2S" action B.b1No2S explanation
+  in
+    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
 
 
 poc2C :: Situations
@@ -66,13 +104,38 @@ twoSuited = let
             "next suit up, which we can pass or correct to our second suit."
         in situation "2suit" action bid explanation
   in
-    wrapVulDlr $ return sit <~ [B.b1No2C, B.b1No2D, B.b1No2H]
+    wrap $ return sit <~ [B.b1No2C, B.b1No2D, B.b1No2H]
+                      <~ T.allVulnerabilities
+                      <~ [T.West, T.North, T.East]
+
+
+preempt :: Situations
+preempt = let
+    sit bid = let
+        action = do
+            setOpener T.East
+            B.b1N
+        explanation =
+            "We've got a single-suited hand. However, it's such a long " .+
+            "suit that we should pre-empt at the 3 level, rather than " .+
+            "doubling with the intention of signing off at the 2 level. " .+
+            "This makes it harder for the opponents to recover from our " .+
+            "interference."
+        in situation "pre" action bid explanation
+  in
+    -- If we're going to pre-empt, we must not have had a chance to open the
+    -- bidding ourselves (since we would have already pre-empted, given the
+    -- chance).
+    wrap $ return sit <~ [B.b1No3C, B.b1No3D, B.b1No3H, B.b1No3S]
+                      <~ T.allVulnerabilities
+                      <~ [T.West, T.North, T.East]
 
 
 topic :: Topic
 topic = makeTopic "DONT over strong notrump" "MW1N" situations
   where
-    situations = wrap [ double
+    situations = wrap [ doubleNoSpades
                       , twoSuited
                       , poc2C
+                      , wrap [preempt, doubleSpades, spades]
                       ]

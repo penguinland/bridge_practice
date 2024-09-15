@@ -18,7 +18,8 @@ module Bids.DONT(
 import Action(Action)
 import Bids.Meckwell(singleSuit, twoSuited, b1N)
 import EDSL(pointRange, alternatives, makeCall, makeAlertableCall, forEach,
-            atLeastAsLong, minSuitLength, soundHolding, forbid, forbidAll)
+            atLeastAsLong, minSuitLength, maxSuitLength, soundHolding, forbid,
+            forbidAll)
 import qualified Terminology as T
 
 
@@ -97,6 +98,8 @@ preempt_ suit = do
     pointsToCompete
     minSuitLength suit 7
     soundHolding suit  -- Don't do this with a bad suit, even if you're nonvul.
+    -- Some people are reluctant to pre-empt if they've got a side 4-card major.
+    forEach (filter (/= suit) T.majorSuits) (`maxSuitLength` 3)
     makeCall $ T.Bid 3 suit
 
 b1No3C :: Action
