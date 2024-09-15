@@ -131,11 +131,32 @@ preempt = let
                       <~ [T.West, T.North, T.East]
 
 
+findSecondSuit :: Situations
+findSecondSuit = let
+    sit (overcall, advance) = let
+        action = do
+            setOpener T.West
+            B.b1N
+            _ <- overcall
+            responderCannotBid
+        explanation =
+            "Partner has shown a two-suited hand. However, we don't have " .+
+            "support for their lower suit. Relay to the next suit up: " .+
+            "they'll pass or correct to their second suit, which is likely " .+
+            "to have a better fit with us than the first one did."
+        in situation "2ndS" action advance explanation
+  in
+    wrap $ return sit <~ [(B.b1No2C, B.b1No2C2D), (B.b1No2D, B.b1No2D2H)]
+                      <~ T.allVulnerabilities
+                      <~ [T.West, T.South, T.East]
+
+
 topic :: Topic
 topic = makeTopic "DONT over strong notrump" "MW1N" situations
   where
     situations = wrap [ doubleNoSpades
                       , twoSuited
                       , poc2C
+                      , findSecondSuit
                       , wrap [preempt, doubleSpades, spades]
                       ]
