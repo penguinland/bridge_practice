@@ -18,7 +18,7 @@ import Terminology(CompleteCall, Direction, Vulnerability)
 
 
 data Situation = Situation String Bidding DealerProg CompleteCall Commentary
-                           Vulnerability Direction
+                           Direction Vulnerability
 
 -- The first action is the auction up until now. The second one is some snippet
 -- of auction whose last bid is the intended answer to the situation. We make
@@ -26,7 +26,7 @@ data Situation = Situation String Bidding DealerProg CompleteCall Commentary
 -- auction and describing the next action that should follow.
 situation :: Showable s => String -> Action -> Action -> s -> Vulnerability ->
     Direction -> Situation
-situation r a c s v d = Situation r bidding deal answer (toCommentary s) v d
+situation r a c s v d = Situation r bidding deal answer (toCommentary s) d v
   where
     (bidding, deal) = finish d (a >> withholdBid c)
     answer = extractLastCall c
