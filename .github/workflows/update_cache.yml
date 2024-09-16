@@ -8,7 +8,7 @@ name: Cache Third Party Dependencies
 on:
   pull_request:
     types:
-      - opened
+      - closed
 
 permissions:
   contents: read
@@ -16,7 +16,7 @@ permissions:
 jobs:
   build_when_merged:
     name: Build on ${{ matrix.os }}
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true  # Don't run unless we merged
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
