@@ -1,11 +1,14 @@
 module Bids.Lebensohl(
     b1N  -- re-exported from StandardOpenings
+    -- Systems on over X
   , b1NoX2C
   , b1NoX2D
   , b1NoX2H
+    -- Systems on over 2C
   , b1No2CX
   , b1No2C2D
   , b1No2C2H
+   -- Actual lebensohl bids
   , b1No2D2H
   , b1No2D2S
   , b1No2H2S
