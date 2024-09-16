@@ -89,6 +89,21 @@ If you're interested in modifying any of the code, here's the rough layout:
 - `bridge.tex` needs to be in the same directory as the `.tex` files created by
   `make_pdf`, or else they won't generate PDFs properly.
 
+### Complexity of different parts
+
+As of September 2024, this repo is over 10,000 lines of code. It sounds like a
+lot, but most of it is in the business logic of defining conventions to practice
+and paragraphs of text explaining the answers. The approximate line counts are:
+- 1200 lines of code in `src/` directly, implementing the infrastructure of the
+  system
+- 3600 lines in `src/Bids/`, defining various bidding conventions
+- 4800 lines in `src/Topics/`, defining situations to practice
+- 800 lines of frontend stuff (LaTeX, JavaScript, CSS, HTML, `Main` functions)
+
+It can be intimidating trying to learn your way around a new repo this large,
+but you can ignore all the bids and topics you're not interested in, at which
+point the code is a very manageable size.
+
 ## Bugfixes
 
 If something has gone wrong but you figure out what it was, please send a pull

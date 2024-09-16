@@ -18,7 +18,8 @@ module Bids.DONT(
 import Action(Action)
 import Bids.Meckwell(singleSuit, twoSuited, b1N)
 import EDSL(pointRange, alternatives, makeCall, makeAlertableCall, forEach,
-            atLeastAsLong, minSuitLength, soundHolding, forbid, forbidAll)
+            longerThan, minSuitLength, maxSuitLength, soundHolding, forbid,
+            forbidAll)
 import qualified Terminology as T
 
 
@@ -58,7 +59,11 @@ b1No2C = do
 b1No2C2D :: Action
 b1No2C2D = do
     -- Never mind our strength: we'd prefer partner's other suit.
-    forEach [T.Diamonds, T.Hearts, T.Spades] (`atLeastAsLong` T.Clubs)
+    -- TODO: might you ever bid this if, say, 2 suits are longer than clubs and
+    -- the third is equal length? I'd relay with 5422, and probably even 4333.
+    -- We're practicing the obvious situations, and the less-obvious ones won't
+    -- come up.
+    forEach [T.Diamonds, T.Hearts, T.Spades] (`longerThan` T.Clubs)
     makeAlertableCall (T.Bid 2 T.Diamonds) "pass or correct"
 
 
@@ -71,7 +76,12 @@ b1No2D = do
 
 b1No2D2H :: Action
 b1No2D2H = do
-    forEach T.majorSuits (`atLeastAsLong` T.Diamonds)
+    -- Like bidding 2D over2C, we're going to practice the obvious situations,
+    -- and avoid the more ambiguous ones where the suits are equal length.
+    alternatives [ forEach T.majorSuits (`longerThan` T.Diamonds)
+    -- Even if you've got tolerance for diamonds, prefer playing in a major!
+                 , forEach T.majorSuits (`minSuitLength` 4)
+                 ]
     makeAlertableCall (T.Bid 2 T.Hearts) "pass or correct"
 
 
@@ -97,6 +107,8 @@ preempt_ suit = do
     pointsToCompete
     minSuitLength suit 7
     soundHolding suit  -- Don't do this with a bad suit, even if you're nonvul.
+    -- Some people are reluctant to pre-empt if they've got a side 4-card major.
+    forEach (filter (/= suit) T.majorSuits) (`maxSuitLength` 3)
     makeCall $ T.Bid 3 suit
 
 b1No3C :: Action
