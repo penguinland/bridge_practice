@@ -1,0 +1,41 @@
+name: Cache Third Party Dependencies
+# This is separate from the other build action in the hope that it can cache
+# things on the main branch, which can thus be reused across multiple PRs. Per
+# https://github.com/actions/cache/blob/v3/tips-and-workarounds.md#use-cache-across-feature-branches
+# caches cannot be reused across feature branches, so we need a cache on the
+# main branch instead.
+
+on:
+  pull_request:
+    types:
+      - opened
+
+permissions:
+  contents: read
+
+jobs:
+  build_when_merged:
+    name: Build on ${{ matrix.os }}
+    if: github.event.pull_request.merged == true
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+    steps:
+      - name: Cache third-party libraries
+        uses: actions/cache@v4
+        with:
+          key: ${{ matrix.os }}-
+          restore-keys: |
+            ${{ matrix.os }}-
+          path: |
+            ~/.stack
+            ~/.local/bin
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Build project
+        uses: freckle/stack-action@v5
+        with:
+          test: false
