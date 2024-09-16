@@ -18,7 +18,7 @@ module Bids.DONT(
 import Action(Action)
 import Bids.Meckwell(singleSuit, twoSuited, b1N)
 import EDSL(pointRange, alternatives, makeCall, makeAlertableCall, forEach,
-            atLeastAsLong, minSuitLength, maxSuitLength, soundHolding, forbid,
+            longerThan, minSuitLength, maxSuitLength, soundHolding, forbid,
             forbidAll)
 import qualified Terminology as T
 
@@ -59,7 +59,7 @@ b1No2C = do
 b1No2C2D :: Action
 b1No2C2D = do
     -- Never mind our strength: we'd prefer partner's other suit.
-    forEach [T.Diamonds, T.Hearts, T.Spades] (`atLeastAsLong` T.Clubs)
+    forEach [T.Diamonds, T.Hearts, T.Spades] (`longerThan` T.Clubs)
     makeAlertableCall (T.Bid 2 T.Diamonds) "pass or correct"
 
 
@@ -72,7 +72,7 @@ b1No2D = do
 
 b1No2D2H :: Action
 b1No2D2H = do
-    forEach T.majorSuits (`atLeastAsLong` T.Diamonds)
+    forEach T.majorSuits (`longerThan` T.Diamonds)
     makeAlertableCall (T.Bid 2 T.Hearts) "pass or correct"
 
 
