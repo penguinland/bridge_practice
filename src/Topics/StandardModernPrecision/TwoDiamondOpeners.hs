@@ -46,7 +46,7 @@ immediateSignoffSpades34 = let
                 then "If we're stuck playing a 4-3 fit, oh well."
                 else ""
       in
-        situation "S43" action bid explanation vul direction
+        situation "S43" action bid explanation direction vul
   in
     wrap $ return sit <~ nwOrSeBid B.b2D2S B.bP2D2S
                       <~ [3, 4]
@@ -64,7 +64,7 @@ immediateSignoffSpades5 = let
             "Without the strength for a game contract, sign off in " .+
             T.Bid 2 T.Spades .+ " with a guaranteed fit."
       in
-        situation "Sfit" action bid explanation vul direction
+        situation "Sfit" action bid explanation direction vul
   in
     -- Although this can happen when anyone is dealer, it is very rare when East
     -- deals, and generating those hands is difficult for dealer (often
@@ -87,7 +87,7 @@ immediateSignoffClubs = let
             "Without the strength to invite to game, sign off in a club " .+
             "partscore."
       in
-        situation "3C" action bid explanation vul direction
+        situation "3C" action bid explanation direction vul
   in
     wrap $ return sit <~ nwOrSeBid B.b2D3C B.bP2D3C
                       <~ T.allVulnerabilities
@@ -108,7 +108,7 @@ passBlackSignoff = let
             "Just pass. It's possible that sometimes we'll end up in a " .+
             "7-card fit."
       in
-        situation "3CP" action (makePass) explanation vul direction
+        situation "3CP" action (makePass) explanation direction vul
   in
     wrap $ return sit <~ [ (B.bP2D2S, T.Spades, T.West)
                          , (B.bP2D2S, T.Spades, T.North)
@@ -135,7 +135,7 @@ immediateSignoffHearts = let
             "pull the bid to " .+ T.Bid 2 T.Spades .+ " with " .+
             "exactly 4315 shape."
       in
-        situation "2H" action bid explanation vul direction
+        situation "2H" action bid explanation direction vul
   in
     wrap $ return sit <~ nwOrSeBid B.b2D2H B.bP2D2H <~ T.allVulnerabilities
 
@@ -154,7 +154,7 @@ passSignoffHearts = let
             "Partner has less-than-invitational values and is signing off. " .+
             "Given that we have 4 hearts, pass."
       in
-        situation "2H2S" action (makePass) explanation vul direction
+        situation "2H2S" action (makePass) explanation direction vul
   in
     wrap $ return sit <~ nwOrSeBid B.bP2D2H B.b2D2H <~ T.allVulnerabilities
 
@@ -177,7 +177,7 @@ correctSignoffHearts = let
             "pull this bid to the final contract, now that they know our " .+
             "exact shape."
       in
-        situation "2H2S" action B.b2D2H2S explanation vul direction
+        situation "2H2S" action B.b2D2H2S explanation direction vul
   in
     wrap $ return sit <~ nwOrSeBid B.bP2D2H B.b2D2H
                       -- We want to commonly show times when responder has just

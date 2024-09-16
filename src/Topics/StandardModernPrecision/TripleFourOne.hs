@@ -21,7 +21,7 @@ showAny4441 = let
                 setOpener opener
                 action
           in
-            situation "any" action' answer explanation vul dealer
+            situation "any" action' answer explanation dealer vul
       in
         wrap $ return inner <~ dealers
   in
@@ -52,7 +52,7 @@ relay = let
                 setOpener opener
                 action
           in
-            situation "relay" action' answer explanation vul dealer
+            situation "relay" action' answer explanation dealer vul
       in
         wrap $ return inner <~ dealers
   in
@@ -90,7 +90,7 @@ bidSingleton = let
                 setOpener opener
                 action
           in
-            situation "bsing" action' answer explanation vul dealer
+            situation "bsing" action' answer explanation dealer vul
       in
         wrap $ return inner <~ answers <~ dealers
   in
@@ -140,7 +140,7 @@ singletonInPartnerSuit = let
                 _ <- partnerBid
                 oppsPass
           in
-            situation "pdsing" action' ourBid explanation vul dealer
+            situation "pdsing" action' ourBid explanation dealer vul
       in
         wrap $ return inner <~ lastTwoBids <~ dealers
   in

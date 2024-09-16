@@ -24,9 +24,9 @@ data Situation = Situation String Bidding DealerProg CompleteCall Commentary
 -- of auction whose last bid is the intended answer to the situation. We make
 -- this a convenience, so you can reuse Actions for both constructing the
 -- auction and describing the next action that should follow.
-situation :: Showable s => String -> Action -> Action -> s -> Vulnerability ->
-    Direction -> Situation
-situation r a c s v d = Situation r bidding deal answer (toCommentary s) d v
+situation :: Showable s => String -> Action -> Action -> s -> Direction ->
+    Vulnerability -> Situation
+situation r a c s d v = Situation r bidding deal answer (toCommentary s) d v
   where
     (bidding, deal) = finish d (a >> withholdBid c)
     answer = extractLastCall c

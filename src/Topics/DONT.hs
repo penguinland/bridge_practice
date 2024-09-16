@@ -34,7 +34,7 @@ doubleNoSpades = let
     -- It is tremendously unlikely that you'd be a passed hand and want to make
     -- this bid: you probably should have opened the bidding (either at the 1
     -- level or bidding a weak 2). So, make sure we're an unpassed hand.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+    wrap $ return sit <~ [T.West, T.North, T.East] <~ T.allVulnerabilities
 
 
 doubleSpades :: Situations
@@ -52,7 +52,7 @@ doubleSpades = let
             "didn't merely bid " .+ T.Bid 2 T.Spades .+ " right away."
         in situation "dblS" action B.b1NoX explanation
   in
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+    wrap $ return sit <~ [T.West, T.North, T.East] <~ T.allVulnerabilities
 
 
 spades :: Situations
@@ -68,7 +68,7 @@ spades = let
             "spades naturally."
         in situation "2S" action B.b1No2S explanation
   in
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+    wrap $ return sit <~ [T.West, T.North, T.East] <~ T.allVulnerabilities
 
 
 poc2C :: Situations
@@ -89,7 +89,7 @@ poc2C = let
     -- North will want to come in over that with a single-suited hand: North
     -- should probably have opened a weak two. So, ensure they're an unpassed
     -- hand.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.South, T.East]
+    wrap $ return sit <~ [T.West, T.South, T.East] <~ T.allVulnerabilities
 
 
 twoSuited :: Situations
@@ -105,8 +105,8 @@ twoSuited = let
         in situation "2suit" action bid explanation
   in
     wrap $ return sit <~ [B.b1No2C, B.b1No2D, B.b1No2H]
-                      <~ T.allVulnerabilities
                       <~ [T.West, T.North, T.East]
+                      <~ T.allVulnerabilities
 
 
 preempt :: Situations
@@ -127,8 +127,8 @@ preempt = let
     -- bidding ourselves (since we would have already pre-empted, given the
     -- chance).
     wrap $ return sit <~ [B.b1No3C, B.b1No3D, B.b1No3H, B.b1No3S]
-                      <~ T.allVulnerabilities
                       <~ [T.West, T.North, T.East]
+                      <~ T.allVulnerabilities
 
 
 findSecondSuit :: Situations
@@ -147,8 +147,8 @@ findSecondSuit = let
         in situation "2ndS" action advance explanation
   in
     wrap $ return sit <~ [(B.b1No2C, B.b1No2C2D), (B.b1No2D, B.b1No2D2H)]
-                      <~ T.allVulnerabilities
                       <~ [T.West, T.South, T.East]
+                      <~ T.allVulnerabilities
 
 
 topic :: Topic

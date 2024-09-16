@@ -14,7 +14,7 @@ minSupport :: Situations
 minSupport = let
     -- The type signature is to convince the compiler that we're not throwing
     -- away values from openerBid
-    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit :: (Action, Action) -> T.Direction -> T.Vulnerability -> Situation
     sit (openerBid, responderBid) = let
         action = do
             setOpener T.North
@@ -36,7 +36,7 @@ maxSupportSemibalanced :: Situations
 maxSupportSemibalanced = let
     -- The type signature is to convince the compiler that we're not throwing
     -- away values from openerBid
-    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit :: (Action, Action) -> T.Direction -> T.Vulnerability -> Situation
     sit (openerBid, responderBid) = let
         action = do
             setOpener T.North
@@ -59,7 +59,7 @@ maxSupportUnbalanced :: Situations
 maxSupportUnbalanced = let
     -- The type signature is to convince the compiler that we're not throwing
     -- away values from openerBid
-    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit :: (Action, Action) -> T.Direction -> T.Vulnerability -> Situation
     sit (openerBid, responderBid) = let
         action = do
             setOpener T.North
@@ -200,7 +200,7 @@ otherMajorSpades = let
 
 threeCardSupport :: Situations
 threeCardSupport = let
-    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit :: (Action, Action) -> T.Direction -> T.Vulnerability -> Situation
     sit (openerBid, responderBid) = let
         action = do
             setOpener T.North
@@ -242,7 +242,7 @@ threeCardSupportHearts = let
 
 maxNoMajors :: Situations
 maxNoMajors = let
-    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit :: (Action, Action) -> T.Direction -> T.Vulnerability -> Situation
     sit (openerBid, responderBid) = let
         action = do
             setOpener T.North
