@@ -9,7 +9,7 @@ import CommonBids(setOpener)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapVulDlr, Situations, makeTopic)
+import Topic(Topic, wrap, Situations, makeTopic)
 
 
 ignoreOpps :: Situations
@@ -52,11 +52,42 @@ ignoreOpps = let
                       <~ [T.North, T.South, T.West]
 
 
+signoff :: Situations
+signoff = let
+    sit (overcall, response) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            overcall
+        explanation =
+            "Partner opened a strong " .+ B.b1N .+ ", and RHO interfered " .+
+            "with the auction. We're so weak we don't even want to invite " .+
+            "to game, but we do have enough strength to suspect this is " .+
+            "our contract. Bid our suit at the 2 level, as signoff."
+      in situation "snof" action response explanation
+  in
+    wrap $ return sit <~ [ (DONT.b1No2D, B.b1No2D2H)
+                         , (DONT.b1No2D, B.b1No2D2S)
+                         -- If RHO shows both majors, don't bid a major!
+                         --, (DONT.b1No2H, B.b1No2H2S)
+                         , (MW.b1No2D,   B.b1No2D2H)
+                         , (MW.b1No2D,   B.b1No2D2S)
+                         , (MW.b1No2H,   B.b1No2H2S)
+                         -- If RHO shows both majors, don't bid a major!
+                         --, (Capp.b1No2D, B.b1No2D2H)
+                         --, (Capp.b1No2D, B.b1No2D2S)
+                         , (Capp.b1No2H, B.b1No2H2S)
+                         ]
+                      <~ T.allVulnerabilities
+                      -- East should be an unpassed hand to interfere.
+                      <~ [T.North, T.South, T.West]
+
+
 topic :: Topic
 topic = makeTopic
     ("lebensohl after interference over our " .+ T.Bid 1 T.Notrump)
     "leb1N" situations
   where
     situations = wrap [ ignoreOpps
-                      , ignoreOpps
+                      , signoff
                       ]
