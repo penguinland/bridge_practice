@@ -18,35 +18,38 @@ ignoreOpps = let
         action = do
             setOpener T.North
             B.b1N
-            _ <- overcall
+            overcall
         explanation =
             "Partner opened a strong " .+ B.b1N .+ ", and RHO interfered " .+
             "with the auction. However, their call didn't actually take up " .+
             "any of our bidding room. Ignore it, and use our usual systems " .+
             "over notrump" .+
             (if overcallIs2C then " (double of " .+ overcall .+ " is Stayman)"
-                            else "") .+ "."
+                            else mempty) .+ "."
       in situation "ignr" action response explanation
   in
-    wrapVulDlr $ return sit <~ [ (DONT.b1NoX,  B.b1NoX2C,  False)
-                               , (DONT.b1NoX,  B.b1NoX2D,  False)
-                               , (DONT.b1NoX,  B.b1NoX2H,  False)
-                               , (MW.b1NoX,    B.b1NoX2C,  False)
-                               , (MW.b1NoX,    B.b1NoX2D,  False)
-                               , (MW.b1NoX,    B.b1NoX2H,  False)
-                               , (Capp.b1NoX,  B.b1NoX2C,  False)
-                               , (Capp.b1NoX,  B.b1NoX2D,  False)
-                               , (Capp.b1NoX,  B.b1NoX2H,  False)
-                               , (DONT.b1No2C, B.b1No2CX,  True)
-                               , (DONT.b1No2C, B.b1No2C2D, True)
-                               , (DONT.b1No2C, B.b1No2C2H, True)
-                               , (MW.b1No2C,   B.b1No2CX,  True)
-                               , (MW.b1No2C,   B.b1No2C2D, True)
-                               , (MW.b1No2C,   B.b1No2C2H, True)
-                               , (Capp.b1No2C, B.b1No2CX,  True)
-                               , (Capp.b1No2C, B.b1No2C2D, True)
-                               , (Capp.b1No2C, B.b1No2C2H, True)
-                               ]
+    -- East should be an unpassed hand to interfere over North's notrump.
+    wrap $ return sit <~ [ (DONT.b1NoX,  B.b1NoX2C,  False)
+                         , (DONT.b1NoX,  B.b1NoX2D,  False)
+                         , (DONT.b1NoX,  B.b1NoX2H,  False)
+                         , (MW.b1NoX,    B.b1NoX2C,  False)
+                         , (MW.b1NoX,    B.b1NoX2D,  False)
+                         , (MW.b1NoX,    B.b1NoX2H,  False)
+                         , (Capp.b1NoX,  B.b1NoX2C,  False)
+                         , (Capp.b1NoX,  B.b1NoX2D,  False)
+                         , (Capp.b1NoX,  B.b1NoX2H,  False)
+                         , (DONT.b1No2C, B.b1No2CX,  True)
+                         , (DONT.b1No2C, B.b1No2C2D, True)
+                         , (DONT.b1No2C, B.b1No2C2H, True)
+                         , (MW.b1No2C,   B.b1No2CX,  True)
+                         , (MW.b1No2C,   B.b1No2C2D, True)
+                         , (MW.b1No2C,   B.b1No2C2H, True)
+                         , (Capp.b1No2C, B.b1No2CX,  True)
+                         , (Capp.b1No2C, B.b1No2C2D, True)
+                         , (Capp.b1No2C, B.b1No2C2H, True)
+                         ]
+                      <~ T.allVulnerabilities
+                      <~ [T.North, T.South, T.West]
 
 
 topic :: Topic

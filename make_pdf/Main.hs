@@ -6,6 +6,7 @@ import qualified Topics.Stayman as Stayman
 --import qualified Topics.MinorTransfersScott as MinorTransfers
 import qualified Topics.StandardOpeners as StandardOpeners
 import qualified Topics.TexasTransfers as TexasTransfers
+import qualified Topics.Lebensohl as Lebensohl
 
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
 import qualified Topics.StandardModernPrecision.OneClubResponses as Smp1CResponses
@@ -43,6 +44,7 @@ main = let
               , Meckwell.topic
               , DONT.topic
               , Cappelletti.topic
+              , Lebensohl.topic
               , Jacoby2NT.topic
               , Lampe.topic
               , TripleFourOne.topic

@@ -39,7 +39,7 @@ b1No2CX :: Action
 b1No2CX = NT.b1N2C
 
 b1No2C2D :: Action
-b1No2C2D = NT.b1N2C2D
+b1No2C2D = NT.b1N2D
 
 b1No2C2H :: Action
-b1No2C2H = NT.b1N2C2H
+b1No2C2H = NT.b1N2H
