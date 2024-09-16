@@ -2,8 +2,13 @@ module Bids.DONT(
     b1N  -- Re-exported from Meckwell
   , b1NoX
   , b1NoX2C
+  , b1NoX2D
+  , b1NoX2H
+  --, b1NoX2S
   , b1No2C
   , b1No2C2D
+  , b1No2C2H
+  , b1No2C2S
   , b1No2D
   , b1No2D2H
   , b1No2H
@@ -34,6 +39,12 @@ pointsToCompete :: Action
 pointsToCompete = pointRange minPointsToCompete 40
 
 
+breakRelay:: T.Suit -> Action
+breakRelay suit = do
+    singleSuit suit
+    makeCall (T.Bid 2 suit)
+
+
 b1NoX :: Action
 b1NoX = do
     shouldntPreempt
@@ -47,6 +58,26 @@ b1NoX = do
 
 b1NoX2C :: Action
 b1NoX2C = makeAlertableCall (T.Bid 2 T.Clubs) "pass or correct"
+
+
+-- TODO: do you need tolerance for all higher-ranking suits to break the relay?
+-- Can you have tolerance for any lower-ranking suit to do it? Think this
+-- through more.
+b1NoX2D :: Action
+b1NoX2D = breakRelay T.Diamonds
+
+
+b1NoX2H :: Action
+b1NoX2H = breakRelay T.Hearts
+
+
+-- If we've got a single-suited hand with spades, probably complete the relay
+-- with 2C: if we have tolerance for partner's suit, we can pass, and otherwise
+-- we can show our spades later.
+{-
+b1NoX2S :: Action
+b1NoX2S = breakRelay T.Spades
+-}
 
 
 b1No2C :: Action
@@ -65,6 +96,14 @@ b1No2C2D = do
     -- come up.
     forEach [T.Diamonds, T.Hearts, T.Spades] (`longerThan` T.Clubs)
     makeAlertableCall (T.Bid 2 T.Diamonds) "pass or correct"
+
+
+b1No2C2H :: Action
+b1No2C2H = breakRelay T.Hearts
+
+
+b1No2C2S :: Action
+b1No2C2S = breakRelay T.Spades
 
 
 b1No2D :: Action

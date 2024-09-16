@@ -151,6 +151,28 @@ findSecondSuit = let
                       <~ [T.West, T.South, T.East]
 
 
+breakRelayDouble :: Situations
+breakRelayDouble = let
+    sit advance = let
+        action = do
+            setOpener T.West
+            B.b1N
+            _ <- B.b1NoX
+            responderCannotBid
+        explanation =
+            "Partner has shown a single-suited hand. Normally, we'd relay " .+
+            T.Bid 2 T.Clubs .+ " to ask what their suit is, but we also " .+
+            "have a single-suited hand. Bid our suit instead, and partner " .+
+            "can pass with tolerance for our suit, or bid their own suit " .+
+            "without tolerance for ours. This gives us 2 chances to find " .+
+            "a good contract."
+        in situation "brX" action advance explanation
+  in
+    wrap $ return sit <~ [B.b1NoX2D, B.b1NoX2H]
+                      <~ T.allVulnerabilities
+                      <~ [T.West, T.South, T.East]
+
+
 topic :: Topic
 topic = makeTopic "DONT over strong notrump" "MW1N" situations
   where
@@ -159,4 +181,5 @@ topic = makeTopic "DONT over strong notrump" "MW1N" situations
                       , poc2C
                       , findSecondSuit
                       , wrap [preempt, doubleSpades, spades]
+                      , wrap [breakRelayDouble]
                       ]
