@@ -83,6 +83,17 @@ signoff = let
                       <~ [T.North, T.South, T.West]
 
 
+-- TODO:
+-- natural GF bids at the 3 level
+-- jump to 3N
+-- relay to 3N (answer should be 2N planning to rebid 3N)
+-- cue bid for Stayman
+-- relay to cue bid (answer should be 2N planning to rebid the cue)
+-- complete the relay
+-- Texas transfers over interference (in the Texas Transfers topic)
+-- make the opponents sometimes use natural overcalls
+
+
 topic :: Topic
 topic = makeTopic
     ("lebensohl after interference over our " .+ T.Bid 1 T.Notrump)
