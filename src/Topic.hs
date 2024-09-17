@@ -10,7 +10,7 @@ module Topic(
 , wrap
 , wrapDlr
 , wrapNW
-, wrapVulSE
+, wrapSE
 , stdWrap
 , stdWrapNW
 , stdWrapSE
@@ -49,8 +49,7 @@ instance Situationable Situations where
 -- The most common Situation parameters are letting anyone be vulnerable, and
 -- either letting anyone be the dealer, ensuring North is an unpassed hand, or
 -- ensuring South is an unpassed hand. Make some syntactic sugar for that.
-wrapDlr :: State StdGen (Direction -> Vulnerability -> Situation) ->
-    Situations
+wrapDlr :: State StdGen (Direction -> Vulnerability -> Situation) -> Situations
 wrapDlr sit = wrap $ sit <~ allDirections <~ allVulnerabilities
 
 -- By ensuring that only North or West could be dealer, if we make North open
@@ -62,9 +61,8 @@ wrapNW sit = wrap $ sit <~ [North, West] <~ allVulnerabilities
 -- By ensuring that only South or East could be dealer, if we make South open
 -- the bidding, we ensure that North is an unpassed hand. This is useful when
 -- practicing game-forcing auctions when we open the bidding.
-wrapVulSE :: State StdGen (Direction -> Vulnerability -> Situation) ->
-    Situations
-wrapVulSE sit = wrap $ sit <~ [South, East] <~ allVulnerabilities
+wrapSE :: State StdGen (Direction -> Vulnerability -> Situation) -> Situations
+wrapSE sit = wrap $ sit <~ [South, East] <~ allVulnerabilities
 
 -- and more syntactic sugar for a Situation that is _only_ parameterized on
 -- those features.
@@ -75,7 +73,7 @@ stdWrapNW :: (Direction -> Vulnerability -> Situation) -> Situations
 stdWrapNW = wrapNW . return
 
 stdWrapSE :: (Direction -> Vulnerability -> Situation) -> Situations
-stdWrapSE = wrapVulSE . return
+stdWrapSE = wrapSE . return
 
 
 data Topic = Topic { topicName :: Commentary

@@ -7,7 +7,7 @@ import EDSL(makePass, pointRange, suitLength, maxSuitLength, forEach)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, stdWrap, wrap, wrapDlr, wrapNW, wrapVulSE, Situations,
+import Topic(Topic, stdWrap, wrap, wrapDlr, wrapNW, wrapSE, Situations,
              makeTopic)
 
 
@@ -457,9 +457,9 @@ bothMajorsUnbalancedUnpassed = let
       in situation "bmubp" action opener4S explanation
   in
     -- This version is only for when responder is a passed hand
-    wrapVulSE $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C3S)
-                              , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D3S)
-                              ]
+    wrapSE $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C3S)
+                           , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D3S)
+                           ]
 
 
 -- TODO eventually, but maybe in separate topics:

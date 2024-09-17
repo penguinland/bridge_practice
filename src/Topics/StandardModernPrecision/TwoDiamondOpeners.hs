@@ -9,7 +9,7 @@ import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, stdWrap, wrapDlr, Situations, makeTopic,
-             wrapNW, wrapVulSE, stdWrapNW, stdWrapSE)
+             wrapNW, wrapSE, stdWrapNW, stdWrapSE)
 
 
 -- When trying to sign off with less than invitational strength, a new suit
@@ -280,7 +280,7 @@ maximumResponse = let
       in
         situation "max" action bid explanation
   in
-    wrapVulSE $ return sit <~ [B.b2D2N3D, B.b2D2N3H, B.b2D2N3S]
+    wrapSE $ return sit <~ [B.b2D2N3D, B.b2D2N3H, B.b2D2N3S]
 
 
 gfAnyway :: Situations
@@ -330,7 +330,7 @@ gfAnywayResponses = let
       in
         situation "reans" action bid explanation
   in
-    wrapVulSE $ return sit <~ [B.b2D2N3C3D3H, B.b2D2N3C3D3S, B.b2D2N3C3D3N]
+    wrapSE $ return sit <~ [B.b2D2N3C3D3H, B.b2D2N3C3D3S, B.b2D2N3C3D3N]
 
 
 invSignoff :: Situations

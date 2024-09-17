@@ -7,7 +7,7 @@ import EDSL(forbid, makeCall, makeAlertableCall, makePass, pointRange,
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, makeTopic, wrap, wrapNW, wrapVulSE, stdWrapNW, Situations)
+import Topic(Topic, makeTopic, wrap, wrapNW, wrapSE, stdWrapNW, Situations)
 
 
 -- Note that the person initiating the transfer shouldn't have had an
@@ -113,7 +113,7 @@ completeTransfer = let
       in
         situation "Complete" action bid explanation
   in
-    wrapVulSE $ return sit <~ T.minorSuits
+    wrapSE $ return sit <~ T.minorSuits
 
 
 superacceptTransfer :: Situations
@@ -135,7 +135,7 @@ superacceptTransfer = let
       in
         situation "SupAcc" action bid explanation
   in
-    wrapVulSE $ return sit <~ T.minorSuits
+    wrapSE $ return sit <~ T.minorSuits
 
 
 completeSuperacceptAKQ :: Situations

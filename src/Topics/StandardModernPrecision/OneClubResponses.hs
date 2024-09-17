@@ -8,7 +8,8 @@ import EDSL(maxSuitLength, pointRange, forEach)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapNW, wrapVulSE, stdWrapNW, Situations, makeTopic)
+import Topic(Topic, wrap, wrapNW, wrapSE, stdWrapSE, stdWrapNW, Situations,
+             makeTopic)
 
 
 oneDiamond :: Situations
@@ -222,7 +223,7 @@ passGameSingleSuit = let
       in
         situation "PG" action bid explanation
   in
-    wrapVulSE $ return sit <~ T.allSuits
+    wrapSE $ return sit <~ T.allSuits
 
 
 passOneNotrump :: Situations
@@ -238,7 +239,7 @@ passOneNotrump = let
       \ we'll go from there. Stayman is on, but transfers are off (so the\
       \ stronger hand will be declarer more often)."
   in
-    wrapVulSE . return $ situation "P1N" action B.bP1C1N explanation
+    stdWrapSE $ situation "P1N" action B.bP1C1N explanation
 
 
 passTwoSpades :: Situations
@@ -258,7 +259,7 @@ passTwoSpades = let
         T.Bid 4 T.Diamonds .+ "/RKC to indicate how high to go\
       \ and which suit is trump."
   in
-    wrapVulSE . return $ situation "P2S" action B.bP1C2S explanation
+    stdWrapSE $ situation "P2S" action B.bP1C2S explanation
 
 
 -- TODO: figure out how two-suited hands show slam interest. Which suit do you

@@ -7,7 +7,7 @@ import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic, stdWrapNW, stdWrapSE,
-             wrapNW, wrapVulSE)
+             wrapNW, wrapSE)
 
 
 bid1NHearts :: Situations
@@ -64,7 +64,7 @@ rebid2N = let
       in
         situation "rb2N" action B.b1M1N2N explanation
   in
-    wrapVulSE $ return sit <~ [(B.b1H, B.b1H1N), (B.b1S, B.b1S1N)]
+    wrapSE $ return sit <~ [(B.b1H, B.b1H1N), (B.b1S, B.b1S1N)]
 
 
 jumpShift :: Situations
@@ -85,12 +85,12 @@ jumpShift = let
       in
         situation "js" action rebid explanation
   in
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3C)
-                              , (B.b1H, B.b1H1N, B.b1H1N3D)
-                              , (B.b1S, B.b1S1N, B.b1S1N3C)
-                              , (B.b1S, B.b1S1N, B.b1S1N3D)
-                              , (B.b1S, B.b1S1N, B.b1S1N3H)
-                              ]
+    wrapSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3C)
+                           , (B.b1H, B.b1H1N, B.b1H1N3D)
+                           , (B.b1S, B.b1S1N, B.b1S1N3C)
+                           , (B.b1S, B.b1S1N, B.b1S1N3D)
+                           , (B.b1S, B.b1S1N, B.b1S1N3H)
+                           ]
 
 
 majorReverse :: Situations
@@ -139,8 +139,8 @@ jumpRebid = let
       in
         situation "jrb" action rebid explanation
   in
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3H)
-                              , (B.b1S, B.b1S1N, B.b1S1N3S) ]
+    wrapSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N3H)
+                           , (B.b1S, B.b1S1N, B.b1S1N3S) ]
 
 
 limitRaise3 :: Situations
@@ -219,8 +219,8 @@ nonjumpRebid = let
       in
         situation "nrb" action rebid explanation
   in
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2H)
-                              , (B.b1S, B.b1S1N, B.b1S1N2S) ]
+    wrapSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2H)
+                           , (B.b1S, B.b1S1N, B.b1S1N2S) ]
 
 
 secondSuitRebid :: Situations
@@ -243,12 +243,12 @@ secondSuitRebid = let
       in
         situation "b2nd" action rebid explanation
   in
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2C)
-                              , (B.b1H, B.b1H1N, B.b1H1N2D)
-                              , (B.b1S, B.b1S1N, B.b1S1N2C)
-                              , (B.b1S, B.b1S1N, B.b1S1N2D)
-                              , (B.b1S, B.b1S1N, B.b1S1N2H)
-                              ]
+    wrapSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2C)
+                           , (B.b1H, B.b1H1N, B.b1H1N2D)
+                           , (B.b1S, B.b1S1N, B.b1S1N2C)
+                           , (B.b1S, B.b1S1N, B.b1S1N2D)
+                           , (B.b1S, B.b1S1N, B.b1S1N2H)
+                           ]
 
 
 heartsSpadesThird :: Situations
@@ -271,9 +271,9 @@ heartsSpadesThird = let
       in
         situation "b2nd4" action rebid explanation
   in
-    wrapVulSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2C)
-                              , (B.b1H, B.b1H1N, B.b1H1N2D)
-                              ]
+    wrapSE $ return sit <~ [ (B.b1H, B.b1H1N, B.b1H1N2C)
+                           , (B.b1H, B.b1H1N, B.b1H1N2D)
+                           ]
 
 
 wantFlannery :: Situations

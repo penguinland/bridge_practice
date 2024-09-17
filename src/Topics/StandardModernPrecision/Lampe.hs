@@ -7,7 +7,8 @@ import EDSL(alternatives, minSuitLength, forbid, makeCall)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapNW, wrapVulSE, Situations, makeTopic, wrapDlr)
+import Topic(Topic, wrap, wrapNW, wrapSE, stdWrapSE, Situations, makeTopic,
+             wrapDlr)
 
 
 majorSuitImmediateResponse :: Situations
@@ -118,7 +119,7 @@ twoClubsUnbal = let
         "With an unbalanced minimum, rebid an artificial " .+
         T.Bid 2 T.Diamonds .+ "."
   in
-    wrapVulSE . return $ situation "2CUnbal" action B.b1D2C2D explanation
+    stdWrapSE $ situation "2CUnbal" action B.b1D2C2D explanation
 
 
 twoClubsBal :: Situations
@@ -133,7 +134,7 @@ twoClubsBal = let
         "With a balanced minimum, rebid an artificial " .+
         T.Bid 2 T.Hearts .+ "."
   in
-    wrapVulSE . return $ situation "2CBal" action B.b1D2C2H explanation
+    stdWrapSE $ situation "2CBal" action B.b1D2C2H explanation
 
 
 twoClubsSS :: Situations
@@ -155,7 +156,7 @@ twoClubsSS = let
         situation "2CSS" action answer explanation
   in
     -- For us to bid a forcing 1N, we must be an unpassed hand.
-    wrapVulSE $ return sit
+    wrapSE $ return sit
         <~ [B.b1D2C2S, B.b1D2C2N, B.b1D2C3C, B.b1D2C3D, B.b1D2C3H, B.b1D2C3S]
 
 
@@ -199,16 +200,16 @@ twoClubsUnbalSS = let
         situation "uGFSS" action answer explanation
   in
     -- For us to bid a forcing 1N, we must be an unpassed hand.
-    wrapVulSE $ return sit <~ [ B.b1D2C2D2H2S
-                              , B.b1D2C2D2H2N
-                              , B.b1D2C2D2H3C
-                              , B.b1D2C2D2H3D
-                              -- We're a minimum, and we only open 1D with a
-                              -- 5-card suit if were a maximum. So, the other
-                              -- shape-showers don't exist.
-                              --, B.b1D2C2D2H3H
-                              --, B.b1D2C2D2H3S
-                              ]
+    wrapSE $ return sit <~ [ B.b1D2C2D2H2S
+                           , B.b1D2C2D2H2N
+                           , B.b1D2C2D2H3C
+                           , B.b1D2C2D2H3D
+                           -- We're a minimum, and we only open 1D with a
+                           -- 5-card suit if were a maximum. So, the other
+                           -- shape-showers don't exist.
+                           --, B.b1D2C2D2H3H
+                           --, B.b1D2C2D2H3S
+                           ]
 
 
 
