@@ -121,7 +121,7 @@ Here is a rough summary of some of the data types in the code:
   select which `Topic`s you want to practice.
 - A `Description` is a string-like data type that can render certain things
   (e.g., bids) in a fancy way. Most string-like things in here are actually
-  `Description` (`Topic` names, bidding alerts, explanations of why the answer
+  `Description`s (`Topic` names, bidding alerts, explanations of why the answer
   is correct, etc.).
 - An `Action` is a way to modify either the `dealer` program or the bidding.
   The embedded domain-specific language I've built is entirely made out of
