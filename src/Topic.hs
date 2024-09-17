@@ -5,7 +5,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 
 module Topic(
-  Situations  -- Note that constructors aren't public; use wrap instead.
+  Situations  -- Note that constructors aren't public: use wrap instead.
 , choose
 , wrap
 , wrapDlr
