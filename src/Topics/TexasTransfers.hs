@@ -8,7 +8,7 @@ import EDSL(makePass, makeCall, suitLength, minSuitLength, maxSuitLength,
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapVulNW, wrapVulSE, Situations, makeTopic)
+import Topic(Topic, wrap, wrapNW, wrapVulSE, Situations, makeTopic)
 
 
 makeTransferSignoff :: Situations
@@ -34,7 +34,7 @@ makeTransferSignoff = let
     -- with exactly 10 HCP). It's not impossible: it happens once every couple
     -- hundred thousand hands. To speed up program execution, we focus only on
     -- the times when South is an unpassed hand.
-    wrapVulNW $ return sit <~ [B.b1N4D, B.b1N4H]
+    wrapNW $ return sit <~ [B.b1N4D, B.b1N4H]
 
 
 makeTransferSlam :: Situations
@@ -56,7 +56,7 @@ makeTransferSlam = let
         in situation "SI" action bid explanation
   in
     -- Note that South cannot be a passed hand and have interest in slam.
-    wrapVulNW $ return sit <~ [B.b1N4D, B.b1N4H]
+    wrapNW $ return sit <~ [B.b1N4D, B.b1N4H]
 
 
 completeTransfer :: Situations
@@ -142,7 +142,7 @@ transferSlamInvite = let
             "investigate slam, and with a minimum, they'll pass."
         in situation "SInv" action bid explanation
   in
-    wrapVulNW $ return sit <~ [(B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
+    wrapNW $ return sit <~ [(B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
 
 
 transferSlamInviteDeclined :: Situations

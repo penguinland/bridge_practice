@@ -5,7 +5,7 @@ import CommonBids(setOpener, noInterference)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapDlr, wrapVulNW, Situations, makeTopic)
+import Topic(Topic, wrap, wrapDlr, wrapNW, Situations, makeTopic)
 
 
 simpleRaise :: Situations
@@ -47,7 +47,7 @@ limitRaise = let
   in
     -- You should be an unpassed hand to make a limit raise; otherwise, consider
     -- using Drury.
-    wrapVulNW $ return sit <~ [(B.b1H, B.b1H3H), (B.b1S, B.b1S3S)]
+    wrapNW $ return sit <~ [(B.b1H, B.b1H3H), (B.b1S, B.b1S3S)]
 
 
 blast3N :: Situations
@@ -72,7 +72,7 @@ blast3N = let
         situation "3N" action response explanation
   in
     -- You should be an unpassed hand to be game-forcing.
-    wrapVulNW $ return sit <~ [(B.b1H, B.b1H3N), (B.b1S, B.b1S3N)]
+    wrapNW $ return sit <~ [(B.b1H, B.b1H3N), (B.b1S, B.b1S3N)]
 
 
 topic :: Topic

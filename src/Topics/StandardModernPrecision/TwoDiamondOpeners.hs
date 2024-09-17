@@ -9,7 +9,7 @@ import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, stdWrap, wrapDlr, Situations, makeTopic,
-             wrapVulNW, wrapVulSE, stdWrapNW, stdWrapSE)
+             wrapNW, wrapVulSE, stdWrapNW, stdWrapSE)
 
 
 -- When trying to sign off with less than invitational strength, a new suit
@@ -218,7 +218,7 @@ immediateGameSignoff = let
       in
         situation "gfso" action bid explanation
   in
-    wrapVulNW $ return sit <~ [B.b2D3N, B.b2D4H, B.b2D4S]
+    wrapNW $ return sit <~ [B.b2D3N, B.b2D4H, B.b2D4S]
 
 
 bid2N :: Situations
@@ -351,7 +351,7 @@ invSignoff = let
       in
         situation "invso" action bid explanation
   in
-    wrapVulNW $ return sit <~ [B.b2D2N3CP, B.b2D2N3C3H, B.b2D2N3C3S]
+    wrapNW $ return sit <~ [B.b2D2N3CP, B.b2D2N3C3H, B.b2D2N3C3S]
 
 
 -- TODO:

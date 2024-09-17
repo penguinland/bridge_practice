@@ -8,7 +8,7 @@ import EDSL(maxSuitLength, pointRange, forEach)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapVulNW, wrapVulSE, Situations, makeTopic)
+import Topic(Topic, wrap, wrapNW, wrapVulSE, stdWrapNW, Situations, makeTopic)
 
 
 oneDiamond :: Situations
@@ -21,7 +21,7 @@ oneDiamond = let
         "When game might not be possible opposite a random 17 HCP, start\
       \ with " .+ T.Bid 1 T.Diamonds .+ ". This initiates MaFiA."
   in
-    wrapVulNW . return $ situation "1D" action B.b1C1D explanation
+    stdWrapNW $ situation "1D" action B.b1C1D explanation
 
 
 oneHeart :: Situations
@@ -36,7 +36,7 @@ oneHeart = let
       \ Subsequent bids are natural 5-card suits (and later 4-card suits), not\
       \ MaFiA."
   in
-    wrapVulNW . return $ situation "1H" action B.b1C1H explanation
+    stdWrapNW $ situation "1H" action B.b1C1H explanation
 
 
 oneHeartNoSpades :: Situations
@@ -51,7 +51,7 @@ oneHeartNoSpades = let
       \ this kind of hand. Partner's rebid will be a natural 5-card suit, not\
       \ MaFiA."
   in
-    wrapVulNW . return $ situation "1Hns" action B.b1C1Hnos explanation
+    stdWrapNW $ situation "1Hns" action B.b1C1Hnos explanation
 
 
 oneNotrump :: Situations
@@ -65,7 +65,7 @@ oneNotrump = let
       \ hand with no 5-card suit. Bid a natural " .+ T.Bid 1 T.Notrump .+ ",\
       \ and we'll go from there. Stayman is on, but transfers are not."
   in
-    wrapVulNW . return $ situation "1N" action B.b1C1N explanation
+    stdWrapNW $ situation "1N" action B.b1C1N explanation
 
 
 oneNotrumpAlt :: Situations
@@ -83,7 +83,7 @@ oneNotrumpAlt = let
       \ Compared to the naive approach, this never wastes extra bidding room\
       \ and often saves some for control bids after we've found a fit."
   in
-    wrapVulNW . return $ situation "1Nalt" action B.b1C1Nalt explanation
+    stdWrapNW $ situation "1Nalt" action B.b1C1Nalt explanation
 
 
 slamSingleSuit :: Situations
@@ -112,8 +112,8 @@ slamSingleSuitModified :: Situations
       in
         situation "Slam" action bid explanation
   in
-    ( wrapVulNW $ return sit <~ T.allSuits
-    , wrapVulNW $ return sit <~ [T.Clubs, T.Diamonds])
+    ( wrapNW $ return sit <~ T.allSuits
+    , wrapNW $ return sit <~ [T.Clubs, T.Diamonds])
 
 
 twoHeartsBalanced :: Situations
@@ -133,7 +133,7 @@ twoHeartsBalanced = let
         T.Bid 3 T.Spades .+ " to show that (which should be\
       \ surprising enough for you to recognize/remember)."
   in
-    wrapVulNW . return $ situation "2HAlt" action B.b1C2Halt explanation
+    stdWrapNW $ situation "2HAlt" action B.b1C2Halt explanation
 
 
 twoNotrumpBalanced :: Situations
@@ -151,7 +151,7 @@ twoNotrumpBalanced = let
       \ bid naturally. They're captain of the auction: they'll know whether to\
       \ sign off in game or investigate slam."
   in
-    wrapVulNW . return $ situation "2NAlt" action B.b1C2Nalt explanation
+    stdWrapNW $ situation "2NAlt" action B.b1C2Nalt explanation
 
 
 oneSpadeGF :: Situations
@@ -176,8 +176,7 @@ oneSpadeGF = let
       in
         situation "1Sgf" action B.b1C1Sgf explanation
   in
-    wrapVulNW $ return sit <~ [ (explanationMin, 8, 11)
-                              , (explanationMax, 12, 40) ]
+    wrapNW $ return sit <~ [(explanationMin, 8, 11), (explanationMax, 12, 40)]
 
 twoSpades :: Situations
 twoSpades = let
@@ -195,7 +194,7 @@ twoSpades = let
         T.Bid 4 T.Diamonds .+ "/RKC to tell us how high to go and\
       \ what suit is trump."
   in
-    wrapVulNW . return $ situation "2S" action B.b1C2S explanation
+    stdWrapNW $ situation "2S" action B.b1C2S explanation
 
 
 passGameSingleSuit :: Situations

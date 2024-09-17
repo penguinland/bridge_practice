@@ -8,7 +8,7 @@ import EDSL(forbid, pointRange, suitLength, balancedHand, flatHand,
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(wrap, stdWrap, stdWrapNW, wrapDlr, wrapVulNW, Situations,
+import Topic(wrap, stdWrap, stdWrapNW, wrapDlr, wrapNW, Situations,
              Topic, makeTopic)
 
 
@@ -355,8 +355,8 @@ singleSuitedInvite = let
   in
     -- We must be an unpassed hand: if we had a chance to bid earlier, we would
     -- have bid a weak two.
-    wrapVulNW $ return sit <~ [ (B.b1N2D, B.b1N2D2H, B.b1N2D2H3H)
-                              , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3S) ]
+    wrapNW $ return sit <~ [ (B.b1N2D, B.b1N2D2H, B.b1N2D2H3H)
+                           , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3S) ]
 
 
 topic :: Topic

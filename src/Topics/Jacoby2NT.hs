@@ -5,7 +5,7 @@ import CommonBids(setOpener, noInterference)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(wrap, wrapVulNW, wrapVulSE, Situations, Topic, makeTopic)
+import Topic(wrap, wrapNW, wrapVulSE, Situations, Topic, makeTopic)
 
 
 j2nt :: Situations
@@ -26,7 +26,7 @@ j2nt = let
         situation "j2n" action j2ntBid explanation
   in
     -- We must be an unpassed hand to be game-forcing.
-    wrapVulNW $ return sit <~ [(B.b1H, B.b1H2N), (B.b1S, B.b1S2N)]
+    wrapNW $ return sit <~ [(B.b1H, B.b1H2N), (B.b1S, B.b1S2N)]
 
 
 singleton :: Situations
@@ -185,12 +185,11 @@ semibalSignoff = let
         situation "sbso" action responderSignoff explanation
   in
     -- Partner must be an unpassed hand to be game-forcing.
-    wrapVulNW $ return sit
-        <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, B.b1H2N4HP)
-           , (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4H)
-           , (B.b1S, B.b1S2N, B.b1S2N4S, B.b1S2N4SP)
-           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4S)
-           ]
+    wrapNW $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, B.b1H2N4HP)
+                           , (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4H)
+                           , (B.b1S, B.b1S2N, B.b1S2N4S, B.b1S2N4SP)
+                           , (B.b1S, B.b1S2N, B.b1S2N3N, B.b1S2N3N4S)
+                           ]
 
 
 semibalMinSlam :: Situations
@@ -217,10 +216,9 @@ semibalMinSlam = let
         situation "sbminbw" action responderRebid explanation
   in
     -- Partner must be an unpassed hand to be game-forcing.
-    wrapVulNW $ return sit
-        <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, B.b1H2N4H4N)
-           , (B.b1S, B.b1S2N, B.b1S2N4S, B.b1S2N4S4N)
-           ]
+    wrapNW $ return sit <~ [ (B.b1H, B.b1H2N, B.b1H2N4H, B.b1H2N4H4N)
+                           , (B.b1S, B.b1S2N, B.b1S2N4S, B.b1S2N4S4N)
+                           ]
 
 
 semibalMedSlam :: Situations
@@ -244,7 +242,7 @@ semibalMedSlam = let
         situation "sbmedcb" action responderRebid explanation
   in
     -- Partner must be an unpassed hand to be game-forcing.
-    wrapVulNW $ return sit
+    wrapNW $ return sit
         <~ [ (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4C)
            , (B.b1H, B.b1H2N, B.b1H2N3N, B.b1H2N3N4D)
            -- Should there be one for control bidding spades when hearts are
@@ -278,7 +276,7 @@ semibalMaxSlam = let
         situation "sbmaxcb" action responderRebid explanation
   in
     -- Partner must be an unpassed hand to be game-forcing.
-    wrapVulNW $ return sit
+    wrapNW $ return sit
         -- Although it's possible to have no controls and want to rebid 4M, it
         -- is exceedingly unlikely. Skip those situations because they're so
         -- rare.

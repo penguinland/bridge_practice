@@ -7,7 +7,7 @@ import EDSL(alternatives, minSuitLength, forbid, makeCall)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapVulNW, wrapVulSE, Situations, makeTopic, wrapDlr)
+import Topic(Topic, wrap, wrapNW, wrapVulSE, Situations, makeTopic, wrapDlr)
 
 
 majorSuitImmediateResponse :: Situations
@@ -55,10 +55,10 @@ clubCanape = let
       in
         situation "ccan" action responderRebid explanation
   in
-    wrapVulNW $ return sit <~ [ (B.b1D1H, B.b1D1H1S, B.b1D1H1S2N)
-                              , (B.b1D1H, B.b1D1H1N, B.b1D1H1N2N)
-                              , (B.b1D1S, B.b1D1S1N, B.b1D1S1N2N)
-                              ]
+    wrapNW $ return sit <~ [ (B.b1D1H, B.b1D1H1S, B.b1D1H1S2N)
+                           , (B.b1D1H, B.b1D1H1N, B.b1D1H1N2N)
+                           , (B.b1D1S, B.b1D1S1N, B.b1D1S1N2N)
+                           ]
 
 
 diamondCanape :: Situations
@@ -84,13 +84,13 @@ diamondCanape = let
       in
         situation "dcan" action responderRebid explanation
   in
-    wrapVulNW $ return sit <~ [ (B.b1D1H, B.b1D1H1S, B.b1D1H1S3C)
-                              , (B.b1D1H, B.b1D1H1N, B.b1D1H1N3C)
-                              , (B.b1D1S, B.b1D1S1N, B.b1D1S1N3C)
-                              , (B.b1D1H, B.b1D1H1S, B.b1D1H1S3D)
-                              , (B.b1D1H, B.b1D1H1N, B.b1D1H1N3D)
-                              , (B.b1D1S, B.b1D1S1N, B.b1D1S1N3D)
-                              ]
+    wrapNW $ return sit <~ [ (B.b1D1H, B.b1D1H1S, B.b1D1H1S3C)
+                           , (B.b1D1H, B.b1D1H1N, B.b1D1H1N3C)
+                           , (B.b1D1S, B.b1D1S1N, B.b1D1S1N3C)
+                           , (B.b1D1H, B.b1D1H1S, B.b1D1H1S3D)
+                           , (B.b1D1H, B.b1D1H1N, B.b1D1H1N3D)
+                           , (B.b1D1S, B.b1D1S1N, B.b1D1S1N3D)
+                           ]
 
 
 twoClubs :: Situations
@@ -103,7 +103,7 @@ twoClubs = let
         "With at least invitational strength and a minor, start with an " .+
         "artificial " .+ T.Bid 2 T.Clubs .+ "."
   in
-    wrapVulNW . return $ situation "2C" action B.b1D2C explanation
+    wrapNW . return $ situation "2C" action B.b1D2C explanation
 
 
 twoClubsUnbal :: Situations
@@ -175,7 +175,7 @@ twoClubsUnbalGf = let
         "shape-shower. This will let us find the right suit to play " .+
         "in, or perhaps " .+ T.Bid 3 T.Notrump .+ "."
   in
-    wrapVulNW . return $ situation "unbalGF" action B.b1D2C2D2H explanation
+    wrapNW . return $ situation "unbalGF" action B.b1D2C2D2H explanation
 
 
 twoClubsUnbalSS :: Situations
@@ -230,7 +230,7 @@ twoDiamonds = let
         "With both majors and less than game forcing strength, make a " .+
         "Reverse-Flannery-like " .+ T.Bid 2 T.Diamonds .+ " bid."
   in
-    wrapVulNW . return $ situation "2D" action B.b1D2D explanation
+    wrapNW . return $ situation "2D" action B.b1D2D explanation
 
 
 topic :: Topic

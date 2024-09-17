@@ -6,7 +6,7 @@ import EDSL(maxSuitLength, minSuitLength, pointRange, alternatives)
 import Output(Punct(..), (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapVulNW, Situations, makeTopic)
+import Topic(Topic, wrap, wrapNW, stdWrapNW, Situations, makeTopic)
 
 
 oneMajor :: Situations
@@ -22,7 +22,7 @@ oneMajor = let
       in
         situation "1M" action bid explanation
   in
-    wrapVulNW $ return sit <~ [B.b1D1H, B.b1D1S]
+    wrapNW $ return sit <~ [B.b1D1H, B.b1D1S]
 
 
 twoMinor6M :: Situations
@@ -43,8 +43,8 @@ twoMinor6M = let
       in
         situation "6m4M" action bid explanation
   in
-    wrapVulNW $ return sit <~ [(T.Clubs, B.b1D2C), (T.Diamonds, B.b1D2D)]
-                           <~ [T.Hearts, T.Spades]
+    wrapNW $ return sit <~ [(T.Clubs, B.b1D2C), (T.Diamonds, B.b1D2D)]
+                        <~ [T.Hearts, T.Spades]
 
 
 twoMinorLongInv :: Situations
@@ -65,7 +65,7 @@ twoMinorLongInv = let
       in
         situation "6mw" action bid explanation
   in
-    wrapVulNW $ return sit <~ [(T.Clubs, B.b1D2C), (T.Diamonds, B.b1D2D)]
+    wrapNW $ return sit <~ [(T.Clubs, B.b1D2C), (T.Diamonds, B.b1D2D)]
 
 
 twoMinorBothInv :: Situations
@@ -91,7 +91,7 @@ twoMinorBothInv = let
       in
         situation "9m" action B.b1D2D explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 reverseFlannery :: Situations
@@ -114,7 +114,7 @@ reverseFlannery = let
       in
         situation "RevFl" action bid explanation
   in
-    wrapVulNW $ return sit <~ [(B.b1D2H, False), (B.b1D2S, True)]
+    wrapNW $ return sit <~ [(B.b1D2H, False), (B.b1D2S, True)]
 
 
 weakMinors54 :: Situations
@@ -134,7 +134,7 @@ weakMinors54 = let
       in
         situation "54min" action B.b1D3C explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 weakMinors55 :: Situations
@@ -153,7 +153,7 @@ weakMinors55 = let
       in
         situation "55min" action B.b1D4C explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 notrump1 :: Situations
@@ -171,7 +171,7 @@ notrump1 = let
       in
         situation "1N" action B.b1D1N explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 notrump2 :: Situations
@@ -198,7 +198,7 @@ notrump2 = let
       in
         situation "2N" action B.b1D2N explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 notrump3 :: Situations
@@ -217,7 +217,7 @@ notrump3 = let
       in
         situation "3N" action B.b1D3N explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 invertedMinors :: Situations
@@ -235,7 +235,7 @@ invertedMinors = let
       in
         situation "3d" action B.b1D3D explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 preempt3M :: Situations
@@ -253,7 +253,7 @@ preempt3M = let
       in
         situation "3M" action bid explanation
   in
-    wrapVulNW $ return sit <~ [B.b1D3H, B.b1D3S]
+    wrapNW $ return sit <~ [B.b1D3H, B.b1D3S]
 
 
 -- TODO: uncomment this and get it right when you're more confident of the
@@ -275,7 +275,7 @@ preempt4D = let
       in
         situation "4D" action B.b1D4D explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 -}
 
 
@@ -296,7 +296,7 @@ majorGame = let
       in
         situation "4M" action bid explanation
   in
-    wrapVulNW $ return sit <~ [B.b1D4H, B.b1D4S]
+    wrapNW $ return sit <~ [B.b1D4H, B.b1D4S]
 
 
 

@@ -7,7 +7,7 @@ import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic, stdWrapNW, stdWrapSE,
-             wrapVulNW, wrapVulSE)
+             wrapNW, wrapVulSE)
 
 
 bid1NHearts :: Situations
@@ -166,7 +166,7 @@ limitRaise3 = let
         situation "lr3" action response explanation
   in
     -- For us to bid a forcing 1N, we must be an unpassed hand.
-    wrapVulNW $ return sit <~ [(B.b1H, B.b1H1N), (B.b1S, B.b1S1N)]
+    wrapNW $ return sit <~ [(B.b1H, B.b1H1N), (B.b1S, B.b1S1N)]
 
 
 raise2 :: Situations
@@ -195,7 +195,7 @@ raise2 = let
         situation "mr2" action response explanation
   in
     -- For us to bid a forcing 1N, we must be an unpassed hand.
-    wrapVulNW $ return sit <~ [(B.b1H, B.b1H1N), (B.b1S, B.b1S1N)]
+    wrapNW $ return sit <~ [(B.b1H, B.b1H1N), (B.b1S, B.b1S1N)]
 
 
 nonjumpRebid :: Situations

@@ -7,8 +7,8 @@ import EDSL(makePass, pointRange, suitLength, maxSuitLength, forEach)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, stdWrap, wrap, wrapDlr, wrapVulNW, wrapVulSE,
-             Situations, makeTopic)
+import Topic(Topic, stdWrap, wrap, wrapDlr, wrapNW, wrapVulSE, Situations,
+             makeTopic)
 
 
 garbageStayman :: Situations
@@ -174,7 +174,7 @@ noFitBalancedSlamInv = let
       in situation "SlINoF" action B.b1N2C2D4N explanation
   in
     -- We're slam invitational; we can't be a passed hand.
-    wrapVulNW $ return sit
+    wrapNW $ return sit
 
 
 fitInvite :: Situations
@@ -240,8 +240,8 @@ fitSlam = let
       in situation "fitSl" action responderRebid explanation
   in
     -- We're slam invitational; we can't be a passed hand.
-    wrapVulNW $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3S)
-                              , (B.b1N2C2S, B.b1N2C2S3H) ]
+    wrapNW $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3S)
+                           , (B.b1N2C2S, B.b1N2C2S3H) ]
 
 
 wrongMajorGFH :: Situations
@@ -426,9 +426,9 @@ bothMajorsUnbalancedPassed = let
       in situation "bmubup" action opener4S explanation
   in
     -- This version is only for when responder is a passed hand
-    wrapVulNW $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C4S)
-                              , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D4S)
-                              ]
+    wrapNW $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C4S)
+                           , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D4S)
+                           ]
 
 
 bothMajorsUnbalancedUnpassed :: Situations

@@ -9,7 +9,7 @@ module Topic(
 , choose
 , wrap
 , wrapDlr
-, wrapVulNW
+, wrapNW
 , wrapVulSE
 , stdWrap
 , stdWrapNW
@@ -56,9 +56,8 @@ wrapDlr sit = wrap $ sit <~ allDirections <~ allVulnerabilities
 -- By ensuring that only North or West could be dealer, if we make North open
 -- the bidding, we ensure South is an unpassed hand. This is useful when
 -- practicing game-forcing auctions when partner opens the bidding.
-wrapVulNW :: State StdGen (Direction -> Vulnerability -> Situation) ->
-    Situations
-wrapVulNW sit = wrap $ sit <~ [North, West] <~ allVulnerabilities
+wrapNW :: State StdGen (Direction -> Vulnerability -> Situation) -> Situations
+wrapNW sit = wrap $ sit <~ [North, West] <~ allVulnerabilities
 
 -- By ensuring that only South or East could be dealer, if we make South open
 -- the bidding, we ensure that North is an unpassed hand. This is useful when
@@ -73,7 +72,7 @@ stdWrap :: (Direction -> Vulnerability -> Situation) -> Situations
 stdWrap = wrapDlr . return
 
 stdWrapNW :: (Direction -> Vulnerability -> Situation) -> Situations
-stdWrapNW = wrapVulNW . return
+stdWrapNW = wrapNW . return
 
 stdWrapSE :: (Direction -> Vulnerability -> Situation) -> Situations
 stdWrapSE = wrapVulSE . return
