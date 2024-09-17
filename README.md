@@ -123,9 +123,9 @@ Here is a rough summary of some of the data types in the code:
   bids) in a fancy way. Most string-like things in here are actually
   `Commentary` (`Topic` names, alert descriptions, explanations of why the
   answer is right, etc.).
-- An `Action` is a way to modify either the `dealer` program or the bidding,
-  used when constructing `Situations`. The embedded domain specific language
-  I've built is entirely made out of `Action`s.
+- An `Action` is a way to modify either the `dealer` program or the bidding.
+  The embedded domain specific language I've built is entirely made out of
+  `Action`s.
 - A `Call` is what you'd expect (pass, bid, double, or redouble). A
   `CompleteCall` is a `Call` with an optional `Commentary` containing a
   description of an alert.
