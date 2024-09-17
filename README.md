@@ -119,10 +119,10 @@ Here is a rough summary of some of the data types in the code:
   collection of collections of parameterizable `Situation`s.
 - A `Topic` is a named `Situations`. When you use this system as a whole, you
   select which `Topic`s you want to practice.
-- `Description` is a string-like data type that can render certain things (e.g.,
-  bids) in a fancy way. Most string-like things in here are actually
-  `Description` (`Topic` names, bidding alerts, explanations of why the
-  answer is correct, etc.).
+- A `Description` is a string-like data type that can render certain things
+  (e.g., bids) in a fancy way. Most string-like things in here are actually
+  `Description` (`Topic` names, bidding alerts, explanations of why the answer
+  is correct, etc.).
 - An `Action` is a way to modify either the `dealer` program or the bidding.
   The embedded domain-specific language I've built is entirely made out of
   `Action`s.
