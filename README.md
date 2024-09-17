@@ -110,7 +110,7 @@ Here is a rough summary of some of the data types in the code:
 - A `SituationInstance` is a problem and solution to be shown to the user. It
   contains an entire deal of the cards, the bidding, the answer, the explanation
   of why the answer is right, etc.
-- A `Situation` contains a `dealer` program to generate a deal, and everything
+- A `Situation` contains a `dealer` program to generate a deal, plus everything
   else needed to make a `SituationInstance`.
 - `Situations` take in a random number generator and give back a `Situation`.
   It might be a collection of multiple `Situation`s, or a single `Situation`
