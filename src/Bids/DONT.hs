@@ -1,5 +1,5 @@
 module Bids.DONT(
-    b1N  -- Re-exported from Meckwell
+    b1N  -- Re-exported from StandardOpenings
   , b1NoX
   , b1NoX2C
   , b1No2C
@@ -16,7 +16,7 @@ module Bids.DONT(
 
 
 import Action(Action)
-import Bids.Meckwell(b1N)
+import Bids.StandardOpenings(b1N)
 import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import EDSL(pointRange, alternatives, makeCall, makeAlertableCall, forEach,
             longerThan, minSuitLength, maxSuitLength, soundHolding, forbid,
