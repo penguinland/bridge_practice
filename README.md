@@ -109,7 +109,7 @@ point the code is a very manageable size.
 Here is a rough summary of some of the data types in the code:
 - A `SituationInstance` is a problem and solution to be shown to the user. It
   contains an entire deal of the cards, the bidding, the answer, the explanation
-  of why the answer is right, etc.
+  of why the answer is correct, etc.
 - A `Situation` contains a `dealer` program to generate a deal, plus everything
   else needed to make a `SituationInstance`.
 - `Situations` take in a random number generator and give back a `Situation`.
@@ -122,9 +122,9 @@ Here is a rough summary of some of the data types in the code:
 - `Commentary` is a string-like data type that can render certain things (e.g.,
   bids) in a fancy way. Most string-like things in here are actually
   `Commentary` (`Topic` names, alert descriptions, explanations of why the
-  answer is right, etc.).
+  answer is correct, etc.).
 - An `Action` is a way to modify either the `dealer` program or the bidding.
-  The embedded domain specific language I've built is entirely made out of
+  The embedded domain-specific language I've built is entirely made out of
   `Action`s.
 - A `Call` is what you'd expect (pass, bid, double, or redouble). A
   `CompleteCall` is a `Call` with an optional `Commentary` describing an alert.
