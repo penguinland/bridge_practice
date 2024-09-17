@@ -127,7 +127,7 @@ Here is a rough summary of some of the data types in the code:
   The embedded domain-specific language I've built is entirely made out of
   `Action`s.
 - A `Call` is what you'd expect (pass, bid, double, or redouble). A
-  `CompleteCall` is a `Call` with an optional `Description` describing an alert.
+  `CompleteCall` is a `Call` with an optional `Description` of an alert.
 - Hopefully other things are straightforward (e.g., you can figure out on your
   own what `Direction` and `Hand` represent).
 
