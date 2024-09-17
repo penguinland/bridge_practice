@@ -104,6 +104,34 @@ It can be intimidating trying to learn your way around a new repo this large,
 but you can ignore all the bids and topics you're not interested in, at which
 point the code is a very manageable size.
 
+### Data Types and Terminology
+
+Here is a rough summary of some of the data types in the code:
+- A `SituationInstance` is a problem and solution to be shown to the user. It
+  contains an entire deal of the cards, the bidding, the answer, the explanation
+  of why the answer is right, etc.
+- A `Situation` contains a `dealer` program to generate a deal, and everything
+  else needed to make a `SituationInstance`.
+- `Situations` take in a random number generator and give back a `Situation`.
+  It might be a collection of multiple `Situation`s, or a single `Situation`
+  that can be parameterized (e.g., you can randomly set the vulnerability and
+  dealer, while the rest is unchanged). It is often a collection of collections
+  of parameterizable `Situation`s.
+- A `Topic` is a named `Situations`. When you use this system as a whole, you
+  select which `Topic`s you want to practice.
+- `Commentary` is a string-like data type that can render certain things (e.g.,
+  bids) in a fancy way. Most string-like things in here are actually
+  `Commentary` (`Topic` names, alert descriptions, explanations of why the
+  answer is right, etc.).
+- An `Action` is a way to modify either the `dealer` program or the bidding,
+  used when constructing `Situations`. The embedded domain specific language
+  I've built is entirely made out of `Action`s.
+- A `Call` is what you'd expect (pass, bid, double, or redouble). A
+  `CompleteCall` is a `Call` with an optional `Commentary` containing a
+  description of an alert.
+- Hopefully other things are straightforward (e.g., you can figure out on your
+  own what `Direction` and `Hand` represent).
+
 ## Bugfixes
 
 If something has gone wrong but you figure out what it was, please send a pull
