@@ -7,8 +7,8 @@ import EDSL(makePass, pointRange, suitLength, maxSuitLength, forEach)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, stdWrap, wrap, wrapVulDlr, wrapVulNW, wrapVulSE,
-             Situations, makeTopic)
+import Topic(Topic, stdWrap, wrap, wrapDlr, wrapNW, wrapSE, Situations,
+             makeTopic)
 
 
 garbageStayman :: Situations
@@ -89,7 +89,7 @@ oneMajor = let
             "the auction; they'll know what to do next."
       in situation "1Maj" action bid explanation
   in
-    wrapVulDlr $ return sit <~ [B.b1N2C2H, B.b1N2C2S]
+    wrapDlr $ return sit <~ [B.b1N2C2H, B.b1N2C2S]
 
 
 bothMajors :: Situations
@@ -174,7 +174,7 @@ noFitBalancedSlamInv = let
       in situation "SlINoF" action B.b1N2C2D4N explanation
   in
     -- We're slam invitational; we can't be a passed hand.
-    wrapVulNW $ return sit
+    wrapNW $ return sit
 
 
 fitInvite :: Situations
@@ -195,8 +195,8 @@ fitInvite = let
             "and bid 4 with a maximum."
       in situation "fitInv" action responderRebid explanation
   in
-    wrapVulDlr $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3H)
-                               , (B.b1N2C2S, B.b1N2C2S3S) ]
+    wrapDlr $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3H)
+                            , (B.b1N2C2S, B.b1N2C2S3S) ]
 
 
 fitGF :: Situations
@@ -216,8 +216,8 @@ fitGF = let
             "sign off in game."
       in situation "fitGF" action responderRebid explanation
   in
-    wrapVulDlr $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H4H)
-                               , (B.b1N2C2S, B.b1N2C2S4S) ]
+    wrapDlr $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H4H)
+                            , (B.b1N2C2S, B.b1N2C2S4S) ]
 
 
 fitSlam :: Situations
@@ -240,8 +240,8 @@ fitSlam = let
       in situation "fitSl" action responderRebid explanation
   in
     -- We're slam invitational; we can't be a passed hand.
-    wrapVulNW $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3S)
-                              , (B.b1N2C2S, B.b1N2C2S3H) ]
+    wrapNW $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3S)
+                           , (B.b1N2C2S, B.b1N2C2S3H) ]
 
 
 wrongMajorGFH :: Situations
@@ -370,7 +370,7 @@ inv54 = let
             T.Bid 3 T.Notrump .+ " without one."
       in situation "inv54" action bid explanation
   in
-    wrapVulDlr $ return sit <~ [B.b1N2C2D2H, B.b1N2C2D2S]
+    wrapDlr $ return sit <~ [B.b1N2C2D2H, B.b1N2C2D2S]
 
 
 noFitUnbalancedGF :: Situations
@@ -395,11 +395,11 @@ noFitUnbalancedGF = let
             "need to worry about partner passing us out too low."
       in situation "nfubgf" action responderRebid explanation
   in
-    wrapVulDlr $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C)
-                               , (B.b1N2C2H, B.b1N2C2H3D)
-                               , (B.b1N2C2S, B.b1N2C2S3C)
-                               , (B.b1N2C2S, B.b1N2C2S3D)
-                               ]
+    wrapDlr $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C)
+                            , (B.b1N2C2H, B.b1N2C2H3D)
+                            , (B.b1N2C2S, B.b1N2C2S3C)
+                            , (B.b1N2C2S, B.b1N2C2S3D)
+                            ]
 
 
 bothMajorsUnbalancedPassed :: Situations
@@ -426,9 +426,9 @@ bothMajorsUnbalancedPassed = let
       in situation "bmubup" action opener4S explanation
   in
     -- This version is only for when responder is a passed hand
-    wrapVulNW $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C4S)
-                              , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D4S)
-                              ]
+    wrapNW $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C4S)
+                           , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D4S)
+                           ]
 
 
 bothMajorsUnbalancedUnpassed :: Situations
@@ -457,9 +457,9 @@ bothMajorsUnbalancedUnpassed = let
       in situation "bmubp" action opener4S explanation
   in
     -- This version is only for when responder is a passed hand
-    wrapVulSE $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C3S)
-                              , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D3S)
-                              ]
+    wrapSE $ return sit <~ [ (B.b1N2C2H, B.b1N2C2H3C, B.b1N2C2H3C3S)
+                           , (B.b1N2C2H, B.b1N2C2H3D, B.b1N2C2H3D3S)
+                           ]
 
 
 -- TODO eventually, but maybe in separate topics:

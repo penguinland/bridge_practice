@@ -7,8 +7,7 @@ import EDSL(forbid, makeCall, makeAlertableCall, makePass, pointRange,
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, makeTopic, wrap, wrapVulNW, wrapVulSE, stdWrapNW,
-             Situations)
+import Topic(Topic, makeTopic, wrap, wrapNW, wrapSE, stdWrapNW, Situations)
 
 
 -- Note that the person initiating the transfer shouldn't have had an
@@ -95,7 +94,7 @@ initiateTransfer = let
       in
         situation "Init" action bid explanation
   in
-    wrapVulNW $ return sit <~ T.minorSuits
+    wrapNW $ return sit <~ T.minorSuits
 
 
 completeTransfer :: Situations
@@ -114,7 +113,7 @@ completeTransfer = let
       in
         situation "Complete" action bid explanation
   in
-    wrapVulSE $ return sit <~ T.minorSuits
+    wrapSE $ return sit <~ T.minorSuits
 
 
 superacceptTransfer :: Situations
@@ -136,7 +135,7 @@ superacceptTransfer = let
       in
         situation "SupAcc" action bid explanation
   in
-    wrapVulSE $ return sit <~ T.minorSuits
+    wrapSE $ return sit <~ T.minorSuits
 
 
 completeSuperacceptAKQ :: Situations
@@ -158,7 +157,7 @@ completeSuperacceptAKQ = let
       in
         situation "3NTAKQ" action bid explanation
   in
-    wrapVulNW $ return sit <~ T.minorSuits
+    wrapNW $ return sit <~ T.minorSuits
 
 
 completeSuperacceptKQJ10 :: Situations
@@ -182,7 +181,7 @@ completeSuperacceptKQJ10 = let
       in
         situation "3NTKQJ" action bid explanation
   in
-    wrapVulNW $ return sit <~ T.minorSuits
+    wrapNW $ return sit <~ T.minorSuits
 
 
 completeSuperaccept10CardFit :: Situations
@@ -204,7 +203,7 @@ completeSuperaccept10CardFit = let
       in
         situation "3NT10Fit" action bid explanation
   in
-    wrapVulNW $ return sit <~ T.minorSuits
+    wrapNW $ return sit <~ T.minorSuits
 
 
 failSuperaccept :: Situations
@@ -227,7 +226,7 @@ failSuperaccept = let
       in
         situation "SupFail" action bid explanation
   in
-    wrapVulNW $ return sit <~ T.minorSuits
+    wrapNW $ return sit <~ T.minorSuits
 
 
 notrumpInvite :: Situations

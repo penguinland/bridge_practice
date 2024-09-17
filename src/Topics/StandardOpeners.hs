@@ -10,7 +10,7 @@ import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import Structures(currentBidder)
 import qualified Terminology as T
-import Topic(Topic, wrap, stdWrap, stdWrapSE, wrapVulDlr, Situations, makeTopic)
+import Topic(Topic, wrap, stdWrap, stdWrapSE, wrapDlr, Situations, makeTopic)
 
 
 -- Yes, I realize that many of these Situations lack the nuance of planning your
@@ -155,7 +155,7 @@ oneClubEqualMinors = let
       in
         situation "1C1Suit" action SO.b1C explanation
   in
-    wrapVulDlr $ return sit <~ [3, 4]
+    wrapDlr $ return sit <~ [3, 4]
 
 
 bothMinorsNoReverse :: Situations

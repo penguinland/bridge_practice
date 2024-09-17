@@ -48,8 +48,8 @@ ignoreOpps = let
                          , (Capp.b1No2C, B.b1No2C2D, True)
                          , (Capp.b1No2C, B.b1No2C2H, True)
                          ]
-                      <~ T.allVulnerabilities
                       <~ [T.North, T.South, T.West]
+                      <~ T.allVulnerabilities
 
 
 signoff :: Situations
@@ -78,9 +78,9 @@ signoff = let
                          --, (Capp.b1No2D, B.b1No2D2S)
                          , (Capp.b1No2H, B.b1No2H2S)
                          ]
-                      <~ T.allVulnerabilities
                       -- East should be an unpassed hand to interfere.
                       <~ [T.North, T.South, T.West]
+                      <~ T.allVulnerabilities
 
 
 -- TODO:

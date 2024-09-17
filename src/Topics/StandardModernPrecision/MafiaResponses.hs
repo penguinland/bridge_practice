@@ -7,14 +7,14 @@ import EDSL(suitLength, maxSuitLength)
 import Output((.+), Punct(..))
 import Situation(Situation, situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapVulNW, Situations, makeTopic)
+import Topic(Topic, wrap, wrapNW, stdWrapNW, Situations, makeTopic)
 
 
 minSupport :: Situations
 minSupport = let
     -- The type signature is to convince the compiler that we're not throwing
     -- away values from openerBid
-    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit :: (Action, Action) -> T.Direction -> T.Vulnerability -> Situation
     sit (openerBid, responderBid) = let
         action = do
             setOpener T.North
@@ -28,15 +28,15 @@ minSupport = let
       in
         situation "2M" action responderBid explanation
   in
-    wrapVulNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2H)
-                              , (B.b1C1D1S, B.b1C1D1S2S) ]
+    wrapNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2H)
+                           , (B.b1C1D1S, B.b1C1D1S2S) ]
 
 
 maxSupportSemibalanced :: Situations
 maxSupportSemibalanced = let
     -- The type signature is to convince the compiler that we're not throwing
     -- away values from openerBid
-    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit :: (Action, Action) -> T.Direction -> T.Vulnerability -> Situation
     sit (openerBid, responderBid) = let
         action = do
             setOpener T.North
@@ -51,15 +51,15 @@ maxSupportSemibalanced = let
       in
         situation "3MB" action responderBid explanation
   in
-    wrapVulNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H3H)
-                              , (B.b1C1D1S, B.b1C1D1S3S) ]
+    wrapNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H3H)
+                           , (B.b1C1D1S, B.b1C1D1S3S) ]
 
 
 maxSupportUnbalanced :: Situations
 maxSupportUnbalanced = let
     -- The type signature is to convince the compiler that we're not throwing
     -- away values from openerBid
-    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit :: (Action, Action) -> T.Direction -> T.Vulnerability -> Situation
     sit (openerBid, responderBid) = let
         action = do
             setOpener T.North
@@ -79,8 +79,8 @@ maxSupportUnbalanced = let
       in
         situation "3MV" action responderBid explanation
   in
-    wrapVulNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2N)
-                              , (B.b1C1D1S, B.b1C1D1S2N) ]
+    wrapNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2N)
+                           , (B.b1C1D1S, B.b1C1D1S2N) ]
 
 
 brakesHearts :: Situations
@@ -103,7 +103,7 @@ brakesHearts = let
       in
         situation "1NH" action B.b1C1D1H1N explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 brakesSpades :: Situations
@@ -127,7 +127,7 @@ brakesSpades = let
       in
         situation "1NS" action B.b1C1D1S1N explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 brakesSpadesHearts :: Situations
@@ -154,7 +154,7 @@ brakesSpadesHearts = let
       in
         situation "1NSH" action B.b1C1D1S1N explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 otherMajorHearts :: Situations
@@ -173,7 +173,7 @@ otherMajorHearts = let
       in
         situation "1S" action B.b1C1D1H1S explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 otherMajorSpades :: Situations
@@ -195,12 +195,12 @@ otherMajorSpades = let
       in
         situation "2H" action B.b1C1D1S2H explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 threeCardSupport :: Situations
 threeCardSupport = let
-    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit :: (Action, Action) -> T.Direction -> T.Vulnerability -> Situation
     sit (openerBid, responderBid) = let
         action = do
             setOpener T.North
@@ -217,8 +217,8 @@ threeCardSupport = let
       in
         situation "2D" action responderBid explanation
   in
-    wrapVulNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2D)
-                              , (B.b1C1D1S, B.b1C1D1S2D) ]
+    wrapNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2D)
+                           , (B.b1C1D1S, B.b1C1D1S2D) ]
 
 
 threeCardSupportHearts :: Situations
@@ -237,12 +237,12 @@ threeCardSupportHearts = let
       in
         situation "2D" action B.b1C1D1S2D explanation
   in
-    wrapVulNW $ return sit
+    stdWrapNW sit
 
 
 maxNoMajors :: Situations
 maxNoMajors = let
-    sit :: (Action, Action) -> T.Vulnerability -> T.Direction -> Situation
+    sit :: (Action, Action) -> T.Direction -> T.Vulnerability -> Situation
     sit (openerBid, responderBid) = let
         action = do
             setOpener T.North
@@ -260,8 +260,8 @@ maxNoMajors = let
       in
         situation "2C" action responderBid explanation
   in
-    wrapVulNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2C)
-                              , (B.b1C1D1S, B.b1C1D1S2C) ]
+    wrapNW $ return sit <~ [ (B.b1C1D1H, B.b1C1D1H2C)
+                           , (B.b1C1D1S, B.b1C1D1S2C) ]
 
 
 topic :: Topic

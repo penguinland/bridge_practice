@@ -8,7 +8,7 @@ import EDSL(forbid, pointRange, suitLength, balancedHand, flatHand,
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(wrap, stdWrap, stdWrapNW, wrapVulDlr, wrapVulNW, Situations,
+import Topic(wrap, stdWrap, stdWrapNW, wrapDlr, wrapNW, Situations,
              Topic, makeTopic)
 
 
@@ -41,7 +41,7 @@ initiateTransferWeak = let
       in
         situation "InitWeak" action bid explanation
   in
-    wrapVulDlr $ return sit <~ [B.b1N2D, B.b1N2H]
+    wrapDlr $ return sit <~ [B.b1N2D, B.b1N2H]
 
 
 initiateTransferBInv :: Situations
@@ -66,7 +66,7 @@ initiateTransferBInv = let
       in
         situation "InitBInv" action bid explanation
   in
-    wrapVulDlr $ return sit <~ [(B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
+    wrapDlr $ return sit <~ [(B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
 
 
 initiateTransferBGf :: Situations
@@ -89,7 +89,7 @@ initiateTransferBGf = let
       in
         situation "InitBGF" action bid explanation
   in
-    wrapVulDlr $ return sit <~ [(B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
+    wrapDlr $ return sit <~ [(B.b1N2D, T.Hearts), (B.b1N2H, T.Spades)]
 
 
 completeTransfer :: Situations
@@ -110,7 +110,7 @@ completeTransfer = let
       in
         situation "Complete" action openerRebid explanation
   in
-    wrapVulDlr $ return sit <~ [(B.b1N2D, B.b1N2D2H), (B.b1N2H, B.b1N2H2S)]
+    wrapDlr $ return sit <~ [(B.b1N2D, B.b1N2D2H), (B.b1N2H, B.b1N2H2S)]
 
 
 completeTransferShort :: Situations
@@ -137,7 +137,7 @@ completeTransferShort = let
       in
         situation "Short" action openerRebid explanation
   in
-    wrapVulDlr $ return sit <~ [(B.b1N2D, B.b1N2D2H), (B.b1N2H, B.b1N2H2S)]
+    wrapDlr $ return sit <~ [(B.b1N2D, B.b1N2D2H), (B.b1N2H, B.b1N2H2S)]
 
 
 majors55inv :: Situations
@@ -272,11 +272,11 @@ rebidMinor = let
       in
         situation "ubgf" action responderRebid explanation
   in
-    wrapVulDlr $ return sit <~ [ (B.b1N2D, B.b1N2D2H, B.b1N2D2H3C)
-                               , (B.b1N2D, B.b1N2D2H, B.b1N2D2H3D)
-                               , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3C)
-                               , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3D)
-                               ]
+    wrapDlr $ return sit <~ [ (B.b1N2D, B.b1N2D2H, B.b1N2D2H3C)
+                            , (B.b1N2D, B.b1N2D2H, B.b1N2D2H3D)
+                            , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3C)
+                            , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3D)
+                            ]
 
 superaccept :: Situations
 superaccept = let
@@ -302,7 +302,7 @@ superaccept = let
       in
         situation "supac" action openerRebid explanation
   in
-    wrapVulDlr $ return sit <~ [(B.b1N2D, B.b1N2D3H), (B.b1N2H, B.b1N2H3S)]
+    wrapDlr $ return sit <~ [(B.b1N2D, B.b1N2D3H), (B.b1N2H, B.b1N2H3S)]
 
 
 noFlatSuperaccept :: Situations
@@ -328,7 +328,7 @@ noFlatSuperaccept = let
       in
         situation "flatSA" action openerRebid explanation
   in
-    wrapVulDlr $ return sit <~ [(B.b1N2D, B.b1N2D2H), (B.b1N2H, B.b1N2H2S)]
+    wrapDlr $ return sit <~ [(B.b1N2D, B.b1N2D2H), (B.b1N2H, B.b1N2H2S)]
 
 
 singleSuitedInvite :: Situations
@@ -355,8 +355,8 @@ singleSuitedInvite = let
   in
     -- We must be an unpassed hand: if we had a chance to bid earlier, we would
     -- have bid a weak two.
-    wrapVulNW $ return sit <~ [ (B.b1N2D, B.b1N2D2H, B.b1N2D2H3H)
-                              , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3S) ]
+    wrapNW $ return sit <~ [ (B.b1N2D, B.b1N2D2H, B.b1N2D2H3H)
+                           , (B.b1N2H, B.b1N2H2S, B.b1N2H2S3S) ]
 
 
 topic :: Topic

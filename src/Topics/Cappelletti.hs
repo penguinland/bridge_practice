@@ -30,7 +30,7 @@ penaltyDouble = let
         in situation "pdbl" action B.b1NoX explanation
   in
     -- Ensure we're not dealer: we'd have opened the bidding.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+    wrap $ return sit <~ [T.West, T.North, T.East] <~ T.allVulnerabilities
 
 
 singleSuited :: Situations
@@ -49,7 +49,7 @@ singleSuited = let
     -- Although it's possible to make this bid as a passed hand, it is extremely
     -- unlikely. As a performance optimization, let's just practice this when
     -- we're an unpassed hand.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+    wrap $ return sit <~ [T.West, T.North, T.East] <~ T.allVulnerabilities
 
 
 singleSuitedRelay :: Situations
@@ -68,7 +68,7 @@ singleSuitedRelay = let
   in
     -- We're going to continue with the optimization that the Cappelletti bidder
     -- should be an unpassed hand.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.South, T.East]
+    wrap $ return sit <~ [T.West, T.South, T.East] <~ T.allVulnerabilities
 
 
 bothMajors :: Situations
@@ -83,7 +83,7 @@ bothMajors = let
             "their favorite major, and we'll play there."
         in situation "bmaj" action B.b1No2D explanation
   in
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+    wrap $ return sit <~ [T.West, T.North, T.East] <~ T.allVulnerabilities
 
 
 majorMinor :: Situations
@@ -100,8 +100,8 @@ majorMinor = let
         in situation "Mm" action bid explanation
   in
     wrap $ return sit <~ [B.b1No2H, B.b1No2S]
-                      <~ T.allVulnerabilities
                       <~ [T.West, T.North, T.East]
+                      <~ T.allVulnerabilities
 
 
 relayToFindMinor :: Situations
@@ -120,8 +120,8 @@ relayToFindMinor = let
         in situation "Mm" action answer explanation
   in
     wrap $ return sit <~ [(B.b1No2H, B.b1No2H2N), (B.b1No2S, B.b1No2S2N)]
-                      <~ T.allVulnerabilities
                       <~ [T.West, T.South, T.East]
+                      <~ T.allVulnerabilities
 
 
 bothMinors :: Situations
@@ -136,7 +136,7 @@ bothMinors = let
             "Partner will bid their favorite minor, and we'll play there."
         in situation "bmin" action B.b1No2N explanation
   in
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+    wrap $ return sit <~ [T.West, T.North, T.East] <~ T.allVulnerabilities
 
 
 topic :: Topic

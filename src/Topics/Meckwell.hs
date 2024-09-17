@@ -32,7 +32,8 @@ majorSuit = let
     -- Ensure we're not dealer: it's too rare to find a hand where we'd want to
     -- overcall after 1N but not open the bidding ourselves.
     wrap $ return sit <~ [(T.Hearts, B.b1No2H), (T.Spades, B.b1No2S)]
-                      <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+                      <~ [T.West, T.North, T.East]
+                      <~ T.allVulnerabilities
 
 
 minorAndMajor :: Situations
@@ -51,7 +52,8 @@ minorAndMajor = let
     -- Ensure we're not dealer: it's too rare to find a hand where we'd want to
     -- overcall after 1N but not open the bidding ourselves.
     wrap $ return sit <~ [(T.Clubs, B.b1No2C), (T.Diamonds, B.b1No2D)]
-                      <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+                      <~ [T.West, T.North, T.East]
+                      <~ T.allVulnerabilities
 
 
 double :: Situations
@@ -70,7 +72,7 @@ double = let
   in
     -- Ensure we're not dealer: it's too rare to find a hand where we'd want to
     -- overcall after 1N but not open the bidding ourselves.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+    wrap $ return sit <~ [T.West, T.North, T.East] <~ T.allVulnerabilities
 
 
 relayAfterDouble :: Situations
@@ -90,7 +92,7 @@ relayAfterDouble = let
         in situation "Xrelay" action B.b1NoX2C explanation
   in
     -- Ensure partner is not dealer.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.South, T.East]
+    wrap $ return sit <~ [T.West, T.South, T.East] <~ T.allVulnerabilities
 
 
 doubleBothMajors :: Situations
@@ -110,7 +112,7 @@ doubleBothMajors = let
         in situation "bmaj" action B.b1NoX2C2H explanation
   in
     -- Ensure we're not dealer.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+    wrap $ return sit <~ [T.West, T.North, T.East] <~ T.allVulnerabilities
 
 
 bothMinors :: Situations
@@ -125,7 +127,7 @@ bothMinors = let
         in situation "bmin" action B.b1No2N explanation
   in
     -- Ensure we're not dealer.
-    wrap $ return sit <~ T.allVulnerabilities <~ [T.West, T.North, T.East]
+    wrap $ return sit <~ [T.West, T.North, T.East] <~ T.allVulnerabilities
 
 
 findMajor :: Situations
@@ -148,7 +150,8 @@ findMajor = let
     wrap $ return sit <~ [ (B.b1No2C, B.b1No2C2H, T.Clubs)
                          , (B.b1No2D, B.b1No2D2H, T.Diamonds)
                          ]
-                      <~ T.allVulnerabilities <~ [T.West, T.South, T.East]
+                      <~ [T.West, T.South, T.East]
+                      <~ T.allVulnerabilities
 
 
 topic :: Topic

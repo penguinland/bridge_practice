@@ -8,9 +8,9 @@ module Topic(
   Situations  -- Note that constructors aren't public; use wrap instead.
 , choose
 , wrap
-, wrapVulDlr
-, wrapVulNW
-, wrapVulSE
+, wrapDlr
+, wrapNW
+, wrapSE
 , stdWrap
 , stdWrapNW
 , stdWrapSE
@@ -49,34 +49,31 @@ instance Situationable Situations where
 -- The most common Situation parameters are letting anyone be vulnerable, and
 -- either letting anyone be the dealer, ensuring North is an unpassed hand, or
 -- ensuring South is an unpassed hand. Make some syntactic sugar for that.
-wrapVulDlr :: State StdGen (Vulnerability -> Direction -> Situation) ->
-    Situations
-wrapVulDlr sit = wrap $ sit <~ allVulnerabilities <~ allDirections
+wrapDlr :: State StdGen (Direction -> Vulnerability -> Situation) -> Situations
+wrapDlr sit = wrap $ sit <~ allDirections <~ allVulnerabilities
 
 -- By ensuring that only North or West could be dealer, if we make North open
 -- the bidding, we ensure South is an unpassed hand. This is useful when
 -- practicing game-forcing auctions when partner opens the bidding.
-wrapVulNW :: State StdGen (Vulnerability -> Direction -> Situation) ->
-    Situations
-wrapVulNW sit = wrap $ sit <~ allVulnerabilities <~ [North, West]
+wrapNW :: State StdGen (Direction -> Vulnerability -> Situation) -> Situations
+wrapNW sit = wrap $ sit <~ [North, West] <~ allVulnerabilities
 
 -- By ensuring that only South or East could be dealer, if we make South open
 -- the bidding, we ensure that North is an unpassed hand. This is useful when
 -- practicing game-forcing auctions when we open the bidding.
-wrapVulSE :: State StdGen (Vulnerability -> Direction -> Situation) ->
-    Situations
-wrapVulSE sit = wrap $ sit <~ allVulnerabilities <~ [South, East]
+wrapSE :: State StdGen (Direction -> Vulnerability -> Situation) -> Situations
+wrapSE sit = wrap $ sit <~ [South, East] <~ allVulnerabilities
 
 -- and more syntactic sugar for a Situation that is _only_ parameterized on
 -- those features.
-stdWrap :: (Vulnerability -> Direction -> Situation) -> Situations
-stdWrap = wrapVulDlr . return
+stdWrap :: (Direction -> Vulnerability -> Situation) -> Situations
+stdWrap = wrapDlr . return
 
-stdWrapNW :: (Vulnerability -> Direction -> Situation) -> Situations
-stdWrapNW = wrapVulNW . return
+stdWrapNW :: (Direction -> Vulnerability -> Situation) -> Situations
+stdWrapNW = wrapNW . return
 
-stdWrapSE :: (Vulnerability -> Direction -> Situation) -> Situations
-stdWrapSE = wrapVulSE . return
+stdWrapSE :: (Direction -> Vulnerability -> Situation) -> Situations
+stdWrapSE = wrapSE . return
 
 
 data Topic = Topic { topicName :: Commentary

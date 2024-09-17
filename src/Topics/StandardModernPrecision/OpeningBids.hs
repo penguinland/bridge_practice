@@ -4,7 +4,7 @@ import qualified Bids.StandardModernPrecision.BasicBids as B
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic)
+import Topic(Topic, wrap, stdWrap, wrapDlr, Situations, makeTopic)
 
 
 oneClub :: Situations
@@ -43,7 +43,7 @@ oneMajor = let
         situation "1M" action (B.b1M suit) explanation
   in
     -- TODO: figure out some syntactic sugar for this, too
-    wrapVulDlr $ return sit <~ T.majorSuits
+    wrapDlr $ return sit <~ T.majorSuits
 
 
 oneNotrump :: Situations

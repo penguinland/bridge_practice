@@ -41,7 +41,7 @@ instance ToJSON SituationInstance where
 
 
 instantiate :: String -> Situation -> StateT StdGen IO (Maybe SituationInstance)
-instantiate reference (Situation _ b dl c s v dn) = do
+instantiate reference (Situation _ b dl c s dn v) = do
     n <- state (first fromIntegral . genWord64)
     maybeDeal <- lift $ eval dn v dl n
     return (SituationInstance b c s <$> maybeDeal <*> pure reference)
