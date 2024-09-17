@@ -102,7 +102,7 @@ and paragraphs of text explaining the answers. The approximate line counts are:
 
 It can be intimidating trying to learn your way around a new repo this large,
 but you can ignore all the bids and topics you're not interested in, at which
-point the code is a very manageable size.
+point the code is a manageable size.
 
 ### Data Types and Terminology
 
