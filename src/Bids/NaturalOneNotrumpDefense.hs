@@ -11,8 +11,7 @@ module Bids.NaturalOneNotrumpDefense(
 
 import Action(Action)
 import EDSL(pointRange, minSuitLength, maxSuitLength, makeCall, alternatives,
-            soundHolding, makeAlertableCall, forEach)
-import Output ((.+))
+            soundHolding, forEach)
 import qualified Terminology as T
 
 
