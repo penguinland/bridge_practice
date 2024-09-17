@@ -1,9 +1,10 @@
 module Topics.Lebensohl(topic) where
 
-import qualified Bids.Lebensohl as B
-import qualified Bids.Meckwell as MW
 import qualified Bids.Cappelletti as Capp
 import qualified Bids.DONT as DONT
+import qualified Bids.Lebensohl as B
+import qualified Bids.Meckwell as MW
+import qualified Bids.NaturalOneNotrumpDefense as Nat
 import CommonBids(setOpener)
 --import EDSL(makePass, pointRange, suitLength, maxSuitLength, forEach)
 import Output((.+))
@@ -47,6 +48,9 @@ ignoreOpps = let
                          , (Capp.b1No2C, B.b1No2CX,  True)
                          , (Capp.b1No2C, B.b1No2C2D, True)
                          , (Capp.b1No2C, B.b1No2C2H, True)
+                         , (Nat.b1No2C,  B.b1No2CX,  True)
+                         , (Nat.b1No2C,  B.b1No2C2D, True)
+                         , (Nat.b1No2C,  B.b1No2C2H, True)
                          ]
                       <~ [T.North, T.South, T.West]
                       <~ T.allVulnerabilities
@@ -77,6 +81,9 @@ signoff = let
                          --, (Capp.b1No2D, B.b1No2D2H)
                          --, (Capp.b1No2D, B.b1No2D2S)
                          , (Capp.b1No2H, B.b1No2H2S)
+                         , (Nat.b1No2D,  B.b1No2D2H)
+                         , (Nat.b1No2D,  B.b1No2D2S)
+                         , (Nat.b1No2H,  B.b1No2H2S)
                          ]
                       -- East should be an unpassed hand to interfere.
                       <~ [T.North, T.South, T.West]
