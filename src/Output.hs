@@ -6,8 +6,8 @@
 
 module Output (
   OutputType(..)
-, Commentary(..)
-, toCommentary
+, Description(..)
+, toDescription
 , Showable(..)
 , (.+)
 , Punct(..)
@@ -21,16 +21,16 @@ data OutputType = LaTeX
                 | Html
 
 
-newtype Commentary = Commentary [OutputType -> String]
+newtype Description = Description [OutputType -> String]
 
-instance Semigroup Commentary where
-    (Commentary as) <> (Commentary bs) = Commentary (as ++ bs)
+instance Semigroup Description where
+    (Description as) <> (Description bs) = Description (as ++ bs)
 
-instance Monoid Commentary where
-    mempty = Commentary [const ""]
+instance Monoid Description where
+    mempty = Description [const ""]
 
-instance ToJSON Commentary where
-    toJSON (Commentary c) = toJSON . concatMap (Html  &) $ c
+instance ToJSON Description where
+    toJSON (Description d) = toJSON . concatMap (Html  &) $ d
 
 
 class Showable a where
@@ -45,22 +45,20 @@ instance Showable String where
     toLatex = id
     toHtml = id
 
-instance Showable Commentary where
-    toLatex (Commentary c) = concatMap (LaTeX &) $ c
-    toHtml  (Commentary c) = concatMap (Html  &) $ c
+instance Showable Description where
+    toLatex (Description d) = concatMap (LaTeX &) $ d
+    toHtml  (Description d) = concatMap (Html  &) $ d
 
 
-(.+) :: (Showable a, Showable b) => a -> b -> Commentary
-a .+ b = toCommentary a <> toCommentary b
+(.+) :: (Showable a, Showable b) => a -> b -> Description
+a .+ b = toDescription a <> toDescription b
 
 
-output :: Showable a => OutputType -> a -> String
-output LaTeX = toLatex
-output Html = toHtml
-
-
-toCommentary :: Showable a => a -> Commentary
-toCommentary a = Commentary [flip output a]
+toDescription :: Showable a => a -> Description
+toDescription a = Description [flip output a]
+  where
+    output LaTeX = toLatex
+    output Html = toHtml
 
 
 data Punct = NDash

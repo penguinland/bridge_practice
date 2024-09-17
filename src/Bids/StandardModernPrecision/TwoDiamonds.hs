@@ -36,12 +36,12 @@ import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
             makeAlertableCall, atLeastAsLong, longerThan, forbid, forbidAll,
             balancedHand, soundHolding, makePass, alternatives, forEach,
             minLoserCount, maxLoserCount)
-import Output(Punct(..), (.+), Commentary)
+import Output(Punct(..), (.+), Description)
 import qualified Terminology as T
 
 
 -- This name is too long to write over and over.
-name44Rkc :: Commentary
+name44Rkc :: Description
 name44Rkc = T.Bid 4 T.Clubs .+ "/" .+ T.Bid 4 T.Diamonds .+ "/RKC"
 
 
