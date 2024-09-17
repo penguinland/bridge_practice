@@ -54,13 +54,11 @@ instance Showable Commentary where
 a .+ b = toCommentary a <> toCommentary b
 
 
-output :: Showable a => OutputType -> a -> String
-output LaTeX = toLatex
-output Html = toHtml
-
-
 toCommentary :: Showable a => a -> Commentary
 toCommentary a = Commentary [flip output a]
+  where
+    output LaTeX = toLatex
+    output Html = toHtml
 
 
 data Punct = NDash
