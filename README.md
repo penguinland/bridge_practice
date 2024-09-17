@@ -113,10 +113,10 @@ Here is a rough summary of some of the data types in the code:
 - A `Situation` contains a `dealer` program to generate a deal, plus everything
   else needed to make a `SituationInstance`.
 - `Situations` take in a random number generator and give back a `Situation`.
-  It might be a collection of multiple `Situation`s, or a single `Situation`
-  that can be parameterized (e.g., you can randomly set the vulnerability and
-  dealer, while the rest is unchanged). It is often a collection of collections
-  of parameterizable `Situation`s.
+  It might be a collection of multiple `Situation`s to randomly choose from, or
+  a single `Situation` that can be parameterized (e.g., you can randomly set the
+  vulnerability and dealer, while the rest is unchanged). It is often a
+  collection of collections of parameterizable `Situation`s.
 - A `Topic` is a named `Situations`. When you use this system as a whole, you
   select which `Topic`s you want to practice.
 - `Commentary` is a string-like data type that can render certain things (e.g.,
