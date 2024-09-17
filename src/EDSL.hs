@@ -66,8 +66,9 @@ makeCall :: T.Call -> Action
 makeCall call = modify $ first (addCall $ T.CompleteCall call Nothing)
 
 makeAlertableCall :: Showable a => T.Call -> a -> Action
-makeAlertableCall call alert =
-    modify $ first (addCall $ T.CompleteCall call (Just . toDescription $ alert))
+makeAlertableCall call alert = modify . first $ addCall completeCall
+  where
+    completeCall = T.CompleteCall call (Just . toDescription $ alert)
 
 
 makePass :: Action
