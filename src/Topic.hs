@@ -85,7 +85,7 @@ data Topic = Topic { topicName :: Description
 -- in other files are named that. This is named as a verb to distinguish it from
 -- the values it generates.
 makeTopic :: Showable a => a -> String -> Situations -> Topic
-makeTopic c n s = Topic (toDescription c) n s
+makeTopic d n s = Topic (toDescription d) n s
 
 
 choose :: Topic -> State StdGen Situation

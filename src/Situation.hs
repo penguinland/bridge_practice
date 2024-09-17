@@ -26,7 +26,7 @@ data Situation = Situation String Bidding DealerProg CompleteCall Description
 -- auction and describing the next action that should follow.
 situation :: Showable s => String -> Action -> Action -> s -> Direction ->
     Vulnerability -> Situation
-situation r a c s d = Situation r bidding deal answer (toDescription s) d
+situation r a c s d v = Situation r bidding deal answer (toDescription s) d v
   where
     (bidding, deal) = finish d (a >> withholdBid c)
     answer = extractLastCall c

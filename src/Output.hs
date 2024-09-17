@@ -30,7 +30,7 @@ instance Monoid Description where
     mempty = Description [const ""]
 
 instance ToJSON Description where
-    toJSON (Description c) = toJSON . concatMap (Html  &) $ c
+    toJSON (Description d) = toJSON . concatMap (Html  &) $ d
 
 
 class Showable a where
@@ -46,8 +46,8 @@ instance Showable String where
     toHtml = id
 
 instance Showable Description where
-    toLatex (Description c) = concatMap (LaTeX &) $ c
-    toHtml  (Description c) = concatMap (Html  &) $ c
+    toLatex (Description d) = concatMap (LaTeX &) $ d
+    toHtml  (Description d) = concatMap (Html  &) $ d
 
 
 (.+) :: (Showable a, Showable b) => a -> b -> Description
