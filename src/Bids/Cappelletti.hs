@@ -13,7 +13,7 @@ module Bids.Cappelletti(
 
 
 import Action(Action)
-import Bids.Meckwell(singleSuit, twoSuited)
+import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import CommonBids(weak1NT)
 import EDSL(pointRange, minSuitLength, maxSuitLength, alternatives, forbid,
             makeCall, makeAlertableCall, forEach)
@@ -38,7 +38,7 @@ b1NoX = do
     -- choice probably depends on the vulnerability and the quality of your
     -- suit(s). For now, skip all of that and just suppose that you couldn't
     -- have bid anything else.
-    forEach T.allSuits (forbid . singleSuit)
+    forEach T.allSuits (forbid . singleSuited)
     forEach [ (T.Clubs, T.Diamonds)
             , (T.Clubs, T.Hearts)
             , (T.Clubs, T.Spades)
@@ -56,7 +56,7 @@ b1No2C :: Action
 b1No2C = do
     pointsToCompete
     forbid b1NoX
-    alternatives . map singleSuit $ T.allSuits
+    alternatives . map singleSuited $ T.allSuits
     makeAlertableCall (T.Bid 2 T.Clubs)
                       "single-suited hand (not necessarily clubs)"
 

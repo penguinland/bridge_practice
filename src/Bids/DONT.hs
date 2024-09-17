@@ -1,5 +1,5 @@
 module Bids.DONT(
-    b1N  -- Re-exported from Meckwell
+    b1N  -- Re-exported from StandardOpenings
   , b1NoX
   , b1NoX2C
   , b1No2C
@@ -16,7 +16,8 @@ module Bids.DONT(
 
 
 import Action(Action)
-import Bids.Meckwell(singleSuit, twoSuited, b1N)
+import Bids.StandardOpenings(b1N)
+import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import EDSL(pointRange, alternatives, makeCall, makeAlertableCall, forEach,
             longerThan, minSuitLength, maxSuitLength, soundHolding, forbid,
             forbidAll)
@@ -41,7 +42,7 @@ b1NoX = do
     -- If you're single-suited with spades, bid 2S with a minimum, and
     -- double-then-bid with extras.
     forbid b1No2S
-    alternatives $ map singleSuit T.allSuits
+    alternatives $ map singleSuited T.allSuits
     makeAlertableCall T.Double "single-suited hand"
 
 
@@ -98,7 +99,7 @@ b1No2S = do
     shouldntPreempt
     -- If you've got extra strength, double and then bid 2S afterward.
     pointRange 0 (minPointsToCompete + 2)
-    singleSuit T.Spades
+    singleSuited T.Spades
     makeCall $ T.Bid 2 T.Spades
 
 
