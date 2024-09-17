@@ -8,7 +8,7 @@ module Topic(
   Situations  -- Note that constructors aren't public; use wrap instead.
 , choose
 , wrap
-, wrapVulDlr
+, wrapDlr
 , wrapVulNW
 , wrapVulSE
 , stdWrap
@@ -49,9 +49,9 @@ instance Situationable Situations where
 -- The most common Situation parameters are letting anyone be vulnerable, and
 -- either letting anyone be the dealer, ensuring North is an unpassed hand, or
 -- ensuring South is an unpassed hand. Make some syntactic sugar for that.
-wrapVulDlr :: State StdGen (Direction -> Vulnerability -> Situation) ->
+wrapDlr :: State StdGen (Direction -> Vulnerability -> Situation) ->
     Situations
-wrapVulDlr sit = wrap $ sit <~ allDirections <~ allVulnerabilities
+wrapDlr sit = wrap $ sit <~ allDirections <~ allVulnerabilities
 
 -- By ensuring that only North or West could be dealer, if we make North open
 -- the bidding, we ensure South is an unpassed hand. This is useful when
@@ -70,7 +70,7 @@ wrapVulSE sit = wrap $ sit <~ [South, East] <~ allVulnerabilities
 -- and more syntactic sugar for a Situation that is _only_ parameterized on
 -- those features.
 stdWrap :: (Direction -> Vulnerability -> Situation) -> Situations
-stdWrap = wrapVulDlr . return
+stdWrap = wrapDlr . return
 
 stdWrapNW :: (Direction -> Vulnerability -> Situation) -> Situations
 stdWrapNW = wrapVulNW . return

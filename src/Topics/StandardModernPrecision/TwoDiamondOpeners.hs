@@ -8,7 +8,7 @@ import EDSL(forbid, suitLength, makePass)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, stdWrap, wrapVulDlr, Situations, makeTopic,
+import Topic(Topic, wrap, stdWrap, wrapDlr, Situations, makeTopic,
              wrapVulNW, wrapVulSE, stdWrapNW, stdWrapSE)
 
 
@@ -202,7 +202,7 @@ mixedRaise = let
       in
         situation "mixed" action bid explanation
   in
-    wrapVulDlr $ return sit <~ [B.b2D3H, B.b2D3S]
+    wrapDlr $ return sit <~ [B.b2D3H, B.b2D3S]
 
 
 immediateGameSignoff :: Situations
@@ -359,7 +359,7 @@ invSignoff = let
 --   - Responder signs off in 3N over opener's 3C (they had a slam invite)
 --     (would other game-level rebids be signoff? Probably, but it's much easier
 --     to try 3D before signing off).
---   - Rework setOpener, wrapVulDlr, stdWrap, stdWrapNW, stdWrapSE
+--   - Rework setOpener, wrapDlr, stdWrap, stdWrapNW, stdWrapSE
 --   - DON'T DO 4C/4D/RKC: that should be a separate topic
 
 

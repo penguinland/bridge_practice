@@ -5,7 +5,7 @@ import CommonBids(setOpener, noInterference)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapVulDlr, wrapVulNW, Situations, makeTopic)
+import Topic(Topic, wrap, wrapDlr, wrapVulNW, Situations, makeTopic)
 
 
 simpleRaise :: Situations
@@ -24,7 +24,7 @@ simpleRaise = let
       in
         situation "simpR" action response explanation
   in
-    wrapVulDlr $ return sit <~ [(B.b1H, B.b1H2H), (B.b1S, B.b1S2S)]
+    wrapDlr $ return sit <~ [(B.b1H, B.b1H2H), (B.b1S, B.b1S2S)]
 
 
 limitRaise :: Situations

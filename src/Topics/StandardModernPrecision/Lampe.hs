@@ -7,8 +7,7 @@ import EDSL(alternatives, minSuitLength, forbid, makeCall)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapVulNW, wrapVulSE, Situations, makeTopic,
-             wrapVulDlr)
+import Topic(Topic, wrap, wrapVulNW, wrapVulSE, Situations, makeTopic, wrapDlr)
 
 
 majorSuitImmediateResponse :: Situations
@@ -30,7 +29,7 @@ majorSuitImmediateResponse = let
       in
         situation "1M" action answer explanation
   in
-    wrapVulDlr $ return sit <~ [B.b1D1H, B.b1D1S] <~ [True, False]
+    wrapDlr $ return sit <~ [B.b1D1H, B.b1D1S] <~ [True, False]
 
 
 clubCanape :: Situations
