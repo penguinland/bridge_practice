@@ -13,14 +13,14 @@ import Data.Map(fromList)
 import System.Random(StdGen, genWord64)
 
 import DealerProg(eval)
-import Output(Showable(..), Commentary)
+import Output(Showable(..), Description)
 import Situation(Situation(..))
 import Structures(Bidding, Deal)
 import Terminology(CompleteCall)
 
 
 data SituationInstance =
-    SituationInstance Bidding CompleteCall Commentary Deal String
+    SituationInstance Bidding CompleteCall Description Deal String
 
 
 instance Showable SituationInstance where

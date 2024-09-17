@@ -32,7 +32,7 @@ import Data.List.Utils(join)
 
 import Action(Action, newAuction, constrain)
 import DealerProg(invert)
-import Output(Showable, toCommentary)
+import Output(Showable, toDescription)
 import Structures(addCall, currentBidder)
 import qualified Terminology as T
 
@@ -67,7 +67,7 @@ makeCall call = modify $ first (addCall $ T.CompleteCall call Nothing)
 
 makeAlertableCall :: Showable a => T.Call -> a -> Action
 makeAlertableCall call alert =
-    modify $ first (addCall $ T.CompleteCall call (Just . toCommentary $ alert))
+    modify $ first (addCall $ T.CompleteCall call (Just . toDescription $ alert))
 
 
 makePass :: Action

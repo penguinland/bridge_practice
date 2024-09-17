@@ -20,7 +20,7 @@ import Data.Aeson(ToJSON, toJSON, object, (.=))
 import Data.Aeson.Key(fromString)
 import Data.List(singleton)
 
-import Output(Showable, toLatex, toHtml, Commentary)
+import Output(Showable, toLatex, toHtml, Description)
 
 
 data Direction = North | East | South | West deriving Eq
@@ -119,7 +119,7 @@ instance SuitBid Call where
 
 
 -- A complete call is a call with an optional alerted explanation.
-data CompleteCall = CompleteCall Call (Maybe Commentary)
+data CompleteCall = CompleteCall Call (Maybe Description)
 
 -- The Showable instance is for revealing what the correct answer is; during the
 -- auction we need to do different things for our alerts and our opponents'
