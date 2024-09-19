@@ -1,5 +1,11 @@
 module Topics.TexasTransfers(topic) where
 
+import Control.Monad(when)
+
+import qualified Bids.Cappelletti as Capp
+import qualified Bids.DONT as DONT
+import qualified Bids.Meckwell as MW
+import qualified Bids.NaturalOneNotrumpDefense as Nat
 import qualified Bids.OneNotrump as B
 import CommonBids(setOpener)
 -- TODO: replace makePass with something more intelligent
@@ -200,9 +206,170 @@ transferSlamInviteAccepted = let
                            ,(B.b1N2H, B.b1N2H2S, B.b1N2H2S4S)]
 
 
+transferOverInterference :: Situations
+transferOverInterference = let
+    sit (overcall, transferBid) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            overcall
+        explanation =
+            "Partner opened " .+ T.Bid 1 T.Notrump .+ ", and the next " .+
+            "player interfered. As long as they only bid at the 2 or 3 " .+
+            "level, Texas transfers are still on!"
+        in situation "int" action transferBid explanation
+  in
+    wrapNW $ return sit <~ [ (Nat.b1No2C,  B.b1N4D)
+                           , (Nat.b1No2D,  B.b1N4D)
+                           -- Don't make a transfer to the opponent's suit!
+                           --, (Nat.b1No2H,  B.b1N4D)
+                           , (Nat.b1No2S,  B.b1N4D)
+                           , (MW.b1NoX,    B.b1N4D)
+                           , (MW.b1No2C,   B.b1N4D)
+                           , (MW.b1No2D,   B.b1N4D)
+                           --, (MW.b1No2H,   B.b1N4D)
+                           , (MW.b1No2S,   B.b1N4D)
+                           , (MW.b1No2N,   B.b1N4D)
+                           , (Capp.b1NoX,  B.b1N4D)
+                           , (Capp.b1No2C, B.b1N4D)
+                           --, (Capp.b1No2D, B.b1N4D)
+                           --, (Capp.b1No2H, B.b1N4D)
+                           , (Capp.b1No2S, B.b1N4D)
+                           , (Capp.b1No2N, B.b1N4D)
+                           , (DONT.b1NoX,  B.b1N4D)
+                           , (DONT.b1No2C, B.b1N4D)
+                           , (DONT.b1No2D, B.b1N4D)
+                           --, (DONT.b1No2H, B.b1N4D)
+                           , (DONT.b1No2S, B.b1N4D)
+                           , (DONT.b1No3C, B.b1N4D)
+                           , (DONT.b1No3D, B.b1N4D)
+                           --, (DONT.b1No3H, B.b1N4D)
+                           , (DONT.b1No3S, B.b1N4D)
+                           , (Nat.b1No2C,  B.b1N4H)
+                           , (Nat.b1No2D,  B.b1N4H)
+                           , (Nat.b1No2H,  B.b1N4H)
+                           --, (Nat.b1No2S,  B.b1N4H)
+                           , (MW.b1NoX,    B.b1N4H)
+                           , (MW.b1No2C,   B.b1N4H)
+                           , (MW.b1No2D,   B.b1N4H)
+                           , (MW.b1No2H,   B.b1N4H)
+                           --, (MW.b1No2S,   B.b1N4H)
+                           , (MW.b1No2N,   B.b1N4H)
+                           , (Capp.b1NoX,  B.b1N4H)
+                           , (Capp.b1No2C, B.b1N4H)
+                           --, (Capp.b1No2D, B.b1N4H)
+                           , (Capp.b1No2H, B.b1N4H)
+                           --, (Capp.b1No2S, B.b1N4H)
+                           , (Capp.b1No2N, B.b1N4H)
+                           , (DONT.b1NoX,  B.b1N4H)
+                           , (DONT.b1No2C, B.b1N4H)
+                           , (DONT.b1No2D, B.b1N4H)
+                           --, (DONT.b1No2H, B.b1N4H)
+                           --, (DONT.b1No2S, B.b1N4H)
+                           , (DONT.b1No3C, B.b1N4H)
+                           , (DONT.b1No3D, B.b1N4H)
+                           , (DONT.b1No3H, B.b1N4H)
+                           --, (DONT.b1No3S, B.b1N4H)
+                           ]
+
+
+completeTransferOverInterference :: Situations
+completeTransferOverInterference = let
+    sit (overcall, transferBid, completedTransfer) = let
+        action = do
+            setOpener T.South
+            B.b1N
+            _ <- overcall
+            _ <- transferBid
+            makePass
+        explanation =
+            "We opened " .+ T.Bid 1 T.Notrump .+ ", and the next " .+
+            "player interfered. As long as they only bid at the 2 or 3 " .+
+            "level, Texas transfers are still on! Complete partner's transfer."
+        in situation "int" action completedTransfer explanation
+  in
+    wrapSE $ return sit <~ [ (Nat.b1No2C,  B.b1N4D, B.b1N4D4H)
+                           , (Nat.b1No2D,  B.b1N4D, B.b1N4D4H)
+                           -- No transfers into the opponent's suit!
+                           --, (Nat.b1No2H,  B.b1N4D, B.b1N4D4H)
+                           , (Nat.b1No2S,  B.b1N4D, B.b1N4D4H)
+                           , (MW.b1NoX,    B.b1N4D, B.b1N4D4H)
+                           , (MW.b1No2C,   B.b1N4D, B.b1N4D4H)
+                           , (MW.b1No2D,   B.b1N4D, B.b1N4D4H)
+                           --, (MW.b1No2H,   B.b1N4D, B.b1N4D4H)
+                           , (MW.b1No2S,   B.b1N4D, B.b1N4D4H)
+                           , (MW.b1No2N,   B.b1N4D, B.b1N4D4H)
+                           , (Capp.b1NoX,  B.b1N4D, B.b1N4D4H)
+                           , (Capp.b1No2C, B.b1N4D, B.b1N4D4H)
+                           --, (Capp.b1No2D, B.b1N4D, B.b1N4D4H)
+                           --, (Capp.b1No2H, B.b1N4D, B.b1N4D4H)
+                           , (Capp.b1No2S, B.b1N4D, B.b1N4D4H)
+                           , (Capp.b1No2N, B.b1N4D, B.b1N4D4H)
+                           , (DONT.b1NoX,  B.b1N4D, B.b1N4D4H)
+                           , (DONT.b1No2C, B.b1N4D, B.b1N4D4H)
+                           , (DONT.b1No2D, B.b1N4D, B.b1N4D4H)
+                           --, (DONT.b1No2H, B.b1N4D, B.b1N4D4H)
+                           , (DONT.b1No2S, B.b1N4D, B.b1N4D4H)
+                           , (DONT.b1No3C, B.b1N4D, B.b1N4D4H)
+                           , (DONT.b1No3D, B.b1N4D, B.b1N4D4H)
+                           --, (DONT.b1No3H, B.b1N4D, B.b1N4D4H)
+                           , (DONT.b1No3S, B.b1N4D, B.b1N4D4H)
+                           , (Nat.b1No2C,  B.b1N4H, B.b1N4H4S)
+                           , (Nat.b1No2D,  B.b1N4H, B.b1N4H4S)
+                           , (Nat.b1No2H,  B.b1N4H, B.b1N4H4S)
+                           --, (Nat.b1No2S,  B.b1N4H, B.b1N4H4S)
+                           , (MW.b1NoX,    B.b1N4H, B.b1N4H4S)
+                           , (MW.b1No2C,   B.b1N4H, B.b1N4H4S)
+                           , (MW.b1No2D,   B.b1N4H, B.b1N4H4S)
+                           , (MW.b1No2H,   B.b1N4H, B.b1N4H4S)
+                           --, (MW.b1No2S,   B.b1N4H, B.b1N4H4S)
+                           , (MW.b1No2N,   B.b1N4H, B.b1N4H4S)
+                           , (Capp.b1NoX,  B.b1N4H, B.b1N4H4S)
+                           , (Capp.b1No2C, B.b1N4H, B.b1N4H4S)
+                           --, (Capp.b1No2D, B.b1N4H, B.b1N4H4S)
+                           , (Capp.b1No2H, B.b1N4H, B.b1N4H4S)
+                           --, (Capp.b1No2S, B.b1N4H, B.b1N4H4S)
+                           , (Capp.b1No2N, B.b1N4H, B.b1N4H4S)
+                           , (DONT.b1NoX,  B.b1N4H, B.b1N4H4S)
+                           , (DONT.b1No2C, B.b1N4H, B.b1N4H4S)
+                           , (DONT.b1No2D, B.b1N4H, B.b1N4H4S)
+                           --, (DONT.b1No2H, B.b1N4H, B.b1N4H4S)
+                           --, (DONT.b1No2S, B.b1N4H, B.b1N4H4S)
+                           , (DONT.b1No3C, B.b1N4H, B.b1N4H4S)
+                           , (DONT.b1No3D, B.b1N4H, B.b1N4H4S)
+                           , (DONT.b1No3H, B.b1N4H, B.b1N4H4S)
+                           --, (DONT.b1No3S, B.b1N4H, B.b1N4H4S)
+                           ]
+
+
+completeTransferOverInterferenceCuebid :: Situations
+completeTransferOverInterferenceCuebid = let
+    sit (overcall, transferBid, completedTransfer, isShort) = let
+        action = do
+            setOpener T.South
+            B.b1N
+            _ <- overcall
+            _ <- transferBid
+            makePass
+            when isShort $ maxSuitLength (T.suitBid completedTransfer) 2
+        explanation =
+            "We opened " .+ T.Bid 1 T.Notrump .+ ", and the next " .+
+            "player interfered. As long as they only bid at the 2 or 3 " .+
+            "level, Texas transfers are still on! Partner's bid is a " .+
+            "Texas transfer, not a cue bid: complete the transfer" .+
+            (if isShort then ", even if we're short in the suit." else "") .+
+            "."
+        in situation "int" action completedTransfer explanation
+  in
+    wrapSE $ return sit <~ [ (DONT.b1No3D, B.b1N4D, B.b1N4D4H, True)
+                           , (DONT.b1No3H, B.b1N4H, B.b1N4H4S, True)
+                           , (DONT.b1No3D, B.b1N4D, B.b1N4D4H, False)
+                           , (DONT.b1No3H, B.b1N4H, B.b1N4H4S, False)
+                           ]
+
+
 -- TODO: More situations:
 -- 6-4 in majors: Stayman, then Texas if necessary (from both perspectives)
--- Texas after interference (from both perspectives, special-case the cue bids)
 
 
 topic :: Topic
@@ -217,5 +384,11 @@ topic = makeTopic "Texas transfers" "TexTr" situations
                              , transferSlamInvite
                              , transferSlamInviteDeclined
                              , transferSlamInviteAccepted
+                             ]
+                      , wrap [ transferOverInterference
+                             , transferOverInterference
+                             , completeTransferOverInterference
+                             , completeTransferOverInterference
+                             , completeTransferOverInterferenceCuebid
                              ]
                       ]
