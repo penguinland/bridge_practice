@@ -1,7 +1,6 @@
-{-# LANGUAGE RankNTypes #-}  -- Add the `forall` keyword
 {-# LANGUAGE FlexibleInstances #-}  -- `State StdGen p` can be in a class
-{-# LANGUAGE MultiParamTypeClasses #-}  -- Lets Parameterizable take 2 args
-{-# LANGUAGE FlexibleContexts #-}  -- Lets you have `Parameterizable p (a -> b)`
+{-# LANGUAGE TypeFamilies #-}  -- Lets you define a type inside a class
+--{-# LANGUAGE RankNTypes #-}  -- Lets you use `forall`
 
 module Situation (
   Situation(..)
@@ -42,15 +41,23 @@ sitRef :: Situation -> String
 sitRef (Situation r _ _ _ _ _ _) = r
 
 
-class Parameterizable p q where
-    toPreSituation :: p -> State StdGen q
+class Parameterizable p where
+    type StatedType p
+    toPreSituation :: p -> StatedType p
 
-instance Parameterizable (State StdGen p) p where
-    toPreSituation = id
-
-instance Parameterizable p p where
+instance Parameterizable Situation where
+    type StatedType Situation = State StdGen Situation
     toPreSituation = return
 
+instance (Parameterizable q) => Parameterizable (p -> q) where
+    type StatedType (p -> q) = State StdGen (p -> q)
+    toPreSituation = return
 
-(<~) :: forall p a b. Parameterizable p (a -> b) => p -> [a] -> State StdGen b
+instance (Parameterizable p) => Parameterizable (State StdGen p) where
+    type StatedType (State StdGen p) = State StdGen p
+    toPreSituation = id
+
+
+-- TODO: this is still wrong.
+(<~) :: Parameterizable (a -> b) => (a -> b) -> [a] -> State StdGen b
 sf <~ as = toPreSituation sf <*> pickItem as
