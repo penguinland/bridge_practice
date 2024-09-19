@@ -1,7 +1,13 @@
+{-# LANGUAGE RankNTypes #-}  -- Add the `forall` keyword
+{-# LANGUAGE FlexibleInstances #-}  -- `State StdGen p` can be in a class
+{-# LANGUAGE MultiParamTypeClasses #-}  -- Lets Parameterizable take 2 args
+{-# LANGUAGE FlexibleContexts #-}  -- Lets you have `Parameterizable p (a -> b)`
+
 module Situation (
   Situation(..)
 , situation
 , sitRef
+, Parameterizable
 , (<~)
 ) where
 
@@ -36,5 +42,15 @@ sitRef :: Situation -> String
 sitRef (Situation r _ _ _ _ _ _) = r
 
 
-(<~) :: State StdGen (a -> b) -> [a] -> State StdGen b
-sf <~ as = sf <*> pickItem as
+class Parameterizable p q where
+    toPreSituation :: p -> State StdGen q
+
+instance Parameterizable (State StdGen p) p where
+    toPreSituation = id
+
+instance Parameterizable p p where
+    toPreSituation = return
+
+
+(<~) :: forall p a b. Parameterizable p (a -> b) => p -> [a] -> State StdGen b
+sf <~ as = toPreSituation sf <*> pickItem as
