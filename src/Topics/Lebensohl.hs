@@ -92,7 +92,7 @@ signoff = let
 
 gameForce :: Situations
 gameForce = let
-    sit (overcall, response) = let
+    sit (overcall, responses) dlr vul = let
         action = do
             setOpener T.North
             Leb.b1N
@@ -102,13 +102,29 @@ gameForce = let
             "with the auction. We're at least game-forcing, so should " .+
             "bid our suit at the 3 level. Partner will bid naturally, and " .+
             "we'll find a game (likely either our suit or notrump)."
-      in situation "gfnat" action response explanation
+        inner response = situation "gfnat" action response explanation dlr vul
+      in wrap $ return inner <~ responses
   in
-    wrap $ return sit <~ [
-                         ]
-                      -- East should be an unpassed hand to interfere.
-                      <~ [T.North, T.South, T.West]
-                      <~ T.allVulnerabilities
+    wrap $ return sit
+        <~ [ (Nat.b1No2D,  [Leb.b1No2D3C, Leb.b1No2D3H, Leb.b1No2D3S])
+           , (Nat.b1No2H,  [Leb.b1No2H3C, Leb.b1No2H3D, Leb.b1No2H3S])
+           , (Nat.b1No2S,  [Leb.b1No2S3C, Leb.b1No2S3D, Leb.b1No2S3H])
+           , (DONT.b1No2D, [Leb.b1No2D3C, Leb.b1No2D3H, Leb.b1No2D3S])
+           -- Don't bid either major when the opponents have shown both
+           , (DONT.b1No2H, [Leb.b1No2H3C, Leb.b1No2H3D])
+           , (DONT.b1No2S, [Leb.b1No2S3C, Leb.b1No2S3D, Leb.b1No2S3H])
+           , (MW.b1No2D,   [Leb.b1No2D3C, Leb.b1No2D3H, Leb.b1No2D3S])
+           , (MW.b1No2H,   [Leb.b1No2H3C, Leb.b1No2H3D, Leb.b1No2H3S])
+           , (MW.b1No2S,   [Leb.b1No2S3C, Leb.b1No2S3D, Leb.b1No2S3H])
+           -- Again, don't bid a major when RHO has them both.
+           -- TODO: what do you do if you want to show diamonds!?
+           , (Capp.b1No2D, [Leb.b1No2D3C])
+           , (Capp.b1No2H, [Leb.b1No2H3C, Leb.b1No2H3D, Leb.b1No2H3S])
+           , (Capp.b1No2S, [Leb.b1No2S3C, Leb.b1No2S3D, Leb.b1No2S3H])
+           ]
+        -- East should be an unpassed hand to interfere.
+        <~ [T.North, T.South, T.West]
+        <~ T.allVulnerabilities
 
 
 -- TODO:
