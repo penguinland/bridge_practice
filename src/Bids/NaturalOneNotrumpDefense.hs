@@ -10,7 +10,6 @@ module Bids.NaturalOneNotrumpDefense(
   -- Export these helpers for other defenses against 1N, too
   , singleSuited
   , twoSuited
-  , shouldntPreempt
 ) where
 
 

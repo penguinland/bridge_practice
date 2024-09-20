@@ -8,7 +8,7 @@ module Bids.DONT(
   , b1No2D2H
   , b1No2H
   , b1No2S
-  , b1No3C
+  , b1No3C  -- These next four are all re-exported from NaturalOneNotrumpDefense
   , b1No3D
   , b1No3H
   , b1No3S
@@ -17,10 +17,9 @@ module Bids.DONT(
 
 import Action(Action)
 import Bids.StandardOpenings(b1N)
-import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
+import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited, b1No3C, b1No3D, b1No3H, b1No3S)
 import EDSL(pointRange, alternatives, makeCall, makeAlertableCall, forEach,
-            longerThan, minSuitLength, maxSuitLength, soundHolding, forbid,
-            forbidAll)
+            longerThan, minSuitLength, forbid)
 import qualified Terminology as T
 
 
@@ -37,7 +36,6 @@ pointsToCompete = pointRange minPointsToCompete 40
 
 b1NoX :: Action
 b1NoX = do
-    shouldntPreempt
     pointsToCompete
     -- If you're single-suited with spades, bid 2S with a minimum, and
     -- double-then-bid with extras.
@@ -96,33 +94,7 @@ b1No2H = do
 b1No2S :: Action
 b1No2S = do
     pointsToCompete
-    shouldntPreempt
     -- If you've got extra strength, double and then bid 2S afterward.
     pointRange 0 (minPointsToCompete + 2)
     singleSuited T.Spades
     makeCall $ T.Bid 2 T.Spades
-
-
-preempt_ :: T.Suit -> Action
-preempt_ suit = do
-    pointsToCompete
-    minSuitLength suit 7
-    soundHolding suit  -- Don't do this with a bad suit, even if you're nonvul.
-    -- Some people are reluctant to pre-empt if they've got a side 4-card major.
-    forEach (filter (/= suit) T.majorSuits) (`maxSuitLength` 3)
-    makeCall $ T.Bid 3 suit
-
-b1No3C :: Action
-b1No3C = preempt_ T.Clubs
-
-b1No3D :: Action
-b1No3D = preempt_ T.Diamonds
-
-b1No3H :: Action
-b1No3H = preempt_ T.Hearts
-
-b1No3S :: Action
-b1No3S = preempt_ T.Spades
-
-shouldntPreempt :: Action
-shouldntPreempt = forbidAll[b1No3C, b1No3D, b1No3H, b1No3S]
