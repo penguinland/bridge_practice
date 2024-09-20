@@ -9,15 +9,28 @@ module Bids.Lebensohl(
   , b1No2C2D
   , b1No2C2H
    -- Actual lebensohl bids
+  , b1No2C3D
+  , b1No2C3H
+  , b1No2C3S
   , b1No2D2H
   , b1No2D2S
+  , b1No2D3C
+  , b1No2D3H
+  , b1No2D3S
   , b1No2H2S
+  , b1No2H3C
+  , b1No2H3D
+  , b1No2H3S
+  , b1No2S3C
+  , b1No2S3D
+  , b1No2S3H
 ) where
 
 
 import Action(Action, withholdBid)
 import qualified Bids.OneNotrump as NT
-import EDSL(minSuitLength, makeCall, longerThan, pointRange)
+import EDSL(minSuitLength, makeCall, longerThan, atLeastAsLong, pointRange,
+            forbid, balancedHand, hasStopper, alternatives)
 import qualified Terminology as T
 
 
@@ -76,8 +89,96 @@ b1No2H2S :: Action
 b1No2H2S = b1No2D2S
 
 
-gfWithSuit_ :: T.Suit -> Action
-gfWithSuit_ suit = do
+gfWithSuit_ :: T.Suit -> T.Suit -> Action
+gfWithSuit_ ourSuit oppsSuit = do
     NT.gameForcing
-    minSuitLength suit 5
-    makeCall $ T.Bid 3 suit
+    minSuitLength ourSuit 5
+    -- Prefer notrump when possible
+    alternatives [forbid balancedHand, forbid (hasStopper oppsSuit)]
+    makeCall $ T.Bid 3 ourSuit
+
+-- With 5-5 in two suits, bid the higher one, so you can rebid the lower one
+-- later.
+b1No2D3C :: Action
+b1No2D3C = do
+    T.Clubs `longerThan` T.Diamonds
+    T.Clubs `longerThan` T.Hearts
+    T.Clubs `longerThan` T.Spades
+    gfWithSuit_ T.Clubs T.Diamonds
+
+b1No2H3C :: Action
+b1No2H3C = do
+    T.Clubs `longerThan` T.Diamonds
+    T.Clubs `longerThan` T.Hearts
+    T.Clubs `longerThan` T.Spades
+    gfWithSuit_ T.Clubs T.Hearts
+
+b1No2S3C :: Action
+b1No2S3C = do
+    T.Clubs `longerThan` T.Diamonds
+    T.Clubs `longerThan` T.Hearts
+    T.Clubs `longerThan` T.Spades
+    gfWithSuit_ T.Clubs T.Spades
+
+b1No2C3D :: Action
+b1No2C3D = do
+    T.Diamonds `atLeastAsLong` T.Clubs
+    T.Diamonds `longerThan` T.Hearts
+    T.Diamonds `longerThan` T.Spades
+    gfWithSuit_ T.Diamonds T.Clubs
+
+b1No2H3D :: Action
+b1No2H3D = do
+    T.Diamonds `atLeastAsLong` T.Clubs
+    T.Diamonds `longerThan` T.Hearts
+    T.Diamonds `longerThan` T.Spades
+    gfWithSuit_ T.Diamonds T.Hearts
+
+b1No2S3D :: Action
+b1No2S3D = do
+    T.Diamonds `atLeastAsLong` T.Clubs
+    T.Diamonds `longerThan` T.Hearts
+    T.Diamonds `longerThan` T.Spades
+    gfWithSuit_ T.Diamonds T.Spades
+
+b1No2C3H :: Action
+b1No2C3H = do
+    T.Hearts `atLeastAsLong` T.Clubs
+    T.Hearts `atLeastAsLong` T.Diamonds
+    T.Hearts `longerThan` T.Spades
+    gfWithSuit_ T.Hearts T.Clubs
+
+b1No2D3H :: Action
+b1No2D3H = do
+    T.Hearts `atLeastAsLong` T.Clubs
+    T.Hearts `atLeastAsLong` T.Diamonds
+    T.Hearts `longerThan` T.Spades
+    gfWithSuit_ T.Hearts T.Diamonds
+
+b1No2S3H :: Action
+b1No2S3H = do
+    T.Hearts `atLeastAsLong` T.Clubs
+    T.Hearts `atLeastAsLong` T.Diamonds
+    T.Hearts `longerThan` T.Spades
+    gfWithSuit_ T.Hearts T.Spades
+
+b1No2C3S :: Action
+b1No2C3S = do
+    T.Spades `atLeastAsLong` T.Clubs
+    T.Spades `atLeastAsLong` T.Diamonds
+    T.Spades `atLeastAsLong` T.Hearts
+    gfWithSuit_ T.Spades T.Clubs
+
+b1No2D3S :: Action
+b1No2D3S = do
+    T.Spades `atLeastAsLong` T.Clubs
+    T.Spades `atLeastAsLong` T.Diamonds
+    T.Spades `atLeastAsLong` T.Hearts
+    gfWithSuit_ T.Spades T.Diamonds
+
+b1No2H3S :: Action
+b1No2H3S = do
+    T.Spades `atLeastAsLong` T.Clubs
+    T.Spades `atLeastAsLong` T.Diamonds
+    T.Spades `atLeastAsLong` T.Hearts
+    gfWithSuit_ T.Spades T.Hearts

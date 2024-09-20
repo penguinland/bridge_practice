@@ -124,7 +124,7 @@ hasStopper suit = alternatives [
     hasTopN suit 1 1                          -- A
   , hasTopN suit 2 1 >> minSuitLength suit 2  -- Kx
   , hasTopN suit 4 2 >> minSuitLength suit 3  -- QJx
-  , hasTopN suit 5 2 >> minSuitLength suit 4  -- J10xx
+  , hasTopN suit 6 3 >> minSuitLength suit 4  -- J109x
   ]
 
 
