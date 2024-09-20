@@ -22,16 +22,8 @@ import Output ((.+))
 import qualified Terminology as T
 
 
--- What's the right minimum strength to bid Meckwell? It kinda depends on the
--- vulnerability and where in the hand this strength is located. Let's guess 10
--- is a pretty decent minimum, but I'm open to changing it later.
-pointsToCompete :: Action
-pointsToCompete = pointRange 10 40
-
-
 b1NoX :: Action
 b1NoX = do
-    pointsToCompete
     alternatives [ singleSuited T.Clubs
                  , singleSuited T.Diamonds
                  , twoSuited T.Hearts T.Spades
@@ -41,7 +33,6 @@ b1NoX = do
 
 minorAndMajor :: T.Suit -> Action
 minorAndMajor minor = do
-    pointsToCompete
     alternatives [twoSuited minor T.Hearts, twoSuited minor T.Spades]
     makeAlertableCall (T.Bid 2 minor) (show minor .+ " and a major")
 
@@ -54,20 +45,17 @@ b1No2D = minorAndMajor T.Diamonds
 
 b1No2H :: Action
 b1No2H = do
-    pointsToCompete
     singleSuited T.Hearts
     makeCall $ T.Bid 2 T.Hearts
 
 b1No2S :: Action
 b1No2S = do
-    pointsToCompete
     singleSuited T.Spades
     makeCall $ T.Bid 2 T.Spades
 
 
 b1No2N :: Action
 b1No2N = do
-    pointsToCompete
     twoSuited T.Clubs T.Diamonds
     makeAlertableCall (T.Bid 2 T.Notrump) "both minors"
 

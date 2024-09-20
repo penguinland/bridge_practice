@@ -17,26 +17,15 @@ module Bids.DONT(
 
 import Action(Action)
 import Bids.StandardOpenings(b1N)
-import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited, b1No3C, b1No3D, b1No3H, b1No3S)
+import Bids.NaturalOneNotrumpDefense(
+    singleSuited, twoSuited, b1No3C, b1No3D, b1No3H, b1No3S, minPointsToCompete)
 import EDSL(pointRange, alternatives, makeCall, makeAlertableCall, forEach,
             longerThan, minSuitLength, forbid)
 import qualified Terminology as T
 
 
-
--- What's the right minimum strength to bid DONT? It kinda depends on the
--- vulnerability and where in the hand this strength is located. Let's guess 10
--- is a pretty decent minimum, but I'm open to changing it later.
-minPointsToCompete :: Int
-minPointsToCompete = 10
-
-pointsToCompete :: Action
-pointsToCompete = pointRange minPointsToCompete 40
-
-
 b1NoX :: Action
 b1NoX = do
-    pointsToCompete
     -- If you're single-suited with spades, bid 2S with a minimum, and
     -- double-then-bid with extras.
     forbid b1No2S
@@ -50,7 +39,6 @@ b1NoX2C = makeAlertableCall (T.Bid 2 T.Clubs) "pass or correct"
 
 b1No2C :: Action
 b1No2C = do
-    pointsToCompete
     alternatives $ map (twoSuited T.Clubs) [T.Diamonds, T.Hearts, T.Spades]
     makeAlertableCall (T.Bid 2 T.Clubs) "clubs and another suit"
 
@@ -68,7 +56,6 @@ b1No2C2D = do
 
 b1No2D :: Action
 b1No2D = do
-    pointsToCompete
     alternatives $ map (twoSuited T.Diamonds) T.majorSuits
     makeAlertableCall (T.Bid 2 T.Diamonds) "diamonds and a major"
 
@@ -86,14 +73,12 @@ b1No2D2H = do
 
 b1No2H :: Action
 b1No2H = do
-    pointsToCompete
     twoSuited T.Hearts T.Spades
     makeAlertableCall (T.Bid 2 T.Hearts) "both majors"
 
 
 b1No2S :: Action
 b1No2S = do
-    pointsToCompete
     -- If you've got extra strength, double and then bid 2S afterward.
     pointRange 0 (minPointsToCompete + 2)
     singleSuited T.Spades

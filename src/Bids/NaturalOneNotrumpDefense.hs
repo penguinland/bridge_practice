@@ -8,6 +8,8 @@ module Bids.NaturalOneNotrumpDefense(
   , b1No3H
   , b1No3S
   -- Export these helpers for other defenses against 1N, too
+  , minPointsToCompete
+  , pointsToCompete
   , singleSuited
   , twoSuited
 ) where
@@ -22,12 +24,16 @@ import qualified Terminology as T
 -- What's the right minimum strength to overcall? It kinda depends on the
 -- vulnerability and where in the hand this strength is located. Let's guess 10
 -- is a pretty decent minimum, but I'm open to changing it later.
+minPointsToCompete :: Int
+minPointsToCompete = 10
+
 pointsToCompete :: Action
-pointsToCompete = pointRange 10 40
+pointsToCompete = pointRange minPointsToCompete 40
 
 
 singleSuited :: T.Suit -> Action
 singleSuited suit = do
+    pointsToCompete
     minSuitLength suit 6
     shouldntPreempt
     soundHolding suit
@@ -42,6 +48,7 @@ singleSuited suit = do
 -- need opinions from someone who has better fundamentals on this stuff.
 twoSuited :: T.Suit -> T.Suit -> Action
 twoSuited a b = do
+    pointsToCompete
     -- With a 6-card suit, you might be better off treating your hand as
     -- single-suited, depending on the suit quality. Rather than program all
     -- that nuance in, we limit ourselves to either 5-4 or 5-5 shapes.

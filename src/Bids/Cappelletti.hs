@@ -24,13 +24,6 @@ b1N :: Action
 b1N = weak1NT
 
 
--- What's the right minimum strength to bid Cappelletti? It kinda depends on the
--- vulnerability and where in the hand this strength is located. Let's guess 10
--- is a pretty decent minimum, but I'm open to changing it later.
-pointsToCompete :: Action
-pointsToCompete = pointRange 10 40
-
-
 b1NoX :: Action
 b1NoX = do
     pointRange 16 40
@@ -54,7 +47,6 @@ b1NoX = do
 -- the vulnerability.
 b1No2C :: Action
 b1No2C = do
-    pointsToCompete
     forbid b1NoX
     alternatives . map singleSuited $ T.allSuits
     makeAlertableCall (T.Bid 2 T.Clubs)
@@ -67,7 +59,6 @@ b1No2C2D = makeAlertableCall (T.Bid 2 T.Diamonds) "what is your suit?"
 
 b1No2D :: Action
 b1No2D = do
-    pointsToCompete
     forbid b1NoX
     twoSuited T.Hearts T.Spades
     makeAlertableCall (T.Bid 2 T.Diamonds) "both majors"
@@ -75,7 +66,6 @@ b1No2D = do
 
 b1No2H :: Action
 b1No2H = do
-    pointsToCompete
     forbid b1NoX
     alternatives . map (twoSuited T.Hearts) $ T.minorSuits
     makeAlertableCall (T.Bid 2 T.Hearts) "hearts and a minor"
@@ -83,7 +73,6 @@ b1No2H = do
 
 b1No2S :: Action
 b1No2S = do
-    pointsToCompete
     forbid b1NoX
     alternatives . map (twoSuited T.Spades) $ T.minorSuits
     makeAlertableCall (T.Bid 2 T.Spades) "spades and a minor"
@@ -91,7 +80,6 @@ b1No2S = do
 
 b1No2N :: Action
 b1No2N = do
-    pointsToCompete
     forbid b1NoX
     twoSuited T.Clubs T.Diamonds
     makeAlertableCall (T.Bid 2 T.Notrump) "both minors"
