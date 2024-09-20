@@ -74,3 +74,10 @@ b1No2D2S = do
 
 b1No2H2S :: Action
 b1No2H2S = b1No2D2S
+
+
+gfWithSuit_ :: T.Suit -> Action
+gfWithSuit_ suit = do
+    NT.gameForcing
+    minSuitLength suit 5
+    makeCall $ T.Bid 3 suit
