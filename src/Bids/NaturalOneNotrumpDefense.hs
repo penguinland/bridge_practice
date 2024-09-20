@@ -3,15 +3,20 @@ module Bids.NaturalOneNotrumpDefense(
   , b1No2D
   , b1No2H
   , b1No2S
+  , b1No3C
+  , b1No3D
+  , b1No3H
+  , b1No3S
   -- Export these helpers for other defenses against 1N, too
   , singleSuited
   , twoSuited
+  , shouldntPreempt
 ) where
 
 
 import Action(Action)
 import EDSL(pointRange, minSuitLength, maxSuitLength, makeCall, alternatives,
-            soundHolding, forEach)
+            soundHolding, forEach, forbidAll)
 import qualified Terminology as T
 
 
@@ -25,6 +30,7 @@ pointsToCompete = pointRange 10 40
 singleSuited :: T.Suit -> Action
 singleSuited suit = do
     minSuitLength suit 6
+    shouldntPreempt
     soundHolding suit
     forEach (filter (/= suit) T.allSuits) (`maxSuitLength` 3)
 
@@ -72,3 +78,29 @@ b1No2H = naturalSingleSuit_ T.Hearts
 
 b1No2S :: Action
 b1No2S = naturalSingleSuit_ T.Spades
+
+
+preempt_ :: T.Suit -> Action
+preempt_ suit = do
+    pointsToCompete
+    -- TODO: Would you still bid at the 4 level with an 8-card suit?
+    minSuitLength suit 7
+    soundHolding suit  -- Don't do this with a bad suit, even if you're nonvul.
+    -- Some people are reluctant to pre-empt if they've got a side 4-card major.
+    forEach (filter (/= suit) T.majorSuits) (`maxSuitLength` 3)
+    makeCall $ T.Bid 3 suit
+
+b1No3C :: Action
+b1No3C = preempt_ T.Clubs
+
+b1No3D :: Action
+b1No3D = preempt_ T.Diamonds
+
+b1No3H :: Action
+b1No3H = preempt_ T.Hearts
+
+b1No3S :: Action
+b1No3S = preempt_ T.Spades
+
+shouldntPreempt :: Action
+shouldntPreempt = forbidAll[b1No3C, b1No3D, b1No3H, b1No3S]
