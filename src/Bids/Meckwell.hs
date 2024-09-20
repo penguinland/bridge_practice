@@ -16,8 +16,8 @@ module Bids.Meckwell(
 import Action(Action)
 import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import Bids.StandardOpenings(b1N)
-import EDSL(pointRange, minSuitLength, maxSuitLength, makeCall, alternatives,
-            makeAlertableCall, forEach)
+import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
+            alternatives, forEach)
 import Output ((.+))
 import qualified Terminology as T
 
