@@ -90,6 +90,27 @@ signoff = let
                       <~ T.allVulnerabilities
 
 
+gameForce :: Situations
+gameForce = let
+    sit (overcall, response) = let
+        action = do
+            setOpener T.North
+            B.b1N
+            overcall
+        explanation =
+            "Partner opened a strong " .+ B.b1N .+ ", and RHO interfered " .+
+            "with the auction. We're at least game-forcing, so should " .+
+            "bid our suit at the 3 level. Partner will bid naturally, and " .+
+            "we'll find a game (likely either our suit or notrump)."
+      in situation "gfnat" action response explanation
+  in
+    wrap $ return sit <~ [
+                         ]
+                      -- East should be an unpassed hand to interfere.
+                      <~ [T.North, T.South, T.West]
+                      <~ T.allVulnerabilities
+
+
 -- TODO:
 -- natural GF bids at the 3 level
 -- jump to 3N
@@ -108,4 +129,5 @@ topic = makeTopic
   where
     situations = wrap [ ignoreOpps
                       , signoff
+                      , gameForce
                       ]
