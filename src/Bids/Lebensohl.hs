@@ -106,6 +106,7 @@ primarySuit_ T.Spades = do
     T.Spades `atLeastAsLong` T.Clubs
     T.Spades `atLeastAsLong` T.Diamonds
     T.Spades `atLeastAsLong` T.Hearts
+primarySuit_ T.Notrump = error "notrump is not a primary suit"
 
 
 gfWithSuit_ :: T.Suit -> T.Suit -> Action
