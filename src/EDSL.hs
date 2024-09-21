@@ -107,7 +107,13 @@ maxSuitLength :: T.Suit -> Int -> Action
 maxSuitLength = suitLengthOp "<=" "le"
 
 
+-- NOTE: this only works when the first argument is 5 or lower: dealer doesn't
+-- support checking "3 of the top 6" or similar, without redefining one of the
+-- alternate point counts specifically for it.
 hasTopN :: T.Suit -> Int -> Int -> Action
+hasTopN suit 1     minCount = do
+    constrain (join "_" [show suit, show minCount, "of", "top1"])
+              ["aces(", ", " ++ show suit ++ ") >= " ++ show minCount]
 hasTopN suit range minCount = do
     constrain (join "_" [show suit, show minCount, "of", "top", show range])
               ["top" ++ show range ++ "(", ", " ++ show suit ++
@@ -119,12 +125,15 @@ hasControl :: T.Suit -> Action
 hasControl suit = alternatives [hasTopN suit 2 1, maxSuitLength suit 1]
 
 
+-- TODO: Is Q10x a stopper? Maybe, maybe not. Similarly, is J10xx good enough,
+-- or should we really have J109x? If the latter, we'll need to redefine one of
+-- the alternate point counts or build something complicated with hasCard().
 hasStopper :: T.Suit -> Action
 hasStopper suit = alternatives [
     hasTopN suit 1 1                          -- A
   , hasTopN suit 2 1 >> minSuitLength suit 2  -- Kx
   , hasTopN suit 4 2 >> minSuitLength suit 3  -- QJx
-  , hasTopN suit 6 3 >> minSuitLength suit 4  -- J109x
+  , hasTopN suit 5 3 >> minSuitLength suit 4  -- J10xx
   ]
 
 

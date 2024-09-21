@@ -30,7 +30,7 @@ module Bids.Lebensohl(
 import Action(Action, withholdBid)
 import qualified Bids.OneNotrump as NT
 import EDSL(minSuitLength, makeCall, longerThan, atLeastAsLong, pointRange,
-            forbid, balancedHand, hasStopper, alternatives)
+            forbid, balancedHand, hasStopper, alternatives, soundHolding)
 import qualified Terminology as T
 
 
@@ -93,6 +93,9 @@ gfWithSuit_ :: T.Suit -> T.Suit -> Action
 gfWithSuit_ ourSuit oppsSuit = do
     NT.gameForcing
     minSuitLength ourSuit 5
+    -- It's no fun when you bid a suit headed by the queen-nine. Probably do
+    -- that at the table, but practice the more obvious holdings instead.
+    soundHolding ourSuit
     -- Prefer notrump when possible
     alternatives [forbid balancedHand, forbid (hasStopper oppsSuit)]
     makeCall $ T.Bid 3 ourSuit
