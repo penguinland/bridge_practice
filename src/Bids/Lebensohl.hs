@@ -89,6 +89,25 @@ b1No2H2S :: Action
 b1No2H2S = b1No2D2S
 
 
+primarySuit_ :: T.Suit -> Action
+primarySuit_ T.Clubs = do
+    T.Clubs `longerThan` T.Diamonds
+    T.Clubs `longerThan` T.Hearts
+    T.Clubs `longerThan` T.Spades
+primarySuit_ T.Diamonds = do
+    T.Diamonds `atLeastAsLong` T.Clubs
+    T.Diamonds `longerThan` T.Hearts
+    T.Diamonds `longerThan` T.Spades
+primarySuit_ T.Hearts = do
+    T.Hearts `atLeastAsLong` T.Clubs
+    T.Hearts `atLeastAsLong` T.Diamonds
+    T.Hearts `longerThan` T.Spades
+primarySuit_ T.Spades = do
+    T.Spades `atLeastAsLong` T.Clubs
+    T.Spades `atLeastAsLong` T.Diamonds
+    T.Spades `atLeastAsLong` T.Hearts
+
+
 gfWithSuit_ :: T.Suit -> T.Suit -> Action
 gfWithSuit_ ourSuit oppsSuit = do
     NT.gameForcing
@@ -104,84 +123,60 @@ gfWithSuit_ ourSuit oppsSuit = do
 -- later.
 b1No2D3C :: Action
 b1No2D3C = do
-    T.Clubs `longerThan` T.Diamonds
-    T.Clubs `longerThan` T.Hearts
-    T.Clubs `longerThan` T.Spades
+    primarySuit_ T.Clubs
     gfWithSuit_ T.Clubs T.Diamonds
 
 b1No2H3C :: Action
 b1No2H3C = do
-    T.Clubs `longerThan` T.Diamonds
-    T.Clubs `longerThan` T.Hearts
-    T.Clubs `longerThan` T.Spades
+    primarySuit_ T.Clubs
     gfWithSuit_ T.Clubs T.Hearts
 
 b1No2S3C :: Action
 b1No2S3C = do
-    T.Clubs `longerThan` T.Diamonds
-    T.Clubs `longerThan` T.Hearts
-    T.Clubs `longerThan` T.Spades
+    primarySuit_ T.Clubs
     gfWithSuit_ T.Clubs T.Spades
 
 b1No2C3D :: Action
 b1No2C3D = do
-    T.Diamonds `atLeastAsLong` T.Clubs
-    T.Diamonds `longerThan` T.Hearts
-    T.Diamonds `longerThan` T.Spades
+    primarySuit_ T.Diamonds
     gfWithSuit_ T.Diamonds T.Clubs
 
 b1No2H3D :: Action
 b1No2H3D = do
-    T.Diamonds `atLeastAsLong` T.Clubs
-    T.Diamonds `longerThan` T.Hearts
-    T.Diamonds `longerThan` T.Spades
+    primarySuit_ T.Diamonds
     gfWithSuit_ T.Diamonds T.Hearts
 
 b1No2S3D :: Action
 b1No2S3D = do
-    T.Diamonds `atLeastAsLong` T.Clubs
-    T.Diamonds `longerThan` T.Hearts
-    T.Diamonds `longerThan` T.Spades
+    primarySuit_ T.Diamonds
     gfWithSuit_ T.Diamonds T.Spades
 
 b1No2C3H :: Action
 b1No2C3H = do
-    T.Hearts `atLeastAsLong` T.Clubs
-    T.Hearts `atLeastAsLong` T.Diamonds
-    T.Hearts `longerThan` T.Spades
+    primarySuit_ T.Hearts
     gfWithSuit_ T.Hearts T.Clubs
 
 b1No2D3H :: Action
 b1No2D3H = do
-    T.Hearts `atLeastAsLong` T.Clubs
-    T.Hearts `atLeastAsLong` T.Diamonds
-    T.Hearts `longerThan` T.Spades
+    primarySuit_ T.Hearts
     gfWithSuit_ T.Hearts T.Diamonds
 
 b1No2S3H :: Action
 b1No2S3H = do
-    T.Hearts `atLeastAsLong` T.Clubs
-    T.Hearts `atLeastAsLong` T.Diamonds
-    T.Hearts `longerThan` T.Spades
+    primarySuit_ T.Hearts
     gfWithSuit_ T.Hearts T.Spades
 
 b1No2C3S :: Action
 b1No2C3S = do
-    T.Spades `atLeastAsLong` T.Clubs
-    T.Spades `atLeastAsLong` T.Diamonds
-    T.Spades `atLeastAsLong` T.Hearts
+    primarySuit_ T.Spades
     gfWithSuit_ T.Spades T.Clubs
 
 b1No2D3S :: Action
 b1No2D3S = do
-    T.Spades `atLeastAsLong` T.Clubs
-    T.Spades `atLeastAsLong` T.Diamonds
-    T.Spades `atLeastAsLong` T.Hearts
+    primarySuit_ T.Spades
     gfWithSuit_ T.Spades T.Diamonds
 
 b1No2H3S :: Action
 b1No2H3S = do
-    T.Spades `atLeastAsLong` T.Clubs
-    T.Spades `atLeastAsLong` T.Diamonds
-    T.Spades `atLeastAsLong` T.Hearts
+    primarySuit_ T.Spades
     gfWithSuit_ T.Spades T.Hearts
