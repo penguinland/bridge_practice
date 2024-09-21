@@ -116,9 +116,10 @@ gameForce = let
            , (MW.b1No2D,   [Leb.b1No2D3C, Leb.b1No2D3H, Leb.b1No2D3S])
            , (MW.b1No2H,   [Leb.b1No2H3C, Leb.b1No2H3D, Leb.b1No2H3S])
            , (MW.b1No2S,   [Leb.b1No2S3C, Leb.b1No2S3D, Leb.b1No2S3H])
-           -- Again, don't bid a major when RHO has them both.
-           -- TODO: what do you do if you want to show diamonds!?
-           , (Capp.b1No2D, [Leb.b1No2D3C])
+           -- Again, don't bid a major when RHO has them both. 3D should be
+           -- natural and not a cue bid, because you'd never want to have a
+           -- Stayman-like bid when RHO has shown both majors.
+           , (Capp.b1No2D, [Leb.b1No2D3C, Leb.b1No2H3D])
            , (Capp.b1No2H, [Leb.b1No2H3C, Leb.b1No2H3D, Leb.b1No2H3S])
            , (Capp.b1No2S, [Leb.b1No2S3C, Leb.b1No2S3D, Leb.b1No2S3H])
            ]
