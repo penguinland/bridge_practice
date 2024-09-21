@@ -9,18 +9,26 @@ module Bids.Lebensohl(
   , b1No2C2D
   , b1No2C2H
    -- Actual lebensohl bids
+  , bLebensohl2N
+  , bLebensohl3C
   , b1No2C3D
   , b1No2C3H
   , b1No2C3S
   , b1No2D2H
   , b1No2D2S
+  , b1No2D2N3CP
   , b1No2D3C
   , b1No2D3H
   , b1No2D3S
   , b1No2H2S
+  , b1No2H2N3CP
+  , b1No2H2N3C3D
   , b1No2H3C
   , b1No2H3D
   , b1No2H3S
+  , b1No2S2N3CP
+  , b1No2S2N3C3D
+  , b1No2S2N3C3H
   , b1No2S3C
   , b1No2S3D
   , b1No2S3H
@@ -29,8 +37,10 @@ module Bids.Lebensohl(
 
 import Action(Action, withholdBid)
 import qualified Bids.OneNotrump as NT
-import EDSL(minSuitLength, makeCall, longerThan, atLeastAsLong, pointRange,
-            forbid, balancedHand, hasStopper, alternatives, soundHolding)
+import EDSL(minSuitLength, makeCall, makeAlertableCall, pointRange, forEach,
+            forbid, balancedHand, hasStopper, alternatives, soundHolding,
+            longerThan, atLeastAsLong)
+import Output((.+))
 import qualified Terminology as T
 
 
@@ -61,32 +71,26 @@ b1No2C2H :: Action
 b1No2C2H = NT.b1N2H
 
 -- Signoffs
-b1No2D2H :: Action
-b1No2D2H = do
+signoff_ :: Int -> T.Suit -> Action
+signoff_ level suit = do
     NT.lessThanInvitational
     pointRange 5 40
-    minSuitLength T.Hearts 5
+    minSuitLength suit 5
     -- If you're 5-5 in the majors, pick the better suit. I'm too lazy to add
     -- something to the EDSL to figure out which suit is better, so avoid it.
-    T.Hearts `longerThan` T.Clubs
-    T.Hearts `longerThan` T.Diamonds
-    T.Hearts `longerThan` T.Spades
-    makeCall $ T.Bid 2 T.Hearts
+    forEach (filter (/= suit) T.allSuits) (suit `longerThan`)
+    makeCall $ T.Bid level suit
+
+b1No2D2H :: Action
+b1No2D2H = signoff_ 2 T.Hearts
 
 
 b1No2D2S :: Action
-b1No2D2S = do
-    NT.lessThanInvitational
-    pointRange 5 40
-    minSuitLength T.Spades 5
-    T.Spades `longerThan` T.Clubs
-    T.Spades `longerThan` T.Diamonds
-    T.Spades `longerThan` T.Hearts
-    makeCall $ T.Bid 2 T.Spades
+b1No2D2S = signoff_ 2 T.Spades
 
 
 b1No2H2S :: Action
-b1No2H2S = b1No2D2S
+b1No2H2S = signoff_ 2 T.Spades
 
 
 primarySuit_ :: T.Suit -> Action
@@ -159,3 +163,46 @@ b1No2D3S = gfWithSuit_ T.Spades T.Diamonds
 
 b1No2H3S :: Action
 b1No2H3S = gfWithSuit_ T.Spades T.Hearts
+
+
+-- This is the meat of lebensohl!
+bLebensohl2N :: Action
+bLebensohl2N = do
+    alternatives [ b1No2D2N3CP
+                 , b1No2H2N3CP
+                 , b1No2S2N3CP
+                 , b1No2H2N3C3D
+                 , b1No2S2N3C3D
+                 , b1No2S2N3C3H
+                 ]
+    makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
+
+
+bLebensohl3C :: Action
+bLebensohl3C = makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
+
+
+-- Signoffs that you couldn't bid at the 2 level
+b1No2D2N3CP :: Action
+b1No2D2N3CP = do
+    withholdBid $ signoff_ 8 T.Clubs
+    makeCall T.Pass
+
+b1No2H2N3CP :: Action
+b1No2H2N3CP = do
+    withholdBid $ signoff_ 8 T.Clubs
+    makeCall T.Pass
+
+b1No2S2N3CP :: Action
+b1No2S2N3CP = do
+    withholdBid $ signoff_ 8 T.Clubs
+    makeCall T.Pass
+
+b1No2H2N3C3D :: Action
+b1No2H2N3C3D = signoff_ 3 T.Diamonds
+
+b1No2S2N3C3D :: Action
+b1No2S2N3C3D = signoff_ 3 T.Diamonds
+
+b1No2S2N3C3H :: Action
+b1No2S2N3C3H = signoff_ 3 T.Hearts
