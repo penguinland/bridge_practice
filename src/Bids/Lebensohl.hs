@@ -34,6 +34,7 @@ module Bids.Lebensohl(
   , b1No2S3C
   , b1No2S3D
   , b1No2S3H
+  , b1NoBM2N  -- For when the opponents show both majors
 ) where
 
 
@@ -221,5 +222,14 @@ b1No2S2N = do
     alternatives [ b1No2S2N3CP
                  , b1No2S2N3C3D
                  , b1No2S2N3C3H
+                 ]
+    makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
+
+
+-- Have a special one for when the opponents show both majors
+b1NoBM2N :: Action
+b1NoBM2N = do
+    alternatives [ b1No2S2N3CP
+                 , b1No2S2N3C3D
                  ]
     makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)

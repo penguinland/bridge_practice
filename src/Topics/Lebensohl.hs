@@ -9,7 +9,7 @@ import qualified Bids.Lebensohl as Leb
 import qualified Bids.Meckwell as MW
 import qualified Bids.NaturalOneNotrumpDefense as Nat
 import CommonBids(setOpener)
-import EDSL(alternatives)
+import EDSL(makePass)
 import Output(Description, (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -177,7 +177,7 @@ signoff3 = let
            -- Again, don't bid a major when RHO has them both. 3D should be
            -- natural and not a cue bid, because you'd never want to have a
            -- Stayman-like bid when RHO has shown both majors.
-           , (Capp.b1No2D, alternatives [Leb.b1No2H2N, Leb.b1No2S2N],
+           , (Capp.b1No2D, Leb.b1NoBM2N,
                  [Leb.b1No2D2N3CP, Leb.b1No2H2N3C3D])
            , (Capp.b1No2H, Leb.b1No2H2N,
                  [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
@@ -189,12 +189,48 @@ signoff3 = let
         <~ T.allVulnerabilities
 
 
+completeRelay :: Situations
+completeRelay = let
+    sit (overcall, relay) = let
+        action = do
+            setOpener T.South
+            Leb.b1N
+            _ <- overcall
+            _ <-relay
+            makePass  -- TODO: prevent RHO from raising LHO's suit
+        explanation =
+            "We opened a strong " .+ Leb.b1N .+ ", and LHO interfered " .+
+            "with the auction. Partner made a lebensohl bid, and we " .+
+            "should complete the relay to see what they do next. Partner " .+
+            "is captain of the auction, and knows where we're going."
+      in situation "relay" action Leb.b1N2N3C explanation
+  in
+    wrap $ return sit
+        <~ [ (Nat.b1No2D,  Leb.b1No2D2N)
+           , (Nat.b1No2H,  Leb.b1No2H2N)
+           , (Nat.b1No2S,  Leb.b1No2S2N)
+           , (DONT.b1No2D, Leb.b1No2D2N)
+           , (DONT.b1No2H, Leb.b1NoBM2N)
+           , (DONT.b1No2S, Leb.b1No2S2N)
+           , (MW.b1No2D,   Leb.b1No2D2N)
+           , (MW.b1No2H,   Leb.b1No2H2N)
+           , (MW.b1No2S,   Leb.b1No2S2N)
+           -- Again, don't bid a major when RHO has them both. 3D should be
+           -- natural and not a cue bid, because you'd never want to have a
+           -- Stayman-like bid when RHO has shown both majors.
+           , (Capp.b1No2D, Leb.b1NoBM2N)
+           , (Capp.b1No2H, Leb.b1No2H2N)
+           , (Capp.b1No2S, Leb.b1No2S2N)
+           ]
+        -- West should be an unpassed hand to interfere.
+        <~ [T.North, T.South, T.East]
+        <~ T.allVulnerabilities
+
 -- TODO:
 -- jump to 3N
 -- relay to 3N (answer should be 2N planning to rebid 3N)
 -- cue bid for Stayman
 -- relay to cue bid (answer should be 2N planning to rebid the cue)
--- complete the relay
 -- pass after relay and signoff
 -- pass or bid game after relay and invite
 
@@ -208,4 +244,5 @@ topic = makeTopic
                       , signoff2
                       , signoff3
                       , gameForce
+                      , completeRelay
                       ]
