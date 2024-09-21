@@ -2,14 +2,15 @@ module Topics.Lebensohl(topic) where
 
 import Control.Monad(join)
 
+import Action(extractLastCall, withholdBid)
 import qualified Bids.Cappelletti as Capp
 import qualified Bids.DONT as DONT
 import qualified Bids.Lebensohl as Leb
 import qualified Bids.Meckwell as MW
 import qualified Bids.NaturalOneNotrumpDefense as Nat
 import CommonBids(setOpener)
---import EDSL(makePass, pointRange, suitLength, maxSuitLength, forEach)
-import Output((.+))
+import EDSL(makePass)
+import Output(Description, (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic)
@@ -58,8 +59,8 @@ ignoreOpps = let
                       <~ T.allVulnerabilities
 
 
-signoff :: Situations
-signoff = let
+signoff2 :: Situations
+signoff2 = let
     sit (overcall, response) = let
         action = do
             setOpener T.North
@@ -70,7 +71,7 @@ signoff = let
             "with the auction. We're so weak we don't even want to invite " .+
             "to game, but we do have enough strength to suspect this is " .+
             "our contract. Bid our suit at the 2 level, as signoff."
-      in situation "snof" action response explanation
+      in situation "so2" action response explanation
   in
     wrap $ return sit <~ [ (DONT.b1No2D, Leb.b1No2D2H)
                          , (DONT.b1No2D, Leb.b1No2D2S)
@@ -130,15 +131,108 @@ gameForce = let
         <~ T.allVulnerabilities
 
 
+signoff3 :: Situations
+signoff3 = let
+    sit (overcall, relay, responses) dlr vul = let
+        inner response = let
+            action = do
+                setOpener T.North
+                Leb.b1N
+                _ <-overcall
+                withholdBid response
+            responseDescription :: Description
+            responseDescription =
+                if (T.removeAlert . extractLastCall $ response) == T.Pass
+                then "pass" .+ ""
+                else "bid " .+ response
+            explanation =
+                "Partner opened a strong " .+ Leb.b1N .+ ", and RHO " .+
+                "interfered with the auction. We're less-than-invitational, " .+
+                "and just want to sign off in partscore. However, we can't " .+
+                "do that at the 2 level any more. Make a lebensohl relay, " .+
+                "planning to " .+ responseDescription .+ " afterwards."
+          in situation "so3" action relay explanation dlr vul
+      in return inner <~ responses
+  in
+    wrap . join $ return sit
+        <~ [ (Nat.b1No2D,  Leb.b1No2D2N,
+                 [Leb.b1No2D2N3CP])
+           , (Nat.b1No2H,  Leb.b1No2H2N,
+                 [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
+           , (Nat.b1No2S,  Leb.b1No2S2N,
+                 [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
+           , (DONT.b1No2D, Leb.b1No2D2N,
+                 [Leb.b1No2D2N3CP])
+           , (DONT.b1No2H, Leb.b1No2H2N,
+                 -- Don't bid either major when the opponents have shown both
+                 [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
+           , (DONT.b1No2S, Leb.b1No2S2N,
+                 [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
+           , (MW.b1No2D,   Leb.b1No2D2N,
+                 [Leb.b1No2D2N3CP])
+           , (MW.b1No2H,   Leb.b1No2H2N,
+                 [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
+           , (MW.b1No2S,   Leb.b1No2S2N,
+                 [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
+           -- Again, don't bid a major when RHO has them both. 3D should be
+           -- natural and not a cue bid, because you'd never want to have a
+           -- Stayman-like bid when RHO has shown both majors.
+           , (Capp.b1No2D, Leb.b1NoBM2N,
+                 [Leb.b1No2D2N3CP, Leb.b1No2H2N3C3D])
+           , (Capp.b1No2H, Leb.b1No2H2N,
+                 [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
+           , (Capp.b1No2S, Leb.b1No2S2N,
+                 [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
+           ]
+        -- East should be an unpassed hand to interfere.
+        <~ [T.North, T.South, T.West]
+        <~ T.allVulnerabilities
+
+
+completeRelay :: Situations
+completeRelay = let
+    sit (overcall, relay) = let
+        action = do
+            setOpener T.South
+            Leb.b1N
+            _ <- overcall
+            _ <-relay
+            makePass  -- TODO: prevent RHO from raising LHO's suit
+        explanation =
+            "We opened a strong " .+ Leb.b1N .+ ", and LHO interfered " .+
+            "with the auction. Partner made a lebensohl bid, and we " .+
+            "should complete the relay to see what they do next. Partner " .+
+            "is captain of the auction, and knows where we're going."
+      in situation "relay" action Leb.b1N2N3C explanation
+  in
+    wrap $ return sit
+        <~ [ (Nat.b1No2D,  Leb.b1No2D2N)
+           , (Nat.b1No2H,  Leb.b1No2H2N)
+           , (Nat.b1No2S,  Leb.b1No2S2N)
+           , (DONT.b1No2D, Leb.b1No2D2N)
+           , (DONT.b1No2H, Leb.b1NoBM2N)
+           , (DONT.b1No2S, Leb.b1No2S2N)
+           , (MW.b1No2D,   Leb.b1No2D2N)
+           , (MW.b1No2H,   Leb.b1No2H2N)
+           , (MW.b1No2S,   Leb.b1No2S2N)
+           -- Again, don't bid a major when RHO has them both. 3D should be
+           -- natural and not a cue bid, because you'd never want to have a
+           -- Stayman-like bid when RHO has shown both majors.
+           , (Capp.b1No2D, Leb.b1NoBM2N)
+           , (Capp.b1No2H, Leb.b1No2H2N)
+           , (Capp.b1No2S, Leb.b1No2S2N)
+           ]
+        -- West should be an unpassed hand to interfere.
+        <~ [T.North, T.South, T.East]
+        <~ T.allVulnerabilities
+
 -- TODO:
--- natural GF bids at the 3 level
 -- jump to 3N
 -- relay to 3N (answer should be 2N planning to rebid 3N)
 -- cue bid for Stayman
 -- relay to cue bid (answer should be 2N planning to rebid the cue)
--- complete the relay
--- Texas transfers over interference (in the Texas Transfers topic)
--- make the opponents sometimes use natural overcalls
+-- pass after relay and signoff
+-- pass or bid game after relay and invite
 
 
 topic :: Topic
@@ -147,6 +241,8 @@ topic = makeTopic
     "leb1N" situations
   where
     situations = wrap [ ignoreOpps
-                      , signoff
+                      , signoff2
+                      , signoff3
                       , gameForce
+                      , completeRelay
                       ]

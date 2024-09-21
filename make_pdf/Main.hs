@@ -49,9 +49,7 @@ main = let
               , Lampe.topic
               , TripleFourOne.topic
               ]
-    topics = [ MajorSuitRaises.topic
-             , ForcingOneNotrump.topic
-             , Jacoby2NT.topic
+    topics = [ Lebensohl.topic
              ]
   in do
     -- outputLatex returns a copy of the contents of the file it wrote, but we
