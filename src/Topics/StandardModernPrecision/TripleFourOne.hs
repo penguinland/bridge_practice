@@ -1,5 +1,7 @@
 module Topics.StandardModernPrecision.TripleFourOne(topic) where
 
+import Control.Monad(join)
+
 import Bids.StandardModernPrecision.BasicBids(setOpener, oppsPass)
 import Bids.StandardModernPrecision.TwoDiamonds(name44Rkc)
 import qualified Bids.StandardModernPrecision.OneClub as B
@@ -25,19 +27,19 @@ showAny4441 = let
       in
         return inner <~ dealers
   in
-    wrap $ return sit <~ [ (do B.b1C
-                               oppsPass
-                               B.b1C1H
-                               oppsPass
-                           , B.b1C1H2S, T.South, [T.South, T.East])
-                         , (do B.b1C
-                               oppsPass
-                           , B.b1C2S, T.North, [T.North, T.West])
-                         , (do B.b1C
-                               oppsPass
-                           , B.bP1C2S, T.North, [T.South, T.East])
-                         ]
-                      <~ T.allVulnerabilities
+    wrap . join $ return sit <~ [ (do B.b1C
+                                      oppsPass
+                                      B.b1C1H
+                                      oppsPass
+                                  , B.b1C1H2S, T.South, [T.South, T.East])
+                                , (do B.b1C
+                                      oppsPass
+                                  , B.b1C2S, T.North, [T.North, T.West])
+                                , (do B.b1C
+                                      oppsPass
+                                  , B.bP1C2S, T.North, [T.South, T.East])
+                                ]
+                             <~ T.allVulnerabilities
 
 
 relay :: Situations
@@ -56,25 +58,25 @@ relay = let
       in
         return inner <~ dealers
   in
-    wrap $ return sit <~ [ (do B.b1C
-                               oppsPass
-                               B.b1C1H
-                               oppsPass
-                               B.b1C1H2S
-                               oppsPass
-                           , B.b1C1H2S2N, T.North, [T.North, T.West])
-                         , (do B.b1C
-                               oppsPass
-                               B.b1C2S
-                               oppsPass
-                           , B.b1C2S2N, T.South, [T.South, T.East])
-                         , (do B.b1C
-                               oppsPass
-                               B.bP1C2S
-                               oppsPass
-                           , B.b1C2S2N, T.South, [T.North, T.West])
-                         ]
-                      <~ T.allVulnerabilities
+    wrap . join $ return sit <~ [ (do B.b1C
+                                      oppsPass
+                                      B.b1C1H
+                                      oppsPass
+                                      B.b1C1H2S
+                                      oppsPass
+                                  , B.b1C1H2S2N, T.North, [T.North, T.West])
+                                , (do B.b1C
+                                      oppsPass
+                                      B.b1C2S
+                                      oppsPass
+                                  , B.b1C2S2N, T.South, [T.South, T.East])
+                                , (do B.b1C
+                                      oppsPass
+                                      B.bP1C2S
+                                      oppsPass
+                                  , B.b1C2S2N, T.South, [T.North, T.West])
+                                ]
+                             <~ T.allVulnerabilities
 
 
 bidSingleton :: Situations
@@ -94,7 +96,7 @@ bidSingleton = let
       in
         return inner <~ answers <~ dealers
   in
-    wrap $ return sit
+    wrap . join $ return sit
         <~ [ (do B.b1C
                  oppsPass
                  B.b1C1H
@@ -144,34 +146,35 @@ singletonInPartnerSuit = let
       in
         return inner <~ lastTwoBids <~ dealers
   in
-    wrap $ return sit <~ [ (do B.b1C
-                               oppsPass
-                               B.b1C1H
-                               oppsPass
-                           , [ (B.b1C1H1S, B.b1C1H1S3C)
-                             , (B.b1C1H2C, B.b1C1H2C3D)
-                             , (B.b1C1H2D, B.b1C1H2D3H)
-                             , (B.b1C1H2H, B.b1C1H2H3S)
-                             ], T.North, [T.North, T.West])
-                         , (do B.b1C
-                               oppsPass
-                           -- TODO: We're using the standard responses, not the
-                           -- modified ones. Is it worth making a whole separate
-                           -- topic for the modified version? Not sure.
-                           , [ (B.b1C1S, B.b1C1S3C)
-                             , (B.b1C2C, B.b1C2C3D)
-                             , (B.b1C2D, B.b1C2D3H)
-                             , (B.b1C2H, B.b1C2H3S)
-                             ], T.South, [T.South, T.East])
-                         , (do B.b1C
-                               oppsPass
-                           , [ (B.bP1C1H, B.b1C1H2S)
-                             , (B.bP1C1S, B.b1C1S3C)
-                             , (B.bP1C2C, B.b1C2C3D)
-                             , (B.bP1C2D, B.b1C2D3H)
-                             ], T.South, [T.North, T.West])
-                         ]
-                      <~ T.allVulnerabilities
+    wrap . join $ return sit <~ [ (do B.b1C
+                                      oppsPass
+                                      B.b1C1H
+                                      oppsPass
+                                  , [ (B.b1C1H1S, B.b1C1H1S3C)
+                                    , (B.b1C1H2C, B.b1C1H2C3D)
+                                    , (B.b1C1H2D, B.b1C1H2D3H)
+                                    , (B.b1C1H2H, B.b1C1H2H3S)
+                                    ], T.North, [T.North, T.West])
+                                , (do B.b1C
+                                      oppsPass
+                                  -- TODO: We're using the standard responses,
+                                  -- not the modified ones. Is it worth making a
+                                  -- whole separate topic for the modified
+                                  -- version? Not sure.
+                                  , [ (B.b1C1S, B.b1C1S3C)
+                                    , (B.b1C2C, B.b1C2C3D)
+                                    , (B.b1C2D, B.b1C2D3H)
+                                    , (B.b1C2H, B.b1C2H3S)
+                                    ], T.South, [T.South, T.East])
+                                , (do B.b1C
+                                      oppsPass
+                                  , [ (B.bP1C1H, B.b1C1H2S)
+                                    , (B.bP1C1S, B.b1C1S3C)
+                                    , (B.bP1C2C, B.b1C2C3D)
+                                    , (B.bP1C2D, B.b1C2D3H)
+                                    ], T.South, [T.North, T.West])
+                                ]
+                             <~ T.allVulnerabilities
 
 
 topic :: Topic

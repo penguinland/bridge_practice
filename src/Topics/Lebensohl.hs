@@ -1,5 +1,7 @@
 module Topics.Lebensohl(topic) where
 
+import Control.Monad(join)
+
 import qualified Bids.Cappelletti as Capp
 import qualified Bids.DONT as DONT
 import qualified Bids.Lebensohl as Leb
@@ -105,7 +107,7 @@ gameForce = let
         inner response = situation "gfnat" action response explanation dlr vul
       in return inner <~ responses
   in
-    wrap $ return sit
+    wrap . join $ return sit
         <~ [ (Nat.b1No2D,  [Leb.b1No2D3C, Leb.b1No2D3H, Leb.b1No2D3S])
            , (Nat.b1No2H,  [Leb.b1No2H3C, Leb.b1No2H3D, Leb.b1No2H3S])
            , (Nat.b1No2S,  [Leb.b1No2S3C, Leb.b1No2S3D, Leb.b1No2S3H])
