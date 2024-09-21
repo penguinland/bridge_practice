@@ -112,6 +112,7 @@ gfWithSuit_ :: T.Suit -> T.Suit -> Action
 gfWithSuit_ ourSuit oppsSuit = do
     NT.gameForcing
     minSuitLength ourSuit 5
+    primarySuit_ ourSuit
     -- It's no fun when you bid a suit headed by the queen-nine. Probably do
     -- that at the table, but practice the more obvious holdings instead.
     soundHolding ourSuit
@@ -119,64 +120,41 @@ gfWithSuit_ ourSuit oppsSuit = do
     alternatives [forbid balancedHand, forbid (hasStopper oppsSuit)]
     makeCall $ T.Bid 3 ourSuit
 
+
 -- With 5-5 in two suits, bid the higher one, so you can rebid the lower one
 -- later.
 b1No2D3C :: Action
-b1No2D3C = do
-    primarySuit_ T.Clubs
-    gfWithSuit_ T.Clubs T.Diamonds
+b1No2D3C = gfWithSuit_ T.Clubs T.Diamonds
 
 b1No2H3C :: Action
-b1No2H3C = do
-    primarySuit_ T.Clubs
-    gfWithSuit_ T.Clubs T.Hearts
+b1No2H3C = gfWithSuit_ T.Clubs T.Hearts
 
 b1No2S3C :: Action
-b1No2S3C = do
-    primarySuit_ T.Clubs
-    gfWithSuit_ T.Clubs T.Spades
+b1No2S3C = gfWithSuit_ T.Clubs T.Spades
 
 b1No2C3D :: Action
-b1No2C3D = do
-    primarySuit_ T.Diamonds
-    gfWithSuit_ T.Diamonds T.Clubs
+b1No2C3D = gfWithSuit_ T.Diamonds T.Clubs
 
 b1No2H3D :: Action
-b1No2H3D = do
-    primarySuit_ T.Diamonds
-    gfWithSuit_ T.Diamonds T.Hearts
+b1No2H3D = gfWithSuit_ T.Diamonds T.Hearts
 
 b1No2S3D :: Action
-b1No2S3D = do
-    primarySuit_ T.Diamonds
-    gfWithSuit_ T.Diamonds T.Spades
+b1No2S3D = gfWithSuit_ T.Diamonds T.Spades
 
 b1No2C3H :: Action
-b1No2C3H = do
-    primarySuit_ T.Hearts
-    gfWithSuit_ T.Hearts T.Clubs
+b1No2C3H = gfWithSuit_ T.Hearts T.Clubs
 
 b1No2D3H :: Action
-b1No2D3H = do
-    primarySuit_ T.Hearts
-    gfWithSuit_ T.Hearts T.Diamonds
+b1No2D3H = gfWithSuit_ T.Hearts T.Diamonds
 
 b1No2S3H :: Action
-b1No2S3H = do
-    primarySuit_ T.Hearts
-    gfWithSuit_ T.Hearts T.Spades
+b1No2S3H = gfWithSuit_ T.Hearts T.Spades
 
 b1No2C3S :: Action
-b1No2C3S = do
-    primarySuit_ T.Spades
-    gfWithSuit_ T.Spades T.Clubs
+b1No2C3S = gfWithSuit_ T.Spades T.Clubs
 
 b1No2D3S :: Action
-b1No2D3S = do
-    primarySuit_ T.Spades
-    gfWithSuit_ T.Spades T.Diamonds
+b1No2D3S = gfWithSuit_ T.Spades T.Diamonds
 
 b1No2H3S :: Action
-b1No2H3S = do
-    primarySuit_ T.Spades
-    gfWithSuit_ T.Spades T.Hearts
+b1No2H3S = gfWithSuit_ T.Spades T.Hearts
