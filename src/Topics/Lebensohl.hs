@@ -103,7 +103,7 @@ gameForce = let
             "bid our suit at the 3 level. Partner will bid naturally, and " .+
             "we'll find a game (likely either our suit or notrump)."
         inner response = situation "gfnat" action response explanation dlr vul
-      in wrap $ return inner <~ responses
+      in return inner <~ responses
   in
     wrap $ return sit
         <~ [ (Nat.b1No2D,  [Leb.b1No2D3C, Leb.b1No2D3H, Leb.b1No2D3S])
