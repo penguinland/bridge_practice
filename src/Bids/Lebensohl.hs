@@ -76,10 +76,13 @@ signoff_ level suit = do
     NT.lessThanInvitational
     pointRange 5 40
     minSuitLength suit 5
+    -- Have a good reason to bid this suit.
+    alternatives [soundHolding suit, minSuitLength suit 6]
     -- If you're 5-5 in the majors, pick the better suit. I'm too lazy to add
     -- something to the EDSL to figure out which suit is better, so avoid it.
     forEach (filter (/= suit) T.allSuits) (suit `longerThan`)
     makeCall $ T.Bid level suit
+
 
 b1No2D2H :: Action
 b1No2D2H = signoff_ 2 T.Hearts

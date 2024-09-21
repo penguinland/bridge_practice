@@ -2,7 +2,7 @@ module Topics.Lebensohl(topic) where
 
 import Control.Monad(join)
 
-import Action(extractLastCall)
+import Action(extractLastCall, withholdBid)
 import qualified Bids.Cappelletti as Capp
 import qualified Bids.DONT as DONT
 import qualified Bids.Lebensohl as Leb
@@ -134,16 +134,17 @@ gameForce = let
 signoff3 :: Situations
 signoff3 = let
     sit (overcall, responses) dlr vul = let
-        action = do
-            setOpener T.North
-            Leb.b1N
-            overcall
         inner response = let
+            action = do
+                setOpener T.North
+                Leb.b1N
+                _ <-overcall
+                withholdBid response
             responseDescription :: Description
             responseDescription =
                 if (T.removeAlert . extractLastCall $ response) == T.Pass
                 then "pass" .+ ""
-                else "bid " .+ action
+                else "bid " .+ response
             explanation =
                 "Partner opened a strong " .+ Leb.b1N .+ ", and RHO " .+
                 "interfered with the auction. We're less-than-invitational, " .+
