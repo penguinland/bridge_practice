@@ -77,7 +77,13 @@ b1No2C2H = NT.b1N2H
 signoff_ :: Int -> T.Suit -> Action
 signoff_ level suit = do
     NT.lessThanInvitational
-    pointRange 5 40
+    pointRange 5 40  -- We should have at least half the points to compete
+    -- NOTE: if we're nonvul, we might compete with less than half the points if
+    -- we're extra shapely. That's hard to encode here because we don't know the
+    -- vulnerability yet, and annoying to code in a topic because we can't reuse
+    -- this function for that situation. Just skip it; users won't get to
+    -- practice but it's a rare situation that is hopefully obvious when it
+    -- occurs.
     minSuitLength suit 5
     -- Have a good reason to bid this suit.
     alternatives [soundHolding suit, minSuitLength suit 6]
