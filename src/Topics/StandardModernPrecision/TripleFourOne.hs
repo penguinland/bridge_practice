@@ -23,7 +23,7 @@ showAny4441 = let
           in
             situation "any" action' answer explanation dealer vul
       in
-        wrap $ return inner <~ dealers
+        return inner <~ dealers
   in
     wrap $ return sit <~ [ (do B.b1C
                                oppsPass
@@ -54,7 +54,7 @@ relay = let
           in
             situation "relay" action' answer explanation dealer vul
       in
-        wrap $ return inner <~ dealers
+        return inner <~ dealers
   in
     wrap $ return sit <~ [ (do B.b1C
                                oppsPass
@@ -92,7 +92,7 @@ bidSingleton = let
           in
             situation "bsing" action' answer explanation dealer vul
       in
-        wrap $ return inner <~ answers <~ dealers
+        return inner <~ answers <~ dealers
   in
     wrap $ return sit
         <~ [ (do B.b1C
@@ -142,7 +142,7 @@ singletonInPartnerSuit = let
           in
             situation "pdsing" action' ourBid explanation dealer vul
       in
-        wrap $ return inner <~ lastTwoBids <~ dealers
+        return inner <~ lastTwoBids <~ dealers
   in
     wrap $ return sit <~ [ (do B.b1C
                                oppsPass
