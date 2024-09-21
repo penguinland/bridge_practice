@@ -17,6 +17,8 @@ module Bids.Lebensohl(
   , b1No2D2S
   , b1No2D2N
   , b1No2D2N3CP
+  , b1No2D2N3C3H
+  , b1No2D2N3C3S
   , b1No2D3C
   , b1No2D3H
   , b1No2D3S
@@ -24,6 +26,7 @@ module Bids.Lebensohl(
   , b1No2H2N
   , b1No2H2N3CP
   , b1No2H2N3C3D
+  , b1No2H2N3C3S
   , b1No2H3C
   , b1No2H3D
   , b1No2H3S
@@ -203,6 +206,28 @@ b1No2S2N3C3H :: Action
 b1No2S2N3C3H = signoff_ 3 T.Hearts
 
 
+-- Invites for higher suits
+invite_ :: T.Suit -> Action
+invite_ suit = do
+    NT.invitational
+    minSuitLength suit 5
+    primarySuit_ suit
+    -- It's no fun when you bid a suit headed by the queen-nine. Probably do
+    -- that at the table, but practice the more obvious holdings instead.
+    soundHolding suit
+    makeCall $ T.Bid 3 suit
+
+
+b1No2D2N3C3H :: Action
+b1No2D2N3C3H = invite_ T.Hearts
+
+b1No2D2N3C3S :: Action
+b1No2D2N3C3S = invite_ T.Spades
+
+b1No2H2N3C3S :: Action
+b1No2H2N3C3S = invite_ T.Spades
+
+
 -- Time for the actual lebensohl relays!
 b1N2N3C :: Action
 b1N2N3C = makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
@@ -211,6 +236,8 @@ b1N2N3C = makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
 b1No2D2N :: Action
 b1No2D2N = do
     alternatives [ b1No2D2N3CP
+                 , b1No2D2N3C3H
+                 , b1No2D2N3C3S
                  ]
     makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
 
@@ -219,6 +246,7 @@ b1No2H2N :: Action
 b1No2H2N = do
     alternatives [ b1No2H2N3CP
                  , b1No2H2N3C3D
+                 , b1No2D2N3C3S
                  ]
     makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
 
