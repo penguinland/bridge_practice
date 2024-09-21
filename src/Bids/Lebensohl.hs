@@ -9,23 +9,25 @@ module Bids.Lebensohl(
   , b1No2C2D
   , b1No2C2H
    -- Actual lebensohl bids
-  , bLebensohl2N
-  , bLebensohl3C
+  , b1N2N3C
   , b1No2C3D
   , b1No2C3H
   , b1No2C3S
   , b1No2D2H
   , b1No2D2S
+  , b1No2D2N
   , b1No2D2N3CP
   , b1No2D3C
   , b1No2D3H
   , b1No2D3S
   , b1No2H2S
+  , b1No2H2N
   , b1No2H2N3CP
   , b1No2H2N3C3D
   , b1No2H3C
   , b1No2H3D
   , b1No2H3S
+  , b1No2S2N
   , b1No2S2N3CP
   , b1No2S2N3C3D
   , b1No2S2N3C3H
@@ -168,23 +170,6 @@ b1No2H3S :: Action
 b1No2H3S = gfWithSuit_ T.Spades T.Hearts
 
 
--- This is the meat of lebensohl!
-bLebensohl2N :: Action
-bLebensohl2N = do
-    alternatives [ b1No2D2N3CP
-                 , b1No2H2N3CP
-                 , b1No2S2N3CP
-                 , b1No2H2N3C3D
-                 , b1No2S2N3C3D
-                 , b1No2S2N3C3H
-                 ]
-    makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
-
-
-bLebensohl3C :: Action
-bLebensohl3C = makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
-
-
 -- Signoffs that you couldn't bid at the 2 level
 b1No2D2N3CP :: Action
 b1No2D2N3CP = do
@@ -209,3 +194,32 @@ b1No2S2N3C3D = signoff_ 3 T.Diamonds
 
 b1No2S2N3C3H :: Action
 b1No2S2N3C3H = signoff_ 3 T.Hearts
+
+
+-- Time for the actual lebensohl relays!
+b1N2N3C :: Action
+b1N2N3C = makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
+
+
+b1No2D2N :: Action
+b1No2D2N = do
+    alternatives [ b1No2D2N3CP
+                 ]
+    makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
+
+
+b1No2H2N :: Action
+b1No2H2N = do
+    alternatives [ b1No2H2N3CP
+                 , b1No2H2N3C3D
+                 ]
+    makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
+
+
+b1No2S2N :: Action
+b1No2S2N = do
+    alternatives [ b1No2S2N3CP
+                 , b1No2S2N3C3D
+                 , b1No2S2N3C3H
+                 ]
+    makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)

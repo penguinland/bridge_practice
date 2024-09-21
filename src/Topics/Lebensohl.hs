@@ -9,7 +9,7 @@ import qualified Bids.Lebensohl as Leb
 import qualified Bids.Meckwell as MW
 import qualified Bids.NaturalOneNotrumpDefense as Nat
 import CommonBids(setOpener)
---import EDSL(makePass, pointRange, suitLength, maxSuitLength, forEach)
+import EDSL(alternatives)
 import Output(Description, (.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -133,7 +133,7 @@ gameForce = let
 
 signoff3 :: Situations
 signoff3 = let
-    sit (overcall, responses) dlr vul = let
+    sit (overcall, relay, responses) dlr vul = let
         inner response = let
             action = do
                 setOpener T.North
@@ -151,26 +151,38 @@ signoff3 = let
                 "and just want to sign off in partscore. However, we can't " .+
                 "do that at the 2 level any more. Make a lebensohl relay, " .+
                 "planning to " .+ responseDescription .+ " afterwards."
-          in situation "so3" action Leb.bLebensohl2N explanation dlr vul
+          in situation "so3" action relay explanation dlr vul
       in return inner <~ responses
   in
     wrap . join $ return sit
-        <~ [ (Nat.b1No2D,  [Leb.b1No2D2N3CP])
-           , (Nat.b1No2H,  [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
-           , (Nat.b1No2S,  [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
-           , (DONT.b1No2D, [Leb.b1No2D2N3CP])
-           -- Don't bid either major when the opponents have shown both
-           , (DONT.b1No2H, [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
-           , (DONT.b1No2S, [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
-           , (MW.b1No2D,   [Leb.b1No2D2N3CP])
-           , (MW.b1No2H,   [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
-           , (MW.b1No2S,   [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
+        <~ [ (Nat.b1No2D,  Leb.b1No2D2N,
+                 [Leb.b1No2D2N3CP])
+           , (Nat.b1No2H,  Leb.b1No2H2N,
+                 [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
+           , (Nat.b1No2S,  Leb.b1No2S2N,
+                 [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
+           , (DONT.b1No2D, Leb.b1No2D2N,
+                 [Leb.b1No2D2N3CP])
+           , (DONT.b1No2H, Leb.b1No2H2N,
+                 -- Don't bid either major when the opponents have shown both
+                 [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
+           , (DONT.b1No2S, Leb.b1No2S2N,
+                 [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
+           , (MW.b1No2D,   Leb.b1No2D2N,
+                 [Leb.b1No2D2N3CP])
+           , (MW.b1No2H,   Leb.b1No2H2N,
+                 [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
+           , (MW.b1No2S,   Leb.b1No2S2N,
+                 [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
            -- Again, don't bid a major when RHO has them both. 3D should be
            -- natural and not a cue bid, because you'd never want to have a
            -- Stayman-like bid when RHO has shown both majors.
-           , (Capp.b1No2D, [Leb.b1No2D2N3CP, Leb.b1No2H2N3C3D])
-           , (Capp.b1No2H, [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
-           , (Capp.b1No2S, [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
+           , (Capp.b1No2D, alternatives [Leb.b1No2H2N, Leb.b1No2S2N],
+                 [Leb.b1No2D2N3CP, Leb.b1No2H2N3C3D])
+           , (Capp.b1No2H, Leb.b1No2H2N,
+                 [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
+           , (Capp.b1No2S, Leb.b1No2S2N,
+                 [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
            ]
         -- East should be an unpassed hand to interfere.
         <~ [T.North, T.South, T.West]
