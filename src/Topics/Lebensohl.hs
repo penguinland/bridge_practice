@@ -376,6 +376,7 @@ bid3NWithoutStopper = let
 -- relay to cue bid (answer should be 2N planning to rebid the cue)
 -- opener responds to Stayman
 -- pass or bid game after relay and invite (maybe not: should be obvious)
+-- opener uses normal systems after X or 2C
 
 
 topic :: Topic
