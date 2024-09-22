@@ -306,7 +306,7 @@ invite = let
 -- cue bid for Stayman
 -- relay to cue bid (answer should be 2N planning to rebid the cue)
 -- opener responds to Stayman
--- pass or bid game after relay and invite
+-- pass or bid game after relay and invite (maybe not: should be obvious)
 
 
 topic :: Topic
