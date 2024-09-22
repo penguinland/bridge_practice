@@ -311,10 +311,10 @@ bid3NWithStopper = let
         explanation =
             "Partner opened a strong " .+ Leb.b1N .+ ", and RHO " .+
             "interfered with the auction. We've got a balanced game-forcing " .+
-            "hand with a stopper in the opponent's suit, so we'd like to " .+
-            "play in notrump. Relay through " .+ relay .+ ", then bid " .+
-            bid .+ " to show this. Partner can then pass, safe in the " .+
-            "knowledge that you've got the opponent's suit stopped."
+            "hand with a stopper in the opponent's suit. Relay through " .+
+            relay .+ ", then bid " .+ bid .+ " to show this. Partner can " .+
+            "then pass, safe in the knowledge that we've got the " .+
+            "opponent's suit stopped."
       in situation "rel3N" action relay explanation
   in
     wrap $ return sit <~ [ (Nat.b1No2D,  Leb.b1No2D2N, Leb.b1No2D2N3C3N)
