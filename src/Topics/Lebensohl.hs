@@ -215,9 +215,6 @@ completeRelay = let
            , (MW.b1No2D,   Leb.b1No2D2N)
            , (MW.b1No2H,   Leb.b1No2H2N)
            , (MW.b1No2S,   Leb.b1No2S2N)
-           -- Again, don't bid a major when RHO has them both. 3D should be
-           -- natural and not a cue bid, because you'd never want to have a
-           -- Stayman-like bid when RHO has shown both majors.
            , (Capp.b1No2D, Leb.b1NoBM2N)
            , (Capp.b1No2H, Leb.b1No2H2N)
            , (Capp.b1No2S, Leb.b1No2S2N)
