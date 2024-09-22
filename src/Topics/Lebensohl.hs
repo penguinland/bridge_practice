@@ -138,7 +138,7 @@ signoff3 = let
             action = do
                 setOpener T.North
                 Leb.b1N
-                _ <-overcall
+                _ <- overcall
                 withholdBid response
             responseDescription :: Description
             responseDescription =
@@ -274,7 +274,7 @@ invite = let
             action = do
                 setOpener T.North
                 Leb.b1N
-                _ <-overcall
+                _ <- overcall
                 withholdBid response
             explanation =
                 "Partner opened a strong " .+ Leb.b1N .+ ", and RHO " .+
@@ -300,9 +300,78 @@ invite = let
         <~ T.allVulnerabilities
 
 
+bid3NWithStopper :: Situations
+bid3NWithStopper = let
+    sit (overcall, relay, bid) = let
+        action = do
+            setOpener T.North
+            Leb.b1N
+            _ <- overcall
+            withholdBid bid
+        explanation =
+            "Partner opened a strong " .+ Leb.b1N .+ ", and RHO " .+
+            "interfered with the auction. We've got a balanced game-forcing " .+
+            "hand with a stopper in the opponent's suit, so we'd like to " .+
+            "play in notrump. Relay through " .+ relay .+ ", then bid " .+
+            bid .+ " to show this. Partner can then pass, safe in the " .+
+            "knowledge that you've got the opponent's suit stopped."
+      in situation "rel3N" action relay explanation
+  in
+    wrap $ return sit <~ [ (Nat.b1No2D,  Leb.b1No2D2N, Leb.b1No2D2N3C3N)
+                         , (Nat.b1No2H,  Leb.b1No2H2N, Leb.b1No2H2N3C3N)
+                         , (Nat.b1No2S,  Leb.b1No2S2N, Leb.b1No2S2N3C3N)
+                         , (DONT.b1No2D, Leb.b1No2D2N, Leb.b1No2D2N3C3N)
+                         , (DONT.b1No2H, Leb.b1NoBM2N, Leb.b1NoBM2N3C3N)
+                         , (DONT.b1No2S, Leb.b1No2S2N, Leb.b1No2S2N3C3N)
+                         , (MW.b1No2D,   Leb.b1No2D2N, Leb.b1No2D2N3C3N)
+                         , (MW.b1No2H,   Leb.b1No2H2N, Leb.b1No2H2N3C3N)
+                         , (MW.b1No2S,   Leb.b1No2S2N, Leb.b1No2S2N3C3N)
+                         , (Capp.b1No2D, Leb.b1NoBM2N, Leb.b1NoBM2N3C3N)
+                         , (Capp.b1No2H, Leb.b1No2H2N, Leb.b1No2H2N3C3N)
+                         , (Capp.b1No2S, Leb.b1No2S2N, Leb.b1No2S2N3C3N)
+                         ]
+                      -- East should be an unpassed hand to interfere.
+                      <~ [T.North, T.South, T.West]
+                      <~ T.allVulnerabilities
+
+
+bid3NWithoutStopper :: Situations
+bid3NWithoutStopper = let
+    sit (overcall, bid) = let
+        action = do
+            setOpener T.North
+            Leb.b1N
+            overcall
+        explanation =
+            "Partner opened a strong " .+ Leb.b1N .+ ", and RHO " .+
+            "interfered with the auction. We've got a balanced game-forcing " .+
+            "hand, so we'd like to play in notrump if we've got the " .+
+            "opponent's suit stopped. However, our hand doesn't contain " .+
+            "a stopper. Jump to " .+ bid .+ " to show this: partner can " .+
+            "pass if they have a stopper of their own, or scramble into " .+
+            "the 4 level if they don't (if neither of us has a stopper, " .+
+            "we're likely to be able to find a fit somewhere else)."
+      in situation "3N" action bid explanation
+  in
+    wrap $ return sit <~ [ (Nat.b1No2D,  Leb.b1No2D3N)
+                         , (Nat.b1No2H,  Leb.b1No2H3N)
+                         , (Nat.b1No2S,  Leb.b1No2S3N)
+                         , (DONT.b1No2D, Leb.b1No2D3N)
+                         , (DONT.b1No2H, Leb.b1NoBM3N)
+                         , (DONT.b1No2S, Leb.b1No2S3N)
+                         , (MW.b1No2D,   Leb.b1No2D3N)
+                         , (MW.b1No2H,   Leb.b1No2H3N)
+                         , (MW.b1No2S,   Leb.b1No2S3N)
+                         , (Capp.b1No2D, Leb.b1NoBM3N)
+                         , (Capp.b1No2H, Leb.b1No2H3N)
+                         , (Capp.b1No2S, Leb.b1No2S3N)
+                         ]
+                      -- East should be an unpassed hand to interfere.
+                      <~ [T.North, T.South, T.West]
+                      <~ T.allVulnerabilities
+
+
 -- TODO:
--- jump to 3N
--- relay to 3N (answer should be 2N planning to rebid 3N)
 -- cue bid for Stayman
 -- relay to cue bid (answer should be 2N planning to rebid the cue)
 -- opener responds to Stayman
@@ -321,4 +390,5 @@ topic = makeTopic
                       , completeRelay
                       , passSignoff
                       , invite
+                      , wrap [bid3NWithStopper, bid3NWithoutStopper]
                       ]
