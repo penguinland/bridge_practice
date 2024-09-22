@@ -270,13 +270,45 @@ passSignoff = let
         <~ T.allVulnerabilities
 
 
+invite :: Situations
+invite = let
+    sit (overcall, relay, responses) dlr vul = let
+        inner response = let
+            action = do
+                setOpener T.North
+                Leb.b1N
+                _ <-overcall
+                withholdBid response
+            explanation =
+                "Partner opened a strong " .+ Leb.b1N .+ ", and RHO " .+
+                "interfered with the auction. We've got invitational " .+
+                "strength in a suit higher than the interference. Make a " .+
+                "lebensohl relay, planning to rebid " .+ response .+
+                " afterwards."
+          in situation "inv" action relay explanation dlr vul
+      in return inner <~ responses
+  in
+    wrap . join $ return sit
+        <~ [ (Nat.b1No2D,  Leb.b1No2D2N, [Leb.b1No2D2N3C3H, Leb.b1No2D2N3C3S])
+           , (Nat.b1No2H,  Leb.b1No2H2N, [Leb.b1No2H2N3C3S])
+           , (DONT.b1No2D, Leb.b1No2D2N, [Leb.b1No2D2N3C3H, Leb.b1No2D2N3C3S])
+           -- Don't invite in either major when the opponents have shown both
+           , (MW.b1No2D,   Leb.b1No2D2N, [Leb.b1No2D2N3C3H, Leb.b1No2D2N3C3S])
+           , (MW.b1No2H,   Leb.b1No2H2N, [Leb.b1No2H2N3C3S])
+           -- Again, don't bid a major when RHO has them both.
+           , (Capp.b1No2H, Leb.b1No2H2N, [Leb.b1No2H2N3C3S])
+           ]
+        -- East should be an unpassed hand to interfere.
+        <~ [T.North, T.South, T.West]
+        <~ T.allVulnerabilities
+
+
 -- TODO:
 -- jump to 3N
 -- relay to 3N (answer should be 2N planning to rebid 3N)
 -- cue bid for Stayman
 -- relay to cue bid (answer should be 2N planning to rebid the cue)
 -- opener responds to Stayman
--- relay to invite
 -- pass or bid game after relay and invite
 
 
@@ -291,4 +323,5 @@ topic = makeTopic
                       , gameForce
                       , completeRelay
                       , passSignoff
+                      , invite
                       ]
