@@ -245,6 +245,7 @@ bid3N_ theirSuits shouldHaveStopper = do
     balancedHand
     forbid b1No2D3H
     forbid b1No2D3S
+    -- TODO: prefer a Stayman-like cue bid instead
     when shouldHaveStopper (forEach theirSuits hasStopper)
     makeCall $ T.Bid 3 T.Notrump
 
