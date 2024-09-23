@@ -17,26 +17,40 @@ module Bids.Lebensohl(
   , b1No2D2S
   , b1No2D2N
   , b1No2D2N3CP
+  , b1No2D2N3C3H
+  , b1No2D2N3C3S
+  , b1No2D2N3C3N
   , b1No2D3C
   , b1No2D3H
   , b1No2D3S
+  , b1No2D3N
   , b1No2H2S
   , b1No2H2N
   , b1No2H2N3CP
   , b1No2H2N3C3D
+  , b1No2H2N3C3S
+  , b1No2H2N3C3N
   , b1No2H3C
   , b1No2H3D
   , b1No2H3S
+  , b1No2H3N
   , b1No2S2N
   , b1No2S2N3CP
   , b1No2S2N3C3D
   , b1No2S2N3C3H
+  , b1No2S2N3C3N
   , b1No2S3C
   , b1No2S3D
   , b1No2S3H
-  , b1NoBM2N  -- For when the opponents show both majors
+  , b1No2S3N
+  -- For when the opponents show both majors
+  , b1NoBM2N
+  , b1NoBM2N3C3N
+  , b1NoBM3N
 ) where
 
+
+import Control.Monad(when)
 
 import Action(Action, withholdBid)
 import qualified Bids.OneNotrump as NT
@@ -133,8 +147,8 @@ gfWithSuit_ ourSuit oppsSuit = do
     -- It's no fun when you bid a suit headed by the queen-nine. Probably do
     -- that at the table, but practice the more obvious holdings instead.
     soundHolding ourSuit
-    -- Prefer notrump when possible
-    alternatives [forbid balancedHand, forbid (hasStopper oppsSuit)]
+    -- If we're 5332 with a stopper in the opponent's suit, prefer notrump.
+    forbid (balancedHand >> hasStopper oppsSuit)
     makeCall $ T.Bid 3 ourSuit
 
 
@@ -203,6 +217,66 @@ b1No2S2N3C3H :: Action
 b1No2S2N3C3H = signoff_ 3 T.Hearts
 
 
+-- Invites for higher suits
+invite_ :: T.Suit -> Action
+invite_ suit = do
+    NT.invitational
+    minSuitLength suit 5
+    primarySuit_ suit
+    -- It's no fun when you bid a suit headed by the queen-nine. Probably do
+    -- that at the table, but practice the more obvious holdings instead.
+    soundHolding suit
+    makeCall $ T.Bid 3 suit
+
+
+b1No2D2N3C3H :: Action
+b1No2D2N3C3H = invite_ T.Hearts
+
+b1No2D2N3C3S :: Action
+b1No2D2N3C3S = invite_ T.Spades
+
+b1No2H2N3C3S :: Action
+b1No2H2N3C3S = invite_ T.Spades
+
+
+bid3N_ :: [T.Suit] -> Bool -> Action
+bid3N_ theirSuits shouldHaveStopper = do
+    NT.gameForcing
+    balancedHand
+    forbid b1No2D3H
+    forbid b1No2D3S
+    when shouldHaveStopper (forEach theirSuits hasStopper)
+    makeCall $ T.Bid 3 T.Notrump
+
+b1No2D3N :: Action
+b1No2D3N = bid3N_ [T.Diamonds] False
+
+b1No2D2N3C3N :: Action
+b1No2D2N3C3N = bid3N_ [T.Diamonds] True
+
+b1No2H3N :: Action
+b1No2H3N = bid3N_ [T.Hearts] False
+
+b1No2H2N3C3N :: Action
+b1No2H2N3C3N = bid3N_ [T.Hearts] True
+
+b1No2S3N :: Action
+b1No2S3N = bid3N_ [T.Spades] False
+
+b1No2S2N3C3N :: Action
+b1No2S2N3C3N = bid3N_ [T.Spades] True
+
+b1NoBM3N :: Action
+b1NoBM3N = do
+    -- Even if we don't have stoppers in both majors, we should have a stopper
+    -- in at least one of them to make this bid plausible.
+    alternatives [hasStopper T.Hearts, hasStopper T.Spades]
+    bid3N_ [T.Hearts, T.Spades] False
+
+b1NoBM2N3C3N :: Action
+b1NoBM2N3C3N = bid3N_ [T.Hearts, T.Spades] True
+
+
 -- Time for the actual lebensohl relays!
 b1N2N3C :: Action
 b1N2N3C = makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
@@ -211,6 +285,9 @@ b1N2N3C = makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
 b1No2D2N :: Action
 b1No2D2N = do
     alternatives [ b1No2D2N3CP
+                 , b1No2D2N3C3H
+                 , b1No2D2N3C3S
+                 , b1No2D2N3C3N
                  ]
     makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
 
@@ -219,6 +296,8 @@ b1No2H2N :: Action
 b1No2H2N = do
     alternatives [ b1No2H2N3CP
                  , b1No2H2N3C3D
+                 , b1No2D2N3C3S
+                 , b1No2D2N3C3N
                  ]
     makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
 
@@ -228,6 +307,7 @@ b1No2S2N = do
     alternatives [ b1No2S2N3CP
                  , b1No2S2N3C3D
                  , b1No2S2N3C3H
+                 , b1No2S2N3C3N
                  ]
     makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
 
@@ -237,5 +317,6 @@ b1NoBM2N :: Action
 b1NoBM2N = do
     alternatives [ b1No2S2N3CP
                  , b1No2S2N3C3D
+                 , b1NoBM2N3C3N
                  ]
     makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
