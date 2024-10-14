@@ -60,4 +60,5 @@ executables:
     - mtl
     - Spock
     - text
+    - wai-extra
     - wai-middleware-static

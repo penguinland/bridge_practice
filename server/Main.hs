@@ -5,6 +5,8 @@ import Control.Monad.Trans(liftIO)
 import Control.Monad.Trans.State.Strict(runStateT)
 import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.Text(pack)
+-- Take the `Dev` off the end to get more standardized server logs.
+import Network.Wai.Middleware.RequestLogger(logStdoutDev)
 import Network.Wai.Middleware.Static(staticPolicy, addBase)
 import System.Random(StdGen, getStdGen)
 import Web.Spock(SpockM, file, text, get, root, spock, runSpock, json,
@@ -31,7 +33,8 @@ main = do
 
 app :: SpockM () MySession MyAppState ()
 app = do
-    -- NOTE: these first two are relative to the current working directory when
+    middleware logStdoutDev
+    -- NOTE: these next two are relative to the current working directory when
     -- you execute the program! So, you need to run it from the right place.
     middleware (staticPolicy (addBase "static"))
     get root $ file "text/html" "static/index.html"
