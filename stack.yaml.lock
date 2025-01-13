@@ -3,10 +3,59 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: Spock-0.14.0.0@sha256:7e86ccc9e66ce0fdb84d1dcd328f852d3754c2dbfcb60d0e7e2f1cce2f32f177,3681
+    pantry-tree:
+      sha256: 6829dae9ba2492fae3e447afe13013dd863bd48fd5b8addfa74fc55d979de7b2
+      size: 1118
+  original:
+    hackage: Spock-0.14.0.0@sha256:7e86ccc9e66ce0fdb84d1dcd328f852d3754c2dbfcb60d0e7e2f1cce2f32f177,3681
+- completed:
+    hackage: Spock-core-0.14.0.1@sha256:0a11ece2a8f0fbd6bf741b2e0337f33032af3881a3a3cb72b22f50fae222b1cf,3582
+    pantry-tree:
+      sha256: 2d79055a51d5bb2364ac70e29c033f981b11619d5e8fd2ec1a650ffedb07ecc3
+      size: 1113
+  original:
+    hackage: Spock-core-0.14.0.1@sha256:0a11ece2a8f0fbd6bf741b2e0337f33032af3881a3a3cb72b22f50fae222b1cf,3582
+- completed:
+    hackage: reroute-0.7.0.0@sha256:ca982d6c747bee4e089f733cd000b8ccf62fb4312cfb0c5de9c8a33f26e02437,2392
+    pantry-tree:
+      sha256: d2f58178bc71075f61ed0568f165f6fa9cbe65191d10fe067eeed3c5c568dd19
+      size: 660
+  original:
+    hackage: reroute-0.7.0.0@sha256:ca982d6c747bee4e089f733cd000b8ccf62fb4312cfb0c5de9c8a33f26e02437,2392
+- completed:
+    hackage: stm-containers-1.2@sha256:a887f2e7692b7cf20e0b081e2d66e21076e2bd4b57016ec59c484edfa2d29397,3244
+    pantry-tree:
+      sha256: 20b1076bdb121347ccc512a67df697eed34815a8e35279b6b9a0951963b1eba2
+      size: 761
+  original:
+    hackage: stm-containers-1.2@sha256:a887f2e7692b7cf20e0b081e2d66e21076e2bd4b57016ec59c484edfa2d29397,3244
+- completed:
+    hackage: stm-hamt-1.2.0.8@sha256:479907a31ed74ecb29ad1a95138632c065b3fef0736234514e0d912975a79fc5,3978
+    pantry-tree:
+      sha256: c1b7279b02dfa8b06be5cc349955648809adbc3798022760a1b9ac2627c3b1f2
+      size: 963
+  original:
+    hackage: stm-hamt-1.2.0.8@sha256:479907a31ed74ecb29ad1a95138632c065b3fef0736234514e0d912975a79fc5,3978
+- completed:
+    hackage: primitive-extras-0.10.1.5@sha256:3cccdf4a2469dd83b7e5c2366ea0c9125b07ab0d1746940887a47f68c886fa61,2959
+    pantry-tree:
+      sha256: 942957e3c2a505b231d32a7fc46cbd8257f35e0c606e58da5e7755fb1950ed69
+      size: 1050
+  original:
+    hackage: primitive-extras-0.10.1.5@sha256:3cccdf4a2469dd83b7e5c2366ea0c9125b07ab0d1746940887a47f68c886fa61,2959
+- completed:
+    hackage: primitive-unlifted-0.1.3.1@sha256:3b00ca2c605168dee97d92490a018891e10f73b81ff5e2eeae48ece309d20485,1427
+    pantry-tree:
+      sha256: c492e3caeebf476ac0ee1daaedbc2464ef5a530a0b0152a353d64b410c3c1ff3
+      size: 420
+  original:
+    hackage: primitive-unlifted-0.1.3.1@sha256:3b00ca2c605168dee97d92490a018891e10f73b81ff5e2eeae48ece309d20485,1427
 snapshots:
 - completed:
-    sha256: b73b2b116143aea728c70e65c3239188998bac5bc3be56465813dacd74215dc5
-    size: 648424
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/1.yaml
-  original: lts-20.1
+    sha256: 637fb77049b25560622a224845b7acfe81a09fdb6a96a3c75997a10b651667f6
+    size: 534126
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/16/31.yaml
+  original: lts-16.31

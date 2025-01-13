@@ -18,7 +18,7 @@ module Terminology (
 
 import Data.Aeson(ToJSON, toJSON, object, (.=))
 import Data.Aeson.Key(fromString)
-import Data.List(singleton)
+--import Data.List(singleton)
 
 import Output(Showable, toLatex, toHtml, Description)
 
@@ -134,7 +134,9 @@ instance Showable CompleteCall where
 instance ToJSON CompleteCall where
     toJSON (CompleteCall c a) = let
         jsonC = fromString "call" .= toHtml c
-        jsonA = maybe [] (singleton . (fromString "alert" .=) . toHtml) a
+        -- When compiling for rpi, Data.List does not yet contain singleton, so
+        -- I'm using (:[]) instead.
+        jsonA = maybe [] ((:[]) . (fromString "alert" .=) . toHtml) a
       in
         object $ jsonC:jsonA
 
