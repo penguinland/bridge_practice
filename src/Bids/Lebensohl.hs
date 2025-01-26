@@ -61,8 +61,8 @@ import Control.Monad(when)
 import Action(Action, withholdBid)
 import qualified Bids.OneNotrump as NT
 import EDSL(minSuitLength, makeCall, makeAlertableCall, pointRange, forEach,
-            forbid, balancedHand, hasStopper, alternatives, soundHolding,
-            longerThan, atLeastAsLong, suitLength)
+            forbid, forbidAll, balancedHand, hasStopper, alternatives,
+            soundHolding, longerThan, atLeastAsLong, suitLength)
 import Output((.+))
 import qualified Terminology as T
 
@@ -249,9 +249,7 @@ bid3N_ :: [T.Suit] -> Bool -> Action
 bid3N_ theirSuits shouldHaveStopper = do
     NT.gameForcing
     balancedHand
-    forbid b1No2D3H
-    forbid b1No2D3S
-    -- TODO: prefer a Stayman-like cue bid instead
+    forbidAll [b1No2D3H, b1No2D3S, cueBid_ (init theirSuits) shouldHaveStopper]
     when shouldHaveStopper (forEach theirSuits hasStopper)
     makeCall $ T.Bid 3 T.Notrump
 
