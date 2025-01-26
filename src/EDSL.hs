@@ -9,6 +9,7 @@ module EDSL (
 , makePass
 , pointRange
 , balancedHand
+, semibalancedHand
 , flatHand
 , suitLength
 , minSuitLength
@@ -79,6 +80,13 @@ makePass = makeCall T.Pass
 balancedHand :: Action
 balancedHand =
     constrain "balanced" ["shape(", ", any 4333 + any 5332 + any 4432)"]
+
+
+semibalancedHand :: Action
+semibalancedHand =
+    alternatives [ balancedHand
+                 , constrain "semibalanced" ["shape(", ", any 5422 + any 6322"]
+                 ]
 
 
 flatHand :: Action

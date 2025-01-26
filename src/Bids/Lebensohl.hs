@@ -61,8 +61,9 @@ import Control.Monad(when)
 import Action(Action, withholdBid)
 import qualified Bids.OneNotrump as NT
 import EDSL(minSuitLength, makeCall, makeAlertableCall, pointRange, forEach,
-            forbid, forbidAll, balancedHand, hasStopper, alternatives,
-            soundHolding, longerThan, atLeastAsLong, suitLength)
+            forbid, forbidAll, balancedHand, semibalancedHand, hasStopper,
+            alternatives, soundHolding, longerThan, atLeastAsLong, suitLength,
+            maxSuitLength)
 import Output((.+))
 import qualified Terminology as T
 
@@ -249,7 +250,7 @@ bid3N_ :: [T.Suit] -> Bool -> Action
 bid3N_ theirSuits shouldHaveStopper = do
     NT.gameForcing
     balancedHand
-    forbidAll [b1No2D3H, b1No2D3S, cueBid_ (init theirSuits) shouldHaveStopper]
+    forbidAll [b1No2D3H, b1No2D3S, cueBid_ (head theirSuits) shouldHaveStopper]
     when shouldHaveStopper (forEach theirSuits hasStopper)
     makeCall $ T.Bid 3 T.Notrump
 
@@ -286,10 +287,16 @@ b1NoBM2N3C3N = bid3N_ [T.Hearts, T.Spades] True
 cueBid_ :: T.Suit -> Bool -> Action
 cueBid_ oppsSuit shouldHaveStopper = do
     NT.gameForcing
+    semibalancedHand
     -- TODO: if the opponents overcall a natural 2D, do you need exactly 4-4 in
     -- the majors? What if you're 4-3? What if you're 5-4?
     forEach (filter (/= oppsSuit) T.majorSuits) (`suitLength` 4)
     when shouldHaveStopper (hasStopper oppsSuit)
+    -- Simultaneously, make sure you don't want to just double the opponents
+    -- because you've got their suit. This isn't so important when they made a
+    -- 2-suited bid (they'd just run to the second suit), but this part of the
+    -- code doesn't know about that. Assume it's just a natural bid.
+    maxSuitLength oppsSuit 4
     makeAlertableCall (T.Bid 3 oppsSuit)
                       ("Stayman with" ++
                            (if shouldHaveStopper then "" else "out") ++
