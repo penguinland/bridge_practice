@@ -386,7 +386,9 @@ cueBidWithStopper = let
             T.Bid 3 T.Notrump .+ " without one because we have a stopper " .+
             "in the opponent's suit. Relay through " .+
             relay .+ ", then bid " .+ bid .+ " as Stayman. Partner can " .+
-            "bid the correct game, based on whether we've got a major-suit fit."
+            "bid the correct game, based on whether we've got a major-suit " .+
+            "fit. The cuebid will be game-forcing, so we can investigate " .+
+            "slam afterwards if we're particularly strong."
       in situation "rel3N" action relay explanation
   in
     wrap $ return sit <~ [ (Nat.b1No2D,  Leb.b1No2D2N, Leb.b1No2D2N3C3D)
@@ -417,14 +419,16 @@ cueBidWithoutStopper = let
         explanation =
             "Partner opened a strong " .+ Leb.b1N .+ ", and RHO " .+
             "interfered with the auction. We'd prefer to play in a " .+
-            "major-suit fit if we have one, but if we don't, playing in " .+
-            T.Bid 3 T.Notrump .+ " might be risky, because we don't have a " .+
-            "stopper in the opponents' suit in our hand. Make a cue bid as " .+
-            "Stayman: partner can bid a major-suit game if we've got a fit, " .+
-            "can bid " .+ T.Bid 3 T.Notrump .+ " if we don't have a fit " .+
-            "but they have a stopper, and if we don't have a fit and " .+
-            "neither of us can stop the opponent's suit, we'll scramble " .+
-            "into a minor-suit contract or perhaps a 7-card fit."
+            "major-suit fit if we have one. If we don't have one, playing " .+
+            "in " .+ T.Bid 3 T.Notrump .+ " might be risky, because we " .+
+            "don't have a stopper in the opponents' suit in our hand. Make " .+
+            "a cue bid as Stayman: partner can bid a major-suit game if " .+
+            "we've got a fit, can bid " .+ T.Bid 3 T.Notrump .+ " if we " .+
+            "don't have a fit but they have a stopper, and if we don't " .+
+            "have a fit and neither of us can stop the opponent's suit, " .+
+            "we'll scramble into a minor-suit contract or perhaps a 7-card " .+
+            "fit. This cue bid is game-forcing, and we can investigate " .+
+            "slam afterwards if we're particularly strong."
       in situation "3N" action bid explanation
   in
     wrap $ return sit <~ [ (Nat.b1No2D,  Leb.b1No2D3D)
