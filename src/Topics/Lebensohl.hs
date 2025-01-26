@@ -452,7 +452,6 @@ cueBidWithoutStopper = let
 -- TODO:
 -- opener responds to Stayman
 -- pass or bid game after relay and invite (maybe not: should be obvious)
--- opener uses normal systems after X or 2C
 
 
 topic :: Topic
