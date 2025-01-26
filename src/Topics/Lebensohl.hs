@@ -371,9 +371,85 @@ bid3NWithoutStopper = let
                       <~ T.allVulnerabilities
 
 
+cueBidWithStopper :: Situations
+cueBidWithStopper = let
+    sit (overcall, relay, bid) = let
+        action = do
+            setOpener T.North
+            Leb.b1N
+            _ <- overcall
+            withholdBid bid
+        explanation =
+            "Partner opened a strong " .+ Leb.b1N .+ ", and RHO " .+
+            "interfered with the auction. We'd prefer to play in a " .+
+            "major-suit fit if we have one, but can tolerate " .+
+            T.Bid 3 T.Notrump .+ " without one because we have a stopper " .+
+            "in the opponent's suit. Relay through " .+
+            relay .+ ", then bid " .+ bid .+ " as Stayman. Partner can " .+
+            "bid the correct game, based on whether we've got a major-suit " .+
+            "fit. The cuebid will be game-forcing, so we can investigate " .+
+            "slam afterwards if we're particularly strong."
+      in situation "rel3N" action relay explanation
+  in
+    wrap $ return sit <~ [ (Nat.b1No2D,  Leb.b1No2D2N, Leb.b1No2D2N3C3D)
+                         , (Nat.b1No2H,  Leb.b1No2H2N, Leb.b1No2H2N3C3H)
+                         , (Nat.b1No2S,  Leb.b1No2S2N, Leb.b1No2S2N3C3S)
+                         , (DONT.b1No2D, Leb.b1No2D2N, Leb.b1No2D2N3C3D)
+                         -- DONT.b1No2H: skip Stayman when RHO has both majors
+                         , (DONT.b1No2S, Leb.b1No2S2N, Leb.b1No2S2N3C3S)
+                         , (MW.b1No2D,   Leb.b1No2D2N, Leb.b1No2D2N3C3D)
+                         , (MW.b1No2H,   Leb.b1No2H2N, Leb.b1No2H2N3C3H)
+                         , (MW.b1No2S,   Leb.b1No2S2N, Leb.b1No2S2N3C3S)
+                         -- Capp.b1No2D: skip Stayman when RHO has both majors
+                         , (Capp.b1No2H, Leb.b1No2H2N, Leb.b1No2H2N3C3H)
+                         , (Capp.b1No2S, Leb.b1No2S2N, Leb.b1No2S2N3C3S)
+                         ]
+                      -- East should be an unpassed hand to interfere.
+                      <~ [T.North, T.South, T.West]
+                      <~ T.allVulnerabilities
+
+
+cueBidWithoutStopper :: Situations
+cueBidWithoutStopper = let
+    sit (overcall, bid) = let
+        action = do
+            setOpener T.North
+            Leb.b1N
+            overcall
+        explanation =
+            "Partner opened a strong " .+ Leb.b1N .+ ", and RHO " .+
+            "interfered with the auction. We'd prefer to play in a " .+
+            "major-suit fit if we have one. If we don't have one, playing " .+
+            "in " .+ T.Bid 3 T.Notrump .+ " might be risky, because we " .+
+            "don't have a stopper in the opponents' suit in our hand. Make " .+
+            "a cue bid as Stayman: partner can bid a major-suit game if " .+
+            "we've got a fit, can bid " .+ T.Bid 3 T.Notrump .+ " if we " .+
+            "don't have a fit but they have a stopper, and if we don't " .+
+            "have a fit and neither of us can stop the opponent's suit, " .+
+            "we'll scramble into a minor-suit contract or perhaps a 7-card " .+
+            "fit. This cue bid is game-forcing, and we can investigate " .+
+            "slam afterwards if we're particularly strong."
+      in situation "3N" action bid explanation
+  in
+    wrap $ return sit <~ [ (Nat.b1No2D,  Leb.b1No2D3D)
+                         , (Nat.b1No2H,  Leb.b1No2H3H)
+                         , (Nat.b1No2S,  Leb.b1No2S3S)
+                         , (DONT.b1No2D, Leb.b1No2D3D)
+                         -- DONT.b1No2H: skip Stayman when RHO has both majors
+                         , (DONT.b1No2S, Leb.b1No2S3S)
+                         , (MW.b1No2D,   Leb.b1No2D3D)
+                         , (MW.b1No2H,   Leb.b1No2H3H)
+                         , (MW.b1No2S,   Leb.b1No2S3S)
+                         -- Capp.b1No2D: skip Stayman when RHO has both majors
+                         , (Capp.b1No2H, Leb.b1No2H3H)
+                         , (Capp.b1No2S, Leb.b1No2S3S)
+                         ]
+                      -- East should be an unpassed hand to interfere.
+                      <~ [T.North, T.South, T.West]
+                      <~ T.allVulnerabilities
+
+
 -- TODO:
--- cue bid for Stayman
--- relay to cue bid (answer should be 2N planning to rebid the cue)
 -- opener responds to Stayman
 -- pass or bid game after relay and invite (maybe not: should be obvious)
 -- opener uses normal systems after X or 2C
@@ -392,4 +468,5 @@ topic = makeTopic
                       , passSignoff
                       , invite
                       , wrap [bid3NWithStopper, bid3NWithoutStopper]
+                      , wrap [cueBidWithStopper, cueBidWithoutStopper]
                       ]

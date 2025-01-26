@@ -17,10 +17,12 @@ module Bids.Lebensohl(
   , b1No2D2S
   , b1No2D2N
   , b1No2D2N3CP
+  , b1No2D2N3C3D
   , b1No2D2N3C3H
   , b1No2D2N3C3S
   , b1No2D2N3C3N
   , b1No2D3C
+  , b1No2D3D
   , b1No2D3H
   , b1No2D3S
   , b1No2D3N
@@ -28,20 +30,24 @@ module Bids.Lebensohl(
   , b1No2H2N
   , b1No2H2N3CP
   , b1No2H2N3C3D
+  , b1No2H2N3C3H
   , b1No2H2N3C3S
   , b1No2H2N3C3N
   , b1No2H3C
   , b1No2H3D
+  , b1No2H3H
   , b1No2H3S
   , b1No2H3N
   , b1No2S2N
   , b1No2S2N3CP
   , b1No2S2N3C3D
   , b1No2S2N3C3H
+  , b1No2S2N3C3S
   , b1No2S2N3C3N
   , b1No2S3C
   , b1No2S3D
   , b1No2S3H
+  , b1No2S3S
   , b1No2S3N
   -- For when the opponents show both majors
   , b1NoBM2N
@@ -55,8 +61,9 @@ import Control.Monad(when)
 import Action(Action, withholdBid)
 import qualified Bids.OneNotrump as NT
 import EDSL(minSuitLength, makeCall, makeAlertableCall, pointRange, forEach,
-            forbid, balancedHand, hasStopper, alternatives, soundHolding,
-            longerThan, atLeastAsLong)
+            forbid, forbidAll, balancedHand, semibalancedHand, hasStopper,
+            alternatives, soundHolding, longerThan, atLeastAsLong, suitLength,
+            maxSuitLength)
 import Output((.+))
 import qualified Terminology as T
 
@@ -243,9 +250,7 @@ bid3N_ :: [T.Suit] -> Bool -> Action
 bid3N_ theirSuits shouldHaveStopper = do
     NT.gameForcing
     balancedHand
-    forbid b1No2D3H
-    forbid b1No2D3S
-    -- TODO: prefer a Stayman-like cue bid instead
+    forbidAll [b1No2D3H, b1No2D3S, cueBid_ (head theirSuits) shouldHaveStopper]
     when shouldHaveStopper (forEach theirSuits hasStopper)
     makeCall $ T.Bid 3 T.Notrump
 
@@ -278,6 +283,44 @@ b1NoBM2N3C3N :: Action
 b1NoBM2N3C3N = bid3N_ [T.Hearts, T.Spades] True
 
 
+-- Stayman-like cue bids
+cueBid_ :: T.Suit -> Bool -> Action
+cueBid_ oppsSuit shouldHaveStopper = do
+    NT.gameForcing
+    semibalancedHand
+    -- TODO: if the opponents overcall a natural 2D, do you need exactly 4-4 in
+    -- the majors? What if you're 4-3? What if you're 5-4?
+    forEach (filter (/= oppsSuit) T.majorSuits) (`suitLength` 4)
+    when shouldHaveStopper (hasStopper oppsSuit)
+    -- Simultaneously, make sure you don't want to just double the opponents
+    -- because you've got their suit. This isn't so important when they made a
+    -- 2-suited bid (they'd just run to the second suit), but this part of the
+    -- code doesn't know about that. Assume it's just a natural bid.
+    maxSuitLength oppsSuit 4
+    makeAlertableCall (T.Bid 3 oppsSuit)
+                      ("Stayman with" ++
+                           (if shouldHaveStopper then "" else "out") ++
+                           " a stopper")
+
+b1No2D3D :: Action
+b1No2D3D = cueBid_ T.Diamonds False
+
+b1No2D2N3C3D :: Action
+b1No2D2N3C3D = cueBid_ T.Diamonds True
+
+b1No2H3H :: Action
+b1No2H3H = cueBid_ T.Hearts False
+
+b1No2H2N3C3H :: Action
+b1No2H2N3C3H = cueBid_ T.Hearts True
+
+b1No2S3S :: Action
+b1No2S3S = cueBid_ T.Spades False
+
+b1No2S2N3C3S :: Action
+b1No2S2N3C3S = cueBid_ T.Spades True
+
+
 -- Time for the actual lebensohl relays!
 b1N2N3C :: Action
 b1N2N3C = makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
@@ -286,6 +329,7 @@ b1N2N3C = makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
 b1No2D2N :: Action
 b1No2D2N = do
     alternatives [ b1No2D2N3CP
+                 , b1No2D2N3C3D
                  , b1No2D2N3C3H
                  , b1No2D2N3C3S
                  , b1No2D2N3C3N
@@ -297,6 +341,7 @@ b1No2H2N :: Action
 b1No2H2N = do
     alternatives [ b1No2H2N3CP
                  , b1No2H2N3C3D
+                 , b1No2H2N3C3H
                  , b1No2D2N3C3S
                  , b1No2D2N3C3N
                  ]
@@ -308,6 +353,7 @@ b1No2S2N = do
     alternatives [ b1No2S2N3CP
                  , b1No2S2N3C3D
                  , b1No2S2N3C3H
+                 , b1No2S2N3C3S
                  , b1No2S2N3C3N
                  ]
     makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
@@ -319,5 +365,6 @@ b1NoBM2N = do
     alternatives [ b1No2S2N3CP
                  , b1No2S2N3C3D
                  , b1NoBM2N3C3N
+                 -- Don't bother with a Stayman-like bid: RHO has both majors
                  ]
     makeAlertableCall (T.Bid 2 T.Notrump) ("relay to " .+ T.Bid 3 T.Clubs)
