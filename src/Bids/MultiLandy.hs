@@ -12,8 +12,7 @@ module Bids.MultiLandy(
 import Action(Action)
 import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import Bids.StandardOpenings(b1N)
-import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
-            alternatives, forEach)
+import EDSL(makeAlertableCall, alternatives, pointRange, balancedHand)
 import Output ((.+))
 import qualified Terminology as T
 
@@ -21,9 +20,13 @@ import qualified Terminology as T
 b1NoX :: Action
 b1NoX = do
     pointRange 17 40
-    -- You don't have a suit you really want to bid
-    mapM_ (`maxSuitLength` 4) T.majorSuits
-    mapM_ (`maxSuitLength` 5) T.minorSuits
+    -- This is probably the wrong approach: if you're 4441, you might bid this,
+    -- too. and if you're 5521 with good singletons and doubletons and bad
+    -- 5-card suits, you might double, too. but certainly if you've got a
+    -- balanced hand, this is the right call.
+    -- TODO: broaden this to more possible hand types when it's clear what they
+    -- are.
+    balancedHand
     makeAlertableCall T.Double "penalty-oriented"
 
 
@@ -35,13 +38,13 @@ b1No2C = do
 
 b1No2D :: Action
 b1No2D = do
-    alternatives [oneSuited T.Hearts, oneSuited T.Spades]
+    alternatives [singleSuited T.Hearts, singleSuited T.Spades]
     makeAlertableCall (T.Bid 2 T.Clubs) "one long major"
 
 
 minorAndMajor :: T.Suit -> Action
 minorAndMajor major = do
-    alternatives [twoSuited minor T.Clubs, twoSuited minor T.Diamonds]
+    alternatives [twoSuited major T.Clubs, twoSuited major T.Diamonds]
     makeAlertableCall (T.Bid 2 major) (show major .+ " and a minor")
 
 b1No2H :: Action
