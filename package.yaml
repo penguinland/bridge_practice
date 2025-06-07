@@ -45,6 +45,17 @@ executables:
     - -Werror
     dependencies:
     - bridge-practice
+  make_dealer_prog:
+    main:                Main.hs
+    source-dirs:         make_dealer_prog
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -Wall
+    - -Werror
+    dependencies:
+    - bridge-practice
   server:
     main:                Main.hs
     source-dirs:         server
