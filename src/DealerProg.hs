@@ -10,7 +10,7 @@ module DealerProg(
 
 import Data.List(transpose)
 import Data.List.Utils(join, split, wholeMap, fixedWidth)
-import qualified Data.Map.Ordered.Strict as OMap
+import qualified Data.Map.Strict as Map
 import Data.String.Utils(strip)
 import GHC.IO.Exception(ExitCode(ExitSuccess))
 import System.Process(readProcessWithExitCode)
@@ -29,24 +29,24 @@ type CondName = String
 type CondDefn = String
 
 
-data DealerProg = DealerProg (OMap.OMap CondName CondDefn) [CondName]
+data DealerProg = DealerProg (Map.Map CondName CondDefn) [CondName]
 
 
 instance Semigroup DealerProg where
     (DealerProg defnsA reqsA) <> (DealerProg defnsB reqsB) =
-        DealerProg (OMap.unionWithL noDupes defnsA defnsB) (reqsB ++ reqsA)
+        DealerProg (Map.unionWithKey noDupes defnsA defnsB) (reqsB ++ reqsA)
       where
         noDupes k a b | a == b    = a
                       | otherwise = error $ "2 definitons for " ++ k
 
 instance Monoid DealerProg where
-    mempty = DealerProg OMap.empty []
+    mempty = DealerProg Map.empty []
 
 
 addDefn :: CondName -> CondDefn -> DealerProg -> DealerProg
 addDefn name defn (DealerProg m l) =
-  case OMap.lookup name m of
-    Nothing    -> DealerProg ((name, defn) OMap.<| m) l
+  case Map.lookup name m of
+    Nothing    -> DealerProg (Map.insert name defn m) l
     Just defn' -> if defn == defn' then DealerProg m l
                                    else error $ "2 defintions for " ++ name
 
@@ -75,14 +75,14 @@ toProgram (DealerProg defns conds) = join "\n" $
     -- isn't enough, consider removing those situations from practice entirely,
     -- since they'll probably never come up.
     ["generate 10000000", "produce 1", ""] ++
-    (concatMap formatDefinition . OMap.assocs $ defns) ++
-    ["", "condition",
-     "    " ++ (join " && " . map conditionToString . reverse $ conds),
-     "action", "    printall"]
+    Map.foldMapWithKey formatDefinition defns
+    ++ ["", "condition",
+        "    " ++ (join " && " . map conditionToString . reverse $ conds),
+        "action", "    printall"]
   where
     conditionToString :: CondName -> String
     conditionToString = id
-    formatDefinition (name, defn) =
+    formatDefinition name defn =
         ["    " ++ conditionToString name ++ " = " ++ defn]
 
 

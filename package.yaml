@@ -23,7 +23,6 @@ dependencies:
 - base >= 4.11 && < 5
 - containers
 - MissingH
-- ordered-containers
 - process
 - random
 - transformers
