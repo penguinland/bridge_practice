@@ -1,5 +1,6 @@
 module EDSL (
-  forbid
+  nameAction
+, forbid
 , forbidAll
 , alternatives
 , impliesThat
@@ -33,10 +34,18 @@ import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
 import Action(Action, newAuction, constrain)
-import DealerProg(invert)
+import DealerProg(invert, nameAll)
 import Output(Showable, toDescription)
 import Structures(addCall, currentBidder)
 import qualified Terminology as T
+
+
+nameAction :: String -> Action -> Action
+nameAction name action = do
+    (bidding, dealerProg) <- get
+    let freshAuction = newAuction . currentBidder $ bidding
+        (extraBidding, dealerToName) = execState action freshAuction
+    put (bidding <> extraBidding, dealerProg <> nameAll name dealerToName)
 
 
 forbid :: Action -> Action
@@ -44,7 +53,7 @@ forbid action = do
     (bidding, dealerProg) <- get
     let freshAuction = newAuction . currentBidder $ bidding
         (_, dealerToInvert) = execState action freshAuction
-    put (bidding, dealerProg `mappend` invert dealerToInvert)
+    put (bidding, dealerProg <> invert dealerToInvert)
 
 
 forbidAll :: [Action] -> Action

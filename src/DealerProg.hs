@@ -3,6 +3,7 @@ module DealerProg(
 , addDefn
 , addNewReq
 , invert
+, nameAll
 , eval
 , toProgram -- TODO: remove when done debugging
 ) where
@@ -44,6 +45,11 @@ addNewReq name defn (DealerProg m l) =
 invert :: DealerProg -> DealerProg
 invert (DealerProg defns reqs) =
     DealerProg defns ["!(" ++ join " && " reqs ++ ")"]
+
+
+nameAll :: CondName -> DealerProg -> DealerProg
+nameAll name (DealerProg defns reqs) =
+    addNewReq name (join " && " . reverse $ reqs) (DealerProg defns mempty)
 
 
 toProgram :: DealerProg -> String
