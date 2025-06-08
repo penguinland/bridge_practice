@@ -84,7 +84,7 @@ withholdBid action = do
     (bidding, dealerProg) <- get
     let freshAuction = newAuction . currentBidder $ bidding
         (_, dealerToWithhold) = execState action freshAuction
-    put (bidding, dealerProg `mappend` dealerToWithhold)
+    put (bidding, dealerProg <> dealerToWithhold)
 
 
 -- This isn't the more specific type `Action -> T.CompleteCall` in order to get
