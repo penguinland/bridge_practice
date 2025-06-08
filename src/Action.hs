@@ -78,7 +78,7 @@ define :: String -> [String] -> Action
 define = _modifyDealerProg addDefn
 
 
--- Define the constraints in this action without modifying the current Auction.
+-- Add the constraints in this action without modifying the current Bidding.
 withholdBid :: Action -> Action
 withholdBid action = do
     (bidding, dealerProg) <- get
