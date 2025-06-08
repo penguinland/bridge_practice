@@ -34,7 +34,7 @@ data DealerProg = DealerProg (OMap.OMap CondName CondDefn) [CondName]
 
 instance Semigroup DealerProg where
     (DealerProg defnsA reqsA) <> (DealerProg defnsB reqsB) =
-        DealerProg (OMap.unionWithR noDupes defnsA defnsB) (reqsB ++ reqsA)
+        DealerProg (OMap.unionWithL noDupes defnsA defnsB) (reqsB ++ reqsA)
       where
         noDupes k a b | a == b    = a
                       | otherwise = error $ "2 definitons for " ++ k
