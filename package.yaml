@@ -27,33 +27,22 @@ dependencies:
 - random
 - transformers
 
+ghc-options:
+- -Wall
+- -Werror
+
 library:
   source-dirs: src
-  ghc-options:
-  - -Wall
-  - -Werror
 
 executables:
   make_pdf:
     main:                Main.hs
     source-dirs:         make_pdf
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    - -Wall
-    - -Werror
     dependencies:
     - bridge-practice
   make_dealer_prog:
     main:                Main.hs
     source-dirs:         make_dealer_prog
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    - -Wall
-    - -Werror
     dependencies:
     - bridge-practice
   server:
@@ -61,10 +50,6 @@ executables:
     source-dirs:         server
     ghc-options:
     - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    - -Wall
-    - -Werror
     dependencies:
     - bridge-practice
     - extra
