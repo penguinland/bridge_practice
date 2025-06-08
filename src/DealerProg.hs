@@ -1,7 +1,6 @@
 module DealerProg(
   DealerProg
 , addDefn
-, addReq   -- TODO: does this need to be public?
 , addNewReq
 , invert
 , eval
@@ -10,53 +9,36 @@ module DealerProg(
 
 import Data.List(transpose)
 import Data.List.Utils(join, split, wholeMap, fixedWidth)
-import qualified Data.Map.Strict as Map
 import Data.String.Utils(strip)
 import GHC.IO.Exception(ExitCode(ExitSuccess))
 import System.Process(readProcessWithExitCode)
 
+import DealerDefs(CondName, CondDefn, DealerDefs, addDefinition, toProgDefs)
 import qualified Structures as S
 import qualified Terminology as T
 
 
--- TODO: Make these (String, Direction) and [String]. This is difficult at the
--- moment because `invert` prematurely casts some of these to string, meaning
--- the separate direction is lost within inversions before it is lost elsewhere,
--- and thus rotating the auction doesn't work properly. Better might be to make
--- a free monad with an interpreter at the end which casts it to a dealer
--- program?
-type CondName = String
-type CondDefn = String
-
-
-data DealerProg = DealerProg (Map.Map CondName CondDefn) [CondName]
+-- Contains all definitions and then required conditions
+data DealerProg = DealerProg DealerDefs [CondName]
 
 
 instance Semigroup DealerProg where
     (DealerProg defnsA reqsA) <> (DealerProg defnsB reqsB) =
-        DealerProg (Map.unionWithKey noDupes defnsA defnsB) (reqsB ++ reqsA)
-      where
-        noDupes k a b | a == b    = a
-                      | otherwise = error $ "2 definitons for " ++ k
+        DealerProg (defnsA <> defnsB) (reqsB ++ reqsA)
+
 
 instance Monoid DealerProg where
-    mempty = DealerProg Map.empty []
+    mempty = DealerProg mempty []
 
 
 addDefn :: CondName -> CondDefn -> DealerProg -> DealerProg
 addDefn name defn (DealerProg m l) =
-  case Map.lookup name m of
-    Nothing    -> DealerProg (Map.insert name defn m) l
-    Just defn' -> if defn == defn' then DealerProg m l
-                                   else error $ "2 defintions for " ++ name
-
-
-addReq :: CondName -> DealerProg -> DealerProg
-addReq expr (DealerProg m l) = DealerProg m (expr:l)
+  DealerProg (addDefinition name defn m) l
 
 
 addNewReq :: CondName -> CondDefn -> DealerProg -> DealerProg
-addNewReq name defn = addReq name . addDefn name defn
+addNewReq name defn (DealerProg m l) =
+  DealerProg (addDefinition name defn m) (name:l)
 
 
 invert :: DealerProg -> DealerProg
@@ -75,15 +57,10 @@ toProgram (DealerProg defns conds) = join "\n" $
     -- isn't enough, consider removing those situations from practice entirely,
     -- since they'll probably never come up.
     ["generate 10000000", "produce 1", ""] ++
-    Map.foldMapWithKey formatDefinition defns
+    toProgDefs defns
     ++ ["", "condition",
-        "    " ++ (join " && " . map conditionToString . reverse $ conds),
+        "    " ++ (join " && " . reverse $ conds),
         "action", "    printall"]
-  where
-    conditionToString :: CondName -> String
-    conditionToString = id
-    formatDefinition name defn =
-        ["    " ++ conditionToString name ++ " = " ++ defn]
 
 
 eval :: T.Direction -> T.Vulnerability -> DealerProg -> Int -> IO (Maybe S.Deal)

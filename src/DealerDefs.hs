@@ -1,5 +1,7 @@
 module DealerDefs(
-  DealerDefs
+  CondName
+, CondDefn
+, DealerDefs
 , addDefinition
 , toProgDefs
 ) where
@@ -9,11 +11,11 @@ import Data.Maybe(fromMaybe)
 
 
 -- TODO: Make these (String, Direction) and [String]. This is difficult at the
--- moment because `invert` prematurely casts some of these to string, meaning
--- the separate direction is lost within inversions before it is lost elsewhere,
--- and thus rotating the auction doesn't work properly. Better might be to make
--- a free monad with an interpreter at the end which casts it to a dealer
--- program?
+-- moment because `DealerProg.invert` prematurely casts some of these to string,
+-- meaning the separate direction is lost within inversions before it is lost
+-- elsewhere, and thus rotating the auction doesn't work properly. Better might
+-- be to make a free monad with an interpreter at the end which casts it to a
+-- dealer program?
 type CondName = String
 type CondDefn = String
 
