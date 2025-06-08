@@ -45,7 +45,8 @@ nameAction name action = do
     (bidding, dealerProg) <- get
     let freshAuction = newAuction . currentBidder $ bidding
         (extraBidding, dealerToName) = execState action freshAuction
-    put (bidding <> extraBidding, dealerProg <> nameAll name dealerToName)
+        fullName = name ++ "_" ++ (show . currentBidder $ bidding)
+    put (bidding <> extraBidding, dealerProg <> nameAll fullName dealerToName)
 
 
 forbid :: Action -> Action
