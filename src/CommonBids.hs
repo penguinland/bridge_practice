@@ -20,21 +20,21 @@ import Control.Monad.Trans.State.Strict(get)
 import Action(Action, constrain, define)
 import EDSL(forbid, pointRange, balancedHand, makeCall, makeAlertableCall,
             makePass, suitLength, minSuitLength, maxSuitLength, alternatives,
-            forEach)
+            forEach, nameAction)
 import Output(Punct(..), (.+))
 import Structures(currentBidder)
 import qualified Terminology as T
 
 
 strong1NT :: Action
-strong1NT = do
+strong1NT = nameAction "bid_strong_1n" $ do
     balancedHand
     pointRange 15 17
     makeAlertableCall (T.Bid 1 T.Notrump) ("15" .+ NDash .+ "17 HCP")
 
 
 weak1NT :: Action
-weak1NT = do
+weak1NT = nameAction "bid_weak_1n" $ do
     balancedHand
     pointRange 12 14
     makeAlertableCall (T.Bid 1 T.Notrump) ("12" .+ NDash .+ "14 HCP")
