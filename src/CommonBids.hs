@@ -149,7 +149,7 @@ setOpener opener = do
 
 
 takeoutDouble :: T.Suit -> Action
-takeoutDouble shortSuit = do
+takeoutDouble shortSuit = nameAction ("toX_" ++ T.suitLetter shortSuit) $ do
     pointRange 11 40
     forEach T.allSuits setSuitLength
   where
@@ -160,7 +160,7 @@ takeoutDouble shortSuit = do
 
 
 noInterference :: T.Suit -> Action
-noInterference suit = do
+noInterference suit = nameAction ("pass_over_" ++ T.suitLetter suit) $ do
     cannotPreempt
     -- Building out the entire overcall structure just so we can forbid any of
     -- it here is too complicated for now. Let's just say the opponent has at
