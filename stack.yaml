@@ -21,10 +21,6 @@
 #resolver: lts-11.22
 resolver: lts-20.1
 
-# Set the number of things to compile in parallel to one more than the number of
-# CPU cores I have. Hopefully that'll speed up build times.
-jobs: 5
-
 # User packages to be built.
 # Various formats can be used as shown in the example below.
 #
