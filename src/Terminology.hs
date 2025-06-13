@@ -3,6 +3,7 @@ module Terminology (
 , allDirections
 , next
 , Suit(..)
+, suitLetter
 , allSuits
 , minorSuits
 , majorSuits
@@ -76,6 +77,13 @@ instance Show Suit where
     show Hearts   = "hearts"
     show Spades   = "spades"
     show Notrump  = "notrump"
+
+suitLetter :: Suit -> String
+suitLetter Clubs    = "C"
+suitLetter Diamonds = "D"
+suitLetter Hearts   = "H"
+suitLetter Spades   = "S"
+suitLetter Notrump  = "N"
 
 allSuits :: [Suit]
 allSuits = [Clubs, Diamonds, Hearts, Spades]

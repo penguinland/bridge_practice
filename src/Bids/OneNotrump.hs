@@ -66,7 +66,7 @@ import CommonBids(cannotPreempt)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
             makeCall, makeAlertableCall, alternatives, balancedHand,
             longerThan, atLeastAsLong, flatHand, loserCount, minLoserCount,
-            forbidAll, impliesThat, forEach, hasTopN)
+            forbidAll, impliesThat, forEach, hasTopN, nameAction)
 import Output((.+))
 import qualified Terminology as T
 
@@ -135,18 +135,18 @@ texasTransfer_ suit = do
     transferSuit _        = error "Texas transfer to non-major suit"
 
 b1N4D :: Action
-b1N4D = texasTransfer_ T.Hearts
+b1N4D = nameAction "b1N4D" (texasTransfer_ T.Hearts)
 
 b1N4H :: Action
-b1N4H = texasTransfer_ T.Spades
+b1N4H = nameAction "b1N4H" (texasTransfer_ T.Spades)
 
 
 -- Opener should always complete the Texas Transfer: no constraints on that.
 b1N4D4H :: Action
-b1N4D4H = makeCall $ T.Bid 4 T.Hearts
+b1N4D4H = nameAction "b1N4D4H" (makeCall $ T.Bid 4 T.Hearts)
 
 b1N4H4S :: Action
-b1N4H4S = makeCall $ T.Bid 4 T.Spades
+b1N4H4S = nameAction "b1N4H4S" (makeCall $ T.Bid 4 T.Spades)
 
 
 equalMajors_ :: Action
@@ -154,7 +154,7 @@ equalMajors_ = constrain "equal_majors" ["hearts(", ") == spades(", ")"]
 
 
 b1N2D :: Action
-b1N2D = do
+b1N2D = nameAction "b1N2D" $ do
     minSuitLength T.Hearts 5
     forEach [T.Clubs, T.Diamonds, T.Spades] (T.Hearts `atLeastAsLong`)
     -- Prefer to bid Smolen or a Texas transfer instead.
@@ -170,7 +170,7 @@ b1N2D = do
 
 
 b1N2H :: Action
-b1N2H = do
+b1N2H = nameAction "b1N2H" $ do
     minSuitLength T.Spades 5
     forEach [T.Clubs, T.Diamonds, T.Hearts] (T.Spades `atLeastAsLong`)
     -- Prefer to bid Smolen or a Texas transfer instead.
@@ -185,14 +185,14 @@ b1N2H = do
 
 -- You can superaccept a Jacoby transfer with 4-card support and a maximum.
 b1N2D3H :: Action
-b1N2D3H = do
+b1N2D3H = nameAction "b1N2D3H" $ do
     minSuitLength T.Hearts 4
     pointRange 17 17 -- Do it with a good 16, too, but defining "good" is hard
     forbid flatHand
     makeCall $ T.Bid 3 T.Hearts
 
 b1N2H3S :: Action
-b1N2H3S = do
+b1N2H3S = nameAction "b1N2H3S" $ do
     minSuitLength T.Spades 4
     pointRange 17 17 -- Do it with a good 16, too, but defining "good" is hard
     forbid flatHand
@@ -201,25 +201,25 @@ b1N2H3S = do
 
 -- If you can't superaccept, just normal-accept
 b1N2D2H :: Action
-b1N2D2H = do
+b1N2D2H = nameAction "b1N2D2H" $ do
     forbid b1N2D3H
     makeCall $ T.Bid 2 T.Hearts
 
 b1N2H2S :: Action
-b1N2H2S = do
+b1N2H2S = nameAction "b1N2H2S" $ do
     forbid b1N2H3S
     makeCall $ T.Bid 2 T.Spades
 
 
 -- A slam invite is a Jacoby transfer that is then raised immediately to game
 b1N2D2H4H :: Action
-b1N2D2H4H = do
+b1N2D2H4H = nameAction "b1N2D2H4H" $ do
     minSuitLength T.Hearts 6
     slamInvite
     makeCall $ T.Bid 4 T.Hearts
 
 b1N2H2S4S :: Action
-b1N2H2S4S = do
+b1N2H2S4S = nameAction "b1N2H2S4S" $ do
     minSuitLength T.Spades 6
     slamInvite
     makeCall $ T.Bid 4 T.Spades
@@ -229,7 +229,7 @@ b1N2H2S4S = do
 -- transfers, use a Stayman that might be a notrump invite without a 4-card
 -- major, so that 2N can be a transfer to diamonds instead of a natural invite.
 b1N2C :: Action
-b1N2C = do
+b1N2C = nameAction "b1N2C" $ do
     -- For normal Stayman, you should have an exactly 4-card major: 4-2 is
     -- Stayman, 4-4 is Stayman, 5-4 is Stayman then Smolen, 6-4 is Stayman then
     -- Texas, 5-5 is a transfer, 5-3 is a transfer, 6-3 is a transfer.
@@ -248,20 +248,20 @@ b1N2C = do
 
 
 b1N2C2D :: Action
-b1N2C2D = do
+b1N2C2D = nameAction "b1N2C2D" $ do
     maxSuitLength T.Hearts 3
     maxSuitLength T.Spades 3
     makeCall $ T.Bid 2 T.Diamonds  -- Not alertable in the ACBL!
 
 
 b1N2C2H :: Action
-b1N2C2H = do
+b1N2C2H = nameAction "b1N2C2H" $ do
     minSuitLength T.Hearts 4
     makeCall $ T.Bid 2 T.Hearts
 
 
 b1N2C2S :: Action
-b1N2C2S = do
+b1N2C2S = nameAction "b1N2C2S" $ do
     minSuitLength T.Spades 4
     -- If you're 4-4 in the majors, bid 1H instead.
     maxSuitLength T.Hearts 3
@@ -280,28 +280,28 @@ smolen_ longMajor = do
         ("Smolen: 5 " .+ longMajor .+ ", 4 " .+ shortMajor .+ ", GF")
 
 b1N2C2D3H :: Action
-b1N2C2D3H = smolen_ T.Spades
+b1N2C2D3H = nameAction "b1N2C2D3H" (smolen_ T.Spades)
 
 b1N2C2D3S :: Action
-b1N2C2D3S = smolen_ T.Hearts
+b1N2C2D3S = nameAction "b1N2C2D3S" (smolen_ T.Hearts)
 
 
 b1N2C2D2N :: Action
-b1N2C2D2N = do
+b1N2C2D2N = nameAction "b1N2C2D2N" $ do
     balancedHand  -- Is this right? What would you rebid with a 4135 invite?
     pointRange 8 9
     makeCall $ T.Bid 2 T.Notrump
 
 
 b1N2C2D3N :: Action
-b1N2C2D3N = do
+b1N2C2D3N = nameAction "b1N2C2D3N" $ do
     balancedHand
     pointRange 10 14
     makeCall $ T.Bid 3 T.Notrump
 
 
 b1N2C2D4N :: Action
-b1N2C2D4N = do
+b1N2C2D4N = nameAction "b1N2C2D4N" $ do
     balancedHand
     pointRange 15 16
     makeCall $ T.Bid 4 T.Notrump
@@ -315,10 +315,10 @@ inviteWithMajor suit = do
     makeCall $ T.Bid 3 suit
 
 b1N2C2H3H :: Action
-b1N2C2H3H = inviteWithMajor T.Hearts
+b1N2C2H3H = nameAction "b1N2C2H3H" (inviteWithMajor T.Hearts)
 
 b1N2C2S3S :: Action
-b1N2C2S3S = inviteWithMajor T.Spades
+b1N2C2S3S = nameAction "b1N2C2S3S" (inviteWithMajor T.Spades)
 
 
 gameForceWithMajor :: T.Suit -> Action
@@ -329,10 +329,10 @@ gameForceWithMajor suit = do
     makeCall $ T.Bid 4 suit
 
 b1N2C2H4H :: Action
-b1N2C2H4H = gameForceWithMajor T.Hearts
+b1N2C2H4H = nameAction "b1N2C2H4H" (gameForceWithMajor T.Hearts)
 
 b1N2C2S4S :: Action
-b1N2C2S4S = gameForceWithMajor T.Spades
+b1N2C2S4S = nameAction "b1N2C2S4S" (gameForceWithMajor T.Spades)
 
 
 slamWithMajor :: T.Suit -> T.Suit -> Action
@@ -342,10 +342,10 @@ slamWithMajor suit otherSuit = do
     makeAlertableCall (T.Bid 3 otherSuit) "slam interest in partner's major"
 
 b1N2C2H3S :: Action
-b1N2C2H3S = slamWithMajor T.Hearts T.Spades
+b1N2C2H3S = nameAction "b1N2C2H3S" (slamWithMajor T.Hearts T.Spades)
 
 b1N2C2S3H :: Action
-b1N2C2S3H = slamWithMajor T.Spades T.Hearts
+b1N2C2S3H = nameAction "b1N2C2S3H" (slamWithMajor T.Spades T.Hearts)
 
 
 wrongMajorTo3N :: T.Suit -> Action
@@ -356,10 +356,10 @@ wrongMajorTo3N suit = do
     makeCall $ T.Bid 3 T.Notrump
 
 b1N2C2H3N :: Action
-b1N2C2H3N = wrongMajorTo3N T.Hearts
+b1N2C2H3N = nameAction "b1N2C2H3N" (wrongMajorTo3N T.Hearts)
 
 b1N2C2S3N :: Action
-b1N2C2S3N = wrongMajorTo3N T.Spades
+b1N2C2S3N = nameAction "b1N2C2S3N" (wrongMajorTo3N T.Spades)
 
 
 inv54 :: T.Suit -> Action
@@ -371,10 +371,10 @@ inv54 major = do
     makeCall $ T.Bid 2 major
 
 b1N2C2D2H :: Action
-b1N2C2D2H = inv54 T.Hearts
+b1N2C2D2H = nameAction "b1N2C2D2H" (inv54 T.Hearts)
 
 b1N2C2D2S :: Action
-b1N2C2D2S = inv54 T.Spades
+b1N2C2D2S = nameAction "b1N2C2D2S" (inv54 T.Spades)
 
 
 gfNoFitUnbalanced :: T.Suit -> T.Suit -> Action
@@ -389,43 +389,43 @@ gfNoFitUnbalanced partnerMajor ourMinor = do
     makeCall $ T.Bid 3 ourMinor
 
 b1N2C2H3C :: Action
-b1N2C2H3C = gfNoFitUnbalanced T.Hearts T.Clubs
+b1N2C2H3C = nameAction "b1N2C2H3C" (gfNoFitUnbalanced T.Hearts T.Clubs)
 
 b1N2C2H3D :: Action
-b1N2C2H3D = gfNoFitUnbalanced T.Hearts T.Diamonds
+b1N2C2H3D = nameAction "b1N2C2H3D" (gfNoFitUnbalanced T.Hearts T.Diamonds)
 
 b1N2C2S3C :: Action
-b1N2C2S3C = gfNoFitUnbalanced T.Spades T.Clubs
+b1N2C2S3C = nameAction "b1N2C2S3C" (gfNoFitUnbalanced T.Spades T.Clubs)
 
 b1N2C2S3D :: Action
-b1N2C2S3D = gfNoFitUnbalanced T.Spades T.Diamonds
+b1N2C2S3D = nameAction "b1N2C2S3D" (gfNoFitUnbalanced T.Spades T.Diamonds)
 
 
 -- Times when opener is 4-4 in the majors, bids hearts over Stayman, and doesn't
 -- yet find a fit.
 b1N2C2H3C4S :: Action
-b1N2C2H3C4S = do
+b1N2C2H3C4S = nameAction "b1N2C2H3C4S" $ do
     suitLength T.Spades 4
     makeCall $ T.Bid 4 T.Spades
 
 b1N2C2H3D4S :: Action
-b1N2C2H3D4S = do
+b1N2C2H3D4S = nameAction "b1N2C2H3D4S" $ do
     suitLength T.Spades 4
     makeCall $ T.Bid 4 T.Spades
 
 b1N2C2H3N4S :: Action
-b1N2C2H3N4S = do
+b1N2C2H3N4S = nameAction "b1N2C2H3N4S" $ do
     suitLength T.Spades 4
     makeCall $ T.Bid 4 T.Spades
 
 -- If responder is an unpassed hand, prefer to rebid 3S instead of 4S
 b1N2C2H3C3S :: Action
-b1N2C2H3C3S = do
+b1N2C2H3C3S = nameAction "b1N2C2H3C3S" $ do
     suitLength T.Spades 4
     makeCall $ T.Bid 3 T.Spades
 
 b1N2C2H3D3S :: Action
-b1N2C2H3D3S = do
+b1N2C2H3D3S = nameAction "b1N2C2H3D3S" $ do
     suitLength T.Spades 4
     makeCall $ T.Bid 3 T.Spades
 
@@ -433,13 +433,13 @@ b1N2C2H3D3S = do
 -- Bids showing 5-5 in the majors
 
 b1N2D2H2S :: Action
-b1N2D2H2S = do
+b1N2D2H2S = nameAction "b1N2D2H2S" $ do
     minSuitLength T.Spades 5
     invitational
     makeCall $ T.Bid 2 T.Spades
 
 b1N2H2S3H :: Action
-b1N2H2S3H = do
+b1N2H2S3H = nameAction "b1N2H2S3H" $ do
     minSuitLength T.Hearts 5
     gameForcing
     makeCall $ T.Bid 3 T.Hearts
@@ -447,7 +447,7 @@ b1N2H2S3H = do
 -- Unbalanced game-forcing rebids
 
 b1N2D2H3C :: Action
-b1N2D2H3C = do
+b1N2D2H3C = nameAction "b1N2D2H3C" $ do
     gameForcing
     minSuitLength T.Clubs 4
     hasTopN T.Clubs 4 2  -- Don't do it with a bad side suit
@@ -460,7 +460,7 @@ b1N2D2H3C = do
     makeCall $ T.Bid 3 T.Clubs
 
 b1N2D2H3D :: Action
-b1N2D2H3D = do
+b1N2D2H3D = nameAction "b1N2D2H3D" $ do
     gameForcing
     minSuitLength T.Diamonds 4
     hasTopN T.Diamonds 4 2  -- Don't do it with a bad side suit
@@ -473,7 +473,7 @@ b1N2D2H3D = do
     makeCall $ T.Bid 3 T.Diamonds
 
 b1N2H2S3C :: Action
-b1N2H2S3C = do
+b1N2H2S3C = nameAction "b1N2H2S3C" $ do
     gameForcing
     minSuitLength T.Clubs 4
     hasTopN T.Clubs 4 2  -- Don't do it with a bad side suit
@@ -486,7 +486,7 @@ b1N2H2S3C = do
     makeCall $ T.Bid 3 T.Clubs
 
 b1N2H2S3D :: Action
-b1N2H2S3D = do
+b1N2H2S3D = nameAction "b1N2H2S3D" $ do
     gameForcing
     minSuitLength T.Diamonds 4
     hasTopN T.Diamonds 4 2  -- Don't do it with a bad side suit
@@ -500,7 +500,7 @@ b1N2H2S3D = do
 
 
 b1N2D2H3H :: Action
-b1N2D2H3H = do
+b1N2D2H3H = nameAction "b1N2D2H3H" $ do
     minSuitLength T.Hearts 6
     invitational
     loserCount 8
@@ -512,7 +512,7 @@ b1N2D2H3H = do
 
 
 b1N2H2S3S :: Action
-b1N2H2S3S = do
+b1N2H2S3S = nameAction "b1N2H2S3S" $ do
     minSuitLength T.Spades 6
     invitational
     loserCount 8

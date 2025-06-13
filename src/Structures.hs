@@ -13,7 +13,7 @@ import Data.Aeson.Key(fromString)
 import Data.Char(toUpper)
 import Data.List.Utils(join, replace)
 import Data.Map(fromList)
-import Data.Maybe(fromMaybe)
+import Data.Maybe(fromMaybe, catMaybes)
 import Data.Semigroup(First(..), getFirst)
 
 import Output(Showable(..), Punct(NDash))
@@ -41,6 +41,16 @@ instance ToJSON Hand where
 
 -- The direction is the next bidder
 data Bidding = Bidding T.Direction [[Maybe T.CompleteCall]]
+
+instance Semigroup Bidding where
+    biddingA <> (Bidding dirB callsB) = let
+        (Bidding finalDir finalCalls) =
+            foldl (flip addCall) biddingA (catMaybes . concat $ callsB)
+      in
+        if finalDir == dirB
+        then Bidding finalDir finalCalls
+        else error "cannot concatenate Bidding from wrong directions"
+
 
 instance Showable Bidding where
     toLatex (Bidding r b) =

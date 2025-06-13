@@ -251,7 +251,8 @@ bid3N_ theirSuits shouldHaveStopper = do
     NT.gameForcing
     balancedHand
     forbidAll [b1No2D3H, b1No2D3S, cueBid_ (head theirSuits) shouldHaveStopper]
-    when shouldHaveStopper (forEach theirSuits hasStopper)
+    when (    shouldHaveStopper) (         forEach theirSuits hasStopper)
+    when (not shouldHaveStopper) (forbid $ forEach theirSuits hasStopper)
     makeCall $ T.Bid 3 T.Notrump
 
 b1No2D3N :: Action
@@ -291,7 +292,8 @@ cueBid_ oppsSuit shouldHaveStopper = do
     -- TODO: if the opponents overcall a natural 2D, do you need exactly 4-4 in
     -- the majors? What if you're 4-3? What if you're 5-4?
     forEach (filter (/= oppsSuit) T.majorSuits) (`suitLength` 4)
-    when shouldHaveStopper (hasStopper oppsSuit)
+    when (    shouldHaveStopper) (         hasStopper oppsSuit)
+    when (not shouldHaveStopper) (forbid $ hasStopper oppsSuit)
     -- Simultaneously, make sure you don't want to just double the opponents
     -- because you've got their suit. This isn't so important when they made a
     -- 2-suited bid (they'd just run to the second suit), but this part of the

@@ -11,12 +11,12 @@ import Action(finish)
 import DealerProg(toProgram)
 import qualified Terminology as T
 
-import Bids.StandardOpenings(b1C)
---import Bids.StandardModernPrecision.BasicBids(b1D)
+--import Bids.StandardOpenings(b1C)
+import Bids.StandardModernPrecision.BasicBids(b1D)
 
 
 main :: IO ()
 main = let
-    auction = b1C
+    auction = b1D
   in
     putStrLn . toProgram . snd . finish T.South $ auction

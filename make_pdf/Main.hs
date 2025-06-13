@@ -28,7 +28,7 @@ import ProblemSet(outputLatex)
 
 main :: IO ()
 main = let
-    _topics = [ StandardOpeners.topic
+    topics = [ StandardOpeners.topic
               , ForcingOneNotrump.topic
               , MajorSuitRaises.topic
               , JacobyTransfers.topic
@@ -49,7 +49,7 @@ main = let
               , Lampe.topic
               , TripleFourOne.topic
               ]
-    topics = [ Lebensohl.topic
+    _topics = [ Lebensohl.topic
              ]
   in do
     -- outputLatex returns a copy of the contents of the file it wrote, but we

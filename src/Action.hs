@@ -59,12 +59,12 @@ finish :: T.Direction -> State Auction a -> Auction
 finish firstBidder = flip execState (newAuction firstBidder)
 
 
--- modifyDealerProg takes the name of a constraint and pieces of a definition
+-- _modifyDealerProg takes the name of a constraint and pieces of a definition
 -- that should be joined together with the name of the bidder.
 -- TODO: consider making the pieces a String -> String function instead?
-modifyDealerProg :: (String -> String -> DealerProg -> DealerProg) ->
+_modifyDealerProg :: (String -> String -> DealerProg -> DealerProg) ->
         String -> [String] -> Action
-modifyDealerProg op name defnPieces = do
+_modifyDealerProg op name defnPieces = do
     (bidding, dealerProg) <- get
     let bidderName = show . currentBidder $ bidding
         fullName = name ++ "_" ++ bidderName
@@ -72,19 +72,19 @@ modifyDealerProg op name defnPieces = do
     put (bidding, op fullName fullDefn dealerProg)
 
 constrain :: String -> [String] -> Action
-constrain = modifyDealerProg addNewReq
+constrain = _modifyDealerProg addNewReq
 
 define :: String -> [String] -> Action
-define = modifyDealerProg addDefn
+define = _modifyDealerProg addDefn
 
 
--- Define the constraints in this action without modifying the current Auction.
+-- Add the constraints in this action without modifying the current Bidding.
 withholdBid :: Action -> Action
 withholdBid action = do
     (bidding, dealerProg) <- get
     let freshAuction = newAuction . currentBidder $ bidding
         (_, dealerToWithhold) = execState action freshAuction
-    put (bidding, dealerProg `mappend` dealerToWithhold)
+    put (bidding, dealerProg <> dealerToWithhold)
 
 
 -- This isn't the more specific type `Action -> T.CompleteCall` in order to get
