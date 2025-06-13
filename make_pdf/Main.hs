@@ -54,5 +54,5 @@ main = let
   in do
     -- outputLatex returns a copy of the contents of the file it wrote, but we
     -- ignore that.
-    _ <- runStateT (outputLatex 1000 topics "test") (mkStdGen 0)
+    _ <- runStateT (outputLatex 100 topics "test") (mkStdGen 0)
     return ()
