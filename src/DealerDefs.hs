@@ -20,18 +20,20 @@ type CondName = String
 type CondDefn = String
 
 
--- The list is the reverse order in which the definitions were created.
+-- The list is the reverse order in which the definitions were created. This
+-- ordering is important because definitions must be added to the final Dealer
+-- program so that new definitions depend on others above them but never below.
 data DealerDefs = DealerDefs (Map.Map CondName CondDefn) [CondName]
 
 
 instance Semigroup DealerDefs where
-    definitionsB <> (DealerDefs defsB orderB) =
-        foldl combine definitionsB (reverse orderB)
+    definitionsA <> (DealerDefs defsB orderB) =
+        foldl combine definitionsA (reverse orderB)
       where
         combine allDefs newKey =
           let
             newMaybeVal = Map.lookup newKey defsB
-            newError = error "right DealerDefs has unknown definition"
+            newError = error "right DealerDefs has unknown definition!?"
             newVal = fromMaybe newError newMaybeVal
           in
             addDefinition newKey newVal allDefs
