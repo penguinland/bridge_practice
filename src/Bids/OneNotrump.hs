@@ -119,7 +119,7 @@ noInterference = do
 
 
 texasTransfer_ :: T.Suit -> Action
-texasTransfer_ suit = nameAction ("b1N4" ++ T.suitLetter suit) $ do
+texasTransfer_ suit = do
     alternatives [gameNoSlam, slamInterest]
     minSuitLength suit 6
     -- If you're 6-4, bid Stayman, and *then* make a Texas Transfer if necessary
@@ -135,10 +135,10 @@ texasTransfer_ suit = nameAction ("b1N4" ++ T.suitLetter suit) $ do
     transferSuit _        = error "Texas transfer to non-major suit"
 
 b1N4D :: Action
-b1N4D = texasTransfer_ T.Hearts
+b1N4D = nameAction "b1N4D" (texasTransfer_ T.Hearts)
 
 b1N4H :: Action
-b1N4H = texasTransfer_ T.Spades
+b1N4H = nameAction "b1N4H" (texasTransfer_ T.Spades)
 
 
 -- Opener should always complete the Texas Transfer: no constraints on that.
