@@ -78,7 +78,7 @@ b1C = nameAction "smp_b1C" $ do
 
 
 b1M :: T.Suit -> Action
-b1M suit = nameAction ("smp_b1" ++ suitLetter suit) $ do
+b1M suit = nameAction ("smp_b1" ++ T.suitLetter suit) $ do
     _canOpen
     forbidAll [b1C, b1N, b2N]
     minSuitLength suit 5
@@ -91,10 +91,6 @@ b1M suit = nameAction ("smp_b1" ++ suitLetter suit) $ do
     if suit == T.Hearts then T.Hearts `longerThan` T.Spades else return ()
     if suit == T.Spades then T.Spades `atLeastAsLong` T.Hearts else return ()
     makeCall $ T.Bid 1 suit
-  where
-    suitLetter T.Hearts = "H"
-    suitLetter T.Spades = "S"
-    suitLetter _        = error "non-major specified when bidding major"
 
 
 b2C :: Action
