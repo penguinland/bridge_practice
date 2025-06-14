@@ -63,7 +63,7 @@ import qualified Bids.OneNotrump as NT
 import EDSL(minSuitLength, makeCall, makeAlertableCall, pointRange, forEach,
             forbid, forbidAll, balancedHand, semibalancedHand, hasStopper,
             alternatives, soundHolding, longerThan, atLeastAsLong, suitLength,
-            maxSuitLength)
+            maxSuitLength, nameAction)
 import Output((.+))
 import qualified Terminology as T
 
@@ -84,7 +84,7 @@ b1NoX2H :: Action
 b1NoX2H = NT.b1N2H
 
 b1No2CX :: Action
-b1No2CX = do
+b1No2CX = nameAction "leb_b1No2CX" $ do
     withholdBid NT.b1N2C
     makeCall T.Double
 
@@ -115,15 +115,15 @@ signoff_ level suit = do
 
 
 b1No2D2H :: Action
-b1No2D2H = signoff_ 2 T.Hearts
+b1No2D2H = nameAction "leb_b1No2D2H" $ signoff_ 2 T.Hearts
 
 
 b1No2D2S :: Action
-b1No2D2S = signoff_ 2 T.Spades
+b1No2D2S = nameAction "leb_b1No2D2S" $ signoff_ 2 T.Spades
 
 
 b1No2H2S :: Action
-b1No2H2S = signoff_ 2 T.Spades
+b1No2H2S = nameAction "leb_b1No2H2S" $ signoff_ 2 T.Spades
 
 
 primarySuit_ :: T.Suit -> Action
@@ -162,66 +162,66 @@ gfWithSuit_ ourSuit oppsSuit = do
 -- With 5-5 in two suits, bid the higher one, so you can rebid the lower one
 -- later.
 b1No2D3C :: Action
-b1No2D3C = gfWithSuit_ T.Clubs T.Diamonds
+b1No2D3C = nameAction "leb_b1No2D3C" $ gfWithSuit_ T.Clubs T.Diamonds
 
 b1No2H3C :: Action
-b1No2H3C = gfWithSuit_ T.Clubs T.Hearts
+b1No2H3C = nameAction "leb_b1No2H3C" $ gfWithSuit_ T.Clubs T.Hearts
 
 b1No2S3C :: Action
-b1No2S3C = gfWithSuit_ T.Clubs T.Spades
+b1No2S3C = nameAction "leb_b1No2S3C" $ gfWithSuit_ T.Clubs T.Spades
 
 b1No2C3D :: Action
-b1No2C3D = gfWithSuit_ T.Diamonds T.Clubs
+b1No2C3D = nameAction "leb_b1No2C3D" $ gfWithSuit_ T.Diamonds T.Clubs
 
 b1No2H3D :: Action
-b1No2H3D = gfWithSuit_ T.Diamonds T.Hearts
+b1No2H3D = nameAction "leb_b1No2H3D" $ gfWithSuit_ T.Diamonds T.Hearts
 
 b1No2S3D :: Action
-b1No2S3D = gfWithSuit_ T.Diamonds T.Spades
+b1No2S3D = nameAction "leb_b1No2S3D" $ gfWithSuit_ T.Diamonds T.Spades
 
 b1No2C3H :: Action
-b1No2C3H = gfWithSuit_ T.Hearts T.Clubs
+b1No2C3H = nameAction "leb_b1No2C3H" $ gfWithSuit_ T.Hearts T.Clubs
 
 b1No2D3H :: Action
-b1No2D3H = gfWithSuit_ T.Hearts T.Diamonds
+b1No2D3H = nameAction "leb_b1No2D3H" $ gfWithSuit_ T.Hearts T.Diamonds
 
 b1No2S3H :: Action
-b1No2S3H = gfWithSuit_ T.Hearts T.Spades
+b1No2S3H = nameAction "leb_b1No2S3H" $ gfWithSuit_ T.Hearts T.Spades
 
 b1No2C3S :: Action
-b1No2C3S = gfWithSuit_ T.Spades T.Clubs
+b1No2C3S = nameAction "leb_b1No2C3S" $ gfWithSuit_ T.Spades T.Clubs
 
 b1No2D3S :: Action
-b1No2D3S = gfWithSuit_ T.Spades T.Diamonds
+b1No2D3S = nameAction "leb_b1No2D3S" $ gfWithSuit_ T.Spades T.Diamonds
 
 b1No2H3S :: Action
-b1No2H3S = gfWithSuit_ T.Spades T.Hearts
+b1No2H3S = nameAction "leb_b1No2H3S" $ gfWithSuit_ T.Spades T.Hearts
 
 
 -- Signoffs that you couldn't bid at the 2 level
 b1No2D2N3CP :: Action
-b1No2D2N3CP = do
+b1No2D2N3CP = nameAction "leb_b1No2D2N3CP" $ do
     withholdBid $ signoff_ 8 T.Clubs
     makeCall T.Pass
 
 b1No2H2N3CP :: Action
-b1No2H2N3CP = do
+b1No2H2N3CP = nameAction "leb_b1No2H2N3CP" $ do
     withholdBid $ signoff_ 8 T.Clubs
     makeCall T.Pass
 
 b1No2S2N3CP :: Action
-b1No2S2N3CP = do
+b1No2S2N3CP = nameAction "leb_b1No2S2N3CP" $ do
     withholdBid $ signoff_ 8 T.Clubs
     makeCall T.Pass
 
 b1No2H2N3C3D :: Action
-b1No2H2N3C3D = signoff_ 3 T.Diamonds
+b1No2H2N3C3D = nameAction "leb_b1No2H2N3C3D" $ signoff_ 3 T.Diamonds
 
 b1No2S2N3C3D :: Action
-b1No2S2N3C3D = signoff_ 3 T.Diamonds
+b1No2S2N3C3D = nameAction "leb_b1No2S2N3C3D" $ signoff_ 3 T.Diamonds
 
 b1No2S2N3C3H :: Action
-b1No2S2N3C3H = signoff_ 3 T.Hearts
+b1No2S2N3C3H = nameAction "leb_b1No2S2N3C3H" $ signoff_ 3 T.Hearts
 
 
 -- Invites for higher suits
@@ -237,13 +237,13 @@ invite_ suit = do
 
 
 b1No2D2N3C3H :: Action
-b1No2D2N3C3H = invite_ T.Hearts
+b1No2D2N3C3H = nameAction "leb_b1No2D2N3C3H" $ invite_ T.Hearts
 
 b1No2D2N3C3S :: Action
-b1No2D2N3C3S = invite_ T.Spades
+b1No2D2N3C3S = nameAction "leb_b1No2D2N3C3S" $ invite_ T.Spades
 
 b1No2H2N3C3S :: Action
-b1No2H2N3C3S = invite_ T.Spades
+b1No2H2N3C3S = nameAction "leb_b1No2H2N3C3S" $ invite_ T.Spades
 
 
 bid3N_ :: [T.Suit] -> Bool -> Action
@@ -256,32 +256,32 @@ bid3N_ theirSuits shouldHaveStopper = do
     makeCall $ T.Bid 3 T.Notrump
 
 b1No2D3N :: Action
-b1No2D3N = bid3N_ [T.Diamonds] False
+b1No2D3N = nameAction "leb_b1No2D3N" $ bid3N_ [T.Diamonds] False
 
 b1No2D2N3C3N :: Action
-b1No2D2N3C3N = bid3N_ [T.Diamonds] True
+b1No2D2N3C3N = nameAction "leb_b1No2D2N3C3N" $ bid3N_ [T.Diamonds] True
 
 b1No2H3N :: Action
-b1No2H3N = bid3N_ [T.Hearts] False
+b1No2H3N = nameAction "leb_b1No2H3N" $ bid3N_ [T.Hearts] False
 
 b1No2H2N3C3N :: Action
-b1No2H2N3C3N = bid3N_ [T.Hearts] True
+b1No2H2N3C3N = nameAction "leb_b1No2H2N3C3N" $ bid3N_ [T.Hearts] True
 
 b1No2S3N :: Action
-b1No2S3N = bid3N_ [T.Spades] False
+b1No2S3N = nameAction "leb_b1No2S3N" $ bid3N_ [T.Spades] False
 
 b1No2S2N3C3N :: Action
-b1No2S2N3C3N = bid3N_ [T.Spades] True
+b1No2S2N3C3N = nameAction "leb_b1No2S2N3C3N" $ bid3N_ [T.Spades] True
 
 b1NoBM3N :: Action
-b1NoBM3N = do
+b1NoBM3N = nameAction "leb_b1NoBM3N" $ do
     -- Even if we don't have stoppers in both majors, we should have a stopper
     -- in at least one of them to make this bid plausible.
     alternatives [hasStopper T.Hearts, hasStopper T.Spades]
     bid3N_ [T.Hearts, T.Spades] False
 
 b1NoBM2N3C3N :: Action
-b1NoBM2N3C3N = bid3N_ [T.Hearts, T.Spades] True
+b1NoBM2N3C3N = nameAction "leb_b1NoBM2N3C3N" $ bid3N_ [T.Hearts, T.Spades] True
 
 
 -- Stayman-like cue bids
@@ -305,31 +305,32 @@ cueBid_ oppsSuit shouldHaveStopper = do
                            " a stopper")
 
 b1No2D3D :: Action
-b1No2D3D = cueBid_ T.Diamonds False
+b1No2D3D = nameAction "leb_b1No2D3D" $ cueBid_ T.Diamonds False
 
 b1No2D2N3C3D :: Action
-b1No2D2N3C3D = cueBid_ T.Diamonds True
+b1No2D2N3C3D = nameAction "leb_b1No2D2N3C3D" $ cueBid_ T.Diamonds True
 
 b1No2H3H :: Action
-b1No2H3H = cueBid_ T.Hearts False
+b1No2H3H = nameAction "leb_b1No2H3H" $ cueBid_ T.Hearts False
 
 b1No2H2N3C3H :: Action
-b1No2H2N3C3H = cueBid_ T.Hearts True
+b1No2H2N3C3H = nameAction "leb_b1No2H2N3C3H" $ cueBid_ T.Hearts True
 
 b1No2S3S :: Action
-b1No2S3S = cueBid_ T.Spades False
+b1No2S3S = nameAction "leb_b1No2S3S" $ cueBid_ T.Spades False
 
 b1No2S2N3C3S :: Action
-b1No2S2N3C3S = cueBid_ T.Spades True
+b1No2S2N3C3S = nameAction "leb_b1No2S2N3C3S" $ cueBid_ T.Spades True
 
 
 -- Time for the actual lebensohl relays!
 b1N2N3C :: Action
-b1N2N3C = makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
+b1N2N3C = nameAction "leb_b1N2N3C" $ do
+    makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
 
 
 b1No2D2N :: Action
-b1No2D2N = do
+b1No2D2N = nameAction "leb_b1No2D2N" $ do
     alternatives [ b1No2D2N3CP
                  , b1No2D2N3C3D
                  , b1No2D2N3C3H
@@ -340,7 +341,7 @@ b1No2D2N = do
 
 
 b1No2H2N :: Action
-b1No2H2N = do
+b1No2H2N = nameAction "leb_b1No2H2N" $ do
     alternatives [ b1No2H2N3CP
                  , b1No2H2N3C3D
                  , b1No2H2N3C3H
@@ -351,7 +352,7 @@ b1No2H2N = do
 
 
 b1No2S2N :: Action
-b1No2S2N = do
+b1No2S2N = nameAction "leb_b1No2S2N" $ do
     alternatives [ b1No2S2N3CP
                  , b1No2S2N3C3D
                  , b1No2S2N3C3H
@@ -363,7 +364,7 @@ b1No2S2N = do
 
 -- Have a special one for when the opponents show both majors
 b1NoBM2N :: Action
-b1NoBM2N = do
+b1NoBM2N = nameAction "leb_b1NoBM2N" $ do
     alternatives [ b1No2S2N3CP
                  , b1No2S2N3C3D
                  , b1NoBM2N3C3N

@@ -17,13 +17,13 @@ import Action(Action)
 import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import Bids.StandardOpenings(b1N)
 import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
-            alternatives, forEach)
+            alternatives, forEach, nameAction)
 import Output ((.+))
 import qualified Terminology as T
 
 
 b1NoX :: Action
-b1NoX = do
+b1NoX = nameAction "mw_b1NoX" $ do
     alternatives [ singleSuited T.Clubs
                  , singleSuited T.Diamonds
                  , twoSuited T.Hearts T.Spades
@@ -37,31 +37,31 @@ minorAndMajor minor = do
     makeAlertableCall (T.Bid 2 minor) (show minor .+ " and a major")
 
 b1No2C :: Action
-b1No2C = minorAndMajor T.Clubs
+b1No2C = nameAction "mw_b1No2C" $ minorAndMajor T.Clubs
 
 b1No2D :: Action
-b1No2D = minorAndMajor T.Diamonds
+b1No2D = nameAction "mw_b1No2D" $ minorAndMajor T.Diamonds
 
 
 b1No2H :: Action
-b1No2H = do
+b1No2H = nameAction "mw_b1No2H" $ do
     singleSuited T.Hearts
     makeCall $ T.Bid 2 T.Hearts
 
 b1No2S :: Action
-b1No2S = do
+b1No2S = nameAction "mw_b1No2S" $ do
     singleSuited T.Spades
     makeCall $ T.Bid 2 T.Spades
 
 
 b1No2N :: Action
-b1No2N = do
+b1No2N = nameAction "mw_b1No2N" $ do
     twoSuited T.Clubs T.Diamonds
     makeAlertableCall (T.Bid 2 T.Notrump) "both minors"
 
 
 b1NoX2C :: Action
-b1NoX2C = do
+b1NoX2C = nameAction "mw_b1NoX2C" $ do
     -- If you've got a freak hand, you might be tempted to bid your long suit.
     -- So, forbid those here just to make the bid more obvious.
     forEach T.allSuits (`maxSuitLength` 6)
@@ -69,7 +69,7 @@ b1NoX2C = do
 
 
 b1NoX2C2H :: Action
-b1NoX2C2H = do
+b1NoX2C2H = nameAction "mw_b1NoX2C2H" $ do
     twoSuited T.Hearts T.Spades
     makeAlertableCall (T.Bid 2 T.Hearts) "both majors: pass or correct"
 
@@ -84,7 +84,7 @@ findMajor minor = do
     makeAlertableCall (T.Bid 2 T.Hearts) "pass or correct"
 
 b1No2C2H :: Action
-b1No2C2H = findMajor T.Clubs
+b1No2C2H = nameAction "mw_b1No2C2H" $ findMajor T.Clubs
 
 b1No2D2H :: Action
-b1No2D2H = findMajor T.Diamonds
+b1No2D2H = nameAction "mw_b1No2D2H" $ findMajor T.Diamonds
