@@ -27,7 +27,7 @@ import qualified Bids.MajorSuitRaises as M
 import Bids.StandardOpenings(b1H, b1S)
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, impliesThat,
             makeCall, makeAlertableCall, forbid, balancedHand, longerThan,
-            atLeastAsLong, alternatives, forEach, forbidAll)
+            atLeastAsLong, alternatives, forEach, forbidAll, nameAction)
 import qualified Terminology as T
 
 
@@ -37,7 +37,7 @@ notGameForcing = pointRange 6 11
 
 
 b1H1N :: Action
-b1H1N = do
+b1H1N = nameAction "f1n_b1H1N" $ do
     notGameForcing
     forbid M.b1H2H
     forbid M.b1H3H
@@ -54,7 +54,7 @@ b1H1N = do
 
 
 b1S1N :: Action
-b1S1N = do
+b1S1N = nameAction "f1n_b1S1N" $ do
     notGameForcing
     forbid M.b1S2S
     forbid M.b1S3S
@@ -67,7 +67,7 @@ b1S1N = do
 
 
 b1M1N2N :: Action
-b1M1N2N = do
+b1M1N2N = nameAction "f1n_b1M1N2N" $ do
     balancedHand
     pointRange 18 19
     makeCall $ T.Bid 2 T.Notrump
@@ -86,25 +86,25 @@ jumpShift firstSuit secondSuit = do
     makeCall $ T.Bid 3 secondSuit
 
 b1H1N3C :: Action
-b1H1N3C = jumpShift T.Hearts T.Clubs
+b1H1N3C = nameAction "f1n_b1H1N3C" $ jumpShift T.Hearts T.Clubs
 
 b1H1N3D :: Action
-b1H1N3D = jumpShift T.Hearts T.Diamonds
+b1H1N3D = nameAction "f1n_b1H1N3D" $ jumpShift T.Hearts T.Diamonds
 
 b1S1N3C :: Action
-b1S1N3C = jumpShift T.Spades T.Clubs
+b1S1N3C = nameAction "f1n_b1S1N3C" $ jumpShift T.Spades T.Clubs
 
 b1S1N3D :: Action
-b1S1N3D = jumpShift T.Spades T.Diamonds
+b1S1N3D = nameAction "f1n_b1S1N3D" $ jumpShift T.Spades T.Diamonds
 
 b1S1N3H :: Action
-b1S1N3H = do
+b1S1N3H = nameAction "f1n_b1S1N3H" $ do
     -- If you're 5-5 in the majors, I'd start with 1H and reverse to 2S.
     suitLength T.Hearts 4
     jumpShift T.Spades T.Hearts
 
 b1H1N2S :: Action
-b1H1N2S = do
+b1H1N2S = nameAction "f1n_b1H1N2S" $ do
     -- This is just like a jump shift, but we bid at the 2 level, not 3
     withholdBid $ jumpShift T.Hearts T.Spades
     makeCall $ T.Bid 2 T.Spades
@@ -119,10 +119,12 @@ jumpRebid major jumpShifts = do
     makeCall $ T.Bid 3 major
 
 b1H1N3H :: Action
-b1H1N3H = jumpRebid T.Hearts [b1H1N3C, b1H1N3D, b1H1N2S]
+b1H1N3H = nameAction "f1n_b1H1N3H" $
+    jumpRebid T.Hearts [b1H1N3C, b1H1N3D, b1H1N2S]
 
 b1S1N3S :: Action
-b1S1N3S = jumpRebid T.Spades [b1S1N3C, b1S1N3D, b1S1N3H]
+b1S1N3S = nameAction "f1n_b1S1N3S" $
+    jumpRebid T.Spades [b1S1N3C, b1S1N3D, b1S1N3H]
 
 
 rebid :: T.Suit -> [Action] -> Action
@@ -144,10 +146,11 @@ rebid major strongBids = do
     makeCall $ T.Bid 2 major
 
 b1H1N2H :: Action
-b1H1N2H = rebid T.Hearts [b1H1N3C, b1H1N3D, b1H1N3H, b1H1N2S, b1M1N2N]
+b1H1N2H = nameAction "f1n_b1H1N2H" $
+    rebid T.Hearts [b1H1N3C, b1H1N3D, b1H1N3H, b1H1N2S, b1M1N2N]
 
 b1S1N2S :: Action
-b1S1N2S = do
+b1S1N2S = nameAction "f1n_b1S1N2S" $ do
     -- If you're 6-4 in the majors, I'd be seriously tempted to show the second
     -- major instead of rebidding the first. Avoid this possibility.
     maxSuitLength T.Hearts 3
@@ -155,7 +158,7 @@ b1S1N2S = do
 
 
 b1S1N2H :: Action
-b1S1N2H = do
+b1S1N2H = nameAction "f1n_b1S1N2H" $ do
     -- Even if we've got 6+ spades, prefer to show the second major to give
     -- partner options.
     minSuitLength T.Hearts 4
@@ -171,7 +174,7 @@ b1S1N2H = do
 
 
 b1S1N2D :: Action
-b1S1N2D = do
+b1S1N2D = nameAction "f1n_b1S1N2D" $ do
     minSuitLength T.Diamonds 3  -- might be 5332
     -- With 6-5, bid the second suit. With 6-4 (or 6-3!), rebid the major first.
     alternatives [minSuitLength T.Diamonds 5, maxSuitLength T.Spades 5]
@@ -183,7 +186,7 @@ b1S1N2D = do
 
 
 b1S1N2C :: Action
-b1S1N2C = do
+b1S1N2C = nameAction "f1n_b1S1N2C" $ do
     minSuitLength T.Clubs 3  -- might be 5332
     -- With 6-5, bid the second suit. With 6-4 (or 6-3!), rebid the major first.
     alternatives [minSuitLength T.Clubs 5, maxSuitLength T.Spades 5]
@@ -195,7 +198,7 @@ b1S1N2C = do
 
 
 b1H1N2D :: Action
-b1H1N2D = do
+b1H1N2D = nameAction "f1n_b1H1N2D" $ do
     minSuitLength T.Diamonds 3
     -- With 6-5, bid the second suit. With 6-4 (or 6-3!), rebid the major first.
     alternatives [minSuitLength T.Diamonds 5, maxSuitLength T.Hearts 5]
@@ -206,7 +209,7 @@ b1H1N2D = do
 
 
 b1H1N2C :: Action
-b1H1N2C = do
+b1H1N2C = nameAction "f1n_b1H1N2C" $ do
     minSuitLength T.Clubs 3
     -- With 6-5, bid the second suit. With 6-4 (or 6-3!), rebid the major first.
     alternatives [minSuitLength T.Clubs 5, maxSuitLength T.Hearts 5]
