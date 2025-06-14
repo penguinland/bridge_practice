@@ -13,7 +13,7 @@ module Bids.MajorSuitRaises(
 import Action(Action)
 import Bids.StandardOpenings(b1H, b1S)
 import EDSL(pointRange, suitLength, minSuitLength, maxSuitLength, makeCall,
-            flatHand, minLoserCount, forEach)
+            flatHand, minLoserCount, forEach, nameAction)
 import qualified Terminology as T
 
 
@@ -29,10 +29,10 @@ basicRaise suit = do
     makeCall $ T.Bid 2 suit
 
 b1H2H :: Action
-b1H2H = basicRaise T.Hearts
+b1H2H = nameAction "majraise_b1H2H" $ basicRaise T.Hearts
 
 b1S2S :: Action
-b1S2S = basicRaise T.Spades
+b1S2S = nameAction "majraise_b1S2S" $ basicRaise T.Spades
 
 
 limitRaise :: T.Suit -> Action
@@ -49,10 +49,10 @@ limitRaise suit = do
     makeCall $ T.Bid 3 suit
 
 b1H3H :: Action
-b1H3H = limitRaise T.Hearts
+b1H3H = nameAction "majraise_b1H3H" $ limitRaise T.Hearts
 
 b1S3S :: Action
-b1S3S = limitRaise T.Spades
+b1S3S = nameAction "majraise_b1S3S" $ limitRaise T.Spades
 
 
 blast3N :: T.Suit -> Action
@@ -63,7 +63,7 @@ blast3N suit = do
     makeCall $ T.Bid 3 T.Notrump
 
 b1H3N :: Action
-b1H3N = blast3N T.Hearts
+b1H3N = nameAction "majraise_b1H3N" $ blast3N T.Hearts
 
 b1S3N :: Action
-b1S3N = blast3N T.Spades
+b1S3N = nameAction "majraise_b1S3N" $ blast3N T.Spades
