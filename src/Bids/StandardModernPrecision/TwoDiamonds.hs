@@ -35,7 +35,7 @@ import CommonBids(cannotPreempt)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
             makeAlertableCall, atLeastAsLong, longerThan, forbid, forbidAll,
             balancedHand, soundHolding, makePass, alternatives, forEach,
-            minLoserCount, maxLoserCount)
+            minLoserCount, maxLoserCount, nameAction)
 import Output(Punct(..), (.+), Description)
 import qualified Terminology as T
 
@@ -89,12 +89,12 @@ clubsSignoff = do
 
 
 b2D2H :: Action
-b2D2H = do
+b2D2H = nameAction "smp_b2D2H" $ do
     heartsSignoff
     makeAlertableCall (T.Bid 2 T.Hearts) "nonforcing, likely signoff"
 
 bP2D2H :: Action
-bP2D2H = do
+bP2D2H = nameAction "smp_bP2D2H" $ do
     heartsSignoff
     -- When you're a passed hand, bidding a new suit is always nonforcing, so
     -- that's no longer alertable.
@@ -102,18 +102,18 @@ bP2D2H = do
 
 
 b2D2H2S :: Action
-b2D2H2S = do
+b2D2H2S = nameAction "smp_b2D2H2S" $ do
     suitLength T.Hearts 3
     makeAlertableCall (T.Bid 2 T.Spades) "exactly 4315 shape"
 
 
 b2D2S :: Action
-b2D2S = do
+b2D2S = nameAction "smp_b2D2S" $ do
     spadesSignoff
     makeAlertableCall (T.Bid 2 T.Spades) "nonforcing, likely signoff"
 
 bP2D2S :: Action
-bP2D2S = do
+bP2D2S = nameAction "smp_bP2D2S" $ do
     spadesSignoff
     -- When you're a passed hand, bidding a new suit is always nonforcing, so
     -- that's no longer alertable.
@@ -121,12 +121,12 @@ bP2D2S = do
 
 
 b2D3C :: Action
-b2D3C = do
+b2D3C = nameAction "smp_b2D3C" $ do
     clubsSignoff
     makeAlertableCall (T.Bid 3 T.Clubs) "nonforcing, likely signoff"
 
 bP2D3C :: Action
-bP2D3C = do
+bP2D3C = nameAction "smp_bP2D3C" $ do
     clubsSignoff
     -- When you're a passed hand, bidding a new suit is always nonforcing, so
     -- that's no longer alertable.
@@ -134,7 +134,7 @@ bP2D3C = do
 
 
 b2D3H :: Action
-b2D3H = do
+b2D3H = nameAction "smp_b2D3H" $ do
     pointRange 7 10
     minSuitLength T.Hearts 5
     -- NOTE: is this *not* alertable, per
@@ -143,7 +143,7 @@ b2D3H = do
 
 
 b2D3S :: Action
-b2D3S = do
+b2D3S = nameAction "smp_b2D3S" $ do
     pointRange 7 10
     minSuitLength T.Spades 5
     -- NOTE: is this *not* alertable, either
@@ -151,7 +151,7 @@ b2D3S = do
 
 
 b2D3N :: Action
-b2D3N = do
+b2D3N = nameAction "smp_b2D3N" $ do
     pointRange 14 15
     soundHolding T.Diamonds
     balancedHand
@@ -161,7 +161,7 @@ b2D3N = do
 
 
 b2D4H :: Action
-b2D4H = do
+b2D4H = nameAction "smp_b2D4H" $ do
     pointRange 14 15
     minSuitLength T.Hearts 5
     -- If we have a double fit, you might consider looking for slam. Let's avoid
@@ -172,7 +172,7 @@ b2D4H = do
 
 
 b2D4S :: Action
-b2D4S = do
+b2D4S = nameAction "smp_b2D4S" $ do
     pointRange 14 15
     minSuitLength T.Spades 5
     -- If we have a double fit, you might consider looking for slam. Let's avoid
@@ -183,7 +183,7 @@ b2D4S = do
 
 
 b2D2N :: Action
-b2D2N = do
+b2D2N = nameAction "smp_b2D2N" $ do
     -- If you know the final contract, jump to it immediately.
     forbidAll [b2D3N, b2D4H, b2D4S]
     pointRange 11 40
@@ -191,7 +191,7 @@ b2D2N = do
 
 
 b2D2N3C :: Action
-b2D2N3C = do
+b2D2N3C = nameAction "smp_b2D2N3C" $ do
     -- You should have the lower half of your strength to not accept an invite.
     alternatives [pointRange 10 12, pointRange 10 13 >> minLoserCount 7]
     makeAlertableCall (T.Bid 3 T.Clubs)
@@ -199,7 +199,7 @@ b2D2N3C = do
 
 
 b2D2N3D :: Action
-b2D2N3D = do
+b2D2N3D = nameAction "smp_b2D2N3D" $ do
     forbid b2D2N3C  -- We'd accept an invite to game
     forEach T.majorSuits (`suitLength` 4)
     makeAlertableCall (T.Bid 3 T.Diamonds)
@@ -207,21 +207,21 @@ b2D2N3D = do
 
 
 b2D2N3H :: Action
-b2D2N3H = do
+b2D2N3H = nameAction "smp_b2D2N3H" $ do
     forbid b2D2N3C  -- We'd accept an invite to game
     suitLength T.Hearts 3
     makeAlertableCall (T.Bid 3 T.Hearts) "maximum strength, 4315 shape exactly"
 
 
 b2D2N3S :: Action
-b2D2N3S = do
+b2D2N3S = nameAction "smp_b2D2N3S" $ do
     forbid b2D2N3C  -- We'd accept an invite to game
     suitLength T.Spades 3
     makeAlertableCall (T.Bid 3 T.Spades) "maximum strength, 3415 shape exactly"
 
 
 b2D2N3C3D :: Action
-b2D2N3C3D = do
+b2D2N3C3D = nameAction "smp_b2D2N3C3D" $ do
     -- Even if you don't have enough HCPs to be game forcing, if you're shapely
     -- enough, you might be game forcing anyway.
     alternatives [ pointRange 14 40
@@ -231,25 +231,25 @@ b2D2N3C3D = do
 
 
 b2D2N3C3D3H :: Action
-b2D2N3C3D3H = do
+b2D2N3C3D3H = nameAction "smp_b2D2N3C3D3H" $ do
     suitLength T.Hearts 3
     makeAlertableCall (T.Bid 3 T.Hearts) "shorter hearts: 4315 shape exactly"
 
 
 b2D2N3C3D3S :: Action
-b2D2N3C3D3S = do
+b2D2N3C3D3S = nameAction "smp_b2D2N3C3D3S" $ do
     suitLength T.Spades 3
     makeAlertableCall (T.Bid 3 T.Spades) "shorter spades: 3415 shape exactly"
 
 
 b2D2N3C3D3N :: Action
-b2D2N3C3D3N = do
+b2D2N3C3D3N = nameAction "smp_b2D2N3C3D3N" $ do
     forEach T.majorSuits (`suitLength` 4)
     makeAlertableCall (T.Bid 3 T.Notrump) ("4" .+ NDash .+ "4 in the majors")
 
 
 b2D2N3CP :: Action
-b2D2N3CP = do
+b2D2N3CP = nameAction "smp_b2D2N3CP" $ do
     forbid b2D2N3C3D  -- Not game-forcing
     minSuitLength T.Clubs 4
     -- Would you risk a 4-3 major-suit fit when you knew about a 4-4 club fit?
@@ -259,7 +259,7 @@ b2D2N3CP = do
 
 
 b2D2N3C3H :: Action
-b2D2N3C3H = do
+b2D2N3C3H = nameAction "smp_b2D2N3C3H" $ do
     forbid b2D2N3C3D  -- Not game-forcing
     minSuitLength T.Hearts 5
     maxSuitLength T.Clubs 3
@@ -269,7 +269,7 @@ b2D2N3C3H = do
 
 
 b2D2N3C3S :: Action
-b2D2N3C3S = do
+b2D2N3C3S = nameAction "smp_b2D2N3C3S" $ do
     forbid b2D2N3C3D  -- Not game-forcing
     minSuitLength T.Spades 5
     maxSuitLength T.Clubs 3

@@ -22,14 +22,14 @@ module Bids.StandardModernPrecision.OneDiamond(
 import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(b1D)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, maxSuitLength,
-            balancedHand, makeCall, makeAlertableCall, alternatives,
+            balancedHand, makeCall, makeAlertableCall, alternatives, nameAction,
             longerThan, atMostAsLong, impliesThat, forEach, forbidAll)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
 
 
 b1D1H :: Action
-b1D1H = do
+b1D1H = nameAction "smp_b1D1H" $ do
     pointRange 6 40
     minSuitLength T.Hearts 4
     -- If you've got a more specific bid, do that instead
@@ -43,7 +43,7 @@ b1D1H = do
 
 
 b1D1S :: Action
-b1D1S = do
+b1D1S = nameAction "smp_b1D1S" $ do
     pointRange 6 40
     minSuitLength T.Spades 4
     -- If you've got a more specific bid, do that instead
@@ -55,7 +55,7 @@ b1D1S = do
 
 
 b1D1N :: Action
-b1D1N = do
+b1D1N = nameAction "smp_b1D1N" $ do
     pointRange 6 10
     balancedHand
     maxSuitLength T.Hearts 3
@@ -64,7 +64,7 @@ b1D1N = do
 
 
 b1D2C :: Action
-b1D2C = do
+b1D2C = nameAction "smp_b1D2C" $ do
     pointRange 11 40
     forbid balancedHand
     -- Either you've got 5+ clubs, or you've got 9+ cards in the minors.
@@ -80,7 +80,7 @@ b1D2C = do
 
 
 b1D2D :: Action
-b1D2D = do
+b1D2D = nameAction "smp_b1D2D" $ do
     pointRange 11 40
     forbid balancedHand
     -- Either you've got 5+ diamonds, or you've got 9+ cards in the minors.
@@ -96,7 +96,7 @@ b1D2D = do
 
 
 b1D2H :: Action
-b1D2H = do
+b1D2H = nameAction "smp_b1D2H" $ do
     suitLength T.Spades 5
     minSuitLength T.Hearts 4
     maxSuitLength T.Hearts 5
@@ -106,7 +106,7 @@ b1D2H = do
 
 
 b1D2S :: Action
-b1D2S = do
+b1D2S = nameAction "smp_b1D2S" $ do
     suitLength T.Spades 5
     minSuitLength T.Hearts 4
     maxSuitLength T.Hearts 5
@@ -116,7 +116,7 @@ b1D2S = do
 
 
 b1D2N :: Action
-b1D2N = do
+b1D2N = nameAction "smp_b1D2N" $ do
     pointRange 11 12
     balancedHand
     maxSuitLength T.Hearts 3
@@ -125,7 +125,7 @@ b1D2N = do
 
 
 b1D3C :: Action
-b1D3C = do
+b1D3C = nameAction "smp_b1D3C" $ do
     pointRange 6 10
     alternatives [ suitLength T.Clubs 4 >> minSuitLength T.Diamonds 5
                  , suitLength T.Diamonds 4 >> minSuitLength T.Clubs 5 ]
@@ -136,7 +136,7 @@ b1D3C = do
 
 
 b1D3D :: Action
-b1D3D = do
+b1D3D = nameAction "smp_b1D3D" $ do
     pointRange 6 10
     minSuitLength T.Diamonds 6
     -- With 8+ diamonds, bid 4D (the book says 7+, but that's anti-LoTT).
@@ -154,14 +154,14 @@ b1D3M suit = do
     makeAlertableCall (T.Bid 3 suit) "Weak, 7-card suit"
 
 b1D3H :: Action
-b1D3H = b1D3M T.Hearts
+b1D3H = nameAction "smp_b1D3H" $ b1D3M T.Hearts
 
 b1D3S :: Action
-b1D3S = b1D3M T.Spades
+b1D3S = nameAction "smp_b1D3S" $ b1D3M T.Spades
 
 
 b1D3N :: Action
-b1D3N = do
+b1D3N = nameAction "smp_b1D3N" $ do
     pointRange 13 16
     balancedHand
     maxSuitLength T.Hearts 3
@@ -170,7 +170,7 @@ b1D3N = do
 
 
 b1D4C :: Action
-b1D4C = do
+b1D4C = nameAction "smp_b1D4C" $ do
     pointRange 6 10
     minSuitLength T.Clubs 5
     minSuitLength T.Diamonds 5
@@ -184,7 +184,7 @@ b1D4C = do
 -- gambling-like 3N?
 {-
 b1D4D :: Action
-b1D4D = do
+b1D4D = nameAction "smp_b1D4D" $ do
     pointRange 6 9
     minSuitLength T.Diamonds 8
     makeAlertableCall (T.Bid 4 T.Diamonds) "Weak, 8-card suit"
@@ -200,7 +200,7 @@ b1D4M suit = do
        \ game-forcing with no interest in slam"
 
 b1D4H :: Action
-b1D4H = b1D4M T.Hearts
+b1D4H = nameAction "smp_b1D4H" $ b1D4M T.Hearts
 
 b1D4S :: Action
-b1D4S = b1D4M T.Spades
+b1D4S = nameAction "smp_b1D4S" $ b1D4M T.Spades

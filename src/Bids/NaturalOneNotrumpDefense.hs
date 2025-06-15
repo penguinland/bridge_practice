@@ -17,7 +17,7 @@ module Bids.NaturalOneNotrumpDefense(
 
 import Action(Action)
 import EDSL(pointRange, minSuitLength, maxSuitLength, makeCall, alternatives,
-            soundHolding, forEach, forbidAll)
+            soundHolding, forEach, forbidAll, nameAction)
 import qualified Terminology as T
 
 
@@ -71,19 +71,19 @@ naturalSingleSuit_ suit = do
 
 
 b1No2C :: Action
-b1No2C = naturalSingleSuit_ T.Clubs
+b1No2C = nameAction "nat_b1No2C" $ naturalSingleSuit_ T.Clubs
 
 
 b1No2D :: Action
-b1No2D = naturalSingleSuit_ T.Diamonds
+b1No2D = nameAction "nat_b1No2D" $ naturalSingleSuit_ T.Diamonds
 
 
 b1No2H :: Action
-b1No2H = naturalSingleSuit_ T.Hearts
+b1No2H = nameAction "nat_b1No2H" $ naturalSingleSuit_ T.Hearts
 
 
 b1No2S :: Action
-b1No2S = naturalSingleSuit_ T.Spades
+b1No2S = nameAction "nat_b1No2S" $ naturalSingleSuit_ T.Spades
 
 
 preempt_ :: T.Suit -> Action
@@ -97,16 +97,16 @@ preempt_ suit = do
     makeCall $ T.Bid 3 suit
 
 b1No3C :: Action
-b1No3C = preempt_ T.Clubs
+b1No3C = nameAction "nat_b1No3C" $ preempt_ T.Clubs
 
 b1No3D :: Action
-b1No3D = preempt_ T.Diamonds
+b1No3D = nameAction "nat_b1No3D" $ preempt_ T.Diamonds
 
 b1No3H :: Action
-b1No3H = preempt_ T.Hearts
+b1No3H = nameAction "nat_b1No3H" $ preempt_ T.Hearts
 
 b1No3S :: Action
-b1No3S = preempt_ T.Spades
+b1No3S = nameAction "nat_b1No3S" $ preempt_ T.Spades
 
 shouldntPreempt :: Action
 shouldntPreempt = forbidAll[b1No3C, b1No3D, b1No3H, b1No3S]
