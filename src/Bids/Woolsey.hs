@@ -65,17 +65,15 @@ b1No2D = nameAction "wool_b1No2D" $ do
 
 b1No2H :: Action
 b1No2H = nameAction "wool_b1No2H" $ do
-    alternatives [ twoSuited T.Hearts T.Clubs    >> minSuitLength T.Hearts 5
-                 , twoSuited T.Hearts T.Diamonds >> minSuitLength T.Hearts 5
-                 ]
+    forEach T.minorSuits (\m ->
+        twoSuited T.Hearts m >> minSuitLength T.Hearts 5)
     makeAlertableCall (T.Bid 2 T.Hearts) "5+ hearts and 4+ in a minor"
 
 
 b1No2S :: Action
 b1No2S = nameAction "wool_b1No2S" $ do
-    alternatives [ twoSuited T.Spades T.Clubs    >> minSuitLength T.Spades 5
-                 , twoSuited T.Spades T.Diamonds >> minSuitLength T.Spades 5
-                 ]
+    forEach T.minorSuits (\m ->
+        twoSuited T.Spades m >> minSuitLength T.Spades 5)
     makeAlertableCall (T.Bid 2 T.Spades) "5+ spades and 4+ in a minor"
 
 
