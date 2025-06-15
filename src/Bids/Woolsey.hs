@@ -8,20 +8,20 @@ module Bids.Woolsey(
 --  , b1NoX2D2H
 --  , b1NoX2D2S
   , b1No2C
-  , b1No2C2H
-  , b1No2C2S
+  --, b1No2C2H
+  --, b1No2C2S
   , b1No2D
-  , b1No2D2H
-  , b1No2D2HP
-  , b1No2D2H2S
+  --, b1No2D2H
+  --, b1No2D2HP
+  --, b1No2D2H2S
   , b1No2H
-  , b1No2H2N
-  , b1No2H2N3C
-  , b1No2H2N3D
+  --, b1No2H2N
+  --, b1No2H2N3C
+  --, b1No2H2N3D
   , b1No2S
-  , b1No2S2N
-  , b1No2S2N3C
-  , b1No2S2N3D
+  --, b1No2S2N
+  --, b1No2S2N3C
+  --, b1No2S2N3D
   , b1No2N
   , b1No2N3C
   , b1No2N3D
@@ -33,7 +33,6 @@ import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import qualified Bids.Cappelletti as Cappelletti
 import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
             alternatives, forEach, nameAction, longerThan, atLeastAsLong)
-import Output ((.+))
 import qualified Terminology as T
 
 
