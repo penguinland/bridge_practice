@@ -16,7 +16,7 @@ import Action(Action)
 import CommonBids(strong1NT)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, impliesThat,
             longerThan, pointRange, balancedHand, alternatives, forbidAll,
-            equalLength, atLeastAsLong, forEach)
+            equalLength, atLeastAsLong, forEach, nameAction)
 import qualified Terminology as T
 
 
@@ -25,20 +25,20 @@ b1N = strong1NT
 
 
 b2N :: Action
-b2N = do
+b2N = nameAction "sayc_b2N" $ do
     balancedHand
     pointRange 20 21
     makeCall (T.Bid 2 T.Notrump)
 
 
 b2C :: Action
-b2C = do
+b2C = nameAction "sayc_b2C" $ do
     pointRange 22 40
     makeCall (T.Bid 2 T.Clubs)
 
 
 b1S :: Action
-b1S = do
+b1S = nameAction "sayc_b1S" $ do
     forbidAll [b1N, b2N, b2C]
     minSuitLength T.Spades 5
     T.Spades `atLeastAsLong` T.Hearts
@@ -52,7 +52,7 @@ b1S = do
 
 
 b1H :: Action
-b1H = do
+b1H = nameAction "sayc_b1H" $ do
     forbidAll [b1N, b2N, b2C]
     minSuitLength T.Hearts 5
     T.Hearts `atLeastAsLong` T.Spades
@@ -67,8 +67,7 @@ b1H = do
 
 
 b1D :: Action
-b1D = let
-  in do
+b1D = nameAction "sayc_b1D" $ do
     forbidAll [b1N, b2N, b2C]
     forEach T.majorSuits (`maxSuitLength` 4)
     minSuitLength T.Diamonds 3
@@ -82,7 +81,7 @@ b1D = let
 
 
 b1C :: Action
-b1C = do
+b1C = nameAction "sayc_b1C" $ do
     forbidAll [b1N, b2N, b2C]
     forEach T.majorSuits (`maxSuitLength` 4)
     minSuitLength T.Clubs 3
