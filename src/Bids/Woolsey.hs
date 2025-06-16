@@ -15,13 +15,13 @@ module Bids.Woolsey(
   , b1No2D2HP
   , b1No2D2H2S
   , b1No2H
-  --, b1No2H2N
-  --, b1No2H2N3C
-  --, b1No2H2N3D
+  , b1No2H2N
+  , b1No2H2N3C
+  , b1No2H2N3D
   , b1No2S
-  --, b1No2S2N
-  --, b1No2S2N3C
-  --, b1No2S2N3D
+  , b1No2S2N
+  , b1No2S2N3C
+  , b1No2S2N3D
   , b1No2N
   , b1No2N3C
   , b1No2N3D
@@ -110,6 +110,47 @@ b1No2S = nameAction "wool_b1No2S" $ do
     forEach T.minorSuits (\m ->
         twoSuited T.Spades m >> minSuitLength T.Spades 5)
     makeAlertableCall (T.Bid 2 T.Spades) "5+ spades and 4+ in a minor"
+
+
+preferMinor_ :: T.Suit -> Action
+preferMinor_ major = do
+    -- There are lots of other hand shapes that would prefer the minor, but
+    -- figuring them all out is harder than just limiting the hand types to the
+    -- easy ones. When you encounter the hard ones at the table, hopefully this
+    -- practice has helped.
+    maxSuitLength major 2
+    forEach T.minorSuits (`minSuitLength` 4)
+    makeAlertableCall (T.Bid 2 T.Notrump) "bid your minor"
+
+b1No2H2N :: Action
+b1No2H2N = nameAction "wool_b1No2H2N" (preferMinor_ T.Hearts)
+
+b1No2S2N :: Action
+b1No2S2N = nameAction "wool_b1No2S2N" (preferMinor_ T.Spades)
+
+
+b1No2H2N3C :: Action
+b1No2H2N3C = nameAction "wool_b1No2H2N3C" $ do
+    T.Clubs `longerThan` T.Diamonds
+    makeCall (T.Bid 3 T.Clubs)
+
+
+b1No2H2N3D :: Action
+b1No2H2N3D = nameAction "wool_b1No2H2N3D" $ do
+    T.Diamonds `longerThan` T.Clubs
+    makeCall (T.Bid 3 T.Diamonds)
+
+
+b1No2S2N3C :: Action
+b1No2S2N3C = nameAction "wool_b1No2S2N3C" $ do
+    T.Clubs `longerThan` T.Diamonds
+    makeCall (T.Bid 3 T.Clubs)
+
+
+b1No2S2N3D :: Action
+b1No2S2N3D = nameAction "wool_b1No2S2N3D" $ do
+    T.Diamonds `longerThan` T.Clubs
+    makeCall (T.Bid 3 T.Diamonds)
 
 
 b1No2N :: Action
