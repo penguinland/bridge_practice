@@ -24,6 +24,7 @@ module EDSL (
 , equalLength
 , atLeastAsLong
 , atMostAsLong
+, strongerThan
 , loserCount
 , minLoserCount
 , maxLoserCount
@@ -182,6 +183,17 @@ atLeastAsLong = _compareSuitLength "ge" ">="
 
 atMostAsLong :: T.Suit -> T.Suit -> Action
 atMostAsLong = _compareSuitLength "le" "<="
+
+
+strongerThan :: T.Suit -> T.Suit -> Action
+strongerThan suitA suitB = do
+    suitA `atLeastAsLong` suitB
+    alternatives
+        [ suitA `longerThan` suitB
+        , constrain ("more_hcp_" ++ show suitA ++ "_" ++ show suitB)
+              ["hcp(", ", " ++ show suitA ++ ") > " ++
+               "hcp(", ", " ++ show suitB ++ ")"]
+        ]
 
 
 -- unexported helper
