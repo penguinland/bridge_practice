@@ -148,17 +148,20 @@ b1No2D2H2S = nameAction "wool_b1No2D2H2S" $ do
     makeCall $ T.Bid 2 T.Spades
 
 
+majorAndMinor_ :: T.Suit -> Action
+majorAndMinor_ major =
+    alternatives [ twoSuited major T.Clubs    >> minSuitLength major 5
+                 , twoSuited major T.Diamonds >> minSuitLength major 5
+                 ]
+
 b1No2H :: Action
 b1No2H = nameAction "wool_b1No2H" $ do
-    forEach T.minorSuits (\m ->
-        twoSuited T.Hearts m >> minSuitLength T.Hearts 5)
+    majorAndMinor T.Hearts
     makeAlertableCall (T.Bid 2 T.Hearts) "5+ hearts and 4+ in a minor"
-
 
 b1No2S :: Action
 b1No2S = nameAction "wool_b1No2S" $ do
-    forEach T.minorSuits (\m ->
-        twoSuited T.Spades m >> minSuitLength T.Spades 5)
+    majorAndMinor T.Spades
     makeAlertableCall (T.Bid 2 T.Spades) "5+ spades and 4+ in a minor"
 
 
@@ -180,27 +183,21 @@ b1No2S2N = nameAction "wool_b1No2S2N" (preferMinor_ T.Spades)
 
 
 b1No2H2N3C :: Action
-b1No2H2N3C = nameAction "wool_b1No2H2N3C" $ do
+b1No2H2N3C = nameAction "wool_b1No2M2N3C" $ do
     T.Clubs `longerThan` T.Diamonds
     makeCall (T.Bid 3 T.Clubs)
-
 
 b1No2H2N3D :: Action
-b1No2H2N3D = nameAction "wool_b1No2H2N3D" $ do
+b1No2H2N3D = nameAction "wool_b1No2M2N3D" $ do
     T.Diamonds `longerThan` T.Clubs
     makeCall (T.Bid 3 T.Diamonds)
 
-
+-- Rebidding the minors are identical regardless of which major you have.
 b1No2S2N3C :: Action
-b1No2S2N3C = nameAction "wool_b1No2S2N3C" $ do
-    T.Clubs `longerThan` T.Diamonds
-    makeCall (T.Bid 3 T.Clubs)
-
+b1No2S2N3C = b1No2H2N3C
 
 b1No2S2N3D :: Action
-b1No2S2N3D = nameAction "wool_b1No2S2N3D" $ do
-    T.Diamonds `longerThan` T.Clubs
-    makeCall (T.Bid 3 T.Diamonds)
+b1No2S2N3D = b1No2H2N3D
 
 
 b1No2N :: Action
