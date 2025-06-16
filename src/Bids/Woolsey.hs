@@ -32,7 +32,7 @@ import Action(Action, define, constrain)
 import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import qualified Bids.Cappelletti as Cappelletti
 import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
-            alternatives, forEach, nameAction, longerThan, atLeastAsLong)
+            alternatives, forEach, nameAction, longerThan, strongerThan)
 import qualified Terminology as T
 
 
@@ -156,12 +156,12 @@ majorAndMinor_ major =
 
 b1No2H :: Action
 b1No2H = nameAction "wool_b1No2H" $ do
-    majorAndMinor T.Hearts
+    majorAndMinor_ T.Hearts
     makeAlertableCall (T.Bid 2 T.Hearts) "5+ hearts and 4+ in a minor"
 
 b1No2S :: Action
 b1No2S = nameAction "wool_b1No2S" $ do
-    majorAndMinor T.Spades
+    majorAndMinor_ T.Spades
     makeAlertableCall (T.Bid 2 T.Spades) "5+ spades and 4+ in a minor"
 
 
@@ -208,11 +208,11 @@ b1No2N = nameAction "wool_b1No2N" $ do
 
 b1No2N3C :: Action
 b1No2N3C = nameAction "wool_b1No2N3C" $ do
-    T.Clubs `atLeastAsLong` T.Diamonds
+    T.Clubs `strongerThan` T.Diamonds
     makeCall $ T.Bid 3 T.Clubs
 
 
 b1No2N3D :: Action
 b1No2N3D = nameAction "wool_b1No2N3D" $ do
-    T.Diamonds `longerThan` T.Clubs
+    T.Diamonds `strongerThan` T.Clubs
     makeCall $ T.Bid 3 T.Diamonds
