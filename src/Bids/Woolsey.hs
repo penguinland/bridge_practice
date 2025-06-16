@@ -1,12 +1,12 @@
 module Bids.Woolsey(
     b1NweaoX  -- Double is penalty against weak notrump
   , b1NstroX  -- Double is conventional against strong notrump
---  , b1NoX2C
---  , b1NoX2CP
---  , b1NoX2C2D
---  , b1NoX2D
---  , b1NoX2D2H
---  , b1NoX2D2S
+  , b1NoX2C
+  , b1NoX2CP
+  , b1NoX2C2D
+  , b1NoX2D
+  , b1NoX2D2H
+  , b1NoX2D2S
   , b1No2C
   , b1No2C2H
   , b1No2C2S
@@ -28,7 +28,7 @@ module Bids.Woolsey(
 ) where
 
 
-import Action(Action)
+import Action(Action, define, constrain)
 import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import qualified Bids.Cappelletti as Cappelletti
 import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
@@ -48,6 +48,56 @@ b1NstroX = nameAction "wool_b1NstroX" $ do
                  , twoSuited T.Diamonds T.Spades >> maxSuitLength T.Spades 4
                  ]
     makeAlertableCall T.Double "a 4-card major and longer minor"
+
+
+-- After the conventional double, advancer should assume the worst (overcaller
+-- has your shorter minor, and your shorter major). Then, decide which one you
+-- like from those.
+prepareAdvancer_ :: Action
+prepareAdvancer_ = do
+    define "longer_minor"
+        ["clubs(", ") > diamonds(", ") ? clubs(", ") : diamonds(", ")"]
+    define "longer_major"
+        ["hearts(", ") > spades(", ") ? hearts(", ") : spades(", ")"]
+    -- If you've got your own self-sufficient suit, you might be tempted to bid
+    -- that instead. Avoid this ambiguity.
+    forEach T.allSuits (`maxSuitLength` 6)
+
+b1NoX2C :: Action
+b1NoX2C = nameAction "wool_b1NoX2C" $ do
+    prepareAdvancer_
+    constrain "prefer_minor" ["longer_minor_", " >= longer_major_", ""]
+    makeAlertableCall (T.Bid 2 T.Clubs) "prefer the minor: pass or correct"
+
+b1NoX2D :: Action
+b1NoX2D = nameAction "wool_b1NoX2D" $ do
+    prepareAdvancer_
+    constrain "prefer_minor" ["longer_minor_", " < longer_major_", ""]
+    makeAlertableCall (T.Bid 2 T.Diamonds) "bid your major"
+
+
+b1NoX2CP :: Action
+b1NoX2CP = nameAction "wool_b1NoX2CP" $ do
+    T.Clubs `longerThan` T.Diamonds
+    makeCall T.Pass
+
+
+b1NoX2C2D :: Action
+b1NoX2C2D = nameAction "wool_b1NoX2C2D" $ do
+    T.Diamonds `longerThan` T.Clubs
+    makeCall $ T.Bid 2 T.Diamonds
+
+
+b1NoX2D2H :: Action
+b1NoX2D2H = nameAction "wool_b1NoX2D2H" $ do
+    T.Hearts `longerThan` T.Spades
+    makeCall $ T.Bid 2 T.Hearts
+
+
+b1NoX2D2S :: Action
+b1NoX2D2S = nameAction "wool_b1NoX2D2S" $ do
+    T.Spades `longerThan` T.Hearts
+    makeCall $ T.Bid 2 T.Spades
 
 
 b1No2C :: Action
