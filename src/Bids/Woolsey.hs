@@ -108,17 +108,13 @@ b1No2C = nameAction "wool_b1No2C" $ do
 
 b1No2C2H :: Action
 b1No2C2H = nameAction "wool_b1No2C2H" $ do
-    -- If your major suits are the same length, bid the better one. That's
-    -- slightly hard to code up, so just avoid those situations entirely.
-    T.Hearts `longerThan` T.Spades
+    T.Hearts `strongerThan` T.Spades
     makeCall $ T.Bid 2 T.Hearts
 
 
 b1No2C2S :: Action
 b1No2C2S = nameAction "wool_b1No2C2S" $ do
-    -- If your major suits are the same length, bid the better one. That's
-    -- slightly hard to code up, so just avoid those situations entirely.
-    T.Spades `longerThan` T.Hearts
+    T.Spades `strongerThan` T.Hearts
     makeCall $ T.Bid 2 T.Spades
 
 
