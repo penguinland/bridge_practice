@@ -49,9 +49,9 @@ on Ubuntu.
 
 ## Generating PDFs (webserver not required!)
 
-To generate PDFs, edit `app/Main.hs` to list the topics you want to practice,
-and then `run.sh` should be able to display 2 PDFs (one of problems and one of
-solutions).
+To generate PDFs, edit `make_pdf/Main.hs` to list the topics you want to
+practice, and then `run.sh` should be able to display 2 PDFs (one of problems
+and one of solutions).
 
 ## Running the webserver (XeLaTeX not required!)
 
