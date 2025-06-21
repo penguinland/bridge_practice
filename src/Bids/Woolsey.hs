@@ -25,6 +25,8 @@ module Bids.Woolsey(
   , b1No2N
   , b1No2N3C
   , b1No2N3D
+  , b1No3C
+  , b1No3D
 ) where
 
 
@@ -32,7 +34,8 @@ import Action(Action, define, constrain)
 import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import qualified Bids.Cappelletti as Cappelletti
 import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
-            alternatives, forEach, nameAction, longerThan, strongerThan)
+            alternatives, forEach, nameAction, longerThan, strongerThan,
+            pointRange)
 import qualified Terminology as T
 
 
@@ -212,3 +215,19 @@ b1No2N3D :: Action
 b1No2N3D = nameAction "wool_b1No2N3D" $ do
     T.Diamonds `strongerThan` T.Clubs
     makeCall $ T.Bid 3 T.Diamonds
+
+
+-- Single-suited minors need to overcall at the 3 level. You should be either
+-- stronger or shapelier than usual to do this.
+singleMinor_ :: T.Suit -> Action
+singleMinor_ suit = do
+    singleSuited suit
+    alternatives [ minSuitLength suit 6 >> pointRange 14 40
+                 , minSuitLength suit 7
+                 ]
+
+b1No3C :: Action
+b1No3C = nameAction "wool_b1No3C" $ singleMinor_ T.Clubs
+
+b1No3D :: Action
+b1No3D = nameAction "wool_b1No3D" $ singleMinor_ T.Diamonds
