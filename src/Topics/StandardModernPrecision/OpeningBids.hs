@@ -1,6 +1,7 @@
 module Topics.StandardModernPrecision.OpeningBids(topic) where
 
 import qualified Bids.StandardModernPrecision.BasicBids as B
+import EDSL(suitLength)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -92,6 +93,24 @@ twoNotrump = let
     stdWrap $ situation "2N" action B.b2N explanation
 
 
+notrump5422 :: Situations
+notrump5422 = let
+    sit major minor bid = let
+        action = do
+            B.setOpener T.South
+            suitLength major 4
+            suitLength minor 5
+        explanation =
+            "Recall that in Standard Modern Precision, 5422 shapes with a " .+
+            "4-card major and 5-card minor are considered balanced hands. " .+
+            "This avoids rebid problems that treating these shapes as " .+
+            "unbalanced can lead to."
+      in
+        situation "NT54" action bid explanation
+  in
+    wrapDlr $ return sit <~ T.majorSuits <~ T.minorSuits <~ [B.b1N, B.b2N]
+
+
 topic :: Topic
 topic = makeTopic "SMP opening bids" "SmpOpen" situations
   where
@@ -102,4 +121,5 @@ topic = makeTopic "SMP opening bids" "SmpOpen" situations
                       , twoClubs
                       , twoDiamonds
                       , twoNotrump
+                      , notrump5422
                       ]
