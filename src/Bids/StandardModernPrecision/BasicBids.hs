@@ -46,20 +46,28 @@ oppsPass = nameAction "smp_pass" $ do
     makePass
 
 
+smpBalancedHand_ :: Action
+smpBalancedHand_ = nameAction "smp_balanced" $ do
+    alternatives [balancedHand, smpSemibalanced]
+  where
+    smpSemibalanced = constrain "smp_semibalanced"
+        ["shape(", ", 4252 + 2452 + 4225 + 2425)"]
+
+
 ------------------
 -- Opening bids --
 ------------------
 b1N :: Action
 b1N = nameAction "smp_b1N" $ do
     pointRange 14 16
-    balancedHand
+    smpBalancedHand_
     makeAlertableCall (T.Bid 1 T.Notrump) ("14" .+ NDash .+ "16 HCP")
 
 
 b2N :: Action
 b2N = nameAction "smp_b2N" $ do
     pointRange 19 20  -- A modification from Part 1
-    balancedHand
+    smpBalancedHand_
     makeAlertableCall (T.Bid 2 T.Notrump) ("19" .+ NDash .+ "20 HCP")
 
 
@@ -135,7 +143,7 @@ setOpener opener = do
 -- unexported helper
 _canOpen :: Action
 _canOpen = nameAction "smp_opening" $ alternatives [ pointRange 11 40
-                                                   , do forbid balancedHand
+                                                   , do forbid smpBalancedHand_
                                                         pointRange 10 40
                                                         maxLoserCount 7
                                                    ]

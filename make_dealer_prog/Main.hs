@@ -12,16 +12,17 @@ import DealerProg(toProgram)
 import qualified Terminology as T
 
 --import Bids.StandardOpenings(b1C)
---import Bids.StandardModernPrecision.BasicBids(b1D)
-import qualified Bids.Lebensohl as Leb
-import qualified Bids.Meckwell as MW
+import Bids.StandardModernPrecision.BasicBids(b1D)
+--import qualified Bids.Lebensohl as Leb
+--import qualified Bids.Meckwell as MW
 
 
 main :: IO ()
 main = let
     auction = do
-        Leb.b1N
-        MW.b1No2S
-        Leb.b1No2S2N
+        b1D
+        --Leb.b1N
+        --MW.b1No2S
+        --Leb.b1No2S2N
   in
     putStrLn . toProgram . snd . finish T.South $ auction
