@@ -50,13 +50,8 @@ smpBalancedHand_ :: Action
 smpBalancedHand_ = nameAction "smp_balanced" $ do
     alternatives [balancedHand, smpSemibalanced]
   where
-    smpSemibalanced = do  -- 4-2 in the majors, 5-2 in the minors
-        alternatives [ suitLength T.Hearts 2 >> suitLength T.Spades 4
-                     , suitLength T.Hearts 4 >> suitLength T.Spades 2
-                     ]
-        alternatives [ suitLength T.Clubs 2 >> suitLength T.Diamonds 5
-                     , suitLength T.Clubs 5 >> suitLength T.Diamonds 2
-                     ]
+    smpSemibalanced = constrain "smp_semibalanced"
+        ["shape(", ", 4252 + 2452 + 4225 + 2425)"]
 
 
 ------------------
