@@ -19,23 +19,6 @@ responderCannotBid = do
     makePass
 
 
--- overcall 2D
--- partner overcalls 2D, bid 2H PoC
--- overcall 2D with spades, partner bids 2H
--- overcall 2M
--- partner overcalls 2M, you prefer minor
--- overcall 2M, partner prefers minor
--- overcall 2N with both minors
--- partner overcalls 2N, pick better minor
--- overcall 3m
--- double is penalty against weak notrump
--- partner makes penalty double against weak notrump
--- double is conventional against strong notrump
--- partner makes conventional double, prefer minor/major
--- double, partner prefers minor, PoC
--- double, partner prefers major
-
-
 twoClubs :: Situations
 twoClubs = let
     sit openingBid = let
@@ -152,6 +135,20 @@ twoDiamondsWithSpades= let
     wrap $ return sit <~ [weak1NT, strong1NT]
                       <~ [T.West, T.North, T.East]
                       <~ T.allVulnerabilities
+
+
+-- overcall 2M
+-- partner overcalls 2M, you prefer minor
+-- overcall 2M, partner prefers minor
+-- overcall 2N with both minors
+-- partner overcalls 2N, pick better minor
+-- overcall 3m
+-- double is penalty against weak notrump
+-- partner makes penalty double against weak notrump
+-- double is conventional against strong notrump
+-- partner makes conventional double, prefer minor/major
+-- double, partner prefers minor, PoC
+-- double, partner prefers major
 
 
 topic :: Topic
