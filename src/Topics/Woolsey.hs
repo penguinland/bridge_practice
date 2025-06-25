@@ -96,7 +96,7 @@ twoDiamondsResponse = let
 
 
 twoDiamondsWithHearts :: Situations
-twoDiamondsWithHearts= let
+twoDiamondsWithHearts = let
     sit openingBid = let
         action = do
             setOpener T.East
@@ -117,7 +117,7 @@ twoDiamondsWithHearts= let
 
 
 twoDiamondsWithSpades :: Situations
-twoDiamondsWithSpades= let
+twoDiamondsWithSpades = let
     sit openingBid = let
         action = do
             setOpener T.East
@@ -138,7 +138,7 @@ twoDiamondsWithSpades= let
 
 
 twoMajor :: Situations
-twoMajor= let
+twoMajor = let
     sit openingBid overcall = let
         action = do
             setOpener T.East
