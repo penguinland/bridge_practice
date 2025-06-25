@@ -247,7 +247,7 @@ twoNotrumpResponse = let
 
 
 topic :: Topic
-topic = makeTopic "Woolsey (Multi-Landy)" "wool" situations
+topic = makeTopic "Woolsey (Multi-Landy) over all notrump" "wool" situations
   where
     situations = wrap [ twoClubs
                       , twoClubsResponse
