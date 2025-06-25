@@ -137,7 +137,24 @@ twoDiamondsWithSpades= let
                       <~ T.allVulnerabilities
 
 
--- overcall 2M
+twoMajor :: Situations
+twoMajor= let
+    sit openingBid overcall = let
+        action = do
+            setOpener T.East
+            openingBid
+        explanation =
+            "RHO has opened " .+ T.Bid 1 T.Notrump .+ ", and we have a " .+
+            "two-suited hand with a 5-card major and a minor. Bid the " .+
+            "major to show this shape."
+        in situation "2M" action overcall explanation
+  in
+    wrap $ return sit <~ [weak1NT, strong1NT]
+                      <~ [W.b1No2H, W.b1No2S]
+                      <~ [T.West, T.North, T.East]
+                      <~ T.allVulnerabilities
+
+
 -- partner overcalls 2M, you prefer minor
 -- overcall 2M, partner prefers minor
 -- overcall 2N with both minors
@@ -159,4 +176,5 @@ topic = makeTopic "Woolsey (Multi-Landy)" "wool" situations
                       , twoDiamonds
                       , twoDiamondsResponse
                       , wrap [twoDiamondsWithHearts, twoDiamondsWithSpades]
+                      , twoMajor
                       ]
