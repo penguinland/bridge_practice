@@ -256,6 +256,22 @@ threeMinor = let
                       <~ T.allVulnerabilities
 
 
+penaltyDouble :: Situations
+penaltyDouble = let
+    sit = let
+        action = do
+            setOpener T.East
+            weak1NT
+        explanation =
+            "RHO has opened a weak " .+ T.Bid 1 T.Notrump .+ ". Double " .+
+            "should be penalty here: the opponents might not have a place " .+
+            "to run to, and we can punish them for stepping out."
+        in situation "wkX" action W.b1NweaoX explanation
+  in
+    wrap $ return sit <~ [T.West, T.North, T.East]
+                      <~ T.allVulnerabilities
+
+
 convDouble :: Situations
 convDouble = let
     sit = let
@@ -273,9 +289,6 @@ convDouble = let
                       <~ T.allVulnerabilities
 
 
--- double is penalty against weak notrump
--- partner makes penalty double against weak notrump
--- double is conventional against strong notrump
 -- partner makes conventional double, prefer minor/major
 -- double, partner prefers minor, PoC
 -- double, partner prefers major
@@ -295,5 +308,6 @@ topic = makeTopic "Woolsey (Multi-Landy) over all notrump" "wool" situations
                       , twoNotrump
                       , twoNotrumpResponse
                       , threeMinor
+                      , penaltyDouble
                       , convDouble
                       ]
