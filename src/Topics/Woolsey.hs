@@ -175,7 +175,31 @@ twoMajorResponse = let
                       <~ T.allVulnerabilities
 
 
--- overcall 2M, partner prefers minor
+twoMajorWithMinor :: Situations
+twoMajorWithMinor = let
+    sit openingBid (overcall, response, rebid) = let
+        action = do
+            setOpener T.East
+            _ <- openingBid
+            _ <- overcall
+            _ <- responderCannotBid
+            _ <- response
+            makePass
+        explanation =
+            "RHO opened " .+ T.Bid 1 T.Notrump .+ ", and we showed a " .+
+            "two-suited hand with a minor and a 5-card major. Partner has " .+
+            "asked us to bid our minor."
+        in situation "2Mm" action rebid explanation
+  in
+    wrap $ return sit <~ [weak1NT, strong1NT]
+                      <~ [ (W.b1No2H, W.b1No2H2N, W.b1No2H2N3C)
+                         , (W.b1No2S, W.b1No2H2N, W.b1No2H2N3D)
+                         , (W.b1No2S, W.b1No2S2N, W.b1No2S2N3C)
+                         , (W.b1No2S, W.b1No2S2N, W.b1No2S2N3D)]
+                      <~ [T.West, T.North, T.East]
+                      <~ T.allVulnerabilities
+
+
 -- overcall 2N with both minors
 -- partner overcalls 2N, pick better minor
 -- overcall 3m
@@ -197,4 +221,5 @@ topic = makeTopic "Woolsey (Multi-Landy)" "wool" situations
                       , wrap [twoDiamondsWithHearts, twoDiamondsWithSpades]
                       , twoMajor
                       , twoMajorResponse
+                      , twoMajorWithMinor
                       ]
