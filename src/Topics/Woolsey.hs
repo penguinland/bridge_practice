@@ -200,8 +200,43 @@ twoMajorWithMinor = let
                       <~ T.allVulnerabilities
 
 
--- overcall 2N with both minors
--- partner overcalls 2N, pick better minor
+twoNotrump :: Situations
+twoNotrump = let
+    sit openingBid = let
+        action = do
+            setOpener T.East
+            openingBid
+        explanation =
+            "RHO has opened " .+ T.Bid 1 T.Notrump .+ ", and we have a " .+
+            "two-suited hand with both minors. Bid an unusual-like " .+
+            W.b1No2N .+ ". Partner will then bid their favorite minor, and " .+
+            "we'll play there."
+        in situation "2N" action W.b1No2N explanation
+  in
+    wrap $ return sit <~ [weak1NT, strong1NT]
+                      <~ [T.West, T.North, T.East]
+                      <~ T.allVulnerabilities
+
+
+twoNotrumpResponse :: Situations
+twoNotrumpResponse = let
+    sit openingBid response = let
+        action = do
+            setOpener T.West
+            _ <- openingBid
+            W.b1No2N
+            responderCannotBid
+        explanation =
+            "Partner has shown a two-suited hand with both minors. Bid " .+
+            "our favorite minor, and partner will have support for it."
+        in situation "2NR" action response explanation
+  in
+    wrap $ return sit <~ [weak1NT, strong1NT]
+                      <~ [W.b1No2N3C, W.b1No2N3D]
+                      <~ [T.West, T.South, T.East]
+                      <~ T.allVulnerabilities
+
+
 -- overcall 3m
 -- double is penalty against weak notrump
 -- partner makes penalty double against weak notrump
@@ -222,4 +257,6 @@ topic = makeTopic "Woolsey (Multi-Landy)" "wool" situations
                       , twoMajor
                       , twoMajorResponse
                       , twoMajorWithMinor
+                      , twoNotrump
+                      , twoNotrumpResponse
                       ]
