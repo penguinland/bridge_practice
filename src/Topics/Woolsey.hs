@@ -237,7 +237,25 @@ twoNotrumpResponse = let
                       <~ T.allVulnerabilities
 
 
--- overcall 3m
+threeMinor :: Situations
+threeMinor = let
+    sit openingBid overcall = let
+        action = do
+            setOpener T.East
+            openingBid
+        explanation =
+            "RHO has opened " .+ T.Bid 1 T.Notrump .+ ", and we have one " .+
+            "long minor. Bid naturally at the 3 level. Be a little more " .+
+            "conservative when making this bid compared to others, because " .+
+            "the 3 level can be uncomfortably high."
+        in situation "3m" action overcall explanation
+  in
+    wrap $ return sit <~ [weak1NT, strong1NT]
+                      <~ [W.b1No3C, W.b1No3D]
+                      <~ [T.West, T.North, T.East]
+                      <~ T.allVulnerabilities
+
+
 -- double is penalty against weak notrump
 -- partner makes penalty double against weak notrump
 -- double is conventional against strong notrump
@@ -259,4 +277,5 @@ topic = makeTopic "Woolsey (Multi-Landy) over all notrump" "wool" situations
                       , twoMajorWithMinor
                       , twoNotrump
                       , twoNotrumpResponse
+                      , threeMinor
                       ]

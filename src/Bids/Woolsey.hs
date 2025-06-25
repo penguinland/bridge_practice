@@ -233,6 +233,7 @@ singleMinor_ suit = do
     alternatives [ minSuitLength suit 6 >> pointRange 14 40
                  , minSuitLength suit 7
                  ]
+    makeCall $ T.Bid 3 suit
 
 b1No3C :: Action
 b1No3C = nameAction "wool_b1No3C" $ singleMinor_ T.Clubs
