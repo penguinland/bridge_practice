@@ -69,7 +69,7 @@ twoDiamonds = let
             "RHO has opened " .+ T.Bid 1 T.Notrump .+ ", and we have a " .+
             "single-suited hand with a major. Bid " .+ W.b1No2D .+ " to " .+
             "show this. This bid is the " .+ OpenQuote .+ "Multi" .+
-            CloseQuote .+ " part of " .+ "Multi-Landy."
+            CloseQuote .+ " part of Multi-Landy."
         in situation "2D" action W.b1No2D explanation
   in
     wrap $ return sit <~ [weak1NT, strong1NT]
