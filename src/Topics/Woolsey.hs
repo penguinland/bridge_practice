@@ -289,6 +289,7 @@ convDouble = let
                       <~ T.allVulnerabilities
 
 
+-- update the bids so that you prefer penalty double to other bids
 -- partner makes conventional double, prefer minor/major
 -- double, partner prefers minor, PoC
 -- double, partner prefers major
