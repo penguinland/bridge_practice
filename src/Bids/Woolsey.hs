@@ -166,12 +166,20 @@ b1No2S = nameAction "wool_b1No2S" $ do
 
 preferMinor_ :: T.Suit -> Action
 preferMinor_ major = do
-    -- There are lots of other hand shapes that would prefer the minor, but
+    -- There are probably other hand shapes that would prefer the minor, but
     -- figuring them all out is harder than just limiting the hand types to the
     -- easy ones. When you encounter the hard ones at the table, hopefully this
     -- practice has helped.
-    maxSuitLength major 2
-    forEach T.minorSuits (`minSuitLength` 4)
+    alternatives [ maxSuitLength major 2 >>
+                       forEach T.minorSuits (`minSuitLength` 4)
+                 , maxSuitLength major 1 >>
+                       forEach T.minorSuits (`minSuitLength` 3)
+                 , maxSuitLength major 0 >>
+                       forEach T.minorSuits (`minSuitLength` 2) >>
+                       forEach T.majorSuits (`maxSuitLength` 4)
+                 ]
+    -- If we had our own long suit, we might be tempted to bid that instead.
+    forEach T.allSuits (`maxSuitLength` 5)
     makeAlertableCall (T.Bid 2 T.Notrump) "bid your minor"
 
 b1No2H2N :: Action
@@ -225,6 +233,7 @@ singleMinor_ suit = do
     alternatives [ minSuitLength suit 6 >> pointRange 14 40
                  , minSuitLength suit 7
                  ]
+    makeCall $ T.Bid 3 suit
 
 b1No3C :: Action
 b1No3C = nameAction "wool_b1No3C" $ singleMinor_ T.Clubs
