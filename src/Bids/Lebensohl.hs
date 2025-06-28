@@ -63,7 +63,7 @@ import qualified Bids.OneNotrump as NT
 import EDSL(minSuitLength, makeCall, makeAlertableCall, pointRange, forEach,
             forbid, forbidAll, balancedHand, semibalancedHand, hasStopper,
             alternatives, soundHolding, longerThan, atLeastAsLong, suitLength,
-            maxSuitLength, nameAction)
+            maxSuitLength, nameAction, strongerThan)
 import Output((.+))
 import qualified Terminology as T
 
@@ -108,9 +108,8 @@ signoff_ level suit = do
     minSuitLength suit 5
     -- Have a good reason to bid this suit.
     alternatives [soundHolding suit, minSuitLength suit 6]
-    -- If you're 5-5 in the majors, pick the better suit. I'm too lazy to add
-    -- something to the EDSL to figure out which suit is better, so avoid it.
-    forEach (filter (/= suit) T.allSuits) (suit `longerThan`)
+    -- If you're 5-5 in the two suits, pick the better one.
+    forEach (filter (/= suit) T.allSuits) (suit `strongerThan`)
     makeCall $ T.Bid level suit
 
 
