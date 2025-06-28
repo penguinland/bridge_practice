@@ -109,7 +109,7 @@ twoDiamondsWithHearts = let
             setOpener T.East
             _ <- openingBid
             W.b1No2D
-            _ <- responderCannotBid
+            responderCannotBid
             W.b1No2D2H
             makePass
         explanation =
@@ -130,7 +130,7 @@ twoDiamondsWithSpades = let
             setOpener T.East
             _ <- openingBid
             W.b1No2D
-            _ <- responderCannotBid
+            responderCannotBid
             W.b1No2D2H
             makePass
         explanation =
@@ -189,7 +189,7 @@ twoMajorWithMinor = let
             setOpener T.East
             _ <- openingBid
             _ <- overcall
-            _ <- responderCannotBid
+            responderCannotBid
             _ <- response
             makePass
         explanation =
@@ -202,7 +202,8 @@ twoMajorWithMinor = let
                       <~ [ (W.b1No2H, W.b1No2H2N, W.b1No2H2N3C)
                          , (W.b1No2S, W.b1No2H2N, W.b1No2H2N3D)
                          , (W.b1No2S, W.b1No2S2N, W.b1No2S2N3C)
-                         , (W.b1No2S, W.b1No2S2N, W.b1No2S2N3D)]
+                         , (W.b1No2S, W.b1No2S2N, W.b1No2S2N3D)
+                         ]
                       <~ [T.West, T.North, T.East]
                       <~ T.allVulnerabilities
 
@@ -351,8 +352,31 @@ penaltyDoubleResponse = let
                       <~ T.allVulnerabilities
 
 
--- double, partner prefers minor, PoC
--- double, partner prefers major
+convDoubleRebid :: Situations
+convDoubleRebid = let
+    sit (response, rebid, endExplanation) = let
+        action = do
+            setOpener T.East
+            strong1NT
+            W.b1NstroX
+            responderCannotBid
+            _ <- response
+            makePass
+        explanation =
+            "RHO opened a strong " .+ T.Bid 1 T.Notrump .+ ", and we made " .+
+            "a conventional double. Partner has shown preference for our " .+
+            endExplanation
+        in situation "2Mm" action rebid explanation
+  in
+    wrap $ return sit <~ [ (W.b1NoX2C, W.b1NoX2CP,  "minor. Pass.")
+                         , (W.b1NoX2C, W.b1NoX2C2D, "minor. Bid it.")
+                         , (W.b1NoX2D, W.b1NoX2D2H, "major. Bid it.")
+                         , (W.b1NoX2D, W.b1NoX2D2S, "major. Bid it.")
+                         ]
+                      <~ [T.West, T.North, T.East]
+                      <~ T.allVulnerabilities
+
+
 -- Add Woolsey into the lebensohl topic. Consider adding a gotcha to Stayman
 
 
@@ -378,4 +402,5 @@ topic = makeTopic "Woolsey (Multi-Landy) over all notrump" "wool" situations
                              , convDoubleResponseMajor
                              , penaltyDoubleResponse
                              ]
+                      , convDoubleRebid
                       ]
