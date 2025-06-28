@@ -3,7 +3,7 @@ module Topics.Woolsey(topic) where
 import Action(Action)
 import qualified Bids.Woolsey as W
 import CommonBids(setOpener, strong1NT, weak1NT)
-import EDSL(pointRange, minSuitLength, maxSuitLength, makePass, forEach)
+import EDSL(pointRange, minSuitLength, maxSuitLength, makePass, forEach, forbid)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -23,7 +23,7 @@ responderCannotBid = do
 -- so use this when giving the options of "opener bids a strong 1N, or they bid
 -- a weak 1N and we can't make a penalty double."
 eitherNotrumpNoDouble :: [Action]
-eitherNotrumpNoDouble = [strong1NT, weak1NT >> forbid b1NweaoX]
+eitherNotrumpNoDouble = [strong1NT, weak1NT >> forbid W.b1NweaoX]
 
 
 twoClubs :: Situations
@@ -296,7 +296,61 @@ convDouble = let
                       <~ T.allVulnerabilities
 
 
--- partner makes conventional double, prefer minor/major
+convDoubleResponseMinor :: Situations
+convDoubleResponseMinor = let
+    sit = let
+        action = do
+            setOpener T.West
+            strong1NT
+            W.b1NstroX
+            responderCannotBid
+        explanation =
+            "Partner has shown a 4-card major and at least a 5-card minor. " .+
+            "If they have our least favorite major and our least favorite " .+
+            "minor, we prefer the minor. Bid " .+ W.b1NoX2C .+ ", pass or " .+
+            "correct."
+        in situation "sXMin" action W.b1NoX2C explanation
+  in
+    wrap $ return sit <~ [T.West, T.South, T.East]
+                      <~ T.allVulnerabilities
+
+
+convDoubleResponseMajor :: Situations
+convDoubleResponseMajor = let
+    sit = let
+        action = do
+            setOpener T.West
+            strong1NT
+            W.b1NstroX
+            responderCannotBid
+        explanation =
+            "Partner has shown a 4-card major and at least a 5-card minor. " .+
+            "If they have our least favorite major and our least favorite " .+
+            "minor, we prefer the major. Bid " .+ W.b1NoX2D .+ ", asking " .+
+            "partner to bid their major."
+        in situation "sXMaj" action W.b1NoX2D explanation
+  in
+    wrap $ return sit <~ [T.West, T.South, T.East]
+                      <~ T.allVulnerabilities
+
+
+penaltyDoubleResponse :: Situations
+penaltyDoubleResponse = let
+    sit = let
+        action = do
+            setOpener T.West
+            weak1NT
+            W.b1NweaoX
+            responderCannotBid
+        explanation =
+            "Partner has made a penalty double of the opponents' weak " .+
+            "notrump bid. This is not conventional! Pass, don't pull it."
+        in situation "wXP" action makePass explanation
+  in
+    wrap $ return sit <~ [T.West, T.South, T.East]
+                      <~ T.allVulnerabilities
+
+
 -- double, partner prefers minor, PoC
 -- double, partner prefers major
 -- Add Woolsey into the lebensohl topic. Consider adding a gotcha to Stayman
@@ -318,4 +372,10 @@ topic = makeTopic "Woolsey (Multi-Landy) over all notrump" "wool" situations
                       , threeMinor
                       , penaltyDouble
                       , convDouble
+                      , wrap [ convDoubleResponseMinor
+                             , convDoubleResponseMinor
+                             , convDoubleResponseMajor
+                             , convDoubleResponseMajor
+                             , penaltyDoubleResponse
+                             ]
                       ]
