@@ -377,8 +377,7 @@ convDoubleRebid = let
                       <~ T.allVulnerabilities
 
 
--- Add Woolsey into the lebensohl topic. Consider adding a gotcha to Stayman
--- Add Situations to lebensohl for bidding naturally over a Woolsey 2C.
+-- Add Situations to lebensohl/Stayman for bidding naturally over a Woolsey 2C.
 
 
 topic :: Topic

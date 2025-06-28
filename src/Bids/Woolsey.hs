@@ -74,8 +74,9 @@ b1NoX2C = nameAction "wool_b1NoX2C" $ do
     -- Prefer the fit with the most cards.
     constrain "tolerate_minor" ["shorter_minor_", " + 1 >= shorter_major_", ""]
     -- Prefer a 5-2 minor fit over a 4-3 major. Prefer a 4-4 major fit over a
-    -- 5-3 minor. In other words, either the minor is 5-2 or the minor fit is
-    -- strictly longer than the major.
+    -- 5-3 minor. Prefer a 4-5 major fit over a 5-4 minor (solely because it
+    -- scores better). In other words, either the minor is 5-2 or the minor fit
+    -- is strictly longer than the major.
     alternatives
         [ constrain "lanky_minor"  ["shorter_minor_", " == 2"]
         , constrain "prefer_minor" ["shorter_minor_", " >= shorter_major_", ""]
