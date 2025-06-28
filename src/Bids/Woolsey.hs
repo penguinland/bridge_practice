@@ -35,7 +35,7 @@ import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import qualified Bids.Cappelletti as Cappelletti
 import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
             alternatives, forEach, nameAction, longerThan, strongerThan,
-            pointRange)
+            pointRange, forbid)
 import qualified Terminology as T
 
 
@@ -76,8 +76,8 @@ b1NoX2C = nameAction "wool_b1NoX2C" $ do
 
 b1NoX2D :: Action
 b1NoX2D = nameAction "wool_b1NoX2D" $ do
-    prepareAdvancer_
-    constrain "prefer_major" ["shorter_minor_", " < shorter_major_", ""]
+    prepareAdvancer_  -- Remember to still forbid long suits!
+    forbid b1NoX2C
     makeAlertableCall (T.Bid 2 T.Diamonds) "bid your major"
 
 
