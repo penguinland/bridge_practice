@@ -47,8 +47,10 @@ addDefinition :: CondName -> CondDefn -> DealerDefs -> DealerDefs
 addDefinition name defn (DealerDefs defs order) =
   case Map.lookup name defs of
     Nothing    -> DealerDefs (Map.insert name defn defs) (name : order)
-    Just defn' -> if defn == defn' then DealerDefs defs order
-                                   else error $ "2 defintions for " ++ name
+    Just defn' -> if defn == defn'
+                  then DealerDefs defs order
+                  else error $ "2 definitions for " ++ name ++ ": '" ++
+                               defn ++ "' vs '" ++ defn' ++ "'"
 
 
 toProgDefs :: DealerDefs -> [String]

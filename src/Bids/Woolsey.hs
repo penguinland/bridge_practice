@@ -35,7 +35,7 @@ import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import qualified Bids.Cappelletti as Cappelletti
 import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
             alternatives, forEach, nameAction, longerThan, strongerThan,
-            pointRange)
+            pointRange, forbid)
 import qualified Terminology as T
 
 
@@ -58,10 +58,12 @@ b1NstroX = nameAction "wool_b1NstroX" $ do
 -- like from those.
 prepareAdvancer_ :: Action
 prepareAdvancer_ = do
-    define "longer_minor"
-        ["clubs(", ") > diamonds(", ") ? clubs(", ") : diamonds(", ")"]
-    define "longer_major"
-        ["hearts(", ") > spades(", ") ? hearts(", ") : spades(", ")"]
+    -- These definitions are identical to the ones in CommonBids.hs used to
+    -- calculate the Rule of 20. We repeat them here for convenience.
+    define "shorter_minor"
+        ["clubs(", ") > diamonds(", ") ? diamonds(", ") : clubs(", ")"]
+    define "shorter_major"
+        ["hearts(", ") > spades(", ") ? spades(", ") : hearts(", ")"]
     -- If you've got your own self-sufficient suit, you might be tempted to bid
     -- that instead. Avoid this ambiguity.
     forEach T.allSuits (`maxSuitLength` 6)
@@ -69,13 +71,22 @@ prepareAdvancer_ = do
 b1NoX2C :: Action
 b1NoX2C = nameAction "wool_b1NoX2C" $ do
     prepareAdvancer_
-    constrain "prefer_minor" ["longer_minor_", " >= longer_major_", ""]
+    -- Prefer the fit with the most cards.
+    constrain "tolerate_minor" ["shorter_minor_", " + 1 >= shorter_major_", ""]
+    -- Prefer a 5-2 minor fit over a 4-3 major. Prefer a 4-4 major fit over a
+    -- 5-3 minor. Prefer a 4-5 major fit over a 5-4 minor (solely because it
+    -- scores better). In other words, either the minor is 5-2 or the minor fit
+    -- is strictly longer than the major.
+    alternatives
+        [ constrain "lanky_minor"  ["shorter_minor_", " == 2"]
+        , constrain "prefer_minor" ["shorter_minor_", " >= shorter_major_", ""]
+        ]
     makeAlertableCall (T.Bid 2 T.Clubs) "prefer the minor: pass or correct"
 
 b1NoX2D :: Action
 b1NoX2D = nameAction "wool_b1NoX2D" $ do
-    prepareAdvancer_
-    constrain "prefer_minor" ["longer_minor_", " < longer_major_", ""]
+    prepareAdvancer_  -- Remember to still forbid long suits!
+    forbid b1NoX2C
     makeAlertableCall (T.Bid 2 T.Diamonds) "bid your major"
 
 
