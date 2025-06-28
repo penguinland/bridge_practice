@@ -19,6 +19,13 @@ responderCannotBid = do
     makePass
 
 
+-- Syntactic sugar: prefer a penalty double against weak notrump when available,
+-- so use this when giving the options of "opener bids a strong 1N, or they bid
+-- a weak 1N and we can't make a penalty double."
+eitherNotrumpNoDouble :: [Action]
+eitherNotrumpNoDouble = [strong1NT, weak1NT >> forbid b1NweaoX]
+
+
 twoClubs :: Situations
 twoClubs = let
     sit openingBid = let
@@ -33,7 +40,7 @@ twoClubs = let
   in
     -- Ensure we're not dealer: it's too rare to find a hand where we'd want to
     -- overcall after 1N but not open the bidding ourselves.
-    wrap $ return sit <~ [weak1NT, strong1NT]
+    wrap $ return sit <~ eitherNotrumpNoDouble
                       <~ [T.West, T.North, T.East]
                       <~ T.allVulnerabilities
 
@@ -53,7 +60,7 @@ twoClubsResponse = let
   in
     -- Ensure partner isn't dealer: it's too rare to find a hand where they'd
     -- want to overcall after 1N but not open the bidding themselves.
-    wrap $ return sit <~ [weak1NT, strong1NT]
+    wrap $ return sit <~ eitherNotrumpNoDouble
                       <~ [W.b1No2C2H, W.b1No2C2S]
                       <~ [T.West, T.South, T.East]
                       <~ T.allVulnerabilities
@@ -72,7 +79,7 @@ twoDiamonds = let
             CloseQuote .+ " part of Multi-Landy."
         in situation "2D" action W.b1No2D explanation
   in
-    wrap $ return sit <~ [weak1NT, strong1NT]
+    wrap $ return sit <~ eitherNotrumpNoDouble
                       <~ [T.West, T.North, T.East]
                       <~ T.allVulnerabilities
 
@@ -90,7 +97,7 @@ twoDiamondsResponse = let
             ", pass or correct."
         in situation "2DR" action W.b1No2D2H explanation
   in
-    wrap $ return sit <~ [weak1NT, strong1NT]
+    wrap $ return sit <~ eitherNotrumpNoDouble
                       <~ [T.West, T.South, T.East]
                       <~ T.allVulnerabilities
 
@@ -111,7 +118,7 @@ twoDiamondsWithHearts = let
             "or correct. It's time to pass."
         in situation "2DH" action W.b1No2D2HP explanation
   in
-    wrap $ return sit <~ [weak1NT, strong1NT]
+    wrap $ return sit <~ eitherNotrumpNoDouble
                       <~ [T.West, T.North, T.East]
                       <~ T.allVulnerabilities
 
@@ -132,7 +139,7 @@ twoDiamondsWithSpades = let
             "or correct. Correct to spades."
         in situation "2DS" action W.b1No2D2H2S explanation
   in
-    wrap $ return sit <~ [weak1NT, strong1NT]
+    wrap $ return sit <~ eitherNotrumpNoDouble
                       <~ [T.West, T.North, T.East]
                       <~ T.allVulnerabilities
 
@@ -149,7 +156,7 @@ twoMajor = let
             "major to show this shape."
         in situation "2M" action overcall explanation
   in
-    wrap $ return sit <~ [weak1NT, strong1NT]
+    wrap $ return sit <~ eitherNotrumpNoDouble
                       <~ [W.b1No2H, W.b1No2S]
                       <~ [T.West, T.North, T.East]
                       <~ T.allVulnerabilities
@@ -169,7 +176,7 @@ twoMajorResponse = let
             "prompt them to bid it."
         in situation "2MR" action response explanation
   in
-    wrap $ return sit <~ [weak1NT, strong1NT]
+    wrap $ return sit <~ eitherNotrumpNoDouble
                       <~ [(W.b1No2H, W.b1No2H2N), (W.b1No2S, W.b1No2S2N)]
                       <~ [T.West, T.South, T.East]
                       <~ T.allVulnerabilities
@@ -191,7 +198,7 @@ twoMajorWithMinor = let
             "asked us to bid our minor."
         in situation "2Mm" action rebid explanation
   in
-    wrap $ return sit <~ [weak1NT, strong1NT]
+    wrap $ return sit <~ eitherNotrumpNoDouble
                       <~ [ (W.b1No2H, W.b1No2H2N, W.b1No2H2N3C)
                          , (W.b1No2S, W.b1No2H2N, W.b1No2H2N3D)
                          , (W.b1No2S, W.b1No2S2N, W.b1No2S2N3C)
@@ -213,7 +220,7 @@ twoNotrump = let
             "we'll play there."
         in situation "2N" action W.b1No2N explanation
   in
-    wrap $ return sit <~ [weak1NT, strong1NT]
+    wrap $ return sit <~ eitherNotrumpNoDouble
                       <~ [T.West, T.North, T.East]
                       <~ T.allVulnerabilities
 
@@ -231,7 +238,7 @@ twoNotrumpResponse = let
             "our favorite minor, and partner will have support for it."
         in situation "2NR" action response explanation
   in
-    wrap $ return sit <~ [weak1NT, strong1NT]
+    wrap $ return sit <~ eitherNotrumpNoDouble
                       <~ [W.b1No2N3C, W.b1No2N3D]
                       <~ [T.West, T.South, T.East]
                       <~ T.allVulnerabilities
@@ -250,7 +257,7 @@ threeMinor = let
             "the 3 level can be uncomfortably high."
         in situation "3m" action overcall explanation
   in
-    wrap $ return sit <~ [weak1NT, strong1NT]
+    wrap $ return sit <~ eitherNotrumpNoDouble
                       <~ [W.b1No3C, W.b1No3D]
                       <~ [T.West, T.North, T.East]
                       <~ T.allVulnerabilities
@@ -289,10 +296,10 @@ convDouble = let
                       <~ T.allVulnerabilities
 
 
--- update the bids so that you prefer penalty double to other bids
 -- partner makes conventional double, prefer minor/major
 -- double, partner prefers minor, PoC
 -- double, partner prefers major
+-- Add Woolsey into the lebensohl topic. Consider adding a gotcha to Stayman
 
 
 topic :: Topic
