@@ -34,9 +34,8 @@ parse input = let
     -- call init to remove '}' from the end.
     innerRngString = init . join " " . nTimes 4 tail $ pieces
     rng = StdGen {unStdGen = read innerRngString}
-    namePieces = split "." fullSitName
-    targetName = head namePieces
-    sitName = join "." . tail $ namePieces
+    (targetName, sitName') = break (== '.') fullSitName
+    sitName = tail sitName'  -- Remove the period we broke on.
   in
     (targetName, sitName, rng)
 
