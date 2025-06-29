@@ -43,19 +43,13 @@ parse input = let
 debug :: Topic -> String -> StdGen -> IO String
 debug topic sitName rng = do
     let (sit, rng') = runState (choose topic) rng
-    assert $ subnameMatches sitName sit
+    when (sitName /= sitRef sit)
+        (error "Assertion error: situation name doesn't match")
     (maybeSitInst, _) <- runStateT (instantiate "" sit) rng'
     case maybeSitInst of
         Nothing      -> error "Couldn't instantiate situation!?"
-        Just sitInst -> return $ showDealerProg sit ++ "\n\n" ++ toLatex sitInst
-  where
-    assert :: Bool -> IO ()
-    assert value =
-        when (not value) (error "Assertion error: situation name doesn't match")
-    subnameMatches :: String -> Situation -> Bool
-    subnameMatches expected (Situation r _ _ _ _ _ _) = r == expected
-    showDealerProg :: Situation -> String
-    showDealerProg (Situation _ _ dp _ _ _ _) = toProgram dp
+        Just sitInst -> return $ (toProgram . sitDealerProg $ sit) ++ "\n\n" ++
+                                 toLatex sitInst
 
 
 main :: IO ()

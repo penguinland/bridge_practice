@@ -1,7 +1,6 @@
 module Situation (
   Situation(..)
 , situation
-, sitRef
 , (<~)
 ) where
 
@@ -17,8 +16,15 @@ import Structures(Bidding)
 import Terminology(CompleteCall, Direction, Vulnerability)
 
 
-data Situation = Situation String Bidding DealerProg CompleteCall Description
-                           Direction Vulnerability
+data Situation = Situation { sitRef :: String  -- Reference for debugging
+                           , sitBidding :: Bidding
+                           , sitDealerProg :: DealerProg
+                           , sitAnswer :: CompleteCall
+                           , sitExplanation :: Description
+                           , sitDealer :: Direction
+                           , sitVulnerability :: Vulnerability
+                           }
+
 
 -- The first action is the auction up until now. The second one is some snippet
 -- of auction whose last bid is the intended answer to the situation. We make
@@ -30,10 +36,6 @@ situation r a c s d v = Situation r bidding deal answer (toDescription s) d v
   where
     (bidding, deal) = finish d (a >> withholdBid c)
     answer = extractLastCall c
-
-
-sitRef :: Situation -> String
-sitRef (Situation r _ _ _ _ _ _) = r
 
 
 (<~) :: State StdGen (a -> b) -> [a] -> State StdGen b
