@@ -1,6 +1,7 @@
 -- When something is going wrong with the system, give this program the debug
 -- string of the problematic situation instance, and we'll print out information
--- about it.
+-- about it. Example usage:
+--     echo "wool.2D StdGen {unStdGen = SMGen 14968322863915291149 13964134228407631271}" | stack run debugger
 
 import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(runState, runStateT)
@@ -30,7 +31,7 @@ parse input = let
     -- the topic name and "StdGen {unStdGen =", join the rest together, and then
     -- call init twice to remove the newline and '}' from the end.
     innerRngString = init . init . join " " . tail . tail . tail . tail $ pieces
-    rng = StdGen { unStdGen = read innerRngString }
+    rng = StdGen {unStdGen = read innerRngString}
     namePieces = split "." fullSitName
     targetName = head namePieces
     sitName = join "." . tail $ namePieces
