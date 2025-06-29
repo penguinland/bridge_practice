@@ -7,6 +7,7 @@ import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(runState, runStateT)
 import Data.List.Utils(join, split)
 import Data.String.Utils(strip)
+import GHC.Utils.Misc(nTimes)
 -- We import the Internal implementation of the RNG directly because it has
 -- implementations of Read and ways to get at the inner guts of the StdGen that
 -- the non-Internal version does not have. If we ever upgrade to a newer version
@@ -31,7 +32,7 @@ parse input = let
     -- pieces are. So, parse it more manually. We call tail 4 times to take off
     -- the topic name and "StdGen {unStdGen =", join the rest together, and then
     -- call init to remove '}' from the end.
-    innerRngString = init . join " " . tail . tail . tail . tail $ pieces
+    innerRngString = init . join " " . nTimes 4 tail $ pieces
     rng = StdGen {unStdGen = read innerRngString}
     namePieces = split "." fullSitName
     targetName = head namePieces

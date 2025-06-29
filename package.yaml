@@ -58,6 +58,7 @@ executables:
     source-dirs:         debugger
     dependencies:
     - bridge-practice
+    - ghc
   make_dealer_prog:
     main:                Main.hs
     source-dirs:         make_dealer_prog
