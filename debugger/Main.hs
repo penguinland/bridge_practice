@@ -7,7 +7,7 @@ import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(runState, runStateT)
 import Data.List.Utils(join, split)
 -- We import the Internal implementation of the RNG directly because it has
--- implementations of Read and ways to get at the inner guts of the StdGen than
+-- implementations of Read and ways to get at the inner guts of the StdGen that
 -- the non-Internal version does not have. If we ever upgrade to a newer version
 -- of System.Random, this might break.
 import System.Random.Internal(StdGen(..))
