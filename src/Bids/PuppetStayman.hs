@@ -117,8 +117,7 @@ b2N3C3D3S4H = nameAction "puppet_b2N3C3D3S4H" $ do
 
 b2N3C3D3N :: Action
 b2N3C3D3N = nameAction "puppet_b2N3C3D3N" $ do
-    maxSuitLength T.Hearts 3
-    maxSuitLength T.Spades 3
+    forEach T.majorSuits (`maxSuitLength` 3)
     makeCall $ T.Bid 3 T.Notrump
 
 
