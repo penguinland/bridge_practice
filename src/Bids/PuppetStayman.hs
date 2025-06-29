@@ -3,13 +3,13 @@ module Bids.PuppetStayman(
   , b2N  -- re-exported from StandardOpenings
 --  , b2N3C  -- TODO: do you bid this or a transfer if you're 5-4 in the majors?
   , b2N3C3D
---  , b2N3C3D3H
+  , b2N3C3D3H
 --  , b2N3C3D3H3N
 --  , b2N3C3D3H4S
---  , b2N3C3D3S
+  , b2N3C3D3S
 --  , b2N3C3D3S3N
 --  , b2N3C3D3S4H
---  , b2N3C3D3N
+  , b2N3C3D3N
 --  , b2N3C3D4D  -- TODO: when do you bid 4C, and when 4D?
 --  , b2N3C3D4C4H
 --  , b2N3C3D4C4S
@@ -22,10 +22,10 @@ module Bids.PuppetStayman(
   , b2N3C3S4H
   , b2N3C3S4S
   , b2N3C3N
- , b2N3C3N4D
- , b2N3C3N4D4H
- , b2N3C3N4H
- , b2N3C3N4H4S
+  , b2N3C3N4D
+  , b2N3C3N4D4H
+  , b2N3C3N4H
+  , b2N3C3N4H4S
 ) where
 
 
@@ -36,7 +36,6 @@ import CommonBids(cannotPreempt)      -- Used in noInterference
 import EDSL(makeCall, makeAlertableCall, forbid, forbidAll, forEach,
             suitLength, minSuitLength, maxSuitLength, alternatives,
             nameAction, pointRange, maxLoserCount)
---import Output((.+))
 import qualified Terminology as T
 
 
@@ -56,9 +55,30 @@ slamInterest_ = alternatives [pointRange 12 40, maxLoserCount 7]
 
 b2N3C3D :: Action
 b2N3C3D = nameAction "puppet_b2N3C3D" $ do
-    forEach T.majorSuits (`maxSuitLength` 4)
+    forbidAll [b2N3C3H, b2N3C3S]
     alternatives [suitLength T.Hearts 4, suitLength T.Spades 4]
     makeAlertableCall (T.Bid 3 T.Diamonds) "has at least one 4-card major"
+
+
+b2N3C3D3H :: Action
+b2N3C3D3H = nameAction "puppet_b2N3C3D3H" $ do
+    minSuitLength T.Spades 4
+    maxSuitLength T.Hearts 3
+    makeAlertableCall (T.Bid 3 T.Hearts) "4+ spades, at most 3 hearts"
+
+
+b2N3C3D3S :: Action
+b2N3C3D3S = nameAction "puppet_b2N3C3D3S" $ do
+    minSuitLength T.Hearts 4
+    maxSuitLength T.Spades 3
+    makeAlertableCall (T.Bid 3 T.Spades) "4+ hearts, at most 3 spades"
+
+
+b2N3C3D3N :: Action
+b2N3C3D3N = nameAction "puppet_b2N3C3D3N" $ do
+    maxSuitLength T.Hearts 3
+    maxSuitLength T.Spades 3
+    makeCall $ T.Bid 3 T.Notrump
 
 
 b2N3C3H :: Action
