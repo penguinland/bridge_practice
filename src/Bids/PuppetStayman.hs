@@ -5,10 +5,10 @@ module Bids.PuppetStayman(
   , b2N3C3D
   , b2N3C3D3H
   , b2N3C3D3H3N
---  , b2N3C3D3H4S
+  , b2N3C3D3H4S
   , b2N3C3D3S
   , b2N3C3D3S3N
---  , b2N3C3D3S4H
+  , b2N3C3D3S4H
   , b2N3C3D3N
   , b2N3C3D4D  -- TODO: when do you bid 4C, and when 4D?
   , b2N3C3D4D4H
@@ -69,8 +69,14 @@ b2N3C3D3H = nameAction "puppet_b2N3C3D3H" $ do
 
 b2N3C3D3H3N :: Action
 b2N3C3D3H3N = nameAction "puppet_b2N3C3D3H3N" $ do
-    maxSuitLength T.Hearts 3
+    forbid b2N3C3D3H4S
     makeCall $ T.Bid 3 T.Notrump
+
+
+b2N3C3D3H4S :: Action
+b2N3C3D3H4S = nameAction "puppet_b2N3C3D3H4S" $ do
+    minSuitLength T.Spades 4
+    makeCall $ T.Bid 4 T.Spades
 
 
 b2N3C3D3S :: Action
@@ -82,8 +88,14 @@ b2N3C3D3S = nameAction "puppet_b2N3C3D3S" $ do
 
 b2N3C3D3S3N :: Action
 b2N3C3D3S3N = nameAction "puppet_b2N3C3D3S3N" $ do
-    maxSuitLength T.Spades 3
+    forbid b2N3C3D3S4H
     makeCall $ T.Bid 3 T.Notrump
+
+
+b2N3C3D3S4H :: Action
+b2N3C3D3S4H = nameAction "puppet_b2N3C3D3S4H" $ do
+    minSuitLength T.Hearts 4
+    makeCall $ T.Bid 4 T.Hearts
 
 
 b2N3C3D3N :: Action
