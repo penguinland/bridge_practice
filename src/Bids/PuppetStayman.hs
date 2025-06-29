@@ -4,10 +4,10 @@ module Bids.PuppetStayman(
 --  , b2N3C  -- TODO: do you bid this or a transfer if you're 5-4 in the majors?
   , b2N3C3D
   , b2N3C3D3H
---  , b2N3C3D3H3N
+  , b2N3C3D3H3N
 --  , b2N3C3D3H4S
   , b2N3C3D3S
---  , b2N3C3D3S3N
+  , b2N3C3D3S3N
 --  , b2N3C3D3S4H
   , b2N3C3D3N
   , b2N3C3D4D  -- TODO: when do you bid 4C, and when 4D?
@@ -67,11 +67,23 @@ b2N3C3D3H = nameAction "puppet_b2N3C3D3H" $ do
     makeAlertableCall (T.Bid 3 T.Hearts) "4+ spades, at most 3 hearts"
 
 
+b2N3C3D3H3N :: Action
+b2N3C3D3H3N = nameAction "puppet_b2N3C3D3H3N" $ do
+    maxSuitLength T.Hearts 3
+    makeCall $ T.Bid 3 T.Notrump
+
+
 b2N3C3D3S :: Action
 b2N3C3D3S = nameAction "puppet_b2N3C3D3S" $ do
     minSuitLength T.Hearts 4
     maxSuitLength T.Spades 3
     makeAlertableCall (T.Bid 3 T.Spades) "4+ hearts, at most 3 spades"
+
+
+b2N3C3D3S3N :: Action
+b2N3C3D3S3N = nameAction "puppet_b2N3C3D3S3N" $ do
+    maxSuitLength T.Spades 3
+    makeCall $ T.Bid 3 T.Notrump
 
 
 b2N3C3D3N :: Action
