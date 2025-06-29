@@ -46,7 +46,7 @@ debug topic sitName rng = do
     (maybeSitInst, _) <- runStateT (instantiate "" sit) rng'
     case maybeSitInst of
         Nothing      -> error "Couldn't instantiate situation!?"
-        Just sitInst -> return $ toLatex sitInst ++ "\n\n" ++ showDealerProg sit
+        Just sitInst -> return $ showDealerProg sit ++ "\n\n" ++ toLatex sitInst
   where
     assert :: Bool -> IO ()
     assert value =
