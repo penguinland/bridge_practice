@@ -27,7 +27,7 @@ instance Semigroup Description where
     (Description as) <> (Description bs) = Description (as ++ bs)
 
 instance Monoid Description where
-    mempty = Description [const ""]
+    mempty = Description []
 
 instance ToJSON Description where
     toJSON (Description d) = toJSON . concatMap (Html  &) $ d
