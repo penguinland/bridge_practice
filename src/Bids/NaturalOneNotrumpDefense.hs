@@ -88,7 +88,10 @@ b1No2S = nameAction "nat_b1No2S" $ naturalSingleSuit_ T.Spades
 
 preempt_ :: T.Suit -> Action
 preempt_ suit = do
+    -- TODO: figure out the right point range for a preempt here. If you're too
+    -- strong, just overcall normally.
     pointsToCompete
+    pointRange 5 12
     -- TODO: Would you still bid at the 4 level with an 8-card suit?
     minSuitLength suit 7
     soundHolding suit  -- Don't do this with a bad suit, even if you're nonvul.

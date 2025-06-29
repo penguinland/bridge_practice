@@ -31,6 +31,8 @@ b1NoX = nameAction "capp_b1NoX" $ do
     -- choice probably depends on the vulnerability and the quality of your
     -- suit(s). For now, skip all of that and just suppose that you couldn't
     -- have bid anything else.
+    -- TODO: invert this, so you only make another bid if you couldn't make a
+    -- penalty double.
     forEach T.allSuits (forbid . singleSuited)
     forEach [ (T.Clubs, T.Diamonds)
             , (T.Clubs, T.Hearts)
