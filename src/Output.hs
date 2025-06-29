@@ -19,6 +19,7 @@ import Data.Function((&))
 
 data OutputType = LaTeX
                 | Html
+                | Debugger
 
 
 newtype Description = Description [OutputType -> String]
@@ -40,14 +41,17 @@ class Showable a where
     -- default "implementation" for those types, and clean this up eventually.
     toHtml :: a -> String
     toHtml _ = undefined
+    toDebugger :: a -> String
 
 instance Showable String where
-    toLatex = id
-    toHtml = id
+    toLatex    = id
+    toHtml     = id
+    toDebugger = id
 
 instance Showable Description where
-    toLatex (Description d) = concatMap (LaTeX &) $ d
-    toHtml  (Description d) = concatMap (Html  &) $ d
+    toLatex     (Description d) = concatMap (LaTeX    &) $ d
+    toHtml      (Description d) = concatMap (Html     &) $ d
+    toDebugger  (Description d) = concatMap (Debugger &) $ d
 
 
 (.+) :: (Showable a, Showable b) => a -> b -> Description
@@ -57,8 +61,9 @@ a .+ b = toDescription a <> toDescription b
 toDescription :: Showable a => a -> Description
 toDescription a = Description [flip output a]
   where
-    output LaTeX = toLatex
-    output Html = toHtml
+    output LaTeX    = toLatex
+    output Html     = toHtml
+    output Debugger = toDebugger
 
 
 data Punct = NDash
@@ -78,3 +83,8 @@ instance Showable Punct where
     toHtml OpenQuote = "&#x201C;"
     toHtml CloseQuote = "&#x201D;"
     toHtml EAcute = "&eacute;"
+    toDebugger NDash = "--"
+    toDebugger MDash = "---"
+    toDebugger OpenQuote = "\""
+    toDebugger CloseQuote = "\""
+    toDebugger EAcute = "e"
