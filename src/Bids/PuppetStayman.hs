@@ -10,9 +10,9 @@ module Bids.PuppetStayman(
 --  , b2N3C3D3S3N
 --  , b2N3C3D3S4H
   , b2N3C3D3N
---  , b2N3C3D4D  -- TODO: when do you bid 4C, and when 4D?
---  , b2N3C3D4C4H
---  , b2N3C3D4C4S
+  , b2N3C3D4D  -- TODO: when do you bid 4C, and when 4D?
+  , b2N3C3D4D4H
+  , b2N3C3D4D4S
   , b2N3C3H
   , b2N3C3H3S
   , b2N3C3H3N
@@ -35,7 +35,7 @@ import Bids.StandardOpenings(b2N)
 import CommonBids(cannotPreempt)      -- Used in noInterference 
 import EDSL(makeCall, makeAlertableCall, forbid, forbidAll, forEach,
             suitLength, minSuitLength, maxSuitLength, alternatives,
-            nameAction, pointRange, maxLoserCount)
+            nameAction, pointRange, maxLoserCount, strongerThan)
 import qualified Terminology as T
 
 
@@ -79,6 +79,27 @@ b2N3C3D3N = nameAction "puppet_b2N3C3D3N" $ do
     maxSuitLength T.Hearts 3
     maxSuitLength T.Spades 3
     makeCall $ T.Bid 3 T.Notrump
+
+
+b2N3C3D4D :: Action
+b2N3C3D4D = nameAction "puppet_b2N3C3D4D" $ do
+    minSuitLength T.Hearts 4
+    minSuitLength T.Spades 4
+    makeAlertableCall (T.Bid 4 T.Diamonds) "at least 4-4 in the majors"
+
+
+b2N3C3D4D4H :: Action
+b2N3C3D4D4H = nameAction "puppet_b2N3C3D4D4H" $ do
+    minSuitLength T.Hearts 4
+    T.Hearts `strongerThan` T.Spades
+    makeCall $ T.Bid 4 T.Hearts
+
+
+b2N3C3D4D4S :: Action
+b2N3C3D4D4S = nameAction "puppet_b2N3C3D4D4S" $ do
+    minSuitLength T.Spades 4
+    T.Spades `strongerThan` T.Hearts
+    makeCall $ T.Bid 4 T.Spades
 
 
 b2N3C3H :: Action
