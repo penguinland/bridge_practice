@@ -61,9 +61,10 @@ main = do
     input <- getContents
     let (targetName, sitName, rng) = parse input
         maybeTopic = getNamedTopic targetName
-    print targetName
-    print sitName
+    putStrLn targetName
+    putStrLn sitName
     print rng
+    putStrLn ""
     case maybeTopic of
         Nothing -> putStrLn $ "Unable to find Topic for " ++ targetName
         Just t -> debug t sitName rng >>= putStrLn

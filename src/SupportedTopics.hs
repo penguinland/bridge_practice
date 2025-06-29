@@ -10,6 +10,7 @@ import Data.Aeson(Value, object, (.=))
 import Data.Aeson.Key(fromString)
 import Data.Containers.ListUtils(nubOrd)
 import Data.Either.Extra(maybeToEither, mapLeft)
+import Data.List(find)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
 import Data.Tuple.Extra((&&&))
@@ -126,9 +127,4 @@ findTopics indices = let
 
 
 getNamedTopic :: String -> Maybe Topic
-getNamedTopic = getNamedTopic' topicList
-  where
-    getNamedTopic' [] _ = Nothing
-    getNamedTopic' ((_, _, t):ts) name = if refName t == name
-                                         then Just t
-                                         else getNamedTopic' ts name
+getNamedTopic name = find ((== name) . refName) . map thd3 $ topicList
