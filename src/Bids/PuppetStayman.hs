@@ -1,7 +1,7 @@
 module Bids.PuppetStayman(
     noInterference
   , b2N  -- re-exported from StandardOpenings
---  , b2N3C  -- TODO: do you bid this or a transfer if you're 5-4 in the majors?
+  , b2N3C  -- TODO: do you bid this or a transfer if you're 5-4 in the majors?
   , b2N3C3D
   , b2N3C3D3H
   , b2N3C3D3H3N
@@ -35,7 +35,7 @@ import Bids.StandardOpenings(b2N)
 import CommonBids(cannotPreempt)      -- Used in noInterference 
 import EDSL(makeCall, makeAlertableCall, forbid, forbidAll, forEach,
             suitLength, minSuitLength, maxSuitLength, alternatives,
-            nameAction, pointRange, maxLoserCount, strongerThan)
+            nameAction, pointRange, maxLoserCount, strongerThan, impliesThat)
 import qualified Terminology as T
 
 
@@ -51,6 +51,17 @@ noInterference = do
 
 slamInterest_ :: Action
 slamInterest_ = alternatives [pointRange 12 40, maxLoserCount 7]
+
+
+b2N3C :: Action
+b2N3C = nameAction "puppet_b2N3C" $ do
+    pointRange 5 40  -- game forcing
+    alternatives [minSuitLength T.Hearts 3, minSuitLength T.Spades 3]
+    -- If you could have made a transfer, prefer Puppet Stayman only if you've
+    -- got both majors.
+    minSuitLength T.Hearts 5 `impliesThat` minSuitLength T.Spades 4
+    minSuitLength T.Spades 5 `impliesThat` minSuitLength T.Hearts 4
+    makeCall $ T.Bid 3 T.Clubs
 
 
 b2N3C3D :: Action
