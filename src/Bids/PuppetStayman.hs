@@ -1,7 +1,7 @@
 module Bids.PuppetStayman(
     noInterference
   , b2N  -- re-exported from StandardOpenings
---  , b2N3C
+--  , b2N3C  -- TODO: do you bid this or a transfer if you're 5-4 in the majors?
   , b2N3C3D
 --  , b2N3C3D3H
 --  , b2N3C3D3H3N
@@ -22,7 +22,10 @@ module Bids.PuppetStayman(
   , b2N3C3S4H
   , b2N3C3S4S
   , b2N3C3N
--- TODO: Texas transfers of b2N3C3N4D, showing 6-4 shape? Does that belong here?
+-- , b2N3C3N4D
+-- , b2N3C3N4D4H
+-- , b2N3C3N4H
+-- , b2N3C3N4H4S
 ) where
 
 
