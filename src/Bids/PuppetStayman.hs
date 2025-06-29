@@ -67,6 +67,7 @@ b2N3C = nameAction "puppet_b2N3C" $ do
               , singleSuited T.Diamonds
               , twoSuited T.Clubs T.Diamonds
               ]
+    -- TODO: would you bid Puppet Stayman with a void? Not sure...
     makeCall $ T.Bid 3 T.Clubs
 
 
