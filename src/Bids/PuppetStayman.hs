@@ -31,6 +31,7 @@ module Bids.PuppetStayman(
 
 import Action(Action)
 import qualified Bids.Meckwell as MW  -- Used in noInterference 
+import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import Bids.StandardOpenings(b2N)
 import CommonBids(cannotPreempt)      -- Used in noInterference 
 import EDSL(makeCall, makeAlertableCall, forbid, forbidAll, forEach,
@@ -61,6 +62,11 @@ b2N3C = nameAction "puppet_b2N3C" $ do
     -- got both majors.
     minSuitLength T.Hearts 5 `impliesThat` minSuitLength T.Spades 4
     minSuitLength T.Spades 5 `impliesThat` minSuitLength T.Hearts 4
+    -- Don't be interested in a minor to bid this.
+    forbidAll [ singleSuited T.Clubs
+              , singleSuited T.Diamonds
+              , twoSuited T.Clubs T.Diamonds
+              ]
     makeCall $ T.Bid 3 T.Clubs
 
 
