@@ -2,6 +2,7 @@ module SupportedTopics(
     assertUniqueTopicIndices
   , topicNames
   , findTopics
+  , getNamedTopic
 ) where
 
 import Control.Monad(when)
@@ -9,13 +10,14 @@ import Data.Aeson(Value, object, (.=))
 import Data.Aeson.Key(fromString)
 import Data.Containers.ListUtils(nubOrd)
 import Data.Either.Extra(maybeToEither, mapLeft)
+import Data.List(find)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
 import Data.Tuple.Extra((&&&))
 import Data.Tuple.Utils(fst3, thd3)
 
 import Output(toHtml)
-import Topic(Topic, topicName)
+import Topic(Topic, refName, topicName)
 
 import qualified Topics.StandardOpeners as StandardOpeners
 import qualified Topics.MajorSuitRaises as MajorSuitRaises
@@ -76,7 +78,7 @@ topicList = [ (10, True,  StandardOpeners.topic)
 -- be hard to figure out.
 -- TODO: consider making this a compile-time assertion instead, possibly via
 -- https://stackoverflow.com/a/6654903
-assertUniqueTopicIndices :: IO()
+assertUniqueTopicIndices :: IO ()
 assertUniqueTopicIndices = let
     indices = map fst3 topicList
   in
@@ -122,3 +124,7 @@ findTopics indices = let
     formatError = ("Unknown indices: " ++) . join "," . map show
   in
     mapLeft formatError results
+
+
+getNamedTopic :: String -> Maybe Topic
+getNamedTopic name = find ((== name) . refName) . map thd3 $ topicList

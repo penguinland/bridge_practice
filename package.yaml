@@ -22,6 +22,7 @@ dependencies:
 - aeson
 - base >= 4.11 && < 5
 - containers
+- extra
 - MissingH
 - process
 - random
@@ -35,16 +36,6 @@ library:
   source-dirs: src
 
 executables:
-  make_pdf:
-    main:                Main.hs
-    source-dirs:         make_pdf
-    dependencies:
-    - bridge-practice
-  make_dealer_prog:
-    main:                Main.hs
-    source-dirs:         make_dealer_prog
-    dependencies:
-    - bridge-practice
   server:
     main:                Main.hs
     source-dirs:         server
@@ -52,9 +43,24 @@ executables:
     - -threaded
     dependencies:
     - bridge-practice
-    - extra
     - mtl
     - Spock
     - text
     - wai-extra
     - wai-middleware-static
+  make_pdf:
+    main:                Main.hs
+    source-dirs:         make_pdf
+    dependencies:
+    - bridge-practice
+  debugger:
+    main:                Main.hs
+    source-dirs:         debugger
+    dependencies:
+    - bridge-practice
+    - ghc
+  make_dealer_prog:
+    main:                Main.hs
+    source-dirs:         make_dealer_prog
+    dependencies:
+    - bridge-practice

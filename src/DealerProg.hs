@@ -5,7 +5,7 @@ module DealerProg(
 , invert
 , nameAll
 , eval
-, toProgram -- TODO: remove when done debugging
+, toProgram  -- Useful when debugging
 ) where
 
 import Data.List(transpose)
