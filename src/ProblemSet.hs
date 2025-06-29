@@ -13,7 +13,7 @@ import System.Random(StdGen)
 
 import Output(toLatex)
 import Random(pickItem)
-import Situation(sitRef)
+import Situation(Situation(..))
 import SituationInstance(instantiate, SituationInstance)
 import Topic(Topic, topicName, refName, choose)
 
