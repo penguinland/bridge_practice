@@ -22,10 +22,10 @@ module Bids.PuppetStayman(
   , b2N3C3S4H
   , b2N3C3S4S
   , b2N3C3N
--- , b2N3C3N4D
--- , b2N3C3N4D4H
--- , b2N3C3N4H
--- , b2N3C3N4H4S
+ , b2N3C3N4D
+ , b2N3C3N4D4H
+ , b2N3C3N4H
+ , b2N3C3N4H4S
 ) where
 
 
@@ -117,3 +117,23 @@ b2N3C3N :: Action
 b2N3C3N = nameAction "puppet_b2N3C3N" $ do
     forEach T.majorSuits (`maxSuitLength` 3)
     makeAlertableCall (T.Bid 3 T.Notrump) "no 4-card major"
+
+
+b2N3C3N4D :: Action
+b2N3C3N4D = nameAction "puppet_b2N3C3N4D" $ do
+    minSuitLength T.Hearts 6
+    makeAlertableCall (T.Bid 4 T.Diamonds) "transfer to hearts"
+
+
+b2N3C3N4D4H :: Action
+b2N3C3N4D4H = makeCall $ T.Bid 4 T.Hearts  -- Remember not to use nameAction!
+
+
+b2N3C3N4H :: Action
+b2N3C3N4H = nameAction "puppet_b2N3C3N4H" $ do
+    minSuitLength T.Spades 6
+    makeAlertableCall (T.Bid 4 T.Hearts) "transfer to spades"
+
+
+b2N3C3N4H4S :: Action
+b2N3C3N4H4S = makeCall $ T.Bid 4 T.Spades  -- Remember not to use nameAction!
