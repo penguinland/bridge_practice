@@ -156,7 +156,18 @@ instance Showable Deal where
       where
         capitalize (h:t) = toUpper h : t
         capitalize _     = error "Attempt to capitalize empty direction!?"
-    toDebugger _ = error "TODO"
+    toDebugger (Deal d v n e s w) = let
+        ns = lines . toDebugger $ n
+        es = lines . toDebugger $ e
+        ss = lines . toDebugger $ s
+        ws = lines . toDebugger $ w
+        indent = "        "
+        formatNS = map (indent ++)
+        -- TODO: get the East hand indented properly
+        formatEW = zipWith (\a b -> a ++ indent ++ b)
+        header = ["Dealer: " ++ toDebugger d ++ ", Vul: " ++ toDebugger v]
+      in
+        join "\n" $ header ++ formatNS ns ++ formatEW es ws ++ formatNS ss
 
 instance ToJSON Deal where
     toJSON (Deal d v n e s w) = toJSON . fromList $
