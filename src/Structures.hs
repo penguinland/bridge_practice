@@ -16,7 +16,7 @@ import Data.Map(fromList)
 import Data.Maybe(fromMaybe, catMaybes)
 import Data.Semigroup(First(..), getFirst)
 
-import Output(Showable(..), Description, Punct(NDash))
+import Output(Showable(..), Punct(NDash))
 import qualified Terminology as T
 
 
@@ -72,38 +72,34 @@ instance Showable Bidding where
             toLatex c ++ "\\" ++ alertMacro ++ "{" ++ toLatex a ++ "}"
         finish T.North = newRow
         finish _       = "&"
-    toMonospace (Bidding _ b) =
-        header ++ formatAuction b ++ "??\n\n" ++ formatAlerts b
-      where
+
+    toMonospace (Bidding _ auction) = let
         header = " West North  East South\n"
-        formatAuction = join "\n" . reverse . fst . foldl formatAuction' ([], 1) . reverse . map catMaybes
-        formatAuction' :: ([String], Int) -> [T.CompleteCall] -> ([String], Int)
-        formatAuction' (outputRows, nextFootnote) row = let
-            formatBid (rowSoFar, nextFootnote') (T.CompleteCall c a) = case a of
-                Nothing -> (rowSoFar ++ toMonospace c ++ "    ", nextFootnote')
-                Just _  -> (rowSoFar ++ toMonospace c ++
-                                "[" ++ show nextFootnote' ++ "] "
-                           , nextFootnote' + 1
-                           )
-            (rowOutput, nextFootnote'') =
-                foldl formatBid ("", nextFootnote) . reverse $ row
+        foldFormatBid (T.CompleteCall b ma) (allBids, nextFootnote) = case ma of
+            Nothing -> ((toMonospace b ++ "   ") : allBids, nextFootnote)
+            Just _  ->
+                ( (toMonospace b ++ "[" ++ show nextFootnote ++ "]") : allBids
+                , nextFootnote + 1)
+        foldFormatMaybeBid maybeBid (results, nextFootnote) =
+            maybe ("     " : results, nextFootnote)
+                  (flip foldFormatBid (results, nextFootnote))
+                maybeBid
+        foldFormatBidRow row (results, nextFootnote) = let
+            (rowBids, nextFootnote') =
+                foldr foldFormatMaybeBid ([], nextFootnote) row
           in
-            (rowOutput : outputRows, nextFootnote'')
-        formatAlerts :: [[Maybe T.CompleteCall]] -> String
-        formatAlerts = join "\n" . fst . foldr formatAlerts' ([], 1)
-        formatAlerts' :: [Maybe T.CompleteCall] -> ([String], Int) -> ([String], Int)
-        formatAlerts' row (alerts, nextFootnote) = let
-            (alertsForRow, nextFootnote') =
-                foldr formatAlert ([], nextFootnote) . catMaybes $ row
-          in
-            (alertsForRow ++ alerts, nextFootnote')
-        formatAlert :: T.CompleteCall -> ([String], Int) -> ([String], Int)
-        formatAlert (T.CompleteCall _ ma) (alertsSoFar, nextFootnote) = case ma of
-            Nothing -> (alertsSoFar, nextFootnote)
-            Just a -> ((formatAlert' nextFootnote a) : alertsSoFar, nextFootnote + 1)
-        formatAlert' :: Int -> Description -> String
-        formatAlert' nextFootnote a =
-            "[" ++ show nextFootnote++ "]: " ++ toMonospace a
+            ((join " " rowBids) : results, nextFootnote')
+        formatAuction = join "\n" . fst . foldr foldFormatBidRow ([], 1 :: Int)
+        foldFormatAlert (T.CompleteCall _ m) (alerts, nextFootnote) = case m of
+            Nothing -> (alerts, nextFootnote)
+            Just a  ->
+                ( ("[" ++ show nextFootnote ++ "]: " ++ toMonospace a) : alerts
+                , nextFootnote + 1)
+        formatAlerts = join "\n" . reverse . fst .
+                       foldr foldFormatAlert ([], 1 :: Int) . catMaybes . concat
+      in
+        header ++ formatAuction auction ++ "??\n\n" ++ formatAlerts auction
+
 
 -- TODO: make good support for alerts in here. Currently they're all displayed
 -- all the time.
