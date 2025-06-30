@@ -29,11 +29,11 @@ instance Showable SituationInstance where
             join "%\n}{%\n" [toLatex d, toLatex b, toLatex c, toLatex s, ds] ++
             "%\n}"
     toHtml _ = "todo"
-    toDebugger (SituationInstance b c s d _) =
-        join "\n" [ toDebugger d
-                  , toDebugger b
-                  , "Answer: " ++ toDebugger c
-                  , toDebugger s
+    toMonospace (SituationInstance b c s d _) =
+        join "\n" [ toMonospace d
+                  , toMonospace b
+                  , "Answer: " ++ toMonospace c
+                  , toMonospace s
                   ]
 
 instance ToJSON SituationInstance where

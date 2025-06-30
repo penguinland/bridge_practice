@@ -30,11 +30,11 @@ instance Showable Hand where
                         replace "T" "10" .
                         replace " " "\\,") [s, h, d, c])
         ++ "}"
-    toDebugger (Hand s h d c) =
+    toMonospace (Hand s h d c) =
         join "\n" $ zipWith formatSuit "SHDC" [s, h, d, c]
       where
         formatSuit name holding = (name : ": ") ++ spaceCards holding
-        spaceCards = replace "." (toDebugger NDash) . replace "T" "10"
+        spaceCards = replace "." (toMonospace NDash) . replace "T" "10"
 
 instance ToJSON Hand where
     toJSON (Hand s h d c) = toJSON . fmap formatHolding . fromList $
@@ -73,7 +73,7 @@ instance Showable Bidding where
             toLatex c ++ "\\" ++ alertMacro ++ "{" ++ toLatex a ++ "}"
         finish T.North = newRow
         finish _       = "&"
-    toDebugger (Bidding _ b) =
+    toMonospace (Bidding _ b) =
         header ++ formatAuction b ++ "??\n\n" ++ formatAlerts b ++ "\n"
       where
         header = " West North  East South\n"
@@ -81,8 +81,8 @@ instance Showable Bidding where
         formatAuction' :: ([String], Int) -> [T.CompleteCall] -> ([String], Int)
         formatAuction' (outputRows, nextFootnote) row = let
             formatBid (rowSoFar, nextFootnote') (T.CompleteCall c a) = case a of
-                Nothing -> (rowSoFar ++ toDebugger c ++ "    ", nextFootnote')
-                Just _  -> (rowSoFar ++ toDebugger c ++
+                Nothing -> (rowSoFar ++ toMonospace c ++ "    ", nextFootnote')
+                Just _  -> (rowSoFar ++ toMonospace c ++
                                 "[" ++ show nextFootnote' ++ "] "
                            , nextFootnote' + 1
                            )
@@ -104,7 +104,7 @@ instance Showable Bidding where
             Just a -> ((formatAlert' nextFootnote a) : alertsSoFar, nextFootnote + 1)
         formatAlert' :: Int -> Description -> String
         formatAlert' nextFootnote a =
-            "[" ++ show nextFootnote++ "]: " ++ toDebugger a
+            "[" ++ show nextFootnote++ "]: " ++ toMonospace a
 
 -- TODO: make good support for alerts in here. Currently they're all displayed
 -- all the time.
@@ -158,15 +158,15 @@ instance Showable Deal where
       where
         capitalize (h:t) = toUpper h : t
         capitalize _     = error "Attempt to capitalize empty direction!?"
-    toDebugger (Deal d v n e s w) = let
-        ns = lines . toDebugger $ n
-        es = lines . toDebugger $ e
-        ss = lines . toDebugger $ s
-        ws = lines . toDebugger $ w
+    toMonospace (Deal d v n e s w) = let
+        ns = lines . toMonospace $ n
+        es = lines . toMonospace $ e
+        ss = lines . toMonospace $ s
+        ws = lines . toMonospace $ w
         indent = replicate 8 ' '
         formatNS = map (indent ++)
         formatEW = zipWith (\a b -> take 20 (a ++ replicate 20 ' ') ++ b)
-        header = ["Dealer: " ++ toDebugger d ++ ", Vul: " ++ toDebugger v, ""]
+        header = ["Dealer: " ++ toMonospace d ++ ", Vul: " ++ toMonospace v, ""]
       in
         join "\n" $ header ++ formatNS ns ++ [""] ++ formatEW es ws ++ [""] ++
                     formatNS ss ++ [""]

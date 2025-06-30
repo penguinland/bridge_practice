@@ -15,7 +15,7 @@ import GHC.Utils.Misc(nTimes)
 import System.Random.Internal(StdGen(..))
 
 import DealerProg(toProgram)
-import Output(toDebugger)
+import Output(toMonospace)
 import Situation(Situation(..))
 import SituationInstance(instantiate)
 import SupportedTopics(getNamedTopic)
@@ -49,7 +49,7 @@ debug topic sitName rng = do
     case maybeSitInst of
         Nothing      -> error "Couldn't instantiate situation!?"
         Just sitInst -> return $ (toProgram . sitDealerProg $ sit) ++ "\n\n" ++
-                                 toDebugger sitInst
+                                 toMonospace sitInst
 
 
 main :: IO ()

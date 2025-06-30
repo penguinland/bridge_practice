@@ -35,10 +35,10 @@ instance Showable Direction where
     toHtml East  = "E"
     toHtml South = "S"
     toHtml West  = "W"
-    toDebugger North = "N"
-    toDebugger East  = "E"
-    toDebugger South = "S"
-    toDebugger West  = "W"
+    toMonospace North = "N"
+    toMonospace East  = "E"
+    toMonospace South = "S"
+    toMonospace West  = "W"
 
 -- We keep these lowercase because that's the format that dealer wants. You'll
 -- have to upper-case them yourself to print them out.
@@ -74,11 +74,11 @@ instance Showable Suit where
     toHtml Hearts   = "<span style='color: red'>&hearts;</span>"
     toHtml Spades   = "&spades;"
     toHtml Notrump  = "<span style='font-variant: small-caps'>nt</span>"
-    toDebugger Clubs    = "C"
-    toDebugger Diamonds = "D"
-    toDebugger Hearts   = "H"
-    toDebugger Spades   = "S"
-    toDebugger Notrump  = "N"
+    toMonospace Clubs    = "C"
+    toMonospace Diamonds = "D"
+    toMonospace Hearts   = "H"
+    toMonospace Spades   = "S"
+    toMonospace Notrump  = "N"
 
 instance Show Suit where
     show Clubs    = "clubs"
@@ -129,10 +129,10 @@ instance Showable Call where
     toHtml Double    = "Dbl"
     toHtml Redouble  = "Rdb"
     toHtml (Bid l s) = show l ++ toHtml s
-    toDebugger Pass      = " P"
-    toDebugger Double    = " X"
-    toDebugger Redouble  = "XX"
-    toDebugger (Bid l s) = show l ++ toDebugger s
+    toMonospace Pass      = " P"
+    toMonospace Double    = " X"
+    toMonospace Redouble  = "XX"
+    toMonospace (Bid l s) = show l ++ toMonospace s
 
 instance SuitBid Call where
     suitBid (Bid _ s) = s
@@ -151,8 +151,8 @@ instance Showable CompleteCall where
         toLatex c ++ maybe "" (\x -> " (" ++ toLatex x ++ ")") a
     toHtml (CompleteCall c a) =
         toHtml c ++ maybe "" (\x -> " (" ++ toHtml x ++ ")") a
-    toDebugger (CompleteCall c a) =
-        toDebugger c ++ maybe "" (\x -> " (" ++ toDebugger x ++ ")") a
+    toMonospace (CompleteCall c a) =
+        toMonospace c ++ maybe "" (\x -> " (" ++ toMonospace x ++ ")") a
 
 instance ToJSON CompleteCall where
     toJSON (CompleteCall c a) = let
@@ -180,10 +180,10 @@ instance Showable Vulnerability where
     toHtml EW   = "E/W"
     toHtml Both = "Both"
     toHtml None = "None"
-    toDebugger NS   = "N/S"
-    toDebugger EW   = "E/W"
-    toDebugger Both = "Both"
-    toDebugger None = "None"
+    toMonospace NS   = "N/S"
+    toMonospace EW   = "E/W"
+    toMonospace Both = "Both"
+    toMonospace None = "None"
 
 allVulnerabilities :: [Vulnerability]
 allVulnerabilities = [NS, EW, Both, None]
