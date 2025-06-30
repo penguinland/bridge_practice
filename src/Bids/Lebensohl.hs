@@ -324,9 +324,8 @@ b1No2S2N3C3S = nameAction "leb_b1No2S2N3C3S" $ cueBid_ T.Spades True
 
 -- Time for the actual lebensohl relays!
 b1N2N3C :: Action
--- This Action adds no constraints to the dealer program, so don't use
--- nameAction here! If you do, it results in syntax errors.
-b1N2N3C = makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
+b1N2N3C = nameAction "leb_b1N2N3C" $
+    makeAlertableCall (T.Bid 3 T.Clubs) "relay completed"
 
 
 b1No2D2N :: Action

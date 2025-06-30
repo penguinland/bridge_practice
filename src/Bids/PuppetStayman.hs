@@ -208,7 +208,7 @@ b2N3C3N4D = nameAction "puppet_b2N3C3N4D" $ do
 
 
 b2N3C3N4D4H :: Action
-b2N3C3N4D4H = makeCall $ T.Bid 4 T.Hearts  -- Remember not to use nameAction!
+b2N3C3N4D4H = nameAction "puppet_b2N3C3N4D4H" $ makeCall $ T.Bid 4 T.Hearts
 
 
 b2N3C3N4H :: Action
@@ -218,4 +218,4 @@ b2N3C3N4H = nameAction "puppet_b2N3C3N4H" $ do
 
 
 b2N3C3N4H4S :: Action
-b2N3C3N4H4S = makeCall $ T.Bid 4 T.Spades  -- Remember not to use nameAction!
+b2N3C3N4H4S = nameAction "puppet_b2N3C3N4H4S" $ makeCall $ T.Bid 4 T.Spades

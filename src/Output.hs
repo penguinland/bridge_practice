@@ -19,6 +19,7 @@ import Data.Function((&))
 
 data OutputType = LaTeX
                 | Html
+                | Monospace
 
 
 newtype Description = Description [OutputType -> String]
@@ -27,7 +28,7 @@ instance Semigroup Description where
     (Description as) <> (Description bs) = Description (as ++ bs)
 
 instance Monoid Description where
-    mempty = Description [const ""]
+    mempty = Description []
 
 instance ToJSON Description where
     toJSON (Description d) = toJSON . concatMap (Html  &) $ d
@@ -40,14 +41,17 @@ class Showable a where
     -- default "implementation" for those types, and clean this up eventually.
     toHtml :: a -> String
     toHtml _ = undefined
+    toMonospace :: a -> String
 
 instance Showable String where
-    toLatex = id
-    toHtml = id
+    toLatex     = id
+    toHtml      = id
+    toMonospace = id
 
 instance Showable Description where
-    toLatex (Description d) = concatMap (LaTeX &) $ d
-    toHtml  (Description d) = concatMap (Html  &) $ d
+    toLatex     (Description d) = concatMap (LaTeX     &) $ d
+    toHtml      (Description d) = concatMap (Html      &) $ d
+    toMonospace (Description d) = concatMap (Monospace &) $ d
 
 
 (.+) :: (Showable a, Showable b) => a -> b -> Description
@@ -57,8 +61,9 @@ a .+ b = toDescription a <> toDescription b
 toDescription :: Showable a => a -> Description
 toDescription a = Description [flip output a]
   where
-    output LaTeX = toLatex
-    output Html = toHtml
+    output LaTeX     = toLatex
+    output Html      = toHtml
+    output Monospace = toMonospace
 
 
 data Punct = NDash
@@ -78,3 +83,8 @@ instance Showable Punct where
     toHtml OpenQuote = "&#x201C;"
     toHtml CloseQuote = "&#x201D;"
     toHtml EAcute = "&eacute;"
+    toMonospace NDash = "-"
+    toMonospace MDash = "---"
+    toMonospace OpenQuote = "\""
+    toMonospace CloseQuote = "\""
+    toMonospace EAcute = "e"

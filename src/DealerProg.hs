@@ -49,7 +49,9 @@ invert (DealerProg defns reqs) =
 
 nameAll :: CondName -> DealerProg -> DealerProg
 nameAll name (DealerProg defns reqs) =
-    addNewReq name (join " && " . reverse $ reqs) (DealerProg defns mempty)
+    if (length reqs > 0)
+    then addNewReq name (join " && " . reverse $ reqs) (DealerProg defns mempty)
+    else DealerProg defns reqs  -- Unchanged
 
 
 toProgram :: DealerProg -> String

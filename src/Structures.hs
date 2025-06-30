@@ -30,6 +30,10 @@ instance Showable Hand where
                         replace "T" "10" .
                         replace " " "\\,") [s, h, d, c])
         ++ "}"
+    toMonospace (Hand s h d c) =
+        join "\n" $ zipWith formatSuit "SHDC" [s, h, d, c]
+      where
+        formatSuit name holding = (name : ": ") ++ (replace "T" "10" holding)
 
 instance ToJSON Hand where
     toJSON (Hand s h d c) = toJSON . fmap formatHolding . fromList $
@@ -53,12 +57,12 @@ instance Semigroup Bidding where
 
 
 instance Showable Bidding where
-    toLatex (Bidding r b) =
-         "  \\begin{bidding}\n    " ++ rows ++ finish r ++
+    toLatex (Bidding p b) =
+         "  \\begin{bidding}\n    " ++ rows ++ finish p ++
          "??\n  \\end{bidding}"
       where
         newRow = "\\\\\n    "  -- backslash, backslash, newline
-        rows = join newRow . reverse . map formatRow $ b
+        rows = join newRow . map formatRow . reverse $ b
         formatRow = join "&" .
                     zipWith formatMaybeBid (cycle ["oppsalert", "ouralert"]) .
                     reverse
@@ -68,6 +72,35 @@ instance Showable Bidding where
             toLatex c ++ "\\" ++ alertMacro ++ "{" ++ toLatex a ++ "}"
         finish T.North = newRow
         finish _       = "&"
+
+    toMonospace (Bidding _ auction) = let
+        header = " West North  East South\n"
+        foldFormatBid (T.CompleteCall b ma) (allBids, nextFootnote) = case ma of
+            Nothing -> ((toMonospace b ++ "   ") : allBids, nextFootnote)
+            Just _  ->
+                ( (toMonospace b ++ "[" ++ show nextFootnote ++ "]") : allBids
+                , nextFootnote + 1)
+        foldFormatMaybeBid maybeBid (results, nextFootnote) =
+            maybe ("     " : results, nextFootnote)
+                  (flip foldFormatBid (results, nextFootnote))
+                maybeBid
+        foldFormatBidRow row (results, nextFootnote) = let
+            (rowBids, nextFootnote') =
+                foldr foldFormatMaybeBid ([], nextFootnote) row
+          in
+            ((join " " . reverse $ rowBids) : results, nextFootnote')
+        formatAuction = join "\n" . reverse . fst .
+                        foldr foldFormatBidRow ([], 1 :: Int)
+        foldFormatAlert (T.CompleteCall _ m) (alerts, nextFootnote) = case m of
+            Nothing -> (alerts, nextFootnote)
+            Just a  ->
+                ( ("[" ++ show nextFootnote ++ "]: " ++ toMonospace a) : alerts
+                , nextFootnote + 1)
+        formatAlerts = join "\n" . reverse . fst .
+                       foldr foldFormatAlert ([], 1 :: Int) . catMaybes . concat
+      in
+        header ++ formatAuction auction ++ " ??\n\n" ++ formatAlerts auction
+
 
 -- TODO: make good support for alerts in here. Currently they're all displayed
 -- all the time.
@@ -121,6 +154,18 @@ instance Showable Deal where
       where
         capitalize (h:t) = toUpper h : t
         capitalize _     = error "Attempt to capitalize empty direction!?"
+    toMonospace (Deal d v n e s w) = let
+        ns = lines . toMonospace $ n
+        es = lines . toMonospace $ e
+        ss = lines . toMonospace $ s
+        ws = lines . toMonospace $ w
+        indent = replicate 8 ' '
+        formatNS = map (indent ++)
+        formatEW = zipWith (\a b -> take 20 (a ++ replicate 20 ' ') ++ b)
+        footer = "Dealer: " ++ toMonospace d ++ ", Vul: " ++ toMonospace v
+      in
+        join "\n" $ formatNS ns ++ [""] ++ formatEW ws es ++ [""] ++
+                    formatNS ss ++ ["", footer]
 
 instance ToJSON Deal where
     toJSON (Deal d v n e s w) = toJSON . fromList $
