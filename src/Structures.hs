@@ -16,7 +16,7 @@ import Data.Map(fromList)
 import Data.Maybe(fromMaybe, catMaybes)
 import Data.Semigroup(First(..), getFirst)
 
-import Output(Showable(..), Punct(NDash))
+import Output(Showable(..), Description, Punct(NDash))
 import qualified Terminology as T
 
 
@@ -30,6 +30,11 @@ instance Showable Hand where
                         replace "T" "10" .
                         replace " " "\\,") [s, h, d, c])
         ++ "}"
+    toDebugger (Hand s h d c) =
+        join "\n" $ zipWith formatSuit "SHDC" [s, h, d, c]
+      where
+        formatSuit name holding = (name : ": ") ++ spaceCards holding
+        spaceCards = replace "." (toDebugger NDash) . replace "T" "10"
 
 instance ToJSON Hand where
     toJSON (Hand s h d c) = toJSON . fmap formatHolding . fromList $
@@ -53,12 +58,12 @@ instance Semigroup Bidding where
 
 
 instance Showable Bidding where
-    toLatex (Bidding r b) =
-         "  \\begin{bidding}\n    " ++ rows ++ finish r ++
+    toLatex (Bidding p b) =
+         "  \\begin{bidding}\n    " ++ rows ++ finish p ++
          "??\n  \\end{bidding}"
       where
         newRow = "\\\\\n    "  -- backslash, backslash, newline
-        rows = join newRow . reverse . map formatRow $ b
+        rows = join newRow . map formatRow . reverse $ b
         formatRow = join "&" .
                     zipWith formatMaybeBid (cycle ["oppsalert", "ouralert"]) .
                     reverse
@@ -68,6 +73,36 @@ instance Showable Bidding where
             toLatex c ++ "\\" ++ alertMacro ++ "{" ++ toLatex a ++ "}"
         finish T.North = newRow
         finish _       = "&"
+    toDebugger (Bidding _ b) = formatAuction b ++ "??\n\n" ++ formatAlerts b
+      where
+        formatAuction = join "\n" . reverse . fst . foldl formatAuction' ([], 1) . reverse . map catMaybes
+        formatAuction' :: ([String], Int) -> [T.CompleteCall] -> ([String], Int)
+        formatAuction' (outputRows, nextFootnote) row = let
+            formatBid (rowSoFar, nextFootnote') (T.CompleteCall c a) = case a of
+                Nothing -> (rowSoFar ++ toDebugger c ++ "    ", nextFootnote')
+                Just _  -> (rowSoFar ++ toDebugger c ++
+                                "[" ++ show nextFootnote' ++ "] "
+                           , nextFootnote' + 1
+                           )
+            (rowOutput, nextFootnote'') =
+                foldl formatBid ("", nextFootnote) . reverse $ row
+          in
+            (rowOutput : outputRows, nextFootnote'')
+        formatAlerts :: [[Maybe T.CompleteCall]] -> String
+        formatAlerts = join "\n" . fst . foldr formatAlerts' ([], 1)
+        formatAlerts' :: [Maybe T.CompleteCall] -> ([String], Int) -> ([String], Int)
+        formatAlerts' row (alerts, nextFootnote) = let
+            (alertsForRow, nextFootnote') =
+                foldr formatAlert ([], nextFootnote) . catMaybes $ row
+          in
+            (alertsForRow ++ alerts, nextFootnote')
+        formatAlert :: T.CompleteCall -> ([String], Int) -> ([String], Int)
+        formatAlert (T.CompleteCall _ ma) (alertsSoFar, nextFootnote) = case ma of
+            Nothing -> (alertsSoFar, nextFootnote)
+            Just a -> ((formatAlert' nextFootnote a) : alertsSoFar, nextFootnote + 1)
+        formatAlert' :: Int -> Description -> String
+        formatAlert' nextFootnote a =
+            "[" ++ show nextFootnote++ "]: " ++ toDebugger a
 
 -- TODO: make good support for alerts in here. Currently they're all displayed
 -- all the time.
@@ -121,6 +156,7 @@ instance Showable Deal where
       where
         capitalize (h:t) = toUpper h : t
         capitalize _     = error "Attempt to capitalize empty direction!?"
+    toDebugger _ = error "TODO"
 
 instance ToJSON Deal where
     toJSON (Deal d v n e s w) = toJSON . fromList $
