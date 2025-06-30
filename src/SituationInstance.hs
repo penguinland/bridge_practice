@@ -24,16 +24,23 @@ data SituationInstance =
 
 
 instance Showable SituationInstance where
-    toLatex (SituationInstance b c s d ds) =
+    toLatex (SituationInstance bidding answer explanation deal debugString) =
         "\\problem{%\n" ++
-            join "%\n}{%\n" [toLatex d, toLatex b, toLatex c, toLatex s, ds] ++
+            join "%\n}{%\n" [ toLatex deal
+                            , toLatex bidding
+                            , toLatex answer
+                            , toLatex explanation
+                            , debugString
+                            ] ++
             "%\n}"
     toHtml _ = "todo"
-    toMonospace (SituationInstance b c s d _) =
-        join "\n" [ toMonospace d
-                  , toMonospace b
-                  , "Answer: " ++ toMonospace c
-                  , toMonospace s
+    toMonospace (SituationInstance bidding call solution deal _) =
+        join "\n" [ toMonospace deal
+                  , ""
+                  , toMonospace bidding
+                  , ""
+                  , "Answer: " ++ toMonospace call
+                  , toMonospace solution
                   ]
 
 instance ToJSON SituationInstance where

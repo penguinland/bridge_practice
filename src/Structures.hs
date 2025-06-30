@@ -73,7 +73,7 @@ instance Showable Bidding where
         finish T.North = newRow
         finish _       = "&"
     toMonospace (Bidding _ b) =
-        header ++ formatAuction b ++ "??\n\n" ++ formatAlerts b ++ "\n"
+        header ++ formatAuction b ++ "??\n\n" ++ formatAlerts b
       where
         header = " West North  East South\n"
         formatAuction = join "\n" . reverse . fst . foldl formatAuction' ([], 1) . reverse . map catMaybes
@@ -168,7 +168,7 @@ instance Showable Deal where
         header = ["Dealer: " ++ toMonospace d ++ ", Vul: " ++ toMonospace v, ""]
       in
         join "\n" $ header ++ formatNS ns ++ [""] ++ formatEW es ws ++ [""] ++
-                    formatNS ss ++ [""]
+                    formatNS ss
 
 instance ToJSON Deal where
     toJSON (Deal d v n e s w) = toJSON . fromList $
