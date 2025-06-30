@@ -162,10 +162,10 @@ instance Showable Deal where
         indent = replicate 8 ' '
         formatNS = map (indent ++)
         formatEW = zipWith (\a b -> take 20 (a ++ replicate 20 ' ') ++ b)
-        header = ["Dealer: " ++ toMonospace d ++ ", Vul: " ++ toMonospace v, ""]
+        footer = "Dealer: " ++ toMonospace d ++ ", Vul: " ++ toMonospace v
       in
-        join "\n" $ header ++ formatNS ns ++ [""] ++ formatEW ws es ++ [""] ++
-                    formatNS ss
+        join "\n" $ formatNS ns ++ [""] ++ formatEW ws es ++ [""] ++
+                    formatNS ss ++ ["", footer]
 
 instance ToJSON Deal where
     toJSON (Deal d v n e s w) = toJSON . fromList $
