@@ -98,7 +98,7 @@ instance Showable Bidding where
         formatAlerts = join "\n" . reverse . fst .
                        foldr foldFormatAlert ([], 1 :: Int) . catMaybes . concat
       in
-        header ++ formatAuction auction ++ "??\n\n" ++ formatAlerts auction
+        header ++ formatAuction auction ++ " ??\n\n" ++ formatAlerts auction
 
 
 -- TODO: make good support for alerts in here. Currently they're all displayed
