@@ -40,6 +40,7 @@ type Action = State Auction ()
 instance Showable Action where
     toLatex = toLatex . T.removeAlert . extractLastCall
     toHtml = toHtml . T.removeAlert . extractLastCall
+    toDebugger = toDebugger . T.removeAlert . extractLastCall
 
 -- AWKWARD TRICK ALERT: Unless you specify the types explicitly, options passed
 -- to `<~` come out as the more general `State Auction a` instead of the more
