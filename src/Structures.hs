@@ -88,8 +88,9 @@ instance Showable Bidding where
             (rowBids, nextFootnote') =
                 foldr foldFormatMaybeBid ([], nextFootnote) row
           in
-            ((join " " rowBids) : results, nextFootnote')
-        formatAuction = join "\n" . fst . foldr foldFormatBidRow ([], 1 :: Int)
+            ((join " " . reverse $ rowBids) : results, nextFootnote')
+        formatAuction = join "\n" . reverse . fst .
+                        foldr foldFormatBidRow ([], 1 :: Int)
         foldFormatAlert (T.CompleteCall _ m) (alerts, nextFootnote) = case m of
             Nothing -> (alerts, nextFootnote)
             Just a  ->
@@ -163,7 +164,7 @@ instance Showable Deal where
         formatEW = zipWith (\a b -> take 20 (a ++ replicate 20 ' ') ++ b)
         header = ["Dealer: " ++ toMonospace d ++ ", Vul: " ++ toMonospace v, ""]
       in
-        join "\n" $ header ++ formatNS ns ++ [""] ++ formatEW es ws ++ [""] ++
+        join "\n" $ header ++ formatNS ns ++ [""] ++ formatEW ws es ++ [""] ++
                     formatNS ss
 
 instance ToJSON Deal where
