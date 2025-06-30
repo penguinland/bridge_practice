@@ -33,8 +33,7 @@ instance Showable Hand where
     toMonospace (Hand s h d c) =
         join "\n" $ zipWith formatSuit "SHDC" [s, h, d, c]
       where
-        formatSuit name holding = (name : ": ") ++ spaceCards holding
-        spaceCards = replace "." (toMonospace NDash) . replace "T" "10"
+        formatSuit name holding = (name : ": ") ++ (replace "T" "10" holding)
 
 instance ToJSON Hand where
     toJSON (Hand s h d c) = toJSON . fmap formatHolding . fromList $
