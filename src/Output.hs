@@ -83,7 +83,7 @@ instance Showable Punct where
     toHtml OpenQuote = "&#x201C;"
     toHtml CloseQuote = "&#x201D;"
     toHtml EAcute = "&eacute;"
-    toDebugger NDash = "--"
+    toDebugger NDash = "-"
     toDebugger MDash = "---"
     toDebugger OpenQuote = "\""
     toDebugger CloseQuote = "\""

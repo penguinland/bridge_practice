@@ -32,7 +32,7 @@ instance Showable SituationInstance where
     toDebugger (SituationInstance b c s d _) =
         join "\n" [ toDebugger d
                   , toDebugger b
-                  , "answer: " ++ toDebugger c
+                  , "Answer: " ++ toDebugger c
                   , toDebugger s
                   ]
 

@@ -73,8 +73,10 @@ instance Showable Bidding where
             toLatex c ++ "\\" ++ alertMacro ++ "{" ++ toLatex a ++ "}"
         finish T.North = newRow
         finish _       = "&"
-    toDebugger (Bidding _ b) = formatAuction b ++ "??\n\n" ++ formatAlerts b
+    toDebugger (Bidding _ b) =
+        header ++ formatAuction b ++ "??\n\n" ++ formatAlerts b ++ "\n"
       where
+        header = " West North  East South\n"
         formatAuction = join "\n" . reverse . fst . foldl formatAuction' ([], 1) . reverse . map catMaybes
         formatAuction' :: ([String], Int) -> [T.CompleteCall] -> ([String], Int)
         formatAuction' (outputRows, nextFootnote) row = let
@@ -161,13 +163,13 @@ instance Showable Deal where
         es = lines . toDebugger $ e
         ss = lines . toDebugger $ s
         ws = lines . toDebugger $ w
-        indent = "        "
+        indent = replicate 8 ' '
         formatNS = map (indent ++)
-        -- TODO: get the East hand indented properly
-        formatEW = zipWith (\a b -> a ++ indent ++ b)
-        header = ["Dealer: " ++ toDebugger d ++ ", Vul: " ++ toDebugger v]
+        formatEW = zipWith (\a b -> take 20 (a ++ replicate 20 ' ') ++ b)
+        header = ["Dealer: " ++ toDebugger d ++ ", Vul: " ++ toDebugger v, ""]
       in
-        join "\n" $ header ++ formatNS ns ++ formatEW es ws ++ formatNS ss
+        join "\n" $ header ++ formatNS ns ++ [""] ++ formatEW es ws ++ [""] ++
+                    formatNS ss ++ [""]
 
 instance ToJSON Deal where
     toJSON (Deal d v n e s w) = toJSON . fromList $
