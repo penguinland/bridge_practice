@@ -3,6 +3,9 @@
 -- and the default compiler doesn't let that be in a type class because not all
 -- its arguments are type variables.
 {-# LANGUAGE FlexibleInstances #-}
+-- In order to assert at compile time that every Topic the webserver knows about has a unique ID,
+-- we need to be able to lift the Topic into Template Haskell.
+{-# LANGUAGE DeriveLift #-}
 
 module Topic(
   Situations  -- Note that constructors aren't public: use wrap instead.
@@ -19,6 +22,7 @@ module Topic(
 ) where
 
 import Control.Monad.Trans.State.Strict(State)
+import Language.Haskell.TH.Syntax(Lift)
 import System.Random(StdGen)
 
 import Output(Description, toDescription, Showable)
@@ -79,7 +83,7 @@ stdWrapSE = wrapSE . return
 data Topic = Topic { topicName :: Description
                    , refName :: String
                    , topicSituations :: Situations
-                   }
+                   } deriving Lift
 
 
 -- The intuitive name for this is `topic`, but most of the actual Topic values

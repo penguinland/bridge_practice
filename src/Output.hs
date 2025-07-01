@@ -3,6 +3,10 @@
 -- doesn't let that be in a typeclass because not all its arguments are type
 -- variables.
 {-# LANGUAGE FlexibleInstances #-}
+-- In order to assert at compile time that every Topic the webserver knows about has a unique ID,
+-- we need to be able to lift the Topic into Template Haskell. In order to lift the Topic, we must
+-- be able to lift every datatype within the Topic, including Description.
+{-# LANGUAGE DeriveLift #-}
 
 module Output (
   OutputType(..)
@@ -15,14 +19,17 @@ module Output (
 
 import Data.Aeson(ToJSON, toJSON)
 import Data.Function((&))
+import Language.Haskell.TH.Syntax(Lift)
 
 
 data OutputType = LaTeX
                 | Html
                 | Monospace
+    deriving Lift
 
 
 newtype Description = Description [OutputType -> String]
+    deriving Lift
 
 instance Semigroup Description where
     (Description as) <> (Description bs) = Description (as ++ bs)

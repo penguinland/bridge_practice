@@ -1,3 +1,6 @@
+-- We want to assert at compile-time that every topic has a unique ID number. We use TH to do this.
+{-# LANGUAGE TemplateHaskell #-}
+
 module SupportedTopics(
     assertUniqueTopicIndices
   , topicNames
@@ -5,17 +8,19 @@ module SupportedTopics(
   , getNamedTopic
 ) where
 
-import Control.Monad(when)
+import Control.Monad(unless)
 import Data.Aeson(Value, object, (.=))
 import Data.Aeson.Key(fromString)
-import Data.Containers.ListUtils(nubOrd)
 import Data.Either.Extra(maybeToEither, mapLeft)
 import Data.List(find)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
 import Data.Tuple.Extra((&&&))
 import Data.Tuple.Utils(fst3, thd3)
+import Language.Haskell.TH(Q)
+import Language.Haskell.TH.Syntax(Exp)
 
+import CompileTime(assertUniqueList)
 import Output(toHtml)
 import Topic(Topic, refName, topicName)
 
@@ -50,28 +55,29 @@ import qualified Topics.StandardModernPrecision.TripleFourOne as TripleFourOne
 -- topics to the middle of the list without messing up anyone using the website.
 -- The boolean is whether this topic should be selected by default.
 topicList :: [(Int, Bool, Topic)]
-topicList = [ (10, True,  StandardOpeners.topic)
-            , (11, True,  MajorSuitRaises.topic)
-            , (12, True,  ForcingOneNotrump.topic)
-            , (13, True,  JacobyTransfers.topic)
-            , (14, True,  Stayman.topic)
-            , (15, False, TexasTransfers.topic)
-            , (16, False, Meckwell.topic)
-            , (19, False, DONT.topic)
-            , (18, False, Cappelletti.topic)
-            , (21, False, Woolsey.topic)
-            , (20, False, Lebensohl.topic)
-            , (17, True,  Jacoby2NT.topic)
-            , (50, False, SmpOpenings.topic)
-            , (51, False, Smp1CResponses.topic)
-            , (52, False, Smp1CResponses.topicExtras)
-            , (53, False, Mafia.topic)
-            , (54, False, MafiaResponses.topic)
-            , (57, False, TripleFourOne.topic)
-            , (55, False, Smp1DResponses.topic)
-            , (70, False, Lampe.topic)
-            , (56, False, TwoDiamondOpeners.topic)
-            ]
+topicList = $(assertUniqueList
+	[ (10, True,  StandardOpeners.topic)
+    , (11, True,  MajorSuitRaises.topic)
+    , (12, True,  ForcingOneNotrump.topic)
+    , (13, True,  JacobyTransfers.topic)
+    , (14, True,  Stayman.topic)
+    , (15, False, TexasTransfers.topic)
+    , (16, False, Meckwell.topic)
+    , (19, False, DONT.topic)
+    , (18, False, Cappelletti.topic)
+    , (21, False, Woolsey.topic)
+    , (20, False, Lebensohl.topic)
+    , (17, True,  Jacoby2NT.topic)
+    , (50, False, SmpOpenings.topic)
+    , (51, False, Smp1CResponses.topic)
+    , (52, False, Smp1CResponses.topicExtras)
+    , (53, False, Mafia.topic)
+    , (54, False, MafiaResponses.topic)
+    , (57, False, TripleFourOne.topic)
+    , (55, False, Smp1DResponses.topic)
+    , (70, False, Lampe.topic)
+    , (56, False, TwoDiamondOpeners.topic)
+    ])
 
 
 -- If topic indices aren't unique, we're gonna have really subtle bugs that will
@@ -79,10 +85,8 @@ topicList = [ (10, True,  StandardOpeners.topic)
 -- TODO: consider making this a compile-time assertion instead, possibly via
 -- https://stackoverflow.com/a/6654903
 assertUniqueTopicIndices :: IO ()
-assertUniqueTopicIndices = let
-    indices = map fst3 topicList
-  in
-    when (indices /= nubOrd indices) (error "duplicate topic indices!?")
+assertUniqueTopicIndices = undefined
+
 
 
 topics :: Map Int Topic
