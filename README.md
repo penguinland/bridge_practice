@@ -88,7 +88,7 @@ If you're interested in modifying any of the code, here's the rough layout:
 - `debugger/` is a utility for working on the codebase. If a problem's solution
   is incorrect but it's not obvious what went wrong or how to fix it, put the
   debug string into stdin to get the solution and the `dealer` program that
-  generated it, which might help you find the problem.
+  generated it, which might help you find the issue.
 - `make_dealer_prog` is for use when you want to do additional analysis on
   an auction. Put the `Action`s you want into the source code to get a `dealer`
   program about them. Then, edit it further to add the analysis you want,
