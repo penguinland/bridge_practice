@@ -46,7 +46,7 @@ name44Rkc = T.Bid 4 T.Clubs .+ "/" .+ T.Bid 4 T.Diamonds .+ "/RKC"
 
 
 noDirectOvercall :: Action
-noDirectOvercall = do
+noDirectOvercall = nameAction "no_overcall" $ do
     cannotPreempt
     -- Either you don't have enough strength or enough shape to overcall
     alternatives [ pointRange 0 10

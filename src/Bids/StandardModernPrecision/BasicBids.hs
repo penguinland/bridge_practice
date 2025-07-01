@@ -137,7 +137,12 @@ setOpener opener = do
     (bidding, _) <- get
     if opener == currentBidder bidding
     then _canOpen
-    else forbid _canOpen >> cannotPreempt2H >> makePass >> setOpener opener
+    else cantOpen _canOpen >> setOpener opener
+  where
+    cantOpen openingBid = nameAction "cant_open" $ do
+        forbid openingBid
+        cannotPreempt2H
+        makePass
 
 
 -- unexported helper

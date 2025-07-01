@@ -21,7 +21,7 @@ import Data.Aeson(ToJSON, toJSON, object, (.=))
 import Data.Aeson.Key(fromString)
 import Data.List(singleton)
 
-import Output(Showable, toLatex, toHtml, Description)
+import Output(Showable(..), Description)
 
 
 data Direction = North | East | South | West deriving Eq
@@ -35,6 +35,10 @@ instance Showable Direction where
     toHtml East  = "E"
     toHtml South = "S"
     toHtml West  = "W"
+    toMonospace North = "N"
+    toMonospace East  = "E"
+    toMonospace South = "S"
+    toMonospace West  = "W"
 
 -- We keep these lowercase because that's the format that dealer wants. You'll
 -- have to upper-case them yourself to print them out.
@@ -60,16 +64,21 @@ next West  = North
 data Suit = Clubs | Diamonds | Hearts | Spades | Notrump deriving Eq
 
 instance Showable Suit where
-    toLatex Clubs     = "\\c{}"
-    toLatex Diamonds  = "\\d{}"
-    toLatex Hearts    = "\\h{}"
-    toLatex Spades    = "\\s{}"
-    toLatex Notrump   = "\\nt{}"
-    toHtml Clubs     = "&clubs;"
-    toHtml Diamonds  = "<span style='color: red'>&diams;</span>"
-    toHtml Hearts    = "<span style='color: red'>&hearts;</span>"
-    toHtml Spades    = "&spades;"
-    toHtml Notrump   = "<span style='font-variant: small-caps'>nt</span>"
+    toLatex Clubs    = "\\c{}"
+    toLatex Diamonds = "\\d{}"
+    toLatex Hearts   = "\\h{}"
+    toLatex Spades   = "\\s{}"
+    toLatex Notrump  = "\\nt{}"
+    toHtml Clubs    = "&clubs;"
+    toHtml Diamonds = "<span style='color: red'>&diams;</span>"
+    toHtml Hearts   = "<span style='color: red'>&hearts;</span>"
+    toHtml Spades   = "&spades;"
+    toHtml Notrump  = "<span style='font-variant: small-caps'>nt</span>"
+    toMonospace Clubs    = "C"
+    toMonospace Diamonds = "D"
+    toMonospace Hearts   = "H"
+    toMonospace Spades   = "S"
+    toMonospace Notrump  = "N"
 
 instance Show Suit where
     show Clubs    = "clubs"
@@ -120,6 +129,10 @@ instance Showable Call where
     toHtml Double    = "Dbl"
     toHtml Redouble  = "Rdb"
     toHtml (Bid l s) = show l ++ toHtml s
+    toMonospace Pass      = " P"
+    toMonospace Double    = " X"
+    toMonospace Redouble  = "XX"
+    toMonospace (Bid l s) = show l ++ toMonospace s
 
 instance SuitBid Call where
     suitBid (Bid _ s) = s
@@ -138,6 +151,8 @@ instance Showable CompleteCall where
         toLatex c ++ maybe "" (\x -> " (" ++ toLatex x ++ ")") a
     toHtml (CompleteCall c a) =
         toHtml c ++ maybe "" (\x -> " (" ++ toHtml x ++ ")") a
+    toMonospace (CompleteCall c a) =
+        toMonospace c ++ maybe "" (\x -> " (" ++ toMonospace x ++ ")") a
 
 instance ToJSON CompleteCall where
     toJSON (CompleteCall c a) = let
@@ -165,6 +180,10 @@ instance Showable Vulnerability where
     toHtml EW   = "E/W"
     toHtml Both = "Both"
     toHtml None = "None"
+    toMonospace NS   = "N/S"
+    toMonospace EW   = "E/W"
+    toMonospace Both = "Both"
+    toMonospace None = "None"
 
 allVulnerabilities :: [Vulnerability]
 allVulnerabilities = [NS, EW, Both, None]
