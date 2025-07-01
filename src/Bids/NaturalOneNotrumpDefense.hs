@@ -32,7 +32,7 @@ pointsToCompete = pointRange minPointsToCompete 40
 
 
 singleSuited :: T.Suit -> Action
-singleSuited suit = do
+singleSuited suit = nameAction ("single_suited_" ++ show suit) $ do
     pointsToCompete
     minSuitLength suit 6
     shouldntPreempt
@@ -47,7 +47,7 @@ singleSuited suit = do
 -- convention, and Meckwell has a different answer than DONT or something. I
 -- need opinions from someone who has better fundamentals on this stuff.
 twoSuited :: T.Suit -> T.Suit -> Action
-twoSuited a b = do
+twoSuited a b = nameAction ("two_suited_" ++ show a ++ "_" ++ show b) $ do
     pointsToCompete
     -- With a 6-card suit, you might be better off treating your hand as
     -- single-suited, depending on the suit quality. Rather than program all

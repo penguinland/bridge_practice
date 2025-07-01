@@ -3,7 +3,8 @@ module Topics.Woolsey(topic) where
 import Action(Action)
 import qualified Bids.Woolsey as W
 import CommonBids(setOpener, strong1NT, weak1NT)
-import EDSL(pointRange, minSuitLength, maxSuitLength, makePass, forEach, forbid)
+import EDSL(pointRange, minSuitLength, maxSuitLength, makePass, forEach, forbid,
+            nameAction)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -12,7 +13,7 @@ import Topic(Topic, wrap, Situations, makeTopic)
 
 -- TODO: maybe remove this
 responderCannotBid :: Action
-responderCannotBid = do
+responderCannotBid = nameAction "responder_pass" $ do
     pointRange 0 7                           -- No jumping to 3N, etc.
     forEach T.majorSuits (`maxSuitLength` 4) -- No transfers
     minSuitLength T.Clubs 2                  -- Avoid Garbage Stayman

@@ -41,20 +41,20 @@ weak1NT = nameAction "bid_weak_1n" $ do
 
 
 preempt4 :: T.Suit -> Action
-preempt4 suit = do
+preempt4 suit = nameAction ("preempt4_" ++ show suit) $ do
     minSuitLength suit 8
     pointRange 5 13  -- TODO: figure out the correct point range
     makeCall (T.Bid 4 suit)
 
 preempt3 :: T.Suit -> Action
-preempt3 T.Clubs = do  -- Compensate for 2C being a strong bid
+preempt3 T.Clubs = nameAction "preempt3C" $ do
     forbid (preempt4 T.Clubs)
     minSuitLength T.Clubs 6
     maxSuitLength T.Clubs 7
     pointRange 5 11
     -- TODO: Clarify the nuance of opening 3C.
     makeCall (T.Bid 3 T.Clubs)
-preempt3 suit = do
+preempt3 suit = nameAction ("preempt3_" ++ show suit) $ do
     forbid (preempt4 suit)
     suitLength suit 7
     pointRange 5 9  -- TODO: figure out this point range, too.
@@ -62,7 +62,7 @@ preempt3 suit = do
 
 weak2 :: T.Suit -> Action
 weak2 T.Clubs = error "Don't bid a weak 2C."
-weak2 suit = do
+weak2 suit = nameAction ("weak2_" ++ show suit) $ do
     forbid (preempt4 suit)
     forbid (preempt3 suit)
     suitLength suit 6
@@ -73,7 +73,7 @@ weak2 suit = do
 
 
 cannotPreempt :: Action
-cannotPreempt = do
+cannotPreempt = nameAction "cannot_preempt" $ do
     forEach [T.Diamonds, T.Hearts, T.Spades] (forbid . weak2)
     forEach T.allSuits (forbid . preempt3)
     forEach T.allSuits (forbid . preempt4)
@@ -81,7 +81,7 @@ cannotPreempt = do
 
 -- Variant in which 2D has some artificial meaning
 cannotPreempt2H :: Action
-cannotPreempt2H = do
+cannotPreempt2H = nameAction "cannot_preempt_2h" $ do
     forEach [T.Hearts, T.Spades] (forbid . weak2)
     forEach T.allSuits (forbid . preempt3)
     forEach T.allSuits (forbid . preempt4)
@@ -128,7 +128,7 @@ thirdSeatOpener = do
     constrain "rule_of_18" ["hcp(", ") + two_longest_suits_", " >= 18"]
 
 fourthSeatOpener :: Action
-fourthSeatOpener =
+fourthSeatOpener = do
     constrain "rule_of_15" ["hcp(", ") + spades(", ") >= 15"]
 
 
@@ -139,12 +139,13 @@ setOpener opener = do
   where
     openingRules = [firstSeatOpener, secondSeatOpener,
                     thirdSeatOpener, fourthSeatOpener]
+    cantOpen openingAction = nameAction "cant_open" $ do
+        forbid openingAction
+        cannotPreempt
+        makePass
     helper (action:actions) caller
       | caller == opener = action
-      | otherwise        = do forbid action
-                              cannotPreempt
-                              makePass
-                              helper actions (T.next caller)
+      | otherwise        = cantOpen action >> helper actions (T.next caller)
     helper [] _          = error "Specified a fifth-seat opener!?"
 
 

@@ -3,7 +3,8 @@ module Topics.DONT(topic) where
 import Action(Action)
 import qualified Bids.DONT as B
 import CommonBids(setOpener)
-import EDSL(pointRange, minSuitLength, maxSuitLength, makePass, forEach)
+import EDSL(pointRange, minSuitLength, maxSuitLength, makePass, forEach,
+            nameAction)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -11,7 +12,7 @@ import Topic(Topic, wrap, Situations, makeTopic)
 
 
 responderCannotBid :: Action
-responderCannotBid = do
+responderCannotBid = nameAction "responder_pass" $ do
     pointRange 0 7                           -- No jumping to 3N, etc.
     forEach T.majorSuits (`maxSuitLength` 4) -- No transfers
     minSuitLength T.Clubs 2                  -- Avoid Garbage Stayman
