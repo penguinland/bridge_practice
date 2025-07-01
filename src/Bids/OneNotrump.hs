@@ -111,7 +111,7 @@ lessThanInvitational = do
 
 
 noInterference :: Action
-noInterference = do
+noInterference = nameAction "no_interference" $ do
     cannotPreempt
     -- If the opponents can't bid Meckwell, they probably can't bid anything.
     forbidAll [MW.b1NoX, MW.b1No2C, MW.b1No2D, MW.b1No2H, MW.b1No2S, MW.b1No2N]
