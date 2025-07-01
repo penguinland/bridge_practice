@@ -82,8 +82,19 @@ If you're interested in modifying any of the code, here's the rough layout:
   - Files in `src/Topics/` describe `Situations` to practice. Each of these
     files typically has a corresponding file in `src/Bids/` that goes with it,
     though some topics involve bids imported from multiple other files.
-- `make_pdf/` and `server/` contain the executables. If you create a new
-  `Topic`, you'll want to add it to one (both?) of those.
+- `make_pdf/` and `server/` contain the executables for users. If you create a
+  new `Topic`, you'll want to add it to `src/SupportedTopics.hs` to put it in
+  the server, or `make_pdf/Main.hs` to generate PDFs about it.
+- `debugger/` is a utility for working on the codebase. If a problem's solution
+  is incorrect but it's not obvious what went wrong or how to fix it, put the
+  debug string into stdin to get the solution and the `dealer` program that
+  generated it, which might help you find the issue.
+- `make_dealer_prog` is for use when you want to do additional analysis on
+  an auction. Put the `Action`s you want into the source code to get a `dealer`
+  program about them. Then, edit it further to add the analysis you want,
+  before manually sending it to the `dealer` engine. This helps you answer
+  questions like "how often will partner have a balanced hand in this bidding
+  sequence?" or "what is East's expected club length in the following auction?"
 - `static/` contains frontend stuff for the webserver (HTML, JavaScript, and
   CSS).
 - `bridge.tex` needs to be in the same directory as the `.tex` files created by
