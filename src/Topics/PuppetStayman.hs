@@ -2,6 +2,7 @@ module Topics.PuppetStayman(topic) where
 
 import qualified Bids.PuppetStayman as P
 import CommonBids(setOpener)
+import EDSL(suitLength, maxSuitLength, forEach)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -22,6 +23,29 @@ threeClubs = let
         in situation "3C" action P.b2N3C explanation
   in
     stdWrap sit
+
+
+threeClubsShortMajors :: Situations
+threeClubsShortMajors = let
+    sit maybeMajor = let
+        action = do
+            setOpener T.North
+            case maybeMajor of
+                Nothing    -> return ()
+                Just major -> suitLength major 5
+            P.b2N
+            P.noInterference
+            forEach T.majorSuits (`maxSuitLength`3)
+        explanation =
+            "Partner has opened " .+ T.Bid 2 T.Notrump .+ ". We've got " .+
+            "game-forcing strength, and it's possible we've got a " .+
+            "major-suit fit. Initiate puppet Stayman. Do this even if you " .+
+            "only have a 3-card major: we might have a 5" .+ NDash .+ "3 fit!"
+        in situation "3Cnm" action P.b2N3C explanation
+  in
+    -- Make this more memorable: half the time, opener *does* have a 5-card
+    -- major! We might not have a fit, but it'll hopefully jog users' memories.
+    wrapDlr $ return sit <~ [Nothing, Nothing, Just T.Spades, Just T.Hearts]
 
 
 fiveCardMajor :: Situations
@@ -80,7 +104,6 @@ noMajor = let
     stdWrap sit
 
 
--- Initial 3C, even if 3-2 in majors
 -- 5-card major raises
 -- Texas transfers over 3N
 -- smolen-like re-responses
@@ -90,7 +113,8 @@ noMajor = let
 topic :: Topic
 topic = makeTopic ("puppet Stayman over " .+ T.Bid 2 T.Notrump) "pup" situations
   where
-    situations = wrap [ threeClubs
+    situations = wrap [ wrap [threeClubs, threeClubs, threeClubs,
+                              threeClubsShortMajors]
                       , wrap [fiveCardMajor, fourCardMajor, noMajor]
-                      , noMajor
+                      , threeClubsShortMajors
                       ]
