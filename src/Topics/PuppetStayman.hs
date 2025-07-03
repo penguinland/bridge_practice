@@ -6,7 +6,8 @@ import EDSL(suitLength, maxSuitLength, forEach)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, stdWrap, wrapDlr, Situations, makeTopic)
+import Topic(Topic, wrap, stdWrap, wrapNW, wrapSE, wrapDlr, Situations,
+             makeTopic)
 
 
 threeClubs :: Situations
@@ -96,17 +97,69 @@ noMajor = let
         explanation =
             "We opened " .+ T.Bid 2 T.Notrump .+ ", and partner bid " .+
             "puppet Stayman. We don't even have a 4-card major: go " .+
-            "straight to " .+ P.b2N3C3N .+ ". This often ends the auction, " .+
-            "though partner might still make a Texas transfer if they're " .+
-            "6" .+ NDash .+ "4 in the majors."
+            "straight to " .+ P.b2N3C3N .+ ". This usually ends the " .+
+            "auction, though partner might still make a Texas transfer if " .+
+            "they're 6" .+ NDash .+ "4 in the majors, or jump to " .+
+            T.Bid 6 T.Notrump .+ " with extra strength."
         in situation "NM" action P.b2N3C3N explanation
   in
     stdWrap sit
 
 
+texasTransfer :: Situations
+texasTransfer = let
+    sit bid = let
+        action = do
+            setOpener T.North
+            P.b2N
+            P.noInterference
+            P.b2N3C
+            P.noInterference
+            P.b2N3C3N
+            P.noInterference
+        explanation =
+            "Partner opened " .+ T.Bid 2 T.Notrump .+ ", and we bid puppet " .+
+            "Stayman. Partner tried to sign off in " .+ T.Bid 3 T.Notrump .+
+            " because they don't have a 4-card major, but we're actually " .+
+            "6" .+ NDash .+ "4 in the majors. Transfer into our fit. We can " .+
+            "then either pass in the correct game or investigate slam, as " .+
+            "necessary."
+        in situation "TexI" action bid explanation
+  in
+    -- South will never be a passed hand: if they could have opened, they woud
+    -- have bid either 1M or 2M. So, West or North must have dealt.
+    wrapNW $ return sit <~ [P.b2N3C3N4D, P.b2N3C3N4H]
+
+
+texasTransferCompleted :: Situations
+texasTransferCompleted = let
+    sit (start, finish) = let
+        action = do
+            setOpener T.South
+            P.b2N
+            P.noInterference
+            P.b2N3C
+            P.noInterference
+            P.b2N3C3N
+            P.noInterference
+            _ <- start
+            P.noInterference
+        explanation =
+            "After we've shown no majors over puppet Stayman, partner has " .+
+            "transferred into their 6-card suit. Complete the transfer. " .+
+            "Partner is likely to pass next, but might investigate slam " .+
+            "with extra strength."
+        in situation "TexC" action finish explanation
+  in
+    -- North will never be a passed hand: if they could have opened, they woud
+    -- have bid either 1M or 2M.
+    wrapSE $ return sit <~ [ (P.b2N3C3N4D, P.b2N3C3N4D4H)
+                           , (P.b2N3C3N4H, P.b2N3C3N4H4S)
+                           ]
+
+
 -- 5-card major raises
--- Texas transfers over 3N
--- smolen-like re-responses
+-- smolen-like re-responses (and 4D with both)
 -- opener sets the contract after smol
 
 
@@ -116,5 +169,5 @@ topic = makeTopic ("puppet Stayman over " .+ T.Bid 2 T.Notrump) "pup" situations
     situations = wrap [ wrap [threeClubs, threeClubs, threeClubs,
                               threeClubsShortMajors]
                       , wrap [fiveCardMajor, fourCardMajor, noMajor]
-                      , threeClubsShortMajors
+                      , wrap [texasTransfer, texasTransferCompleted]
                       ]
