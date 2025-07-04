@@ -28,6 +28,7 @@ module Bids.TakeoutDoubles(
 ) where
 
 -- TODO: include jumps to show stronger hands.
+-- TODO: include jumps to 2N
 -- TODO: include passes that convert the takeout double to penalty?
 
 import Control.Monad(when)
@@ -184,7 +185,9 @@ b1SoXo2H = nameAction "b1HoXo2H" $ do
 oneNotrumpAdvance_ :: T.Suit -> Action
 oneNotrumpAdvance_ oppsSuit = do
     balancedHand
+    pointRange 6 10
     forEach (T.otherSuits oppsSuit) (`maxSuitLength` 4)
+    forEach (filter (/= oppsSuit) T.majorSuits) (`maxSuitLength` 3)
     alternatives [ minSuitLength oppsSuit 4 >> soundHolding oppsSuit
                  , minSuitLength oppsSuit 5 >> hasStopper oppsSuit
                  ]

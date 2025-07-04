@@ -86,8 +86,33 @@ advanceSuit = let
                             ]
 
 
--- bid 1N in response to partner's takeout double
+advanceNotrump :: Situations
+advanceNotrump = let
+    sit (opener, openerSuit, overcall, advance) = let
+        action = do
+            setOpener T.West
+            _ <- opener
+            _ <- overcall
+            B.responderPasses openerSuit
+        explanation =
+            "The opponents have opened the bidding, partner has made " .+
+            "a takeout double, and the next player has passed. We don't " .+
+            "really have a suit of our own to bid, but we've got a few " .+
+            "points and a decent holding in the opponent's suit. Let's try " .+
+            "notrump."
+      in situation "advN" action advance explanation
+  in
+    wrapDlr $ return sit <~ [ (B.b1C, T.Clubs,    B.b1CoX, B.b1CoXo1N)
+                            , (B.b1D, T.Diamonds, B.b1DoX, B.b1DoXo1N)
+                            , (B.b1H, T.Hearts,   B.b1HoX, B.b1HoXo1N)
+                            , (B.b1S, T.Spades,   B.b1SoX, B.b1SoXo1N)
+                            ]
+
+
+-- jump in a new suit to show a non-minimum
 -- convert the takeout double to penalty
+-- jump to 2N
+-- complete the power double
 
 
 topic :: Topic
@@ -95,4 +120,5 @@ topic = makeTopic "takeout doubles of 1-level suit openings" "tox" situations
   where
     situations = wrap [ wrap [makeTox, makeTox, makeTox, makeTox, makePowerX]
                       , advanceSuit
+                      , advanceNotrump
                       ]
