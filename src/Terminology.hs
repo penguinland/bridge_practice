@@ -61,7 +61,7 @@ next West  = North
 
 -- TODO: consider separating Suits from Strains, and only have Notrump in the
 -- latter.
-data Suit = Clubs | Diamonds | Hearts | Spades | Notrump deriving Eq
+data Suit = Clubs | Diamonds | Hearts | Spades | Notrump deriving Eq, Seq
 
 instance Showable Suit where
     toLatex Clubs    = "\\c{}"
