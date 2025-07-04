@@ -320,7 +320,30 @@ smolFitS = let
     stdWrap sit
 
 
--- opener sets the contract after smol
+smolNoFit :: Situations
+smolNoFit = let
+    sit (major, signoff) = let
+        action = do
+            setOpener T.South
+            P.b2N
+            P.noInterference
+            P.b2N3C
+            P.noInterference
+            P.b2N3C3D
+            P.noInterference
+            _ <- major
+            P.noInterference
+        explanation =
+            "We opened " .+ T.Bid 2 T.Notrump .+ ", partner bid puppet " .+
+            "Stayman, and we showed we had at least one 4-card major. " .+
+            "Partner has shown a single 4-card major by making a " .+
+            "Smolen-like bid in the other major. We don't have a fit: " .+
+            "sign off in " .+ signoff .+ "."
+        in situation "SNF" action signoff explanation
+  in
+    wrapDlr $ return sit <~ [ (P.b2N3C3D3H, P.b2N3C3D3H3N)
+                            , (P.b2N3C3D3S, P.b2N3C3D3S3N)
+                            ]
 
 
 topic :: Topic
@@ -335,5 +358,5 @@ topic = makeTopic ("puppet Stayman over " .+ T.Bid 2 T.Notrump) "pup" situations
                              , fiveCardMajorSlam
                              ]
                       , wrap [smol, bothMajors]
-                      , wrap [smolFitH, smolFitS]
+                      , wrap [smolFitH, smolFitS, smolNoFit]
                       ]
