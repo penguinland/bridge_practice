@@ -7,7 +7,11 @@ module Bids.OneNotrump(
   , b1N2C2D2S
   , b1N2C2D2N
   , b1N2C2D3H
+  , b1N2C2D3H3S
+  , b1N2C2D3H3N
   , b1N2C2D3S
+  , b1N2C2D3S3N
+  , b1N2C2D3S4H
   , b1N2C2D3N
   , b1N2C2D4N
   , b1N2C2H
@@ -277,13 +281,37 @@ smolen_ longMajor = do
     suitLength longMajor 5
     suitLength shortMajor 4
     makeAlertableCall (T.Bid 3 shortMajor)
-        ("Smolen: 5 " .+ longMajor .+ ", 4 " .+ shortMajor .+ ", GF")
+        ("5 " .+ show longMajor .+ ", 4 " .+ show shortMajor .+ ", GF")
 
 b1N2C2D3H :: Action
 b1N2C2D3H = nameAction "b1N2C2D3H" (smolen_ T.Spades)
 
 b1N2C2D3S :: Action
 b1N2C2D3S = nameAction "b1N2C2D3S" (smolen_ T.Hearts)
+
+
+b1N2C2D3H3N :: Action
+b1N2C2D3H3N = nameAction "b1N2C2D3H3N" $ do
+    maxSuitLength T.Spades 2
+    makeCall $ T.Bid 3 T.Notrump
+
+
+b1N2C2D3S3N :: Action
+b1N2C2D3S3N = nameAction "b1N2C2D3S3N" $ do
+    maxSuitLength T.Hearts 2
+    makeCall $ T.Bid 3 T.Notrump
+
+
+b1N2C2D3H3S :: Action
+b1N2C2D3H3S = nameAction "b1N2C2D3H3S" $ do
+    forbid b1N2C2D3H3N
+    makeCall $ T.Bid 3 T.Spades
+
+
+b1N2C2D3S4H :: Action
+b1N2C2D3S4H = nameAction "b1N2C2D3S4H" $ do
+    forbid b1N2C2D3S3N
+    makeCall $ T.Bid 4 T.Hearts
 
 
 b1N2C2D2N :: Action
