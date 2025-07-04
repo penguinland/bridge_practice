@@ -126,7 +126,7 @@ texasTransfer = let
             "necessary."
         in situation "TexI" action bid explanation
   in
-    -- South will never be a passed hand: if they could have opened, they woud
+    -- South will never be a passed hand: if they could have opened, they would
     -- have bid either 1M or 2M. So, West or North must have dealt.
     wrapNW $ return sit <~ [P.b2N3C3N4D, P.b2N3C3N4H]
 
@@ -151,7 +151,7 @@ texasTransferCompleted = let
             "with extra strength."
         in situation "TexC" action finish explanation
   in
-    -- North will never be a passed hand: if they could have opened, they woud
+    -- North will never be a passed hand: if they could have opened, they would
     -- have bid either 1M or 2M.
     wrapSE $ return sit <~ [ (P.b2N3C3N4D, P.b2N3C3N4D4H)
                            , (P.b2N3C3N4H, P.b2N3C3N4H4S)
