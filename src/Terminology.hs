@@ -9,6 +9,7 @@ module Terminology (
 , majorSuits
 , otherMinor
 , otherMajor
+, otherSuits
 , SuitBid(..)
 , Call(..)
 , CompleteCall(..)
@@ -61,7 +62,7 @@ next West  = North
 
 -- TODO: consider separating Suits from Strains, and only have Notrump in the
 -- latter.
-data Suit = Clubs | Diamonds | Hearts | Spades | Notrump deriving Eq, Seq
+data Suit = Clubs | Diamonds | Hearts | Spades | Notrump deriving (Eq, Ord)
 
 instance Showable Suit where
     toLatex Clubs    = "\\c{}"
@@ -112,6 +113,10 @@ otherMajor :: Suit -> Suit
 otherMajor Hearts = Spades
 otherMajor Spades = Hearts
 otherMajor _      = error "otherMajor of non-major"
+
+
+otherSuits :: Suit -> [Suit]
+otherSuits s = filter (/= s) allSuits
 
 
 class SuitBid a where

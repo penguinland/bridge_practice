@@ -31,20 +31,19 @@ import Control.Monad(when)
 
 import Action(Action)
 import Bids.StandardOpenings(b1C, b1D, b1H, b1S)
-import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
-            pointRange, soundHolding, maxLoserCount, forbid, forbidAll,
-            shorterThan, atMostAsLong, forEach, hasControl, nameAction)
-import Output((.+))
+import EDSL(minSuitLength, maxSuitLength, makeCall, pointRange, soundHolding, 
+            forEach, nameAction, alternatives, strongerThan, hasStopper,
+            balancedHand, longerThan)
 import qualified Terminology as T
 
 
 powerDouble :: T.Suit -> Action
 powerDouble oppsSuit = nameAction ("power_double_" ++ show oppsSuit) $ do
     pointRange 18 40
-    let otherSuits = filter (/= oppsSuit) T.allSuits
-    alternatives [ pointRange 19 40 >> balancedHand
-                 , alternatives $ mapM_ (`minSuitLength` 6) otherSuits
-                 ]
+    alternatives
+        [ pointRange 19 40 >> balancedHand
+        , alternatives $ map (`minSuitLength` 6) (T.otherSuits oppsSuit)
+        ]
     makeCall T.Double
 
 
@@ -53,7 +52,7 @@ takeoutDouble name oppsSuit = nameAction name $ do
     alternatives [powerDouble oppsSuit, takeoutDouble']
     makeCall T.Double
   where
-    otherSuits = filter (/= oppsSuit) T.allSuits
+    otherSuits = T.otherSuits oppsSuit
     takeoutDouble' = do
         pointRange 11 40
         forEach otherSuits (`minSuitLength` 3)
@@ -114,3 +113,52 @@ b1DoXo2C = nameAction "b1DoXo2C" $ do
     T.Clubs `longerThan` T.Spades
     minimumResponse_ T.Diamonds T.Clubs 2
 
+b1HoXo1S :: Action
+b1HoXo1S = nameAction "b1HoXo1S" $ do
+    minimumResponse_ T.Hearts T.Spades 1
+
+b1HoXo2C :: Action
+b1HoXo2C = nameAction "b1HoXo2C" $ do
+    T.Clubs `longerThan` T.Spades
+    minimumResponse_ T.Hearts T.Clubs 2
+
+b1HoXo2D :: Action
+b1HoXo2D = nameAction "b1HoXo2D" $ do
+    T.Diamonds `longerThan` T.Spades
+    minimumResponse_ T.Hearts T.Diamonds 2
+
+b1SoXo2C :: Action
+b1SoXo2C = nameAction "b1HoXo2C" $ do
+    T.Clubs `longerThan` T.Hearts
+    minimumResponse_ T.Spades T.Clubs 2
+
+b1SoXo2D :: Action
+b1SoXo2D = nameAction "b1HoXo2D" $ do
+    T.Diamonds `longerThan` T.Hearts
+    minimumResponse_ T.Spades T.Diamonds 2
+
+b1SoXo2H :: Action
+b1SoXo2H = nameAction "b1HoXo2H" $ do
+    minimumResponse_ T.Spades T.Hearts 2
+
+
+oneNotrumpAdvance_ :: T.Suit -> Action
+oneNotrumpAdvance_ oppsSuit = do
+    balancedHand
+    forEach (T.otherSuits oppsSuit) (`maxSuitLength` 4)
+    alternatives [ minSuitLength oppsSuit 4 >> soundHolding oppsSuit
+                 , minSuitLength oppsSuit 5 >> hasStopper oppsSuit
+                 ]
+    makeCall $ T.Bid 1 T.Notrump
+
+b1CoXo1N :: Action
+b1CoXo1N = nameAction "b1CoXo1N" $ oneNotrumpAdvance_ T.Clubs
+
+b1DoXo1N :: Action
+b1DoXo1N = nameAction "b1DoXo1N" $ oneNotrumpAdvance_ T.Diamonds
+
+b1HoXo1N :: Action
+b1HoXo1N = nameAction "b1HoXo1N" $ oneNotrumpAdvance_ T.Hearts
+
+b1SoXo1N :: Action
+b1SoXo1N = nameAction "b1SoXo1N" $ oneNotrumpAdvance_ T.Spades
