@@ -225,7 +225,101 @@ fiveCardMajorSlam = let
                             ]
 
 
--- smolen-like re-responses (and 4D with both)
+smol :: Situations
+smol = let
+    sit bid = let
+        action = do
+            setOpener T.North
+            P.b2N
+            P.noInterference
+            P.b2N3C
+            P.noInterference
+            P.b2N3C3D
+            P.noInterference
+        explanation =
+            "Partner opened " .+ T.Bid 2 T.Notrump .+ ", we bid puppet " .+
+            "Stayman, and partner has shown at least one 4-card major. " .+
+            "We have a 4-card major of our own, and show this by bidding " .+
+            "the other major. Partner can retreat to " .+ T.Bid 3 T.Notrump .+
+            " if we don't have a fit, or bid our major if we do. This " .+
+            "right-sides the contract if we have a fit."
+        in situation "Smol" action bid explanation
+  in
+    wrapDlr $ return sit <~ [P.b2N3C3D3H, P.b2N3C3D3S]
+
+
+bothMajors :: Situations
+bothMajors = let
+    sit = let
+        action = do
+            setOpener T.North
+            P.b2N
+            P.noInterference
+            P.b2N3C
+            P.noInterference
+            P.b2N3C3D
+            P.noInterference
+        explanation =
+            "Partner opened " .+ T.Bid 2 T.Notrump .+ ", we bid puppet " .+
+            "Stayman, and partner has shown at least one 4-card major. " .+
+            "We have both majors, so definitely have a fit with partner. " .+
+            "Bid " .+ T.Bid 4 T.Diamonds .+ " to prompt partner to bid " .+
+            "their major. You can then either pass or investigate slam, as " .+
+            "relevant."
+        in situation "44M" action P.b2N3C3D4D explanation
+  in
+    stdWrap sit
+
+
+smolFitH :: Situations
+smolFitH = let
+    sit = let
+        action = do
+            setOpener T.South
+            P.b2N
+            P.noInterference
+            P.b2N3C
+            P.noInterference
+            P.b2N3C3D
+            P.noInterference
+            P.b2N3C3D3S
+            P.noInterference
+        explanation =
+            "We opened " .+ T.Bid 2 T.Notrump .+ ", partner bid puppet " .+
+            "Stayman, and we showed at least one 4-card major. Partner " .+
+            "then bid a Smolen-like " .+ T.Bid 3 T.Spades .+ ", showing " .+
+            "the other major, hearts. Bid game in our known 8-card fit!" .+
+            "Partner will likely pass, but might investigate slam afterwards."
+        in situation "SFH" action P.b2N3C3D3S4H explanation
+  in
+    stdWrap sit
+
+
+smolFitS :: Situations
+smolFitS = let
+    sit = let
+        action = do
+            setOpener T.South
+            P.b2N
+            P.noInterference
+            P.b2N3C
+            P.noInterference
+            P.b2N3C3D
+            P.noInterference
+            P.b2N3C3D3H
+            P.noInterference
+        explanation =
+            "We opened " .+ T.Bid 2 T.Notrump .+ ", partner bid puppet " .+
+            "Stayman, and we showed at least one 4-card major. Partner " .+
+            "then bid a Smolen-like " .+ T.Bid 3 T.Hearts .+ ", showing " .+
+            "the other major, spades. Bid naturally to show our 8-card " .+
+            "fit! Partner will likely sign off by raising to game, but " .+
+            "might investigate slam by control bidding."
+        in situation "SFS" action P.b2N3C3D3H3S explanation
+  in
+    stdWrap sit
+
+
 -- opener sets the contract after smol
 
 
@@ -240,4 +334,6 @@ topic = makeTopic ("puppet Stayman over " .+ T.Bid 2 T.Notrump) "pup" situations
                              , wrongFiveCardMajor
                              , fiveCardMajorSlam
                              ]
+                      , wrap [smol, bothMajors]
+                      , wrap [smolFitH, smolFitS]
                       ]

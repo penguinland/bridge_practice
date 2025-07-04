@@ -5,7 +5,7 @@ module Bids.PuppetStayman(
   , b2N3C3D
   , b2N3C3D3H
   , b2N3C3D3H3N
-  , b2N3C3D3H4S
+  , b2N3C3D3H3S
   , b2N3C3D3S
   , b2N3C3D3S3N
   , b2N3C3D3S4H
@@ -51,7 +51,7 @@ noInterference = do
 
 
 slamInterest_ :: Action
-slamInterest_ = alternatives [pointRange 12 40, maxLoserCount 7]
+slamInterest_ = alternatives [pointRange 12 40, maxLoserCount 6]
 
 
 b2N3C :: Action
@@ -87,14 +87,14 @@ b2N3C3D3H = nameAction "puppet_b2N3C3D3H" $ do
 
 b2N3C3D3H3N :: Action
 b2N3C3D3H3N = nameAction "puppet_b2N3C3D3H3N" $ do
-    forbid b2N3C3D3H4S
+    forbid b2N3C3D3H3S
     makeCall $ T.Bid 3 T.Notrump
 
 
-b2N3C3D3H4S :: Action
-b2N3C3D3H4S = nameAction "puppet_b2N3C3D3H4S" $ do
+b2N3C3D3H3S :: Action
+b2N3C3D3H3S = nameAction "puppet_b2N3C3D3H3S" $ do
     minSuitLength T.Spades 4
-    makeCall $ T.Bid 4 T.Spades
+    makeCall $ T.Bid 3 T.Spades
 
 
 b2N3C3D3S :: Action
