@@ -158,7 +158,73 @@ texasTransferCompleted = let
                            ]
 
 
--- 5-card major raises
+fiveCardMajorRaise :: Situations
+fiveCardMajorRaise = let
+    sit (major, raise) = let
+        action = do
+            setOpener T.North
+            P.b2N
+            P.noInterference
+            P.b2N3C
+            P.noInterference
+            _ <- major
+            P.noInterference
+        explanation =
+            "Partner opened " .+ T.Bid 2 T.Notrump .+ ", we bid puppet " .+
+            "Stayman, and partner has shown a 5-card major. We've got a " .+
+            "fit with them, and no interest in slam. Sign off in game."
+        in situation "5MG" action raise explanation
+  in
+    wrapDlr $ return sit <~ [ (P.b2N3C3H, P.b2N3C3H4H)
+                            , (P.b2N3C3S, P.b2N3C3S4S)
+                            ]
+
+
+wrongFiveCardMajor :: Situations
+wrongFiveCardMajor = let
+    sit (major, raise) = let
+        action = do
+            setOpener T.North
+            P.b2N
+            P.noInterference
+            P.b2N3C
+            P.noInterference
+            _ <- major
+            P.noInterference
+        explanation =
+            "Partner opened " .+ T.Bid 2 T.Notrump .+ ", we bid puppet " .+
+            "Stayman, and partner has shown a 5-card major. Alas, we don't " .+
+            "have a fit. Sign off in " .+ T.Bid 3 T.Notrump .+ "."
+        in situation "5MN" action raise explanation
+  in
+    wrapDlr $ return sit <~ [ (P.b2N3C3H, P.b2N3C3H3N)
+                            , (P.b2N3C3S, P.b2N3C3S3N)
+                            ]
+
+
+fiveCardMajorSlam :: Situations
+fiveCardMajorSlam = let
+    sit (major, raise) = let
+        action = do
+            setOpener T.North
+            P.b2N
+            P.noInterference
+            P.b2N3C
+            P.noInterference
+            _ <- major
+            P.noInterference
+        explanation =
+            "Partner opened " .+ T.Bid 2 T.Notrump .+ ", we bid puppet " .+
+            "Stayman, and partner has shown a 5-card major. We've found " .+
+            "our fit, and have slam interest. Bid the other major to show " .+
+            "this! Partner now knows to investigate slam with us."
+        in situation "5MS" action raise explanation
+  in
+    wrapDlr $ return sit <~ [ (P.b2N3C3H, P.b2N3C3H3S)
+                            , (P.b2N3C3S, P.b2N3C3S4H)
+                            ]
+
+
 -- smolen-like re-responses (and 4D with both)
 -- opener sets the contract after smol
 
@@ -170,4 +236,8 @@ topic = makeTopic ("puppet Stayman over " .+ T.Bid 2 T.Notrump) "pup" situations
                               threeClubsShortMajors]
                       , wrap [fiveCardMajor, fourCardMajor, noMajor]
                       , wrap [texasTransfer, texasTransferCompleted]
+                      , wrap [ fiveCardMajorRaise
+                             , wrongFiveCardMajor
+                             , fiveCardMajorSlam
+                             ]
                       ]

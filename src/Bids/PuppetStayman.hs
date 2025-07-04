@@ -219,6 +219,3 @@ b2N3C3N4H = nameAction "puppet_b2N3C3N4H" $ do
 
 b2N3C3N4H4S :: Action
 b2N3C3N4H4S = nameAction "puppet_b2N3C3N4H4S" $ makeCall $ T.Bid 4 T.Spades
-
-
--- Quantitative 4N when opener has the wrong 5-card major
