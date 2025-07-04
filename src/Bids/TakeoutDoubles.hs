@@ -1,4 +1,4 @@
-module Bids.TakeoutDouble(
+module Bids.TakeoutDoubles(
     powerDouble
   , b1C  -- Re-exported from StandardOpenings
   , b1CoX
