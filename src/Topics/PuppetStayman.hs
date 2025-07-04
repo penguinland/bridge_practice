@@ -358,5 +358,5 @@ topic = makeTopic ("puppet Stayman over " .+ T.Bid 2 T.Notrump) "pup" situations
                              , fiveCardMajorSlam
                              ]
                       , wrap [smol, bothMajors]
-                      , wrap [smolFitH, smolFitS, smolNoFit]
+                      , wrap [smolFitH, smolFitS, smolNoFit, smolNoFit]
                       ]
