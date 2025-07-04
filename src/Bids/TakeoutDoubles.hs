@@ -34,8 +34,17 @@ import Action(Action)
 import Bids.StandardOpenings(b1C, b1D, b1H, b1S)
 import EDSL(minSuitLength, maxSuitLength, makeCall, pointRange, soundHolding, 
             forEach, nameAction, alternatives, strongerThan, hasStopper,
-            balancedHand, longerThan)
+            balancedHand, longerThan, forbid)
 import qualified Terminology as T
+
+
+-- TODO: move this to a file all about 1-level overcalls
+overcall1N_ :: T.Suit -> Action
+overcall1N_ oppsSuit = nameAction ("b1" ++ T.suitLetter oppsSuit ++ "o1N") $ do
+    balancedHand
+    pointRange 16 18
+    hasStopper oppsSuit
+    makeCall $ T.Bid 1 T.Notrump
 
 
 powerDouble :: T.Suit -> Action
@@ -56,9 +65,9 @@ takeoutDouble name oppsSuit = nameAction name $ do
     otherSuits = T.otherSuits oppsSuit
     takeoutDouble' = do
         pointRange 11 40
+        forbid $ overcall1N_ oppsSuit
         forEach otherSuits (`minSuitLength` 3)
-        forEach otherSuits (`maxSuitLength` 5)
-        forEach T.majorSuits (`maxSuitLength` 4)
+        forEach otherSuits (`maxSuitLength` 4)
         maxSuitLength oppsSuit 3
         alternatives [maxSuitLength oppsSuit 2, pointRange 14 40]
 

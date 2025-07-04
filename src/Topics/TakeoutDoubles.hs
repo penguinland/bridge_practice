@@ -1,38 +1,42 @@
-module Topics.TakeoutDouble(topic) where
+module Topics.TakeoutDoubles(topic) where
 
-import qualified Bids.OneNotrump as B
+import qualified Bids.TakeoutDoubles as B
 import CommonBids(setOpener)
-import EDSL(alternatives)
-import Output(Punct(..), (.+))
+import EDSL(forbid)
+import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, stdWrap, stdWrapSE, wrap, wrapDlr, Situations, makeTopic)
+import Topic(Topic, wrap, wrapDlr, Situations, makeTopic)
 
 
-smolen :: Situations
-smolen = let
-    sit bid = let
+makeTox :: Situations
+makeTox = let
+    sit (opener, double, openerSuit) = let
         action = do
-            setOpener T.North
-            B.b1N
-            B.noInterference
-            B.b1N2C
-            B.noInterference
-            B.b1N2C2D
-            B.noInterference
+            setOpener T.East
+            _ <- opener
+            forbid $ B.powerDouble openerSuit
         explanation =
-            "Partner opened a strong " .+ B.b1N .+ ", we bid Stayman, and " .+
-            "partner denied a 4-card major. They might still have a 3-card " .+
-            "major, though. Jump in our shorter major to show our 5" .+ NDash .+
-            "4 shape: partner then has a choice of games, depending on " .+
-            "whether we have a major-suit fit."
-      in situation "smol" action bid explanation
+            "The opponents have opened the bidding, and we've got around " .+
+            "opening strength and support for every unbid suit. Make a " .+
+            "takeout double. Partner will take it out by bidding their " .+
+            "favorite suit, and you'll play there."
+      in situation "tox" action double explanation
   in
-    wrapDlr $ return sit <~ [B.b1N2C2D3H, B.b1N2C2D3S]
+    wrapDlr $ return sit <~ [ (B.b1C, B.b1CoX, T.Clubs)
+                            , (B.b1D, B.b1DoX, T.Diamonds)
+                            , (B.b1H, B.b1HoX, T.Hearts)
+                            , (B.b1S, B.b1SoX, T.Spades)
+                            ]
+
+
+-- make a power double
+-- bid a suit in response to partner's takeout double
+-- bid 1N in response to partner's takeout double
 
 
 topic :: Topic
 topic = makeTopic "takeout doubles of 1-level suit openings" "tox" situations
   where
-    situations = wrap [ smolen
+    situations = wrap [ makeTox
                       ]
