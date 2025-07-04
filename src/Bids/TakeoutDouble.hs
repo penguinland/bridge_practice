@@ -26,6 +26,7 @@ module Bids.TakeoutDouble(
   , b1SoXo2H
 ) where
 
+-- TODO: include jumps to show stronger hands.
 
 import Control.Monad(when)
 
