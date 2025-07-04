@@ -24,6 +24,7 @@ import qualified Topics.MajorSuitRaises as MajorSuitRaises
 import qualified Topics.ForcingOneNotrump as ForcingOneNotrump
 import qualified Topics.JacobyTransfers as JacobyTransfers
 import qualified Topics.Stayman as Stayman
+import qualified Topics.PuppetStayman as PuppetStayman
 import qualified Topics.TexasTransfers as TexasTransfers
 import qualified Topics.Meckwell as Meckwell
 import qualified Topics.DONT as DONT
@@ -56,6 +57,7 @@ topicList = [ (10, True,  StandardOpeners.topic)
             , (13, True,  JacobyTransfers.topic)
             , (14, True,  Stayman.topic)
             , (15, False, TexasTransfers.topic)
+            , (22, False, PuppetStayman.topic)
             , (16, False, Meckwell.topic)
             , (19, False, DONT.topic)
             , (18, False, Cappelletti.topic)
