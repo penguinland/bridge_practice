@@ -4,8 +4,8 @@ module Bids.PuppetStayman(
   , b2N3C  -- TODO: do you bid this or a transfer if you're 5-4 in the majors?
   , b2N3C3D
   , b2N3C3D3H
-  , b2N3C3D3H3N
   , b2N3C3D3H3S
+  , b2N3C3D3H3N
   , b2N3C3D3S
   , b2N3C3D3S3N
   , b2N3C3D3S4H
