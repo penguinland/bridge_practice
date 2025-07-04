@@ -92,6 +92,9 @@ b1CoXo1D = nameAction "b1CoXo1D" $ do
 
 b1CoXo1H :: Action
 b1CoXo1H = nameAction "b1CoXo1H" $ do
+    -- TODO: if you're 5-5 in the majors, do you always want to bid the stronger
+    -- one, or would you perhaps want to bid the cheaper one or the one that
+    -- prevents a reverse later? I dunno, figure it out later.
     minimumResponse_ T.Clubs T.Hearts 1
 
 b1CoXo1S :: Action
