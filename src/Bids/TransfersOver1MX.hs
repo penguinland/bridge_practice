@@ -1,7 +1,7 @@
 module Bids.TransfersOver1MX(
     b1H    -- Re-exported from TakeoutDoubles
   , b1HoX  -- Re-exported from TakeoutDoubles
-  --, b1HoXXX
+  , b1HoXXX
   , b1HoX1S
   , b1HoX1N
   , b1HoX1N2C
@@ -16,7 +16,7 @@ module Bids.TransfersOver1MX(
   , b1HoX2H
   , b1S    -- Re-exported from TakeoutDoubles
   , b1SoX  -- Re-exported from TakeoutDoubles
-  --, b1SoXXX
+  , b1SoXXX
   , b1SoX1N
   , b1SoX1N2C
   , b1SoX1N2CP
@@ -78,6 +78,14 @@ invite_ openerSuit = do
     makeCall $ T.Bid 2 openerSuit
 
 
+b1HoXXX :: Action
+b1HoXXX = nameAction "b1HoXXX" $ do
+    maxSuitLength T.Hearts 2
+    pointRange 10 40
+    forEach T.allSuits (`maxSuitLength` 4)
+    makeCall T.Redouble
+
+
 b1HoX1S :: Action
 b1HoX1S = nameAction "b1HoX1S" $ do
     minSuitLength T.Spades 4
@@ -137,6 +145,14 @@ b1HoX2H = nameAction "b1HoX2H" $ do
     suitLength T.Hearts 3
     pointRange 5 7
     makeAlertableCall (T.Bid 2 T.Hearts) "weakest possible heart raise"
+
+
+b1SoXXX :: Action
+b1SoXXX = nameAction "b1SoXXX" $ do
+    maxSuitLength T.Spades 2
+    pointRange 10 40
+    forEach T.allSuits (`maxSuitLength` 4)
+    makeCall T.Redouble
 
 
 b1SoX1N :: Action
