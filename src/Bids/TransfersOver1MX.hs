@@ -5,8 +5,12 @@ module Bids.TransfersOver1MX(
   , b1HoX1S
   , b1HoX1N
   , b1HoX1N2C
+  , b1HoX1N2CP
+  , b1HoX1N2C2H
   , b1HoX2C
   , b1HoX2C2D
+  , b1HoX2C2DP
+  , b1HoX2C2D2H
   , b1HoX2D
   , b1HoX2D2H
   , b1HoX2H
@@ -15,10 +19,16 @@ module Bids.TransfersOver1MX(
   --, b1SoXXX
   , b1SoX1N
   , b1SoX1N2C
+  , b1SoX1N2CP
+  , b1SoX1N2C2S
   , b1SoX2C
   , b1SoX2C2D
+  , b1SoX2C2DP
+  , b1SoX2C2D2S
   , b1SoX2D
   , b1SoX2D2H
+  , b1SoX2D2HP
+  , b1SoX2D2H2S
   , b1SoX2H
   , b1SoX2H2S
   , b1SoX2S
@@ -27,7 +37,8 @@ module Bids.TransfersOver1MX(
 import Action(Action)
 import Bids.TakeoutDoubles(b1H, b1HoX, b1S, b1SoX)
 import EDSL(suitLength, minSuitLength, maxSuitLength, pointRange, soundHolding,
-            nameAction, alternatives, makeCall, makeAlertableCall, forEach)
+            nameAction, alternatives, makeCall, makeAlertableCall, forEach,
+            loserCount)
 import qualified Terminology as T
 
 
@@ -53,6 +64,20 @@ completeTransfer_ suit = do
     makeCall $ T.Bid 2 suit
 
 
+signoff_ :: T.Suit -> Action
+signoff_ openerSuit = do
+    maxSuitLength openerSuit 2
+    makeCall T.Pass
+
+
+invite_ :: T.Suit -> Action
+invite_ openerSuit = do
+    suitLength openerSuit 3
+    pointRange 10 12
+    loserCount 8
+    makeCall $ T.Bid 2 openerSuit
+
+
 b1HoX1S :: Action
 b1HoX1S = nameAction "b1HoX1S" $ do
     minSuitLength T.Spades 4
@@ -70,6 +95,14 @@ b1HoX1N2C :: Action
 b1HoX1N2C = nameAction "b1HoX1N2C" $ completeTransfer_ T.Clubs
 
 
+b1HoX1N2CP :: Action
+b1HoX1N2CP = nameAction "b1HoX1N2CP" $ signoff_ T.Hearts
+
+
+b1HoX1N2C2H :: Action
+b1HoX1N2C2H = nameAction "b1HoX1N2C2H" $ invite_ T.Hearts
+
+
 b1HoX2C :: Action
 b1HoX2C = nameAction "b1HoX2C" $ do
     transferBid_ T.Hearts T.Diamonds
@@ -78,6 +111,14 @@ b1HoX2C = nameAction "b1HoX2C" $ do
 
 b1HoX2C2D :: Action
 b1HoX2C2D = nameAction "b1HoX2C2D" $ completeTransfer_ T.Diamonds
+
+
+b1HoX2C2DP :: Action
+b1HoX2C2DP = nameAction "b1HoX2C2DP" $ signoff_ T.Hearts
+
+
+b1HoX2C2D2H :: Action
+b1HoX2C2D2H = nameAction "b1HoX2C2D2H" $ invite_ T.Hearts
 
 
 b1HoX2D :: Action
@@ -108,6 +149,14 @@ b1SoX1N2C :: Action
 b1SoX1N2C = nameAction "b1SoX1N2C" $ completeTransfer_ T.Clubs
 
 
+b1SoX1N2CP :: Action
+b1SoX1N2CP = nameAction "b1SoX1N2CP" $ signoff_ T.Spades
+
+
+b1SoX1N2C2S :: Action
+b1SoX1N2C2S = nameAction "b1SoX1N2C2S" $ invite_ T.Spades
+
+
 b1SoX2C :: Action
 b1SoX2C = nameAction "b1SoX2C" $ do
     transferBid_ T.Spades T.Diamonds
@@ -118,6 +167,14 @@ b1SoX2C2D :: Action
 b1SoX2C2D = nameAction "b1SoX2C2D" $ completeTransfer_ T.Diamonds
 
 
+b1SoX2C2DP :: Action
+b1SoX2C2DP = nameAction "b1SoX2C2DP" $ signoff_ T.Spades
+
+
+b1SoX2C2D2S :: Action
+b1SoX2C2D2S = nameAction "b1SoX2C2D2S" $ invite_ T.Spades
+
+
 b1SoX2D :: Action
 b1SoX2D = nameAction "b1SoX2D" $ do
     transferBid_ T.Spades T.Hearts
@@ -126,6 +183,14 @@ b1SoX2D = nameAction "b1SoX2D" $ do
 
 b1SoX2D2H :: Action
 b1SoX2D2H = nameAction "b1SoX2D2H" $ completeTransfer_ T.Hearts
+
+
+b1SoX2D2HP :: Action
+b1SoX2D2HP = nameAction "b1SoX2D2HP" $ signoff_ T.Spades
+
+
+b1SoX2D2H2S :: Action
+b1SoX2D2H2S = nameAction "b1SoX2D2H2S" $ invite_ T.Spades
 
 
 b1SoX2H :: Action
