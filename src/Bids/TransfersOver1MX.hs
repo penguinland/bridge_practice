@@ -2,7 +2,7 @@ module Bids.TransfersOver1MX(
     b1H    -- Re-exported from TakeoutDoubles
   , b1HoX  -- Re-exported from TakeoutDoubles
   --, b1HoXXX
-  --, b1HoX1S
+  , b1HoX1S
   , b1HoX1N
   , b1HoX2C
   , b1HoX2D
@@ -17,13 +17,10 @@ module Bids.TransfersOver1MX(
   , b1SoX2S
 ) where
 
-import Control.Monad(when)
-
 import Action(Action)
 import Bids.TakeoutDoubles(b1H, b1HoX, b1S, b1SoX)
-import EDSL(minSuitLength, maxSuitLength, makeCall, pointRange, soundHolding,
-            forEach, nameAction, alternatives, strongerThan, hasStopper,
-            balancedHand, longerThan, forbid)
+import EDSL(suitLength, minSuitLength, maxSuitLength, pointRange, soundHolding,
+            nameAction, alternatives, makeCall, makeAlertableCall)
 import qualified Terminology as T
 
 
@@ -40,6 +37,13 @@ transferBid_ openerSuit ourSuit = let
         pointRange 6 9
   in
     alternatives [leadDirectingLimitRaise, signoffNoFit]
+
+
+b1HoX1S :: Action
+b1HoX1S = nameAction "b1HoX1S" $ do
+    minSuitLength T.Spades 4
+    pointRange 8 40
+    makeCall $ T.Bid 1 T.Spades
 
 
 b1HoX1N :: Action
@@ -93,8 +97,8 @@ b1SoX2H = nameAction "b1SoX2H" $ do
     makeAlertableCall (T.Bid 2 T.Hearts) "constructive raise in spades"
 
 
-b1HoX2S :: Action
-b1HoX2S = nameAction "b1HoX2S" $ do
+b1SoX2S :: Action
+b1SoX2S = nameAction "b1SoX2S" $ do
     suitLength T.Spades 3
     pointRange 5 7
     makeAlertableCall (T.Bid 2 T.Spades) "weakest possible spade raise"
