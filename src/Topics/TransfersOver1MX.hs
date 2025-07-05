@@ -86,6 +86,7 @@ constrRaiseCompleted = let
 -- transfers for signoff
 -- transfers for limit raise
 -- complete the transfer
+-- don't complete the transfer with a void and extras
 -- pass completed transfer to sign off
 -- rebid partner's suit to show invite
 -- jump to game in partner's suit
