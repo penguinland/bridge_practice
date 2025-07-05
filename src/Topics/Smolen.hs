@@ -125,7 +125,7 @@ noFit = let
 
 
 topic :: Topic
-topic = makeTopic "Smolen" "leb1N" situations
+topic = makeTopic "Smolen" "smol" situations
   where
     situations = wrap [ stayman
                       , smolen
