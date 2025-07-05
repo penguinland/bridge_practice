@@ -29,7 +29,7 @@ module Bids.TakeoutDoubles(
 
 -- TODO: include jumps to show stronger hands.
 -- TODO: include jumps to 2N
--- TODO: include passes that convert the takeout double to penalty?
+-- TODO: include passes that convert the takeout double to penalty
 
 import Control.Monad(when)
 
