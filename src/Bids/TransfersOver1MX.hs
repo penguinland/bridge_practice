@@ -38,13 +38,14 @@ import Action(Action)
 import Bids.TakeoutDoubles(b1H, b1HoX, b1S, b1SoX)
 import EDSL(suitLength, minSuitLength, maxSuitLength, pointRange, soundHolding,
             nameAction, alternatives, makeCall, makeAlertableCall, forEach,
-            loserCount)
+            loserCount, maxLoserCount)
 import qualified Terminology as T
 
 
 transferBid_ :: T.Suit -> T.Suit -> Action
 transferBid_ openerSuit ourSuit = let
     leadDirectingLimitRaise = do
+        minSuitLength ourSuit 4
         soundHolding ourSuit
         suitLength openerSuit 3
         pointRange 11 40
@@ -137,13 +138,21 @@ b1HoX2D = nameAction "b1HoX2D" $ do
 
 
 b1HoX2D2H :: Action
-b1HoX2D2H = nameAction "b1HoX2D2H" $ completeTransfer_ T.Hearts
+b1HoX2D2H = nameAction "b1HoX2D2H" $ do
+    pointRange 0 16  -- If you're much stronger, you might invite
+    maxLoserCount 8
+    completeTransfer_ T.Hearts
 
 
 b1HoX2H :: Action
 b1HoX2H = nameAction "b1HoX2H" $ do
     suitLength T.Hearts 3
     pointRange 5 7
+    forEach T.allSuits (`maxSuitLength` 5)
+    -- If you had 4 spades, you might be tempted to make a free bid of 1S,
+    -- hoping for a 4-4 spade fit in addition to the 5-3 heart fit, and knowing
+    -- you can still sign off in 2H if you don't find it.
+    maxSuitLength T.Spades 3
     makeAlertableCall (T.Bid 2 T.Hearts) "weakest possible heart raise"
 
 
@@ -217,11 +226,15 @@ b1SoX2H = nameAction "b1SoX2H" $ do
 
 
 b1SoX2H2S :: Action
-b1SoX2H2S = nameAction "b1SoX2H2S" $ completeTransfer_ T.Spades
+b1SoX2H2S = nameAction "b1SoX2H2S" $ do
+    pointRange 0 16  -- If you're much stronger, you might invite
+    maxLoserCount 8
+    completeTransfer_ T.Spades
 
 
 b1SoX2S :: Action
 b1SoX2S = nameAction "b1SoX2S" $ do
     suitLength T.Spades 3
     pointRange 5 7
+    forEach T.allSuits (`maxSuitLength` 5)
     makeAlertableCall (T.Bid 2 T.Spades) "weakest possible spade raise"
