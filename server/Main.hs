@@ -50,9 +50,8 @@ app = do
     middleware (staticPolicy (addBase "static"))
     get root $ do
         req <- request
-        if isMobile req
-        then file "text/html" "static/mobile.html"
-        else file "text/html" "static/index.html"
+        file "text/html" $ if isMobile req then "static/mobile.html"
+                                           else "static/index.html"
     get "topics" $ json topicNames
     get "situation" $ do
         requested <- param "topics"
