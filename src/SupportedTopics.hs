@@ -41,7 +41,7 @@ import qualified Topics.StandardModernPrecision.OneClubResponses as Smp1CRespons
 import qualified Topics.StandardModernPrecision.OneDiamondResponses as Smp1DResponses
 import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
-import qualified Topics.StandardModernPrecision.Lampe as Lampe
+--import qualified Topics.StandardModernPrecision.Lampe as Lampe
 import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as TwoDiamondOpeners
 import qualified Topics.StandardModernPrecision.TripleFourOne as TripleFourOne
 
@@ -77,7 +77,7 @@ topicList = [ (10, True,  StandardOpeners.topic)
             , (54, False, MafiaResponses.topic)
             , (57, False, TripleFourOne.topic)
             , (55, False, Smp1DResponses.topic)
-            , (70, False, Lampe.topic)
+            --, (70, False, Lampe.topic)
             , (56, False, TwoDiamondOpeners.topic)
             ]
 
