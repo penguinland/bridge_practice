@@ -87,6 +87,8 @@ b1HoXXX = nameAction "b1HoXXX" $ do
     maxSuitLength T.Hearts 2
     pointRange 10 40
     forEach T.allSuits (`maxSuitLength` 4)
+    -- You'd probably bid a 4-card major at the 1 level if you could.
+    maxSuitLength T.Spades 3
     makeCall T.Redouble
 
 

@@ -178,7 +178,29 @@ oneSpadeNatural = let
     stdWrap sit
 
 
--- 1M-(X)-XX to punish
+redouble :: Situations
+redouble = let
+    sit (opener, double, response) = let
+        action = do
+            setOpener T.North
+            _ <- opener
+            double
+        explanation =
+            "Partner opened the bidding, and the next player made a " .+
+            "takeout double. We don't have an obvious suit to bid, but " .+
+            "do have enough points that this is our hand. Redouble to tell " .+
+            "partner not to let the opponents steal the contract. Maybe " .+
+            "partner has more to tell us about their own hand, or maybe " .+
+            "we defend a doubled contract and punish the opponents for " .+
+            "stepping out too far."
+      in situation "rdbl" action response explanation
+  in
+    wrapDlr $ return sit <~ [ (B.b1H, B.b1HoX, B.b1HoXXX)
+                            , (B.b1S, B.b1SoX, B.b1SoXXX)
+                            ]
+
+
+-- TODO:
 -- don't complete the transfer with a void and extras
 -- pass completed transfer to sign off
 -- rebid partner's suit to show invite
@@ -196,4 +218,5 @@ topic = makeTopic topicName "1MXxfer" situations
                       , initiateLimitRaise
                       , completeTransfer
                       , oneSpadeNatural
+                      , redouble
                       ]
