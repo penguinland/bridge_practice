@@ -35,9 +35,9 @@ import Control.Monad(when)
 
 import Action(Action)
 import Bids.StandardOpenings(b1C, b1D, b1H, b1S)
-import EDSL(minSuitLength, maxSuitLength, makeCall, pointRange, soundHolding,
-            forEach, nameAction, alternatives, strongerThan, hasStopper,
-            balancedHand, longerThan, forbid)
+import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
+            forEach, nameAction, alternatives, soundHolding, hasStopper,
+            balancedHand, longerThan, strongerThan, forbid, impliesThat)
 import qualified Terminology as T
 
 
@@ -84,6 +84,9 @@ takeoutDouble name oppsSuit = nameAction name $ do
         forEach otherSuits (`maxSuitLength` 4)
         maxSuitLength oppsSuit 3
         alternatives [maxSuitLength oppsSuit 2, pointRange 14 40]
+        -- If we're 4333 with extra strength, make sure none of the strength is
+        -- "wasted" in the opponent's suit.
+        (suitLength oppsSuit 3) `impliesThat` (forbid $ hasStopper oppsSuit)
 
 b1CoX :: Action
 b1CoX = takeoutDouble "b1CoX" T.Clubs

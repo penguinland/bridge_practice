@@ -38,16 +38,19 @@ import Action(Action)
 import Bids.TakeoutDoubles(b1H, b1HoX, b1S, b1SoX)
 import EDSL(suitLength, minSuitLength, maxSuitLength, pointRange, soundHolding,
             nameAction, alternatives, makeCall, makeAlertableCall, forEach,
-            loserCount)
+            loserCount, minLoserCount, flatHand, forbid, strongerThan)
 import qualified Terminology as T
 
 
 transferBid_ :: T.Suit -> T.Suit -> Action
 transferBid_ openerSuit ourSuit = let
     leadDirectingLimitRaise = do
+        minSuitLength ourSuit 4
         soundHolding ourSuit
         suitLength openerSuit 3
+        forEach (T.otherSuits ourSuit) (ourSuit `strongerThan`)
         pointRange 11 40
+        forbid flatHand  -- You might just redouble with 4333 shape
     signoffNoFit = do
         maxSuitLength openerSuit 2
         minSuitLength ourSuit 6
@@ -83,6 +86,8 @@ b1HoXXX = nameAction "b1HoXXX" $ do
     maxSuitLength T.Hearts 2
     pointRange 10 40
     forEach T.allSuits (`maxSuitLength` 4)
+    -- You'd probably bid a 4-card major at the 1 level if you could.
+    maxSuitLength T.Spades 3
     makeCall T.Redouble
 
 
@@ -114,7 +119,7 @@ b1HoX1N2C2H = nameAction "b1HoX1N2C2H" $ invite_ T.Hearts
 b1HoX2C :: Action
 b1HoX2C = nameAction "b1HoX2C" $ do
     transferBid_ T.Hearts T.Diamonds
-    makeAlertableCall (T.Bid 1 T.Clubs) "transfer to diamonds"
+    makeAlertableCall (T.Bid 2 T.Clubs) "transfer to diamonds"
 
 
 b1HoX2C2D :: Action
@@ -133,17 +138,25 @@ b1HoX2D :: Action
 b1HoX2D = nameAction "b1HoX2D" $ do
     suitLength T.Hearts 3
     pointRange 8 10
+    minLoserCount 8
     makeAlertableCall (T.Bid 2 T.Diamonds) "constructive raise in hearts"
 
 
 b1HoX2D2H :: Action
-b1HoX2D2H = nameAction "b1HoX2D2H" $ completeTransfer_ T.Hearts
+b1HoX2D2H = nameAction "b1HoX2D2H" $ do
+    pointRange 0 16  -- If you're much stronger, you might invite
+    completeTransfer_ T.Hearts
 
 
 b1HoX2H :: Action
 b1HoX2H = nameAction "b1HoX2H" $ do
     suitLength T.Hearts 3
     pointRange 5 7
+    forEach T.allSuits (`maxSuitLength` 5)
+    -- If you had 4 spades, you might be tempted to make a free bid of 1S,
+    -- hoping for a 4-4 spade fit in addition to the 5-3 heart fit, and knowing
+    -- you can still sign off in 2H if you don't find it.
+    maxSuitLength T.Spades 3
     makeAlertableCall (T.Bid 2 T.Hearts) "weakest possible heart raise"
 
 
@@ -176,7 +189,7 @@ b1SoX1N2C2S = nameAction "b1SoX1N2C2S" $ invite_ T.Spades
 b1SoX2C :: Action
 b1SoX2C = nameAction "b1SoX2C" $ do
     transferBid_ T.Spades T.Diamonds
-    makeAlertableCall (T.Bid 1 T.Clubs) "transfer to diamonds"
+    makeAlertableCall (T.Bid 2 T.Clubs) "transfer to diamonds"
 
 
 b1SoX2C2D :: Action
@@ -194,7 +207,7 @@ b1SoX2C2D2S = nameAction "b1SoX2C2D2S" $ invite_ T.Spades
 b1SoX2D :: Action
 b1SoX2D = nameAction "b1SoX2D" $ do
     transferBid_ T.Spades T.Hearts
-    makeAlertableCall (T.Bid 1 T.Diamonds) "transfer to hearts"
+    makeAlertableCall (T.Bid 2 T.Diamonds) "transfer to hearts"
 
 
 b1SoX2D2H :: Action
@@ -212,16 +225,20 @@ b1SoX2D2H2S = nameAction "b1SoX2D2H2S" $ invite_ T.Spades
 b1SoX2H :: Action
 b1SoX2H = nameAction "b1SoX2H" $ do
     suitLength T.Spades 3
-    pointRange 8 10
+    pointRange 8 9
+    minLoserCount 8
     makeAlertableCall (T.Bid 2 T.Hearts) "constructive raise in spades"
 
 
 b1SoX2H2S :: Action
-b1SoX2H2S = nameAction "b1SoX2H2S" $ completeTransfer_ T.Spades
+b1SoX2H2S = nameAction "b1SoX2H2S" $ do
+    pointRange 0 16  -- If you're much stronger, you might invite
+    completeTransfer_ T.Spades
 
 
 b1SoX2S :: Action
 b1SoX2S = nameAction "b1SoX2S" $ do
     suitLength T.Spades 3
     pointRange 5 7
+    forEach T.allSuits (`maxSuitLength` 5)
     makeAlertableCall (T.Bid 2 T.Spades) "weakest possible spade raise"
