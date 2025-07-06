@@ -38,8 +38,7 @@ import Action(Action)
 import Bids.TakeoutDoubles(b1H, b1HoX, b1S, b1SoX)
 import EDSL(suitLength, minSuitLength, maxSuitLength, pointRange, soundHolding,
             nameAction, alternatives, makeCall, makeAlertableCall, forEach,
-            loserCount, minLoserCount, maxLoserCount, flatHand, forbid,
-            strongerThan)
+            loserCount, minLoserCount, flatHand, forbid, strongerThan)
 import qualified Terminology as T
 
 
@@ -146,7 +145,6 @@ b1HoX2D = nameAction "b1HoX2D" $ do
 b1HoX2D2H :: Action
 b1HoX2D2H = nameAction "b1HoX2D2H" $ do
     pointRange 0 16  -- If you're much stronger, you might invite
-    maxLoserCount 8
     completeTransfer_ T.Hearts
 
 
@@ -235,7 +233,6 @@ b1SoX2H = nameAction "b1SoX2H" $ do
 b1SoX2H2S :: Action
 b1SoX2H2S = nameAction "b1SoX2H2S" $ do
     pointRange 0 16  -- If you're much stronger, you might invite
-    maxLoserCount 8
     completeTransfer_ T.Spades
 
 
