@@ -9,6 +9,7 @@ module EDSL (
 , makeAlertableCall
 , makePass
 , pointRange
+, suitPointRange
 , balancedHand
 , semibalancedHand
 , flatHand
@@ -109,6 +110,13 @@ pointRange minHcp maxHcp =
     constrain (join "_" ["range", show minHcp, show maxHcp])
               ["hcp(", ") >= " ++ show minHcp ++ " && " ++
                "hcp(", ") <= " ++ show maxHcp]
+
+
+suitPointRange :: T.Suit -> Int -> Int -> Action
+suitPointRange suit minHcp maxHcp =
+    constrain (join "_" [show suit, "range", show minHcp, show maxHcp])
+              ["hcp(", ", " ++ show suit ++ ") >= " ++ show minHcp ++ " && " ++
+               "hcp(", ", " ++ show suit ++ ") <= " ++ show maxHcp]
 
 
 suitLengthOp :: String -> String -> T.Suit -> Int -> Action

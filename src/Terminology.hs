@@ -64,6 +64,13 @@ next West  = North
 -- latter.
 data Suit = Clubs | Diamonds | Hearts | Spades | Notrump deriving (Eq, Ord)
 
+instance Show Suit where
+    show Clubs    = "clubs"
+    show Diamonds = "diamonds"
+    show Hearts   = "hearts"
+    show Spades   = "spades"
+    show Notrump  = "notrump"
+
 instance Showable Suit where
     toLatex Clubs    = "\\c{}"
     toLatex Diamonds = "\\d{}"
@@ -81,19 +88,8 @@ instance Showable Suit where
     toMonospace Spades   = "S"
     toMonospace Notrump  = "N"
 
-instance Show Suit where
-    show Clubs    = "clubs"
-    show Diamonds = "diamonds"
-    show Hearts   = "hearts"
-    show Spades   = "spades"
-    show Notrump  = "notrump"
-
 suitLetter :: Suit -> String
-suitLetter Clubs    = "C"
-suitLetter Diamonds = "D"
-suitLetter Hearts   = "H"
-suitLetter Spades   = "S"
-suitLetter Notrump  = "N"
+suitLetter = toMonospace
 
 allSuits :: [Suit]
 allSuits = [Clubs, Diamonds, Hearts, Spades]
