@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bridge Bidding Practice</title>
+    <link rel ="stylesheet" href="style.css">
+  </head>
+  <body style="font-size: 0.85cm;">
+    <center>
+      <h1>Bidding Practice</h1>
+      <p>
+        Reminder: hand evaluation is difficult, and this system is not very
+        nuanced. It's okay to disagree with a marginal choice, as long as you
+        understand why a less skilled player might bid the intended answer.
+      </p>
+      <table border=0 style="table-layout: fixed;">
+        <tr>
+          <td style="vertical-align: top;">
+            <table style="table-layout: fixed; padding: 1ex;">
+              <tr>
+                <td id="top_col1" class="hand_size">
+                </td>
+                <td id="top_col2" class="hand">
+                  <span id="north_hand"></span>
+                </td>
+                <td id="top_col3" class="hand_size">
+                </td>
+              </tr>
+              <tr>
+                <td class="hand">
+                  <span id="west_hand"></span>
+                </td>
+                <td>
+                  <center>
+                    <table style="outline: 1px solid black;">
+                      <tr><td></td><td>N</td><td></td></tr>
+                      <tr><td>W</td><td></td><td>E</td></tr>
+                      <tr><td></td><td>S</td><td></td></tr>
+                    </table>
+                  </center>
+                </td>
+                <td class="hand">
+                  <span id="east_hand"></span>
+                </td>
+              </tr>
+              <tr>
+                <td class="hand_size">
+                  <div id="dlrvul" style="float: right; padding: 2ex;">
+                    Dealer: <span id="dealer"></span><br/>
+                    Vul: <span id="vulnerability"></span>
+                  </div>
+                </td>
+                <td class="hand">
+                  <span id="south_hand"></span>
+                </td>
+                <td style="vertical-align: center;">
+                  <center>
+                    <button onclick="nextProblem()">
+                      Next Problem
+                    </button>
+                  </center>
+                </td>
+              </tr>
+            </table>
+            <center>
+              <table>
+                <tr>
+                  <td id="auction">
+                    <center><span id="bidding"></span></center>
+                  </td>
+                </tr>
+                <tr><td><ol type="a" id="alerts"></ol></td></tr>
+              </table>
+            </center>
+          </td>
+        </tr>
+      </table>
+      <br/>
+      <table>
+          <tr>
+            <td id="explanation">
+            </td>
+          </tr>
+      </table>
+      <hr/>
+      <table>
+        <tr>
+          <td style="vertical-align: top; width: 20em; max-width: 33%;">
+            <h3 style="margin: 0ex;">Topics to Practice</h3>
+            <span id="topic_list"></span>
+            <br/>
+            <hr/>
+            <center>
+              <a href="https://github.com/penguinland/bridge_practice">
+                source code
+              </a>
+            </center>
+          </td>
+        </tr>
+      </table>
+    </center>
+    <script src="index.js"></script>
+  </body>
+</html>
