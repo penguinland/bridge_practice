@@ -1,5 +1,6 @@
 module Bids.Overcalls(
     b1C  -- re-exported from StandardOpenings
+--  , b1CoP
   , b1Co1D
   , b1Co1H
   , b1Co1S
@@ -14,6 +15,7 @@ module Bids.Overcalls(
 --  , b1Co4H
 --  , b1Co4S
   , b1D  -- re-exported from StandardOpenings
+--  , b1DoP
   , b1Do1H
   , b1Do1S
   , b1Do1N
@@ -27,6 +29,7 @@ module Bids.Overcalls(
 --  , b1Do4H
 --  , b1Do4S
   , b1H  -- re-exported from StandardOpenings
+--  , b1HoP
   , b1Ho1S
   , b1Ho1N
   , b1Ho2C
@@ -39,6 +42,7 @@ module Bids.Overcalls(
 --  , b1Ho4D
 --  , b1Ho4S
   , b1S  -- re-exported from StandardOpenings
+--  , b1SoP
   , b1So1N
   , b1So2C
   , b1So2D
