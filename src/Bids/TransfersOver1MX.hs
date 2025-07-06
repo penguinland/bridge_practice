@@ -38,7 +38,8 @@ import Action(Action)
 import Bids.TakeoutDoubles(b1H, b1HoX, b1S, b1SoX)
 import EDSL(suitLength, minSuitLength, maxSuitLength, pointRange, soundHolding,
             nameAction, alternatives, makeCall, makeAlertableCall, forEach,
-            loserCount, maxLoserCount, flatHand, forbid, strongerThan)
+            loserCount, minLoserCount, maxLoserCount, flatHand, forbid,
+            strongerThan)
 import qualified Terminology as T
 
 
@@ -136,6 +137,7 @@ b1HoX2D :: Action
 b1HoX2D = nameAction "b1HoX2D" $ do
     suitLength T.Hearts 3
     pointRange 8 10
+    minLoserCount 8
     makeAlertableCall (T.Bid 2 T.Diamonds) "constructive raise in hearts"
 
 
@@ -223,7 +225,8 @@ b1SoX2D2H2S = nameAction "b1SoX2D2H2S" $ invite_ T.Spades
 b1SoX2H :: Action
 b1SoX2H = nameAction "b1SoX2H" $ do
     suitLength T.Spades 3
-    pointRange 8 10
+    pointRange 8 9
+    minLoserCount 8
     makeAlertableCall (T.Bid 2 T.Hearts) "constructive raise in spades"
 
 

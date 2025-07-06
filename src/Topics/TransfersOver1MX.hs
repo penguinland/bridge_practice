@@ -8,7 +8,7 @@ import EDSL(nameAction, pointRange, forEach, suitLength, maxSuitLength,
 import Output((.+), Punct(..))
 import Situation(Situation, situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapDlr, Situations, makeTopic)
+import Topic(Topic, wrap, wrapDlr, stdWrap, Situations, makeTopic)
 
 
 advancerPasses :: Action
@@ -161,7 +161,23 @@ completeTransfer = let
                             ]
 
 
--- 1H-(X)-1S is natural
+oneSpadeNatural :: Situations
+oneSpadeNatural = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b1H
+            B.b1HoX
+        explanation =
+            "Partner opened the bidding, and the next player made a " .+
+            "takeout double. We can bid a natural " .+ B.b1HoX1S .+ " to " .+
+            "show our suit. Remember that the transfers only start at " .+
+            T.Bid 1 T.Notrump .+ " as a transfer to clubs!"
+      in situation "complT" action B.b1HoX1S explanation
+  in
+    stdWrap sit
+
+
 -- 1M-(X)-XX to punish
 -- don't complete the transfer with a void and extras
 -- pass completed transfer to sign off
@@ -179,4 +195,5 @@ topic = makeTopic topicName "1MXxfer" situations
                       , initiateSignoff
                       , initiateLimitRaise
                       , completeTransfer
+                      , oneSpadeNatural
                       ]
