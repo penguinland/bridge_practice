@@ -187,6 +187,9 @@ async function displayProblem(problem) {
     clear("north_hand");
 
     show_ans = document.createElement("button");
+    // The mobile version needs to set the text size of the button larger than
+    // default. So, give it a class that can be modified by mobile.css.
+    show_ans.className = "button";
     show_ans.innerHTML = "Show Answer";
     show_ans.onclick = displaySolution;
     expl = clear("explanation");

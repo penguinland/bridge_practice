@@ -4,13 +4,15 @@ module Main where
 import Control.Monad.Trans(liftIO)
 import Control.Monad.Trans.State.Strict(runStateT)
 import Data.IORef(IORef, newIORef, readIORef, writeIORef)
-import Data.Text(pack)
+import Data.Text(pack, toLower, isInfixOf)
+import Data.Text.Encoding(decodeUtf8)
+import Network.Wai(Request, requestHeaders)
 -- Take the `Dev` off the end to get more standardized server logs.
 import Network.Wai.Middleware.RequestLogger(logStdoutDev)
 import Network.Wai.Middleware.Static(staticPolicy, addBase)
 import System.Random(StdGen, getStdGen)
 import Web.Spock(SpockM, file, text, get, root, spock, runSpock, json,
-                 getState, middleware, param)
+                 getState, middleware, param, request)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
 import ProblemSet(generate)
@@ -30,13 +32,26 @@ main = do
     runSpock 8765 (spock spockCfg app)
 
 
+isMobile :: Request -> Bool
+isMobile req = let
+    headers = requestHeaders req
+    maybeUseragent = fmap (toLower . decodeUtf8) . lookup "User-Agent" $ headers
+    mobileAgents = ["mobile", "android", "iphone", "ipad", "blackberry"]
+    isMobileAgent useragent = any (`isInfixOf` useragent) mobileAgents
+  in
+    maybe False isMobileAgent maybeUseragent
+
+
 app :: SpockM () MySession MyAppState ()
 app = do
     middleware logStdoutDev
     -- NOTE: these next two are relative to the current working directory when
     -- you execute the program! So, you need to run it from the right place.
     middleware (staticPolicy (addBase "static"))
-    get root $ file "text/html" "static/index.html"
+    get root $ do
+        req <- request
+        file "text/html" $ if isMobile req then "static/mobile.html"
+                                           else "static/index.html"
     get "topics" $ json topicNames
     get "situation" $ do
         requested <- param "topics"

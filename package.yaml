@@ -47,6 +47,7 @@ executables:
     - mtl
     - Spock
     - text
+    - wai
     - wai-extra
     - wai-middleware-static
   make_pdf:
