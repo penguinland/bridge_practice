@@ -155,6 +155,5 @@ topic = makeTopic "immediate overcalls" "overC" situations
     situations = wrap [ oneLevelOvercall
                       , twoLevelOvercall
                       , notrumpOvercall
-                      , weakTwo
-                      , preempt
+                      , wrap [weakTwo, preempt]
                       ]
