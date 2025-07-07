@@ -69,6 +69,26 @@ notrumpOvercall = let
                             ]
 
 
+weakTwo :: Situations
+weakTwo = let
+    sit (opening, overcall) = let
+        action = do
+            setOpener T.East
+            opening
+        explanation =
+            "RHO has opened the bidding. We have a hand appropriate for " .+
+            "a weak two bid, and jumping to the 2 level shows this."
+      in situation "owk2" action overcall explanation
+  in
+    wrapDlr $ return sit <~ [ (B.b1C, B.b1Co2D)
+                            , (B.b1C, B.b1Co2H)
+                            , (B.b1C, B.b1Co2S)
+                            , (B.b1D, B.b1Do2H)
+                            , (B.b1D, B.b1Do2S)
+                            , (B.b1H, B.b1Ho2S)
+                            ]
+
+
 preempt :: Situations
 preempt = let
     sit (opening, overcall) = let
@@ -115,5 +135,6 @@ topic = makeTopic "immediate overcalls" "overC" situations
     situations = wrap [ oneLevelOvercall
                       , twoLevelOvercall
                       , notrumpOvercall
+                      , weakTwo
                       , preempt
                       ]
