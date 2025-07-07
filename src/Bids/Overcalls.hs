@@ -192,7 +192,7 @@ b1So2D = nameAction "b1So2D" $ do
 
 b1So2H :: Action
 b1So2H = nameAction "b1So2H" $ do
-    twoLevelOvercall_ T.Spades
+    twoLevelOvercall_ T.Hearts
 
 
 -- Overcalling 1N
