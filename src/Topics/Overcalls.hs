@@ -4,7 +4,8 @@ import Control.Monad(when)
 
 import qualified Bids.Overcalls as B
 import CommonBids(setOpener)
-import EDSL(soundHolding, pointRange)
+import EDSL(soundHolding, pointRange, makeCall, forEach, forbid, hasTopN,
+            suitLength, maxSuitLength, minSuitLength)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -149,7 +150,57 @@ preempt = let
                       <~ T.allVulnerabilities
 
 
--- TODO: pass when you have too weak a suit and too weak a hand
+passNot1 :: Situations
+passNot1 = let
+    sit (opening, suit) = let
+        action = do
+            setOpener T.East
+            _ <- opening
+            suitLength suit 5
+            pointRange 5 7
+            forbid $ hasTopN suit 5 2
+            forbid $ hasTopN suit 3 1
+            -- If you were 5-5, you might be tempted to bid Michaels/UNT
+            forEach (T.otherSuits suit) (`maxSuitLength` 4)
+        explanation =
+            "RHO has opened the bidding. Although we have a 5-card suit, " .+
+            "we are too weak and have too bad a suit to make an overcall. " .+
+            "Just pass."
+      in situation "preempt" action (makeCall T.Pass) explanation
+  in
+    wrapDlr $ return sit <~ [ (B.b1C, T.Diamonds)
+                            , (B.b1C, T.Hearts)
+                            , (B.b1C, T.Spades)
+                            , (B.b1D, T.Hearts)
+                            , (B.b1D, T.Spades)
+                            , (B.b1H, T.Spades)
+                            ]
+
+
+passNot2 :: Situations
+passNot2 = let
+    sit (opening, oppsSuit, suit) = let
+        action = do
+            setOpener T.East
+            _ <- opening
+            suitLength suit 5
+            pointRange 8 9
+            -- If you were 5-5, you might be tempted to bid Michaels/UNT
+            forEach (T.otherSuits suit) (`maxSuitLength` 4)
+            -- Don't be tempted to make a takeout double, either
+            minSuitLength oppsSuit 3
+        explanation =
+            "RHO has opened the bidding. Although we have a 5-card suit, " .+
+            "we are too weak to make an overcall at the 2 level. Just pass."
+      in situation "preempt" action (makeCall T.Pass) explanation
+  in
+    wrapDlr $ return sit <~ [ (B.b1D, T.Diamonds, T.Clubs)
+                            , (B.b1H, T.Hearts,   T.Clubs)
+                            , (B.b1H, T.Hearts,   T.Diamonds)
+                            , (B.b1S, T.Spades,   T.Clubs)
+                            , (B.b1S, T.Spades,   T.Diamonds)
+                            , (B.b1S, T.Spades,   T.Hearts)
+                            ]
 
 
 topic :: Topic
@@ -159,4 +210,5 @@ topic = makeTopic "immediate overcalls" "overC" situations
                       , twoLevelOvercall
                       , notrumpOvercall
                       , wrap [weakTwo, preempt]
+                      , wrap [passNot1, passNot2]
                       ]
