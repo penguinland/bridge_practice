@@ -1,7 +1,10 @@
 module Topics.Overcalls(topic) where
 
+import Control.Monad(when)
+
 import qualified Bids.Overcalls as B
 import CommonBids(setOpener)
+import EDSL(soundHolding)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -71,49 +74,63 @@ notrumpOvercall = let
 
 weakTwo :: Situations
 weakTwo = let
-    sit (opening, overcall) = let
+    sit (opening, overcall, suit) dealer vul = let
         action = do
             setOpener T.East
-            opening
+            _ <- opening
+            when (vul == T.EW || vul == T.Both) (soundHolding suit)
         explanation =
             "RHO has opened the bidding. We have a hand appropriate for " .+
             "a weak two bid, and jumping to the 2 level shows this."
-      in situation "owk2" action overcall explanation
+      in situation "owk2" action overcall explanation dealer vul
   in
-    wrapDlr $ return sit <~ [ (B.b1C, B.b1Co2D)
-                            , (B.b1C, B.b1Co2H)
-                            , (B.b1C, B.b1Co2S)
-                            , (B.b1D, B.b1Do2H)
-                            , (B.b1D, B.b1Do2S)
-                            , (B.b1H, B.b1Ho2S)
+    wrapDlr $ return sit <~ [ (B.b1C, B.b1Co2D, T.Diamonds)
+                            , (B.b1C, B.b1Co2H, T.Hearts)
+                            , (B.b1C, B.b1Co2S, T.Spades)
+                            , (B.b1D, B.b1Do2H, T.Hearts)
+                            , (B.b1D, B.b1Do2S, T.Spades)
+                            , (B.b1H, B.b1Ho2S, T.Spades)
                             ]
 
 
 preempt :: Situations
 preempt = let
-    sit (opening, overcall) = let
+    sit (opening, overcall, suit) dealer vul = let
         action = do
             setOpener T.East
-            opening
+            _ <- opening
+            when (vul == T.EW || vul == T.Both) (soundHolding suit)
         explanation =
             "RHO has opened the bidding. We can make a preempt, hopefully " .+
             "high enough to make it hard for the opponents to find the " .+
             "correct contract. Partner might even continue the preempt " .+
             "even higher on their turn."
-      in situation "preempt" action overcall explanation
+      in situation "preempt" action overcall explanation dealer vul
   in
-    wrapDlr $ return sit <~ [ (B.b1C, B.b1Co3D), (B.b1C, B.b1Co4D)
-                            , (B.b1C, B.b1Co3H), (B.b1C, B.b1Co4H)
-                            , (B.b1C, B.b1Co3S), (B.b1C, B.b1Co4S)
-                            , (B.b1D, B.b1Do3C), (B.b1D, B.b1Do4C)
-                            , (B.b1D, B.b1Do3H), (B.b1D, B.b1Do4H)
-                            , (B.b1D, B.b1Do3S), (B.b1D, B.b1Do4S)
-                            , (B.b1H, B.b1Ho3C), (B.b1H, B.b1Ho4C)
-                            , (B.b1H, B.b1Ho3D), (B.b1H, B.b1Ho4D)
-                            , (B.b1H, B.b1Ho3S), (B.b1H, B.b1Ho4S)
-                            , (B.b1S, B.b1So3C), (B.b1S, B.b1So4C)
-                            , (B.b1S, B.b1So3D), (B.b1S, B.b1So4D)
-                            , (B.b1S, B.b1So3H), (B.b1S, B.b1So4H)
+    wrapDlr $ return sit <~ [ (B.b1C, B.b1Co3D, T.Diamonds)
+                            , (B.b1C, B.b1Co3H, T.Hearts)
+                            , (B.b1C, B.b1Co3S, T.Spades)
+                            , (B.b1C, B.b1Co4D, T.Diamonds)
+                            , (B.b1C, B.b1Co4H, T.Hearts)
+                            , (B.b1C, B.b1Co4S, T.Spades)
+                            , (B.b1D, B.b1Do3C, T.Clubs)
+                            , (B.b1D, B.b1Do3H, T.Hearts)
+                            , (B.b1D, B.b1Do3S, T.Spades)
+                            , (B.b1D, B.b1Do4C, T.Clubs)
+                            , (B.b1D, B.b1Do4H, T.Hearts)
+                            , (B.b1D, B.b1Do4S, T.Spades)
+                            , (B.b1H, B.b1Ho3C, T.Clubs)
+                            , (B.b1H, B.b1Ho3D, T.Diamonds)
+                            , (B.b1H, B.b1Ho3S, T.Spades)
+                            , (B.b1H, B.b1Ho4C, T.Clubs)
+                            , (B.b1H, B.b1Ho4D, T.Diamonds)
+                            , (B.b1H, B.b1Ho4S, T.Spades)
+                            , (B.b1S, B.b1So3C, T.Clubs)
+                            , (B.b1S, B.b1So3D, T.Diamonds)
+                            , (B.b1S, B.b1So3H, T.Hearts)
+                            , (B.b1S, B.b1So4C, T.Clubs)
+                            , (B.b1S, B.b1So4D, T.Diamonds)
+                            , (B.b1S, B.b1So4H, T.Hearts)
                             ]
 
 
