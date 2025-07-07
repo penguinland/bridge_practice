@@ -185,6 +185,7 @@ passNot2 = let
             _ <- opening
             suitLength suit 5
             pointRange 8 9
+            forbid $ hasTopN suit 5 2
             -- If you were 5-5, you might be tempted to bid Michaels/UNT
             forEach (T.otherSuits suit) (`maxSuitLength` 4)
             -- Don't be tempted to make a takeout double, either
