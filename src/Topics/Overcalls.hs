@@ -149,6 +149,9 @@ preempt = let
                       <~ T.allVulnerabilities
 
 
+-- TODO: pass when you have too weak a suit and too weak a hand
+
+
 topic :: Topic
 topic = makeTopic "immediate overcalls" "overC" situations
   where

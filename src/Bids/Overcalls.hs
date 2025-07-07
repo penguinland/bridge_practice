@@ -58,9 +58,10 @@ module Bids.Overcalls(
 
 import Action(Action)
 import Bids.StandardOpenings(b1C, b1D, b1H, b1S)
+import qualified Bids.TakeoutDoubles as TO
 import EDSL(makeCall, suitLength, minSuitLength, maxSuitLength, nameAction,
             forEach, longerThan, atLeastAsLong, pointRange, soundHolding,
-            balancedHand, forbidAll, hasTopN, alternatives)
+            balancedHand, forbid, forbidAll, hasTopN, alternatives)
 import qualified Terminology as T
 
 
@@ -161,6 +162,7 @@ b1Do2C :: Action
 b1Do2C = nameAction "b1Do2C" $ do
     T.Clubs `longerThan` T.Hearts
     T.Clubs `longerThan` T.Spades
+    forbid TO.b1DoX
     twoLevelOvercall_ T.Clubs
 
 
