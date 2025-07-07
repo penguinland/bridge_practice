@@ -1,6 +1,6 @@
 module Bids.Overcalls(
     b1C  -- re-exported from StandardOpenings
---  , b1CoP
+  , b1CoP
   , b1Co1D
   , b1Co1H
   , b1Co1S
@@ -15,7 +15,7 @@ module Bids.Overcalls(
   , b1Co4H
   , b1Co4S
   , b1D  -- re-exported from StandardOpenings
---  , b1DoP
+  , b1DoP
   , b1Do1H
   , b1Do1S
   , b1Do1N
@@ -29,7 +29,7 @@ module Bids.Overcalls(
   , b1Do4H
   , b1Do4S
   , b1H  -- re-exported from StandardOpenings
---  , b1HoP
+  , b1HoP
   , b1Ho1S
   , b1Ho1N
   , b1Ho2C
@@ -42,7 +42,7 @@ module Bids.Overcalls(
   , b1Ho4D
   , b1Ho4S
   , b1S  -- re-exported from StandardOpenings
---  , b1SoP
+  , b1SoP
   , b1So1N
   , b1So2C
   , b1So2D
@@ -60,7 +60,8 @@ import Action(Action)
 import Bids.StandardOpenings(b1C, b1D, b1H, b1S)
 import CommonBids(weak2, preempt3, preempt4)
 import EDSL(makeCall, minSuitLength, maxSuitLength, longerThan, atLeastAsLong,
-            forEach, nameAction, pointRange, soundHolding, balancedHand)
+            forEach, nameAction, pointRange, soundHolding, balancedHand,
+            forbidAll)
 import qualified Terminology as T
 
 
@@ -341,3 +342,46 @@ b1So4D = nameAction "b1So4D" $ do
 b1So4H :: Action
 b1So4H = nameAction "b1So4H" $ do
     preempt4 T.Hearts
+
+
+-- Define passes as the inability to make any other bid.
+
+
+b1CoP :: Action
+b1CoP = nameAction "b1CoP" $ do
+    forbidAll [ b1Co1D, b1Co2D, b1Co3D, b1Co4D
+              , b1Co1H, b1Co2H, b1Co3H, b1Co4H
+              , b1Co1S, b1Co2S, b1Co3S, b1Co4S
+              , b1Co1N
+              ]
+    makeCall T.Pass
+
+
+b1DoP :: Action
+b1DoP = nameAction "b1DoP" $ do
+    forbidAll [         b1Do2C, b1Do3C, b1Do4C
+              , b1Do1H, b1Do2H, b1Do3H, b1Do4H
+              , b1Do1S, b1Do2S, b1Do3S, b1Do4S
+              , b1Do1N
+              ]
+    makeCall T.Pass
+
+
+b1HoP :: Action
+b1HoP = nameAction "b1HoP" $ do
+    forbidAll [         b1Ho2C, b1Ho3C, b1Ho4C
+              ,         b1Ho2D, b1Ho3D, b1Ho4D
+              , b1Ho1S, b1Ho2S, b1Ho3S, b1Ho4S
+              , b1Co1N
+              ]
+    makeCall T.Pass
+
+
+b1SoP :: Action
+b1SoP = nameAction "b1SoP" $ do
+    forbidAll [         b1So2C, b1So3C, b1So4C
+              ,         b1So2D, b1So3D, b1So4D
+              ,         b1So2H, b1So3H, b1So4H
+              , b1So1N
+              ]
+    makeCall T.Pass
