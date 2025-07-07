@@ -73,6 +73,9 @@ haveOvercall_ suit = do
     alternatives [hasTopN suit 5 2, hasTopN suit 3 1]
     -- Don't overcall a bad suit with a minimum.
     alternatives [soundHolding suit, pointRange 14 40 >> hasTopN suit 5 2]
+    -- With 5-5 in two suits, you might be tempted to bid Michaels/UNT
+    -- TODO: fix this when Michaels/UNT bids are defined and can be forbidden
+    forEach (T.otherSuits suit) (`maxSuitLength` 4)
     forEach T.allSuits (suit `atLeastAsLong`)
 
 
@@ -420,3 +423,5 @@ b1SoP = nameAction "b1SoP" $ do
               , b1So1N
               ]
     makeCall T.Pass
+
+-- TODO: use the above bids in other topics!
