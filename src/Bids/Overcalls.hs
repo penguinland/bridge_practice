@@ -75,6 +75,7 @@ haveOvercall_ suit = do
 oneLevelOvercall_ :: T.Suit -> Action
 oneLevelOvercall_ suit = do
     haveOvercall_ suit
+    -- With too much strength, start with a power double.
     pointRange 8 16
     makeCall $ T.Bid 1 suit
 
@@ -82,6 +83,7 @@ oneLevelOvercall_ suit = do
 twoLevelOvercall_ :: T.Suit -> Action
 twoLevelOvercall_ suit = do
     haveOvercall_ suit
+    -- With too much strength, start with a power double.
     pointRange 11 16
     makeCall $ T.Bid 2 suit
 
