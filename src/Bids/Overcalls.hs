@@ -58,10 +58,9 @@ module Bids.Overcalls(
 
 import Action(Action)
 import Bids.StandardOpenings(b1C, b1D, b1H, b1S)
-import CommonBids(weak2, preempt3, preempt4)
-import EDSL(makeCall, minSuitLength, maxSuitLength, longerThan, atLeastAsLong,
-            forEach, nameAction, pointRange, soundHolding, balancedHand,
-            forbidAll)
+import EDSL(makeCall, suitLength, minSuitLength, maxSuitLength, nameAction,
+            forEach, longerThan, atLeastAsLong, pointRange, soundHolding,
+            balancedHand, forbidAll)
 import qualified Terminology as T
 
 
@@ -86,6 +85,28 @@ twoLevelOvercall_ suit = do
     -- With too much strength, start with a power double.
     pointRange 11 16
     makeCall $ T.Bid 2 suit
+
+
+weak2 :: T.Suit -> Action
+weak2 suit = nameAction ("weak2_overcall_" ++ show suit) $ do
+    suitLength suit 6
+    pointRange 5 11
+    forEach (T.otherSuits suit) (suit `longerThan`)
+    makeCall $ T.Bid 2 suit
+
+
+preempt3 :: T.Suit -> Action
+preempt3 suit = nameAction ("preempt3_overcall_" ++ show suit) $ do
+    suitLength suit 7
+    pointRange 5 9
+    makeCall $ T.Bid 3 suit
+
+
+preempt4 :: T.Suit -> Action
+preempt4 suit = nameAction ("preempt4_overcall_" ++ show suit) $ do
+    minSuitLength suit 8
+    pointRange 5 13  -- TODO: figure out the correct point range
+    makeCall $ T.Bid 4 suit
 
 
 overcall1N_ :: T.Suit -> Action
