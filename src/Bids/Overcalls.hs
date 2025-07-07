@@ -60,7 +60,7 @@ import Action(Action)
 import Bids.StandardOpenings(b1C, b1D, b1H, b1S)
 import EDSL(makeCall, suitLength, minSuitLength, maxSuitLength, nameAction,
             forEach, longerThan, atLeastAsLong, pointRange, soundHolding,
-            balancedHand, forbidAll)
+            balancedHand, forbidAll, hasTopN, alternatives)
 import qualified Terminology as T
 
 
@@ -68,7 +68,8 @@ haveOvercall_ :: T.Suit -> Action
 haveOvercall_ suit = do
     minSuitLength suit 5
     forbidAll $ map ($ suit) [weak2, preempt3, preempt4]
-    soundHolding suit
+    -- Don't overcall a bad suit with a minimum.
+    alternatives [soundHolding suit, pointRange 14 40 >> hasTopN suit 5 2]
     forEach T.allSuits (suit `atLeastAsLong`)
 
 
