@@ -67,6 +67,7 @@ import qualified Terminology as T
 haveOvercall_ :: T.Suit -> Action
 haveOvercall_ suit = do
     minSuitLength suit 5
+    forbidAll $ map ($ suit) [weak2, preempt3, preempt4]
     soundHolding suit
     forEach T.allSuits (suit `atLeastAsLong`)
 
