@@ -21,6 +21,7 @@ import Topic(Topic, refName, topicName)
 
 import qualified Topics.StandardOpeners as StandardOpeners
 import qualified Topics.MajorSuitRaises as MajorSuitRaises
+import qualified Topics.Overcalls as Overcalls
 import qualified Topics.TakeoutDoubles as TakeoutDoubles
 import qualified Topics.TransfersOver1MX as TransfersOver1MX
 import qualified Topics.ForcingOneNotrump as ForcingOneNotrump
@@ -56,6 +57,7 @@ import qualified Topics.StandardModernPrecision.TripleFourOne as TripleFourOne
 topicList :: [(Int, Bool, Topic)]
 topicList = [ (10, True,  StandardOpeners.topic)
             , (11, True,  MajorSuitRaises.topic)
+            , (26, True,  Overcalls.topic)
             , (24, True,  TakeoutDoubles.topic)
             , (12, True,  ForcingOneNotrump.topic)
             , (13, True,  JacobyTransfers.topic)

@@ -159,4 +159,5 @@ might think the intended solution is correct.
 Sometimes (hopefully rarely!), there will be a bug in the business logic, and
 the "intended" solution is flat-out wrong (for example, the stated solution is
 to raise partner's minor even though you've got a 7-card major). Those egregious
-mistakes are easier to fix: please let me know if you find any.
+mistakes are easier to fix: please let me know if you find any. Include the
+debug string if possible.

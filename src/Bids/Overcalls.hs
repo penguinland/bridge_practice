@@ -58,9 +58,10 @@ module Bids.Overcalls(
 
 import Action(Action)
 import Bids.StandardOpenings(b1C, b1D, b1H, b1S)
+import qualified Bids.TakeoutDoubles as TO
 import EDSL(makeCall, suitLength, minSuitLength, maxSuitLength, nameAction,
             forEach, longerThan, atLeastAsLong, pointRange, soundHolding,
-            balancedHand, forbidAll)
+            balancedHand, forbid, forbidAll, hasTopN, alternatives)
 import qualified Terminology as T
 
 
@@ -68,7 +69,13 @@ haveOvercall_ :: T.Suit -> Action
 haveOvercall_ suit = do
     minSuitLength suit 5
     forbidAll $ map ($ suit) [weak2, preempt3, preempt4]
-    soundHolding suit
+    -- Don't overcall too weak a suit.
+    alternatives [hasTopN suit 5 2, hasTopN suit 3 1]
+    -- Don't overcall a bad suit with a minimum.
+    alternatives [soundHolding suit, pointRange 14 40 >> hasTopN suit 5 2]
+    -- With 5-5 in two suits, you might be tempted to bid Michaels/UNT
+    -- TODO: fix this when Michaels/UNT bids are defined and can be forbidden
+    forEach (T.otherSuits suit) (`maxSuitLength` 4)
     forEach T.allSuits (suit `atLeastAsLong`)
 
 
@@ -93,6 +100,8 @@ weak2 suit = nameAction ("weak2_overcall_" ++ show suit) $ do
     suitLength suit 6
     pointRange 5 11
     forEach (T.otherSuits suit) (suit `longerThan`)
+    -- Don't overcall too weak a suit.
+    alternatives [hasTopN suit 5 2, hasTopN suit 3 1]
     makeCall $ T.Bid 2 suit
 
 
@@ -100,6 +109,8 @@ preempt3 :: T.Suit -> Action
 preempt3 suit = nameAction ("preempt3_overcall_" ++ show suit) $ do
     suitLength suit 7
     pointRange 5 9
+    -- Don't overcall too weak a suit.
+    alternatives [hasTopN suit 5 2, hasTopN suit 3 1]
     makeCall $ T.Bid 3 suit
 
 
@@ -107,6 +118,8 @@ preempt4 :: T.Suit -> Action
 preempt4 suit = nameAction ("preempt4_overcall_" ++ show suit) $ do
     minSuitLength suit 8
     pointRange 5 13  -- TODO: figure out the correct point range
+    -- Don't overcall too weak a suit.
+    alternatives [hasTopN suit 5 2, hasTopN suit 3 1]
     makeCall $ T.Bid 4 suit
 
 
@@ -152,6 +165,7 @@ b1Do2C :: Action
 b1Do2C = nameAction "b1Do2C" $ do
     T.Clubs `longerThan` T.Hearts
     T.Clubs `longerThan` T.Spades
+    forbid TO.b1DoX
     twoLevelOvercall_ T.Clubs
 
 
@@ -183,7 +197,7 @@ b1So2D = nameAction "b1So2D" $ do
 
 b1So2H :: Action
 b1So2H = nameAction "b1So2H" $ do
-    twoLevelOvercall_ T.Spades
+    twoLevelOvercall_ T.Hearts
 
 
 -- Overcalling 1N
@@ -409,3 +423,5 @@ b1SoP = nameAction "b1SoP" $ do
               , b1So1N
               ]
     makeCall T.Pass
+
+-- TODO: use the above bids in other topics!
