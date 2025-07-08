@@ -20,7 +20,7 @@ oneLevelOvercall = let
             opening
         explanation =
             "RHO has opened the bidding. We've got a 5-card suit and " .+
-            "enough strength to overcall it."
+            "enough strength to overcall. Bid it as cheaply as possible."
       in situation "o1" action overcall explanation
   in
     wrapDlr $ return sit <~ [ (B.b1C, B.b1Co1D)
@@ -98,7 +98,7 @@ weakTwo = let
                          , (B.b1D, B.b1Do2S, T.Spades)
                          , (B.b1H, B.b1Ho2S, T.Spades)
                          ]
-                      -- You would have opened if you could have.
+                      -- You would have already bid a weak 2 if you could have.
                       <~ [T.West, T.North, T.East]
                       <~ T.allVulnerabilities
 
@@ -145,7 +145,7 @@ preempt = let
                          , (B.b1S, B.b1So4D, T.Diamonds)
                          , (B.b1S, B.b1So4H, T.Hearts)
                          ]
-                      -- You would have opened if you could have.
+                      -- You would already have preempted if you could have.
                       <~ [T.West, T.North, T.East]
                       <~ T.allVulnerabilities
 
