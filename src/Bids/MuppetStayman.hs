@@ -14,19 +14,23 @@ module Bids.MuppetStayman(
   , b2N3C3D4D4H     -- re-exported from PuppetStayman
   , b2N3C3D4D4S     -- re-exported from PuppetStayman
   , b2N3C3H
---  , b2N3C3H3S
---  , b2N3C3H3S3N
+  , b2N3C3H3S
+  , b2N3C3H3S3N
 --  , b2N3C3H3N
 --  , b2N3C3H3NP
 --  , b2N3C3H3N4S
+--  , b2N3C3H4D
+--  , b2N3C3H4D4H
+--  , b2N3C3H4H
+--  , b2N3C3H4H4S
   , b2N3C3S         -- re-exported from PuppetStayman
   , b2N3C3S3N       -- re-exported from PuppetStayman
   , b2N3C3S4H       -- re-exported from PuppetStayman
   , b2N3C3S4S       -- re-exported from PuppetStayman
   , b2N3C3N
---  , b2N3C3NP
---  , b2N3C3N4D
---  , b2N3C3N4D4H
+  , b2N3C3NP
+  , b2N3C3N4D
+  , b2N3C3N4D4H
 ) where
 
 
@@ -34,6 +38,7 @@ import Action(Action)
 import qualified Bids.PuppetStayman as P
 import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
 import qualified EDSL as E
+import Output((.+))
 import qualified Terminology as T
 
 
@@ -102,10 +107,43 @@ b2N3C = E.nameAction "muppet_b2N3C" $ do
 b2N3C3H :: Action
 b2N3C3H = E.nameAction "muppet_b2N3C3H" $ do
     E.forEach T.majorSuits (`E.maxSuitLength` 3)
-    E.makeAlertableCall (T.Bid 3 T.Notrump) "no 4-card major"
+    E.makeAlertableCall (T.Bid 3 T.Hearts) "no 4-card major"
+
+
+b2N3C3H3S :: Action
+b2N3C3H3S = E.nameAction "muppet_b2N3C3H3S" $ do
+    E.maxSuitLength T.Spades 4
+    E.maxSuitLength T.Hearts 5
+    E.makeAlertableCall (T.Bid 3 T.Spades) ("relay to " .+ T.Bid 3 T.Notrump)
+
+
+b2N3C3H3S3N :: Action
+b2N3C3H3S3N = E.nameAction "muppet_b2N3C3H3S3N" $ do
+    E.makeCall $ T.Bid 3 T.Notrump
+
+
+
+
 
 
 b2N3C3N :: Action
 b2N3C3N = E.nameAction "muppet_b2N3C3N" $ do
     E.suitLength T.Hearts 5
-    E.makeAlertableCall (T.Bid 3 T.Hearts) "5-card heart suit"
+    E.makeAlertableCall (T.Bid 3 T.Notrump) "5-card heart suit"
+
+
+b2N3C3NP :: Action
+b2N3C3NP = E.nameAction "muppet_b2N3C3NP" $ do
+    E.forbid b2N3C3N4D
+    E.makeCall $ T.Pass
+
+
+b2N3C3N4D :: Action
+b2N3C3N4D = E.nameAction "muppet_b2N3C3N4D" $ do
+    E.minSuitLength T.Hearts 3
+    E.makeAlertableCall (T.Bid 4 T.Diamonds) "transfer to hearts"
+
+
+b2N3C3N4D4H :: Action
+b2N3C3N4D4H = E.nameAction "muppet_b2N3C3N4D4H" $ do
+    E.makeCall $ T.Bid 4 T.Hearts
