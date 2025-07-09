@@ -58,7 +58,7 @@ b2N3C :: Action
 b2N3C = nameAction "puppet_b2N3C" $ do
     pointRange 5 40  -- game forcing
     alternatives [minSuitLength T.Hearts 3, minSuitLength T.Spades 3]
-    -- If you could have made a transfer, prefer Puppet Stayman only if you've
+    -- If you could have made a transfer, prefer puppet Stayman only if you've
     -- got both majors.
     minSuitLength T.Hearts 5 `impliesThat` minSuitLength T.Spades 4
     minSuitLength T.Spades 5 `impliesThat` minSuitLength T.Hearts 4
@@ -67,7 +67,7 @@ b2N3C = nameAction "puppet_b2N3C" $ do
               , singleSuited T.Diamonds
               , twoSuited T.Clubs T.Diamonds
               ]
-    -- TODO: would you bid Puppet Stayman with a void? Not sure...
+    -- TODO: would you bid puppet Stayman with a void? Not sure...
     makeCall $ T.Bid 3 T.Clubs
 
 

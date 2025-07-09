@@ -1,0 +1,111 @@
+module Bids.MuppetStayman(
+    noInterference  -- re-exported from PuppetStayman
+  , b2N             -- re-exported from StandardOpenings and/or PuppetStayman
+  , b2N3C
+  , b2N3C3D         -- re-exported from PuppetStayman
+  , b2N3C3D3H       -- re-exported from PuppetStayman
+  , b2N3C3D3H3S     -- re-exported from PuppetStayman
+  , b2N3C3D3H3N     -- re-exported from PuppetStayman
+  , b2N3C3D3S       -- re-exported from PuppetStayman
+  , b2N3C3D3S3N     -- re-exported from PuppetStayman
+  , b2N3C3D3S4H     -- re-exported from PuppetStayman
+  , b2N3C3D3N       -- re-exported from PuppetStayman
+  , b2N3C3D4D       -- re-exported from PuppetStayman
+  , b2N3C3D4D4H     -- re-exported from PuppetStayman
+  , b2N3C3D4D4S     -- re-exported from PuppetStayman
+  , b2N3C3H
+--  , b2N3C3H3S
+--  , b2N3C3H3S3N
+--  , b2N3C3H3N
+--  , b2N3C3H3NP
+--  , b2N3C3H3N4S
+  , b2N3C3S         -- re-exported from PuppetStayman
+  , b2N3C3S3N       -- re-exported from PuppetStayman
+  , b2N3C3S4H       -- re-exported from PuppetStayman
+  , b2N3C3S4S       -- re-exported from PuppetStayman
+  , b2N3C3N
+--  , b2N3C3NP
+--  , b2N3C3N4D
+--  , b2N3C3N4D4H
+) where
+
+
+import Action(Action)
+import qualified Bids.PuppetStayman as P
+import Bids.NaturalOneNotrumpDefense(singleSuited, twoSuited)
+import qualified EDSL as E
+import qualified Terminology as T
+
+
+-- Re-export the puppet Stayman bids
+noInterference :: Action
+noInterference = P.noInterference
+b2N         :: Action
+b2N         = P.b2N
+b2N3C3D     :: Action
+b2N3C3D     = P.b2N3C3D
+b2N3C3D3H   :: Action
+b2N3C3D3H   = P.b2N3C3D3H
+b2N3C3D3H3S :: Action
+b2N3C3D3H3S = P.b2N3C3D3H3S
+b2N3C3D3H3N :: Action
+b2N3C3D3H3N = P.b2N3C3D3H3N
+b2N3C3D3S   :: Action
+b2N3C3D3S   = P.b2N3C3D3S
+b2N3C3D3S3N :: Action
+b2N3C3D3S3N = P.b2N3C3D3S3N
+b2N3C3D3S4H :: Action
+b2N3C3D3S4H = P.b2N3C3D3S4H
+b2N3C3D3N   :: Action
+b2N3C3D3N   = P.b2N3C3D3N
+b2N3C3D4D   :: Action
+b2N3C3D4D   = P.b2N3C3D4D
+b2N3C3D4D4H :: Action
+b2N3C3D4D4H = P.b2N3C3D4D4H
+b2N3C3D4D4S :: Action
+b2N3C3D4D4S = P.b2N3C3D4D4S
+b2N3C3S     :: Action
+b2N3C3S     = P.b2N3C3S
+b2N3C3S3N   :: Action
+b2N3C3S3N   = P.b2N3C3S3N
+b2N3C3S4H   :: Action
+b2N3C3S4H   = P.b2N3C3S4H
+b2N3C3S4S   :: Action
+b2N3C3S4S   = P.b2N3C3S4S
+
+
+-- TODO: is this something you show in a way other than just asking for
+-- keycards? Maybe not...
+--slamInterest_ :: Action
+--slamInterest_ = alternatives [pointRange 12 40, maxLoserCount 6]
+
+
+b2N3C :: Action
+b2N3C = E.nameAction "muppet_b2N3C" $ do
+    E.pointRange 5 40  -- game forcing
+    E.alternatives [E.minSuitLength T.Hearts 3, E.minSuitLength T.Spades 3]
+    -- If you could transfer to spades, bid Muppet Stayman if you have any
+    -- interest in hearts at all.
+    E.minSuitLength T.Spades 5 `E.impliesThat` E.maxSuitLength T.Hearts 2
+    -- If you could transfer to hearts, prefer puppet Stayman only if you've
+    -- got both majors.
+    E.minSuitLength T.Hearts 5 `E.impliesThat` E.minSuitLength T.Spades 4
+    -- Don't be interested in a minor to bid this.
+    E.forbidAll [ singleSuited T.Clubs
+                , singleSuited T.Diamonds
+                , twoSuited T.Clubs T.Diamonds
+                ]
+    -- TODO: would you bid Muppet Stayman with a void? Not sure...
+    E.makeCall $ T.Bid 3 T.Clubs
+
+
+b2N3C3H :: Action
+b2N3C3H = E.nameAction "muppet_b2N3C3H" $ do
+    E.forEach T.majorSuits (`E.maxSuitLength` 3)
+    E.makeAlertableCall (T.Bid 3 T.Notrump) "no 4-card major"
+
+
+b2N3C3N :: Action
+b2N3C3N = E.nameAction "muppet_b2N3C3N" $ do
+    E.suitLength T.Hearts 5
+    E.makeAlertableCall (T.Bid 3 T.Hearts) "5-card heart suit"
