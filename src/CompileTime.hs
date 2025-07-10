@@ -1,5 +1,6 @@
--- We use Template Haskell to check at compile time whether every Topic ID is unique. This function
--- must be compiled before SupportedTopics.hs, which is why it's a separate file.
+-- We use Template Haskell to check at compile time whether every Topic ID is
+-- unique. This function must be compiled before SupportedTopics.hs, which is
+-- why it's a separate file.
 {-# LANGUAGE TemplateHaskell #-}
 
 module CompileTime(compileTimeAssertUniqueTopicIDs) where
@@ -7,12 +8,18 @@ module CompileTime(compileTimeAssertUniqueTopicIDs) where
 import Control.Arrow((&&&))
 import Control.Monad(unless)
 import Data.List(sort)
+import Data.Containers.ListUtils(nubOrd)
 import qualified Language.Haskell.TH.Syntax as THS
 
 
 duplicatesOf_ :: [Int] -> [Int]
-duplicatesOf_ = map fst . filter (uncurry (==)) . uncurry zip . (init &&& tail) . sort
+duplicatesOf_ = nubOrd . map fst . filter (uncurry (==)) . uncurry zip .
+                (init &&& tail) . sort
 
+
+-- This is used in SupportedTopics.hs to ensure that every Topic has a unique
+-- ID. It takes a list of (Int, Bool, Topic) tuples, and either fails the
+-- assertion that all ints are unique, or else returns that same list.
 compileTimeAssertUniqueTopicIDs :: THS.Q THS.Exp -> THS.Q THS.Exp
 compileTimeAssertUniqueTopicIDs qexp = let
     getId :: THS.Exp -> Int
