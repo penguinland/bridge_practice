@@ -3,16 +3,13 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module SupportedTopics(
-    assertUniqueTopicIndices
-  , topicNames
+    topicNames
   , findTopics
   , getNamedTopic
 ) where
 
-import Control.Monad(when)
 import Data.Aeson(Value, object, (.=))
 import Data.Aeson.Key(fromString)
-import Data.Containers.ListUtils(nubOrd)
 import Data.Either.Extra(maybeToEither, mapLeft)
 import Data.List(find)
 import Data.List.Utils(join, split)
@@ -58,7 +55,9 @@ import qualified Topics.StandardModernPrecision.TripleFourOne as TripleFourOne
 -- The list is the order to display topics on the website. The int is a unique
 -- ID for the topic when requesting a situation. That way, you can add new
 -- topics to the middle of the list without messing up anyone using the website.
--- The boolean is whether this topic should be selected by default.
+-- The boolean is whether this topic should be selected by default. If topic
+-- indices aren't unique, we're gonna have really subtle bugs that will be hard
+-- to figure out.
 topicList :: [(Int, Bool, Topic)]
 topicList = $(compileTimeAssertUniqueTopicIDs [|
             [ (10, True,  StandardOpeners.topic)
@@ -88,17 +87,6 @@ topicList = $(compileTimeAssertUniqueTopicIDs [|
             --, (70, False, Lampe.topic)
             , (56, False, TwoDiamondOpeners.topic)
             ] |])
-
-
--- If topic indices aren't unique, we're gonna have really subtle bugs that will
--- be hard to figure out.
--- TODO: consider making this a compile-time assertion instead, possibly via
--- https://stackoverflow.com/a/6654903
-assertUniqueTopicIndices :: IO ()
-assertUniqueTopicIndices = let
-    indices = map fst3 topicList
-  in
-    when (indices /= nubOrd indices) (error "duplicate topic indices!?")
 
 
 topics :: Map Int Topic

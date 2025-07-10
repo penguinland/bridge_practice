@@ -16,7 +16,7 @@ import Web.Spock(SpockM, file, text, get, root, spock, runSpock, json,
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
 import ProblemSet(generate)
-import SupportedTopics(assertUniqueTopicIndices, topicNames, findTopics)
+import SupportedTopics(topicNames, findTopics)
 
 
 data MySession = EmptySession
@@ -25,7 +25,6 @@ data MyAppState = IoRng (IORef StdGen)
 
 main :: IO ()
 main = do
-    assertUniqueTopicIndices
     rng <- getStdGen
     ref <- newIORef rng
     spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref)
