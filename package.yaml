@@ -26,6 +26,7 @@ dependencies:
 - MissingH
 - process
 - random
+- template-haskell
 - transformers
 
 ghc-options:

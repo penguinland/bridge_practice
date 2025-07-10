@@ -1,3 +1,7 @@
+-- We use a compile-time assertion that every supported Topic has a unique ID. Doing things at
+-- compile time requires using Template Haskell.
+{-# LANGUAGE TemplateHaskell #-}
+
 module SupportedTopics(
     assertUniqueTopicIndices
   , topicNames
@@ -16,6 +20,7 @@ import Data.Map(Map, fromList, (!?))
 import Data.Tuple.Extra((&&&))
 import Data.Tuple.Utils(fst3, thd3)
 
+import CompileTime(compileTimeAssertUniqueTopicIDs)
 import Output(toHtml)
 import Topic(Topic, refName, topicName)
 
@@ -55,7 +60,8 @@ import qualified Topics.StandardModernPrecision.TripleFourOne as TripleFourOne
 -- topics to the middle of the list without messing up anyone using the website.
 -- The boolean is whether this topic should be selected by default.
 topicList :: [(Int, Bool, Topic)]
-topicList = [ (10, True,  StandardOpeners.topic)
+topicList = $(compileTimeAssertUniqueTopicIDs [|
+            [ (10, True,  StandardOpeners.topic)
             , (11, True,  MajorSuitRaises.topic)
             , (26, True,  Overcalls.topic)
             , (24, True,  TakeoutDoubles.topic)
@@ -81,7 +87,7 @@ topicList = [ (10, True,  StandardOpeners.topic)
             , (55, False, Smp1DResponses.topic)
             --, (70, False, Lampe.topic)
             , (56, False, TwoDiamondOpeners.topic)
-            ]
+            ] |])
 
 
 -- If topic indices aren't unique, we're gonna have really subtle bugs that will
