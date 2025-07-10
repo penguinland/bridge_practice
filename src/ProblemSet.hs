@@ -46,7 +46,7 @@ outputLatex :: Int -> [Topic] -> String -> StateT StdGen IO String
 outputLatex numHands topics filename = do
     problems <- generate numHands topics
     let topicNames = join ", " . map (toLatex . topicName) $ topics
-        problemSet = join "\n" . map toLatex $ problems
+        problemSet = unlines . map toLatex $ problems
     template <- lift $ readFile "template.tex"
     let doc = replace "%<TOPICS>" topicNames .
               replace "%<PROBLEMS>" problemSet $ template

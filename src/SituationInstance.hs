@@ -35,13 +35,13 @@ instance Showable SituationInstance where
             "%\n}"
     toHtml _ = "todo"
     toMonospace (SituationInstance bidding call solution deal _) =
-        join "\n" [ toMonospace deal
-                  , ""
-                  , toMonospace bidding
-                  , ""
-                  , "Answer: " ++ toMonospace call
-                  , toMonospace solution
-                  ]
+        unlines [ toMonospace deal
+                , ""
+                , toMonospace bidding
+                , ""
+                , "Answer: " ++ toMonospace call
+                , toMonospace solution
+                ]
 
 instance ToJSON SituationInstance where
     toJSON (SituationInstance b c s d ds) = toJSON . fromList $

@@ -27,6 +27,3 @@ compileTimeAssertUniqueTopicIDs qexp = let
                 fail $ "Duplicate Topic IDs found: " ++ show duplicates
             qexp
         _ -> fail "Expected a list of items"
-
-
--- TODO: use `unlines` instead of `join "\n"`

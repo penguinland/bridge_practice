@@ -55,7 +55,7 @@ nameAll name (DealerProg defns reqs) =
 
 
 toProgram :: DealerProg -> String
-toProgram (DealerProg defns conds) = join "\n" $
+toProgram (DealerProg defns conds) = unlines $
     -- This used to generate 1 million boards, but some situations are extremely
     -- rare (e.g., North opens a Precision 1D with 5 hearts and South responds
     -- 2N: occurs less than twice in a million deals), and if you run the dealer
@@ -102,7 +102,7 @@ eval dir vul deal seed = let
     toSuits output@(_:s:h:d:c:_)
      | length output == 11 = Just $ map splitSuit [s, h, d, c]
     -- If that didn't work, we have totally misunderstood something.
-    toSuits problem     = error $ join "\n"
+    toSuits problem     = error $ unlines
         ("Unexpected output from dealer invocation:":prog:"Output was:":problem)
 
     splitSuit :: String -> [String]
