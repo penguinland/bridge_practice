@@ -42,7 +42,7 @@ import Output((.+))
 import qualified Terminology as T
 
 
--- Re-export the puppet Stayman bids
+-- Re-export the puppet Stayman bids: responses of 3D and 3S are unchanged.
 noInterference :: Action
 noInterference = P.noInterference
 b2N         :: Action
