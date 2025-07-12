@@ -31,7 +31,7 @@ instance Showable Hand where
                         replace " " "\\,") [s, h, d, c])
         ++ "}"
     toMonospace (Hand s h d c) =
-        join "\n" $ zipWith formatSuit "SHDC" [s, h, d, c]
+        unlines $ zipWith formatSuit "SHDC" [s, h, d, c]
       where
         formatSuit name holding = (name : ": ") ++ (replace "T" "10" holding)
 
@@ -89,14 +89,14 @@ instance Showable Bidding where
                 foldr foldFormatMaybeBid ([], nextFootnote) row
           in
             ((join " " . reverse $ rowBids) : results, nextFootnote')
-        formatAuction = join "\n" . reverse . fst .
+        formatAuction = unlines . reverse . fst .
                         foldr foldFormatBidRow ([], 1 :: Int)
         foldFormatAlert (T.CompleteCall _ m) (alerts, nextFootnote) = case m of
             Nothing -> (alerts, nextFootnote)
             Just a  ->
                 ( ("[" ++ show nextFootnote ++ "]: " ++ toMonospace a) : alerts
                 , nextFootnote + 1)
-        formatAlerts = join "\n" . reverse . fst .
+        formatAlerts = unlines . reverse . fst .
                        foldr foldFormatAlert ([], 1 :: Int) . catMaybes . concat
       in
         header ++ formatAuction auction ++ " ??\n\n" ++ formatAlerts auction
@@ -164,8 +164,8 @@ instance Showable Deal where
         formatEW = zipWith (\a b -> take 20 (a ++ replicate 20 ' ') ++ b)
         footer = "Dealer: " ++ toMonospace d ++ ", Vul: " ++ toMonospace v
       in
-        join "\n" $ formatNS ns ++ [""] ++ formatEW ws es ++ [""] ++
-                    formatNS ss ++ ["", footer]
+        unlines $ formatNS ns ++ [""] ++ formatEW ws es ++ [""] ++
+                  formatNS ss ++ ["", footer]
 
 instance ToJSON Deal where
     toJSON (Deal d v n e s w) = toJSON . fromList $
