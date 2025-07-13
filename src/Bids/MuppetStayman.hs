@@ -90,11 +90,15 @@ b2N3C = E.nameAction "muppet_b2N3C" $ do
     E.pointRange 5 40  -- game forcing
     E.alternatives [E.minSuitLength T.Hearts 3, E.minSuitLength T.Spades 3]
     -- If you could transfer to spades, bid Muppet Stayman if you have any
-    -- interest in hearts at all.
-    E.minSuitLength T.Spades 5 `E.impliesThat` E.maxSuitLength T.Hearts 2
+    -- interest in hearts at all. However, if you're 5-5 in the majors, transfer
+    -- to one and then bid the other yourself, rather than looking for an
+    -- unlikely 5-4 or 5-5 fit.
+    E.minSuitLength T.Spades 5 `E.impliesThat` E.minSuitLength T.Hearts 3
+    E.minSuitLength T.Spades 5 `E.impliesThat` E.maxSuitLength T.Hearts 4
     -- If you could transfer to hearts, prefer puppet Stayman only if you've
-    -- got both majors.
-    E.minSuitLength T.Hearts 5 `E.impliesThat` E.minSuitLength T.Spades 4
+    -- got exactly 4 spades: with 5 or more, transfer to one and then bid the
+    -- other, and with 3 or fewer, just show the hearts.
+    E.minSuitLength T.Hearts 5 `E.impliesThat` E.suitLength T.Spades 4
     -- Don't be interested in a minor to bid this.
     E.forbidAll [ singleSuited T.Clubs
                 , singleSuited T.Diamonds

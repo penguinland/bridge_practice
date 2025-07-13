@@ -58,10 +58,12 @@ b2N3C :: Action
 b2N3C = nameAction "puppet_b2N3C" $ do
     pointRange 5 40  -- game forcing
     alternatives [minSuitLength T.Hearts 3, minSuitLength T.Spades 3]
-    -- If you could have made a transfer, prefer puppet Stayman only if you've
-    -- got both majors.
-    minSuitLength T.Hearts 5 `impliesThat` minSuitLength T.Spades 4
-    minSuitLength T.Spades 5 `impliesThat` minSuitLength T.Hearts 4
+    -- If you could have made a transfer, prefer puppet Stayman only if you're
+    -- exactly 5-4 in the majors: with 5-5, transfer to one and then bid the
+    -- other, and if you're 5-3, just transfer to the one and then bid something
+    -- else like 3N.
+    minSuitLength T.Hearts 5 `impliesThat` suitLength T.Spades 4
+    minSuitLength T.Spades 5 `impliesThat` suitLength T.Hearts 4
     -- Don't be interested in a minor to bid this.
     forbidAll [ singleSuited T.Clubs
               , singleSuited T.Diamonds
