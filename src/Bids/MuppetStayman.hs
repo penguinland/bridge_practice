@@ -79,12 +79,6 @@ b2N3C3S4S   :: Action
 b2N3C3S4S   = P.b2N3C3S4S
 
 
--- TODO: is this something you show in a way other than just asking for
--- keycards? Maybe not...
---slamInterest_ :: Action
---slamInterest_ = alternatives [pointRange 12 40, maxLoserCount 6]
-
-
 b2N3C :: Action
 b2N3C = E.nameAction "muppet_b2N3C" $ do
     E.pointRange 5 40  -- game forcing
