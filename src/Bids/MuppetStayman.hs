@@ -16,13 +16,13 @@ module Bids.MuppetStayman(
   , b2N3C3H
   , b2N3C3H3S
   , b2N3C3H3S3N
---  , b2N3C3H3N
---  , b2N3C3H3NP
---  , b2N3C3H3N4S
---  , b2N3C3H4D
---  , b2N3C3H4D4H
---  , b2N3C3H4H
---  , b2N3C3H4H4S
+  , b2N3C3H3N
+  , b2N3C3H3NP
+  , b2N3C3H3N4S
+  , b2N3C3H4D
+  , b2N3C3H4D4H
+  , b2N3C3H4H
+  , b2N3C3H4H4S
   , b2N3C3S         -- re-exported from PuppetStayman
   , b2N3C3S3N       -- re-exported from PuppetStayman
   , b2N3C3S4H       -- re-exported from PuppetStayman
@@ -126,8 +126,44 @@ b2N3C3H3S3N = E.nameAction "muppet_b2N3C3H3S3N" $ do
     E.makeCall $ T.Bid 3 T.Notrump
 
 
+b2N3C3H3N :: Action
+b2N3C3H3N = E.nameAction "muppet_b2N3C3H3N" $ do
+    E.suitLength T.Spades 5
+    E.makeAlertableCall (T.Bid 3 T.Notrump) "5-card spade suit, pass or correct"
 
 
+b2N3C3H3NP :: Action
+b2N3C3H3NP = E.nameAction "muppet_b2N3C3H3NP" $ do
+    E.maxSuitLength T.Spades 2
+    E.makeCall T.Pass
+
+
+b2N3C3H3N4S :: Action
+b2N3C3H3N4S = E.nameAction "muppet_b2N3C3H3N4S" $ do
+    E.minSuitLength T.Spades 3
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+b2N3C3H4D :: Action
+b2N3C3H4D = E.nameAction "muppet_b2N3C3H4D" $ do
+    E.minSuitLength T.Hearts 6
+    E.makeAlertableCall (T.Bid 4 T.Diamonds) "transfer to hearts"
+
+
+b2N3C3H4D4H :: Action
+b2N3C3H4D4H = E.nameAction "muppet_b2N3C3H4D4H" $ do
+    E.makeCall $ T.Bid 4 T.Hearts
+
+
+b2N3C3H4H :: Action
+b2N3C3H4H = E.nameAction "muppet_b2N3C3H4H" $ do
+    E.minSuitLength T.Spades 6
+    E.makeAlertableCall (T.Bid 4 T.Hearts) "transfer to spades"
+
+
+b2N3C3H4H4S :: Action
+b2N3C3H4H4S = E.nameAction "muppet_b2N3C3H4H4S" $ do
+    E.makeCall $ T.Bid 4 T.Spades
 
 
 b2N3C3N :: Action
