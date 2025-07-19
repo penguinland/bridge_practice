@@ -129,12 +129,18 @@ b2N3C3H3N = E.nameAction "muppet_b2N3C3H3N" $ do
 b2N3C3H3NP :: Action
 b2N3C3H3NP = E.nameAction "muppet_b2N3C3H3NP" $ do
     E.maxSuitLength T.Spades 2
+    -- You might also want to pass with 4333 shape and 3 spades, especially at
+    -- matchpoints. We skip this here to simplify the explanations of what the
+    -- correct answers are.
     E.makeCall T.Pass
 
 
 b2N3C3H3N4S :: Action
 b2N3C3H3N4S = E.nameAction "muppet_b2N3C3H3N4S" $ do
     E.minSuitLength T.Spades 3
+    -- If you were 4333 with 3 spades, you might be tempted to pass 3N,
+    -- especially at matchpoints. Avoid that ambiguity here.
+    E.suitLength T.Spades 3 `E.impliesThat` E.forbid E.flatHand
     E.makeCall $ T.Bid 4 T.Spades
 
 
@@ -168,13 +174,19 @@ b2N3C3N = E.nameAction "muppet_b2N3C3N" $ do
 
 b2N3C3NP :: Action
 b2N3C3NP = E.nameAction "muppet_b2N3C3NP" $ do
-    E.forbid b2N3C3N4D
+    E.maxSuitLength T.Hearts 2
+    -- You might have 3 hearts and 4333 shape, but explaining that in the
+    -- answers would be annoying. Just skip it, and trust that players can
+    -- generalize from this situation to that one as relevant.
     E.makeCall $ T.Pass
 
 
 b2N3C3N4D :: Action
 b2N3C3N4D = E.nameAction "muppet_b2N3C3N4D" $ do
     E.minSuitLength T.Hearts 3
+    -- If you were 4333 with 3 hearts, you might pass 3N, especially at
+    -- matchpoints. Avoid the situation entirely.
+    E.suitLength T.Hearts 3 `E.impliesThat` E.forbid E.flatHand
     E.makeAlertableCall (T.Bid 4 T.Diamonds) "transfer to hearts"
 
 
