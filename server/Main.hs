@@ -6,6 +6,7 @@ import Control.Monad.Trans.State.Strict(runStateT)
 import Data.IORef(IORef, newIORef, readIORef, writeIORef)
 import Data.Text(pack, toLower, isInfixOf)
 import Data.Text.Encoding(decodeUtf8)
+import Data.Time(getCurrentTime)
 import Network.Wai(Request, requestHeaders)
 -- Take the `Dev` off the end to get more standardized server logs.
 import Network.Wai.Middleware.RequestLogger(logStdoutDev)
@@ -53,6 +54,7 @@ app = do
                                            else "static/index.html"
     get "topics" $ json topicNames
     get "situation" $ do
+        liftIO $ getCurrentTime >>= print
         requested <- param "topics"
         case maybe (Left "no topics selected") findTopics requested of
             Left err -> text . pack $ err
