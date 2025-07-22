@@ -62,8 +62,76 @@ fiveHearts = let
             "We opened " .+ T.Bid 2 T.Notrump .+ ", and partner bid " .+
             "Muppet Stayman. We've got a 5-card heart suit, so bid an " .+
             "artificial " .+ M.b2N3C3N .+ ". Partner can pass with no fit, " .+
-			"or transfer to hearts with one."
+            "or transfer to hearts with one."
         in situation "5H" action M.b2N3C3N explanation
+  in
+    stdWrap sit
+
+
+fiveHeartsFit :: Situations
+fiveHeartsFit = let
+    sit = let
+        action = do
+            setOpener T.North
+            M.b2N
+            M.noInterference
+            M.b2N3C
+            M.noInterference
+            M.b2N3C3N
+            M.noInterference
+        explanation =
+            "Partner opened " .+ T.Bid 2 T.Notrump .+ ", and we bid " .+
+            "Muppet Stayman. Partner then showed a 5-card heart suit by " .+
+            "bidding an artificial " .+ T.Bid 3 T.Notrump .+ ". We have a " .+
+            "heart fit: transfer into it. After the transfer, we can pass " .+
+            "or investigate slam if relevant."
+        in situation "5HT" action M.b2N3C3N4D explanation
+  in
+    stdWrap sit
+
+
+fiveHeartsFitSignoff :: Situations
+fiveHeartsFitSignoff = let
+    sit = let
+        action = do
+            setOpener T.South
+            M.b2N
+            M.noInterference
+            M.b2N3C
+            M.noInterference
+            M.b2N3C3N
+            M.noInterference
+            M.b2N3C3N4D
+            M.noInterference
+        explanation =
+            "We opened " .+ T.Bid 2 T.Notrump .+ ", and partner bid " .+
+            "Muppet Stayman. Partner then showed a 5-card heart suit by " .+
+            "bidding an artificial " .+ T.Bid 3 T.Notrump .+ ". Partner has " .+
+            "now transferred into hearts to show that we have a fit! " .+
+            "Complete the transfer. Partner will likely pass, but might " .+
+            "investigate slam afterwards."
+        in situation "5HSO" action M.b2N3C3N4D4H explanation
+  in
+    stdWrap sit
+
+
+fiveHeartsNoFit :: Situations
+fiveHeartsNoFit = let
+    sit = let
+        action = do
+            setOpener T.North
+            M.b2N
+            M.noInterference
+            M.b2N3C
+            M.noInterference
+            M.b2N3C3N
+            M.noInterference
+        explanation =
+            "Partner opened " .+ T.Bid 2 T.Notrump .+ ", and we bid " .+
+            "Muppet Stayman. Partner then showed a 5-card heart suit by " .+
+            "bidding an artificial " .+ T.Bid 3 T.Notrump .+ ", but we " .+
+            "don't have a major-suit fit. Pass."
+        in situation "5HP" action M.b2N3C3NP explanation
   in
     stdWrap sit
 
@@ -363,9 +431,6 @@ smolNoFit = let
 
 
 -- TODO:
--- pass after 3N without a heart fit
--- transfer into hearts after 3N with a heart fit
--- complete the transfer into hearts after 3N with a heart fit
 -- Transfer to notrump after no 4-card major
 -- 3N PoC after no 4-card major with spades
 -- sign off after 3N PoC
@@ -384,4 +449,8 @@ topic = makeTopic ("Muppet Stayman over " .+ T.Bid 2 T.Notrump) "mup" situations
                              ]
                       , wrap [smol, bothMajors]
                       , wrap [smolFitH, smolFitS, smolNoFit, smolNoFit]
+                      , wrap [ fiveHeartsNoFit
+                             , fiveHeartsFit
+                             , fiveHeartsFitSignoff
+                             ]
                       ]
