@@ -204,7 +204,7 @@ texasTransfer = let
             M.noInterference
             M.b2N3C
             M.noInterference
-            M.b2N3C3N
+            M.b2N3C3H
             M.noInterference
         explanation =
             "Partner opened " .+ T.Bid 2 T.Notrump .+ ", and we bid Muppet " .+
@@ -441,7 +441,7 @@ topic = makeTopic ("Muppet Stayman over " .+ T.Bid 2 T.Notrump) "mup" situations
   where
     situations = wrap [ wrap [threeClubs, threeClubs, threeClubs,
                               threeClubsShortMajors]
-                      , wrap [fiveHearts, fiveSpades, fourCardMajor, noMajor]
+                      , wrap [fiveSpades, fourCardMajor, noMajor]
                       , wrap [texasTransfer, texasTransferCompleted]
                       , wrap [ fiveCardSpadeRaise
                              , wrongFiveCardMajor
@@ -449,7 +449,8 @@ topic = makeTopic ("Muppet Stayman over " .+ T.Bid 2 T.Notrump) "mup" situations
                              ]
                       , wrap [smol, bothMajors]
                       , wrap [smolFitH, smolFitS, smolNoFit, smolNoFit]
-                      , wrap [ fiveHeartsNoFit
+                      , wrap [ fiveHearts
+                             , fiveHeartsNoFit
                              , fiveHeartsFit
                              , fiveHeartsFitSignoff
                              ]
