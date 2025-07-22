@@ -49,6 +49,25 @@ threeClubsShortMajors = let
     wrapDlr $ return sit <~ [Nothing, Nothing, Just T.Spades, Just T.Hearts]
 
 
+fiveHearts :: Situations
+fiveHearts = let
+    sit = let
+        action = do
+            setOpener T.South
+            M.b2N
+            M.noInterference
+            M.b2N3C
+            M.noInterference
+        explanation =
+            "We opened " .+ T.Bid 2 T.Notrump .+ ", and partner bid " .+
+            "Muppet Stayman. We've got a 5-card heart suit, so bid an " .+
+            "artificial " .+ M.b2N3C3N .+ ". Partner can pass with no fit, " .+
+			"or transfer to hearts with one."
+        in situation "5H" action M.b2N3C3N explanation
+  in
+    stdWrap sit
+
+
 fiveSpades :: Situations
 fiveSpades = let
     sit = let
@@ -60,7 +79,7 @@ fiveSpades = let
             M.noInterference
         explanation =
             "We opened " .+ T.Bid 2 T.Notrump .+ ", and partner bid " .+
-            "puppet Stayman. We've got a 5-card spade suit, so bid it " .+
+            "Muppet Stayman. We've got a 5-card spade suit, so bid it " .+
             "naturally. Partner will place the contract from there."
         in situation "5S" action M.b2N3C3S explanation
   in
@@ -79,7 +98,8 @@ fourCardMajor = let
         explanation =
             "We opened " .+ T.Bid 2 T.Notrump .+ ", and partner bid " .+
             "Muppet Stayman. We don't have a 5-card major, but do have a " .+
-            "4-card major. Bid " .+ M.b2N3C3D .+ " to show this."
+            "4-card major. Bid " .+ M.b2N3C3D .+ " to show this, just like " .+
+            "in puppet Stayman."
         in situation "4M" action M.b2N3C3D explanation
   in
     stdWrap sit
@@ -97,12 +117,12 @@ noMajor = let
         explanation =
             "We opened " .+ T.Bid 2 T.Notrump .+ ", and partner bid " .+
             "Muppet Stayman. We don't even have a 4-card major: show this " .+
-            "by bidding " .+ M.b2N3C3H .+ ". Partner will likely bid " .+
-            M.b2N3C3H3S .+ " to right-side a notrump contract, but might " .+
-            "bid " .+ M.b2N3C3H3N .+ " to show 5 spades (pass or correct to " .+
-            T.Bid 4 T.Spades .+ "). They might also make a Texas transfer " .+
-            "with a 6-card major."
-        in situation "NM" action M.b2N3C3N explanation
+            "by bidding an artificial " .+ M.b2N3C3H .+ ". Partner will " .+
+            "likely bid " .+ M.b2N3C3H3S .+ " to right-side a notrump " .+
+            "contract, but might bid " .+ M.b2N3C3H3N .+ " to show 5 " .+
+            "spades (pass or correct to " .+ T.Bid 4 T.Spades .+ "). They " .+
+            "might also make a Texas transfer with a 6-card major."
+        in situation "NM" action M.b2N3C3H explanation
   in
     stdWrap sit
 
@@ -343,7 +363,7 @@ smolNoFit = let
 
 
 -- TODO:
--- bid 3N with 5-card heart suit
+-- pass after 3N without a heart fit
 -- transfer into hearts after 3N with a heart fit
 -- complete the transfer into hearts after 3N with a heart fit
 -- Transfer to notrump after no 4-card major
@@ -356,7 +376,7 @@ topic = makeTopic ("Muppet Stayman over " .+ T.Bid 2 T.Notrump) "mup" situations
   where
     situations = wrap [ wrap [threeClubs, threeClubs, threeClubs,
                               threeClubsShortMajors]
-                      , wrap [fiveSpades, fourCardMajor, noMajor]
+                      , wrap [fiveHearts, fiveSpades, fourCardMajor, noMajor]
                       , wrap [texasTransfer, texasTransferCompleted]
                       , wrap [ fiveCardSpadeRaise
                              , wrongFiveCardMajor
