@@ -444,7 +444,10 @@ transfer3N = let
         explanation =
             "Partner opened " .+ T.Bid 2 T.Notrump .+ ", we bid Muppet " .+
             "Stayman, and partner denied having a 4-card major. Relay to " .+
-            "sign off in " .+ M.b2N3C3H3S3N .+ "."
+            "sign off in " .+ M.b2N3C3H3S3N .+ ". At first glance you " .+
+            "might think you should just bid a natural " .+ M.b2N3C3H3S3N .+
+            ", but the relay helps right-side spade contracts by letting " .+
+            "responder avoid bidding natural spades."
         in situation "Tr3N" action M.b2N3C3H3S explanation
   in
     stdWrap sit
@@ -467,7 +470,9 @@ completeTransfer3N = let
             "We opened " .+ T.Bid 2 T.Notrump .+ ", partner bid Muppet " .+
             "Stayman, and we denied having a 4-card major. Partner then " .+
             "made a relay bid. Complete the relay to sign off in " .+
-            M.b2N3C3H3S3N .+ "."
+            M.b2N3C3H3S3N .+ ". Remember that this relay isn't to " .+
+            "right-side notrump contracts: it's to right-side spade " .+
+            "contracts, by enabling responder to never bid natural spades."
         in situation "TrC3N" action M.b2N3C3H3S3N explanation
   in
     stdWrap sit
