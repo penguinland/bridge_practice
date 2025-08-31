@@ -489,7 +489,9 @@ spadesAfterNoMajor = let
             "Stayman, and partner denied having a 4-card major. We have " .+
             "5 spades: bid " .+ M.b2N3C3H3N .+ " to show this. Partner can " .+
             "then pass without a spade fit or bid " .+ T.Bid 4 T.Spades .+
-            " with one."
+            " with one. This is where Muppet Stayman gains over puppet " .+
+            "Stayman: we're able to investigate a 5-3 heart fit and a 3-5 " .+
+            "spade fit."
         in situation "3NSp" action M.b2N3C3H3N explanation
   in
     stdWrap sit
