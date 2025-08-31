@@ -489,10 +489,33 @@ spadesAfterNoMajor = let
             "Stayman, and partner denied having a 4-card major. We have " .+
             "5 spades: bid " .+ M.b2N3C3H3N .+ " to show this. Partner can " .+
             "then pass without a spade fit or bid " .+ T.Bid 4 T.Spades .+
+            " with one."
+        in situation "3NSp" action M.b2N3C3H3N explanation
+  in
+    stdWrap sit
+
+
+spadesAfterNoMajor53 :: Situations
+spadesAfterNoMajor53 = let
+    sit = let
+        action = do
+            setOpener T.North
+            M.b2N
+            M.noInterference
+            M.b2N3C
+            M.noInterference
+            M.b2N3C3H
+            M.noInterference
+            suitLength T.Hearts 3
+        explanation =
+            "Partner opened " .+ T.Bid 2 T.Notrump .+ ", we bid Muppet " .+
+            "Stayman, and partner denied having a 4-card major. We have " .+
+            "5 spades: bid " .+ M.b2N3C3H3N .+ " to show this. Partner can " .+
+            "then pass without a spade fit or bid " .+ T.Bid 4 T.Spades .+
             " with one. This is where Muppet Stayman gains over puppet " .+
             "Stayman: we're able to investigate a 5-3 heart fit and a 3-5 " .+
             "spade fit."
-        in situation "3NSp" action M.b2N3C3H3N explanation
+        in situation "3NSp53" action M.b2N3C3H3N explanation
   in
     stdWrap sit
 
@@ -562,7 +585,7 @@ topic = makeTopic ("Muppet Stayman over " .+ T.Bid 2 T.Notrump) "mup" situations
                              , fiveHeartsFitSignoff
                              ]
                       , wrap [ transfer3N, completeTransfer3N]
-                      , wrap [ spadesAfterNoMajor
+                      , wrap [ wrap [spadesAfterNoMajor, spadesAfterNoMajor53]
                              , wrap [ spadesAfterNoMajorPass
                                     , spadesAfterNoMajorFit
                                     ]
