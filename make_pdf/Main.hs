@@ -22,13 +22,15 @@ import qualified Topics.DONT as DONT
 import qualified Topics.Cappelletti as Cappelletti
 import qualified Topics.Jacoby2NT as Jacoby2NT
 import qualified Topics.ForcingOneNotrump as ForcingOneNotrump
+import qualified Topics.PuppetStayman as PuppetStayman
+import qualified Topics.MuppetStayman as MuppetStayman
 
 import ProblemSet(outputLatex)
 
 
 main :: IO ()
 main = let
-    topics = [ StandardOpeners.topic
+    _topics = [ StandardOpeners.topic
               , ForcingOneNotrump.topic
               , MajorSuitRaises.topic
               , JacobyTransfers.topic
@@ -48,8 +50,10 @@ main = let
               , Jacoby2NT.topic
               , Lampe.topic
               , TripleFourOne.topic
+              , PuppetStayman.topic
+              , MuppetStayman.topic
               ]
-    _topics = [ Lebensohl.topic
+    topics = [ MuppetStayman.topic
              ]
   in do
     -- outputLatex returns a copy of the contents of the file it wrote, but we
