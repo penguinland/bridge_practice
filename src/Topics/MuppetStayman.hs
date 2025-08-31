@@ -430,10 +430,115 @@ smolNoFit = let
                             ]
 
 
--- TODO:
--- Transfer to notrump after no 4-card major
--- 3N PoC after no 4-card major with spades
--- sign off after 3N PoC
+transfer3N :: Situations
+transfer3N = let
+    sit = let
+        action = do
+            setOpener T.North
+            M.b2N
+            M.noInterference
+            M.b2N3C
+            M.noInterference
+            M.b2N3C3H
+            M.noInterference
+        explanation =
+            "Partner opened " .+ T.Bid 2 T.Notrump .+ ", we bid Muppet " .+
+            "Stayman, and partner denied having a 4-card major. Relay to " .+
+            "sign off in " .+ M.b2N3C3H3S3N .+ "."
+        in situation "Tr3N" action M.b2N3C3H3S explanation
+  in
+    stdWrap sit
+
+
+completeTransfer3N :: Situations
+completeTransfer3N = let
+    sit = let
+        action = do
+            setOpener T.South
+            M.b2N
+            M.noInterference
+            M.b2N3C
+            M.noInterference
+            M.b2N3C3H
+            M.noInterference
+            M.b2N3C3H3S
+            M.noInterference
+        explanation =
+            "We opened " .+ T.Bid 2 T.Notrump .+ ", partner bid Muppet " .+
+            "Stayman, and we denied having a 4-card major. Partner then " .+
+            "made a relay bid. Complete the relay to sign off in " .+
+            M.b2N3C3H3S3N .+ "."
+        in situation "TrC3N" action M.b2N3C3H3S3N explanation
+  in
+    stdWrap sit
+
+
+spadesAfterNoMajor :: Situations
+spadesAfterNoMajor = let
+    sit = let
+        action = do
+            setOpener T.North
+            M.b2N
+            M.noInterference
+            M.b2N3C
+            M.noInterference
+            M.b2N3C3H
+            M.noInterference
+        explanation =
+            "Partner opened " .+ T.Bid 2 T.Notrump .+ ", we bid Muppet " .+
+            "Stayman, and partner denied having a 4-card major. We have " .+
+            "5 spades: bid " .+ M.b2N3C3H3N .+ " to show this. Partner can " .+
+            "then pass without a spade fit or bid " .+ T.Bid 4 T.Spades .+
+            " with one."
+        in situation "3NSp" action M.b2N3C3H3N explanation
+  in
+    stdWrap sit
+
+
+spadesAfterNoMajorPass :: Situations
+spadesAfterNoMajorPass = let
+    sit = let
+        action = do
+            setOpener T.South
+            M.b2N
+            M.noInterference
+            M.b2N3C
+            M.noInterference
+            M.b2N3C3H
+            M.noInterference
+            M.b2N3C3H3N
+            M.noInterference
+        explanation =
+            "We opened " .+ T.Bid 2 T.Notrump .+ ", partner bid Muppet " .+
+            "Stayman, and we denied having a 4-card major. Partner then " .+
+            "showed a 5-card spade suit. Without a spade fit, pass and play " .+
+            "in notrump."
+        in situation "3NSpP" action M.b2N3C3H3NP explanation
+  in
+    stdWrap sit
+
+
+spadesAfterNoMajorFit :: Situations
+spadesAfterNoMajorFit = let
+    sit = let
+        action = do
+            setOpener T.South
+            M.b2N
+            M.noInterference
+            M.b2N3C
+            M.noInterference
+            M.b2N3C3H
+            M.noInterference
+            M.b2N3C3H3N
+            M.noInterference
+        explanation =
+            "We opened " .+ T.Bid 2 T.Notrump .+ ", partner bid Muppet " .+
+            "Stayman, and we denied having a 4-card major. Partner then " .+
+            "showed a 5-card spade suit. We have a spade fit, so let's " .+
+            "play there."
+        in situation "3NSpS" action M.b2N3C3H3N4S explanation
+  in
+    stdWrap sit
 
 
 topic :: Topic
@@ -453,5 +558,11 @@ topic = makeTopic ("Muppet Stayman over " .+ T.Bid 2 T.Notrump) "mup" situations
                              , fiveHeartsNoFit
                              , fiveHeartsFit
                              , fiveHeartsFitSignoff
+                             ]
+                      , wrap [ transfer3N, completeTransfer3N]
+                      , wrap [ spadesAfterNoMajor
+                             , wrap [ spadesAfterNoMajorPass
+                                    , spadesAfterNoMajorFit
+                                    ]
                              ]
                       ]
