@@ -593,8 +593,11 @@ b1N3N = nameAction "b1N3N" $ do
     gameNoSlam
     balancedHand
     forbidAll [b1N2C, b1N2D, b1N2D]
+    -- If you're 4-3 in the majors, you might prefer to bid Stayman or puppet
+    -- Stayman. Until puppet Stayman is implemented, forbid that here anyway.
+    forEach T.majorSuits (`maxSuitLength` 3)
     -- If you use puppet Stayman over 1N, prefer that except when responder is
     -- 4333 with a 4-card minor (because you're unlikely to ruff anything in the
     -- hand with short trump).
     --flathand
-    makeCall $ T.Bid 3 T.Spades
+    makeCall $ T.Bid 3 T.Notrump

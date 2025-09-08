@@ -18,7 +18,9 @@ splinter = let
         explanation =
             "Partner opened a strong " .+ B.b1N .+ ". With game-forcing " .+
             "strength, 5-4 in the minors and 3-1 in the majors, make a " .+
-            "splinter bid. Partner will place the contract from here."
+            "splinter bid. Partner will place the contract from here. In " .+
+            "rare circumstances, we can investigate slam after partner has " .+
+            "set the trump suit (if any)."
       in situation "splnt" action bid explanation
   in
     wrapDlr $ return sit <~ [B.b1N3H, B.b1N3S]
