@@ -52,6 +52,7 @@ module Bids.OneNotrump(
   , b1N3D
   , b1N3H
   , b1N3S
+  , b1N3N
   , b1N4D
   , b1N4D4H
   , b1N4H
@@ -585,3 +586,15 @@ b1N3S = nameAction "b1N3S" $ do
     forEach T.minorSuits (`minSuitLength` 4)
     forEach T.minorSuits (`maxSuitLength` 5)
     makeAlertableCall (T.Bid 3 T.Spades) "splinter: 13(54) shape, GF"
+
+
+b1N3N :: Action
+b1N3N = nameAction "b1N3N" $ do
+    gameNoSlam
+    balancedHand
+    forbidAll [b1N2C, b1N2D, b1N2D]
+    -- If you use puppet Stayman over 1N, prefer that except when responder is
+    -- 4333 with a 4-card minor (because you're unlikely to ruff anything in the
+    -- hand with short trump).
+    --flathand
+    makeCall $ T.Bid 3 T.Spades

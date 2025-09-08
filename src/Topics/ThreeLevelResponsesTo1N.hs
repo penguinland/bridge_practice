@@ -2,11 +2,10 @@ module Topics.ThreeLevelResponsesTo1N(topic) where
 
 import qualified Bids.OneNotrump as B
 import CommonBids(setOpener)
-import EDSL(alternatives)
-import Output(Punct(..), (.+))
+import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, stdWrap, stdWrapSE, wrap, wrapDlr, Situations, makeTopic)
+import Topic(Topic, stdWrap, wrap, wrapDlr, Situations, makeTopic)
 
 
 splinter :: Situations
@@ -40,7 +39,7 @@ bothMinors = let
             "could explore slam with sufficient strength."
       in situation "m55" action B.b1N3D explanation
   in
-    wrapDlr $ return sit
+    stdWrap sit
 
 
 topic :: Topic

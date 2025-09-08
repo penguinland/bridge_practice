@@ -33,6 +33,7 @@ import qualified Topics.PuppetStayman as PuppetStayman
 import qualified Topics.MuppetStayman as MuppetStayman
 import qualified Topics.TexasTransfers as TexasTransfers
 import qualified Topics.Smolen as Smolen
+import qualified Topics.ThreeLevelResponsesTo1N as B1N3X
 import qualified Topics.Meckwell as Meckwell
 import qualified Topics.DONT as DONT
 import qualified Topics.Cappelletti as Cappelletti
@@ -70,6 +71,7 @@ topicList = $(compileTimeAssertUniqueTopicIDs [|
     , (14, True,  Stayman.topic)
     , (15, False, TexasTransfers.topic)
     , (23, False, Smolen.topic)
+    , (28, False, B1N3X.topic)
     , (22, False, PuppetStayman.topic)
     , (27, False, MuppetStayman.topic)
     , (16, False, Meckwell.topic)
