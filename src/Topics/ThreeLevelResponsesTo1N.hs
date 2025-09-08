@@ -23,6 +23,7 @@ splinter = let
   in
     wrapDlr $ return sit <~ [B.b1N3H, B.b1N3S]
 
+
 bothMinors :: Situations
 bothMinors = let
     sit = let
@@ -42,9 +43,26 @@ bothMinors = let
     stdWrap sit
 
 
+signoff :: Situations
+signoff = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b1N
+            B.noInterference
+        explanation =
+            "Partner opened a strong " .+ B.b1N .+ ". With game-forcing " .+
+            "strength with no slam interest, a balanced hand, and no " .+
+            "interest in the majors, just sign off in game."
+      in situation "1N3N" action B.b1N3N explanation
+  in
+    stdWrap sit
+
+
 topic :: Topic
 topic = makeTopic ("Common 3-level responses to" .+ B.b1N) "1N3X" situations
   where
     situations = wrap [ splinter
                       , bothMinors
+                      , signoff
                       ]
