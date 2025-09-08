@@ -5,7 +5,7 @@ import CommonBids(setOpener)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, stdWrap, wrap, wrapDlr, Situations, makeTopic)
+import Topic(Topic, stdWrap, wrap, wrapDlr, stdWrapNW, Situations, makeTopic)
 
 
 splinter :: Situations
@@ -42,7 +42,9 @@ bothMinors = let
             "could explore slam with sufficient strength."
       in situation "m55" action B.b1N3D explanation
   in
-    stdWrap sit
+    -- If you had 10+ HCPs and 5-5 in the minors, you would have opened the
+    -- bidding. So, make sure partner bids before you do.
+    stdWrapNW sit
 
 
 signoff :: Situations
