@@ -49,6 +49,10 @@ module Bids.OneNotrump(
   , b1N2H2S3S
   , b1N2H2S4S
   , b1N2H3S
+  , b1N3D
+  , b1N3H
+  , b1N3S
+  , b1N3N
   , b1N4D
   , b1N4D4H
   , b1N4H
@@ -549,3 +553,51 @@ b1N2H2S3S = nameAction "b1N2H2S3S" $ do
     -- hand you might upgrade to game-forcing anyway. Avoid these situations.
     forEach [T.Clubs, T.Diamonds, T.Hearts] (`maxSuitLength` 3)
     makeCall $ T.Bid 3 T.Spades
+
+
+-- Common 3-level responses
+
+-- TODO: some folks play 3C is (low-info) Puppet Stayman, others play it's 5-5
+-- in the minors and invitational. Define these things eventually.
+
+
+b1N3D :: Action
+b1N3D = nameAction "b1N3D" $ do
+    gameForcing
+    forEach T.minorSuits (`minSuitLength` 5)
+    makeAlertableCall (T.Bid 3 T.Diamonds) "at least 5-5 in the minors, GF"
+
+
+b1N3H :: Action
+b1N3H = nameAction "b1N3H" $ do
+    gameForcing
+    suitLength T.Hearts 1
+    suitLength T.Spades 3
+    forEach T.minorSuits (`minSuitLength` 4)
+    forEach T.minorSuits (`maxSuitLength` 5)
+    makeAlertableCall (T.Bid 3 T.Hearts) "splinter: 31(54) shape, GF"
+
+
+b1N3S :: Action
+b1N3S = nameAction "b1N3S" $ do
+    gameForcing
+    suitLength T.Spades 1
+    suitLength T.Hearts 3
+    forEach T.minorSuits (`minSuitLength` 4)
+    forEach T.minorSuits (`maxSuitLength` 5)
+    makeAlertableCall (T.Bid 3 T.Spades) "splinter: 13(54) shape, GF"
+
+
+b1N3N :: Action
+b1N3N = nameAction "b1N3N" $ do
+    gameNoSlam
+    balancedHand
+    forbidAll [b1N2C, b1N2D, b1N2D]
+    -- If you're 4-3 in the majors, you might prefer to bid Stayman or puppet
+    -- Stayman. Until puppet Stayman is implemented, forbid that here anyway.
+    forEach T.majorSuits (`maxSuitLength` 3)
+    -- If you use puppet Stayman over 1N, prefer that except when responder is
+    -- 4333 with a 4-card minor (because you're unlikely to ruff anything in the
+    -- hand with short trump).
+    --flathand
+    makeCall $ T.Bid 3 T.Notrump
