@@ -31,6 +31,12 @@ twoOverOne = let
                            ]
 
 
+-- TODO:
+-- responder raises opener's major with 3-card support
+-- opener rebids after responder's 2/1 bid
+-- responder is too weak so bids 1N Forcing
+
+
 topic :: Topic
 topic = makeTopic "2/1 game forcing" "2o1" situations
   where
