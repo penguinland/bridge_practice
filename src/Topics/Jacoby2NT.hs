@@ -104,8 +104,8 @@ badSideSuit = let
             forbid $ hasTopN longSuit 5 2
         explanation =
             "Partner has bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". We " .+
-            "have a 5-card side suit, but it is so bad that it probably " .+
-            "is not a good source of tricks. Instead, just show our " .+
+            "have 5 " .+ longSuit .+ ", but it is so bad that it is " .+
+            "probably not a good source of tricks. Instead, just show our " .+
             "shortness at the 3 level."
       in
         situation "bad5" action shortBid explanation
