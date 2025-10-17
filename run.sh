@@ -7,7 +7,7 @@ pushd $CWD
 
 echo ""
 echo "Compiling..."
-stack build
+stack build bridge-practice:make_pdf
 
 echo ""
 echo "Running..."
