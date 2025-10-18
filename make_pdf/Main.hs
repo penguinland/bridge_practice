@@ -53,7 +53,7 @@ main = let
               , PuppetStayman.topic
               , MuppetStayman.topic
               ]
-    topics = [ MuppetStayman.topic
+    topics = [ Jacoby2NT.topic
              ]
   in do
     -- outputLatex returns a copy of the contents of the file it wrote, but we
