@@ -1,4 +1,4 @@
-module Bids.OneOverOne(
+module Bids.ImmediateResponses(
     b1C1D
   , b1C1H
   , b1C1S
