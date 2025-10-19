@@ -27,6 +27,8 @@ b1C1D = nameAction "sayc_b1C1D" $ do
     makeCall $ T.Bid 1 T.Diamonds
 
 
+-- TODO: what should you bid with a 4-card major and 6-card minor?
+
 respondWithMajor_ :: T.Suit -> Action
 respondWithMajor_ major = do
     minSuitLength major 4
@@ -78,5 +80,5 @@ b1H1S = nameAction "sayc_b1H1S" $ do
     minSuitLength T.Spades 4
     -- If you could have raised hearts but chose not to, you should have some
     -- extra strength
-    minSuitLength T.Hearts 4 `impliesThat` pointRange 10 40
+    minSuitLength T.Hearts 3 `impliesThat` pointRange 10 40
     makeCall $ T.Bid 1 T.Spades
