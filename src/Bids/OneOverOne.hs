@@ -11,8 +11,9 @@ module Bids.OneOverOne(
 ) where
 
 import Action(Action)
-import EDSL(minSuitLength, maxSuitLength, makeCall, impliesThat, pointRange,
-            balancedHand, forbid, atLeastAsLong, forEach, nameAction)
+import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, impliesThat,
+            pointRange, balancedHand, forbid, atLeastAsLong, forEach,
+            equalLength, impliesThat, nameAction)
 import qualified Terminology as T
 
 
@@ -29,20 +30,33 @@ b1C1D = nameAction "sayc_b1C1D" $ do
 respondWithMajor_ :: T.Suit -> Action
 respondWithMajor_ major = do
     minSuitLength major 4
+    major `atLeastAsLong` (T.otherMajor major)
     pointRange 6 40
     makeCall $ T.Bid 1 major
 
 b1C1H :: Action
-b1C1H = nameAction "sayc_b1C1H" $ respondWithMajor_ T.Hearts
+b1C1H = nameAction "sayc_b1C1H" $ do
+    -- With 4-4 in the majors, start with 1H.
+    T.Hearts `equalLength` T.Spades `impliesThat` suitLength T.Hearts 4
+    respondWithMajor_ T.Hearts
 
 b1C1S :: Action
-b1C1S = nameAction "sayc_b1C1S" $ respondWithMajor_ T.Spades
+b1C1S = nameAction "sayc_b1C1S" $ do
+    -- With at least 5-5 in the majors, start with 1S.
+    T.Spades `equalLength` T.Hearts `impliesThat` minSuitLength T.Spades 5
+    respondWithMajor_ T.Spades
 
 b1D1H :: Action
-b1D1H = nameAction "sayc_b1D1H" $ respondWithMajor_ T.Hearts
+b1D1H = nameAction "sayc_b1D1H" $ do
+    -- With 4-4 in the majors, start with 1H.
+    T.Hearts `equalLength` T.Spades `impliesThat` suitLength T.Hearts 4
+    respondWithMajor_ T.Hearts
 
 b1D1S :: Action
-b1D1S = nameAction "sayc_b1D1S" $ respondWithMajor_ T.Spades
+b1D1S = nameAction "sayc_b1D1S" $ do
+    -- With at least 5-5 in the majors, start with 1S.
+    T.Spades `equalLength` T.Hearts `impliesThat` minSuitLength T.Spades 5
+    respondWithMajor_ T.Spades
 
 
 respond1N_ :: Action
