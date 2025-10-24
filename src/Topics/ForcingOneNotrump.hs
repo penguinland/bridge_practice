@@ -27,7 +27,7 @@ bid1H1S = let
             pointRange 6 11
         explanation =
             "Partner has opened " .+ T.Bid 1 T.Hearts .+ ". We don't have " .+
-            "a heart fit, but have at least 4 spades. No need to bid a " .+
+            "a heart fit, but have at least 4 spades. No need to bid " .+
             "forcing " .+ B.b1H1N .+ " here: just show the spades."
       in
         situation "1H1S" action (makeCall (T.Bid 1 T.Spades)) explanation
