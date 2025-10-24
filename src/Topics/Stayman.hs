@@ -3,7 +3,8 @@ module Topics.Stayman(topic) where
 import qualified Bids.OneNotrump as B
 import CommonBids(setOpener)
 -- TODO: replace makePass with something more intelligent
-import EDSL(makePass, pointRange, suitLength, maxSuitLength, forEach)
+import EDSL(makePass, pointRange, suitLength, maxSuitLength, forEach,
+            forbid, balancedHand, alternatives)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -49,6 +50,27 @@ nongarbageStayman = let
             "have a 4-card major and at least invitational strength. Bid " .+
             "Stayman, and see if we've got a major-suit fit."
       in situation "stmn" action B.b1N2C explanation
+  in
+    stdWrap sit
+
+
+tooWeak :: Situations
+tooWeak = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b1N
+            makePass
+            pointRange 0 7
+            alternatives [suitLength T.Hearts 4, suitLength T.Spades 4]
+            forEach T.majorSuits (`maxSuitLength` 4)
+            forbid B.b1N2C
+            balancedHand
+        explanation =
+            "Partner has opened a strong " .+ T.Bid 1 T.Notrump .+ ". We " .+
+            "have a 4-card major, but less than invitational strength. " .+
+            "Just pass."
+      in situation "weak" action makePass explanation
   in
     stdWrap sit
 
@@ -476,6 +498,7 @@ topic = makeTopic "Stayman" "Stmn" situations
   where
     situations = wrap [ wrap [ garbageStayman
                              , nongarbageStayman
+                             , tooWeak
                              , bothMajorsGF
                              , bothMajorsUnbalancedPassed
                              , bothMajorsUnbalancedUnpassed]
@@ -491,4 +514,103 @@ topic = makeTopic "Stayman" "Stmn" situations
                       , wrap [wrongMajorGFH, wrongMajorGFS]
                       , inv54
                       , noFitUnbalancedGF
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
+                             , tooWeak
                       ]
