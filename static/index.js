@@ -40,14 +40,10 @@ getTopics().then(topics => {
         checkbox.id    = tag_name;
         checkbox.name  = "topics";
         checkbox.value = topic.index;
-		if (saved_checkboxes !== null) {
-			if (saved_checkboxes.includes(topic.index)) {
-				checkbox.checked = true;
-			}
+		if (saved_checkboxes === null) {
+			checkbox.checked = topic.select_by_default;
 		} else {
-			if (topic.select_by_default) {
-				checkbox.checked = true;
-			}
+			checkbox.checked = saved_checkboxes.includes(topic.index);
 		}
 
         const topic_name = document.createElement("span");
