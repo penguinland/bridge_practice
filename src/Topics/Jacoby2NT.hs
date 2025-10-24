@@ -106,10 +106,10 @@ badSideSuit = let
                 minSuitLength longSuit 5
                 forbid $ hasTopN longSuit 5 2
             explanation =
-                "Partner has bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". We have " .+
-                "5 " .+ show longSuit .+ ", but the suit quality is so bad " .+
-                "that it is probably not a good source of tricks. Instead, " .+
-                "just show our shortness at the 3 level."
+                "Partner has bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". We " .+
+                "have 5 " .+ show longSuit .+ ", but the suit quality is " .+
+                "so bad that it is probably not a good source of tricks. " .+
+                "Instead, just show our shortness at the 3 level."
           in
             situation "bad5" action shortBid explanation dlr vul
       in
