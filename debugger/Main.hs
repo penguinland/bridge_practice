@@ -1,7 +1,7 @@
 -- When something is going wrong with the system, give this program the debug
 -- string of the problematic situation instance, and we'll print out information
 -- about it. Example usage:
---     echo "wool.2D StdGen {unStdGen = SMGen 14968322863915291149 13964134228407631271}" | stack run debugger
+--     echo "wool.2D SMGen 14968322863915291149 13964134228407631271" | stack run debugger
 
 import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(runState, runStateT)
