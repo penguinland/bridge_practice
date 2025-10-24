@@ -29,6 +29,7 @@ module EDSL (
 , loserCount
 , minLoserCount
 , maxLoserCount
+, hasCard
 ) where
 
 import Control.Monad.Trans.State.Strict(execState, get, put, modify)
@@ -220,4 +221,8 @@ maxLoserCount :: Int -> Action
 maxLoserCount = loserComparison "at_most" "<="
 
 
--- TODO: hasCard
+hasCard :: T.Suit -> Char -> Action
+hasCard suit rank = let
+    cardName = rank : T.suitLetter suit
+  in
+    constrain ("has_" ++ cardName) ["hasCard(", ", " ++ cardName ++ ")"]
