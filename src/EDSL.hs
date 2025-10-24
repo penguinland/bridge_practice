@@ -96,9 +96,8 @@ balancedHand =
 
 semibalancedHand :: Action
 semibalancedHand =
-    alternatives [ balancedHand
-                 , constrain "semibalanced" ["shape(", ", any 5422 + any 6322)"]
-                 ]
+    constrain "semibalanced"
+        ["shape(", ", any 4333 + any 5332 + any 4432 + any 5422 + any 6322)"]
 
 
 flatHand :: Action

@@ -4,7 +4,7 @@ import qualified Bids.OneNotrump as B
 import CommonBids(setOpener)
 -- TODO: replace makePass with something more intelligent
 import EDSL(makePass, pointRange, suitLength, maxSuitLength, forEach,
-            forbid, balancedHand, alternatives)
+            forbid, semibalancedHand, alternatives)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -65,7 +65,9 @@ tooWeak = let
             alternatives [suitLength T.Hearts 4, suitLength T.Spades 4]
             forEach T.majorSuits (`maxSuitLength` 4)
             forbid B.b1N2C
-            balancedHand
+            -- Don't have a crazy hand shape: 5422 or more balanced.
+            semibalancedHand
+            forEach T.allSuits (`maxSuitLength` 5)
         explanation =
             "Partner has opened a strong " .+ T.Bid 1 T.Notrump .+ ". We " .+
             "have a 4-card major, but less than invitational strength. " .+
@@ -514,103 +516,4 @@ topic = makeTopic "Stayman" "Stmn" situations
                       , wrap [wrongMajorGFH, wrongMajorGFS]
                       , inv54
                       , noFitUnbalancedGF
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
-                             , tooWeak
                       ]
