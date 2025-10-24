@@ -5,8 +5,7 @@
 
 import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(runState, runStateT)
-import Data.List.Utils(join, split)
-import Data.String.Utils(strip)
+import Data.List.Utils(join)
 import GHC.Utils.Misc(nTimes)
 -- We import the Internal implementation of the RNG directly because it has
 -- implementations of Read and ways to get at the inner guts of the StdGen that
@@ -26,7 +25,7 @@ import Topic(Topic(..), choose)
 -- wool.2D StdGen {unStdGen = SMGen 14968322863915291149 13964134228407631271}
 parse :: String -> (String, String, StdGen)
 parse input = let
-    pieces = split " " . strip $ input
+    pieces = words input
     fullSitName = head pieces
     -- Confusingly, although StdGen is Show, it is not Read but all its internal
     -- pieces are. So, parse it more manually. We call tail 4 times to take off
