@@ -21,6 +21,7 @@ function collectTopics() {
         .filter(ch => ch.checked == true)
         .map(t => t.value)
         .join(",");
+	localStorage.setItem("topics", JSON.stringify(indices));
     return indices;
 }
 
@@ -30,7 +31,8 @@ async function getSituation(topics) {
 
 // Create checkbox options for each topic the server supports.
 getTopics().then(topics => {
-    const topic_section = document.getElementById("topic_list")
+	const saved_checkboxes = JSON.parse(localStorage.getItem("topics"));
+    const topic_section = document.getElementById("topic_list");
     topics.forEach(topic => {
         const tag_name = "topic_" + topic.index;
         const checkbox = document.createElement("input");
@@ -38,9 +40,11 @@ getTopics().then(topics => {
         checkbox.id    = tag_name;
         checkbox.name  = "topics";
         checkbox.value = topic.index;
-        if (topic.select_by_default) {
-            checkbox.checked = true;
-        }
+		if (saved_checkboxes) {
+			checkbox.checked = saved_checkboxes.includes(topic.index);
+		} else {
+			checkbox.checked = topic.select_by_default;
+		}
 
         const topic_name = document.createElement("span");
         topic_name.innerHTML = topic.name;
