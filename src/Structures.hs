@@ -89,7 +89,9 @@ instance Showable Bidding where
                 foldr foldFormatMaybeBid ([], nextFootnote) row
           in
             ((join " " . reverse $ rowBids) : results, nextFootnote')
-        formatAuction = unlines . reverse . fst .
+        -- `unlines` always puts a newline at the end. We remove it with `init`
+        -- so we can append the " ??" on the end of the final line.
+        formatAuction = init . unlines . reverse . fst .
                         foldr foldFormatBidRow ([], 1 :: Int)
         foldFormatAlert (T.CompleteCall _ m) (alerts, nextFootnote) = case m of
             Nothing -> (alerts, nextFootnote)

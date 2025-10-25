@@ -29,6 +29,7 @@ module EDSL (
 , loserCount
 , minLoserCount
 , maxLoserCount
+, hasCard
 ) where
 
 import Control.Monad.Trans.State.Strict(execState, get, put, modify)
@@ -96,9 +97,8 @@ balancedHand =
 
 semibalancedHand :: Action
 semibalancedHand =
-    alternatives [ balancedHand
-                 , constrain "semibalanced" ["shape(", ", any 5422 + any 6322)"]
-                 ]
+    constrain "semibalanced"
+        ["shape(", ", any 4333 + any 5332 + any 4432 + any 5422 + any 6322)"]
 
 
 flatHand :: Action
@@ -221,4 +221,8 @@ maxLoserCount :: Int -> Action
 maxLoserCount = loserComparison "at_most" "<="
 
 
--- TODO: hasCard
+hasCard :: T.Suit -> Char -> Action
+hasCard suit rank = let
+    cardName = rank : T.suitLetter suit
+  in
+    constrain ("has_" ++ cardName) ["hasCard(", ", " ++ cardName ++ ")"]

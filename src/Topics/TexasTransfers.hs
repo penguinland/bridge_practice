@@ -8,7 +8,6 @@ import qualified Bids.Meckwell as MW
 import qualified Bids.NaturalOneNotrumpDefense as Nat
 import qualified Bids.OneNotrump as B
 import CommonBids(setOpener)
--- TODO: replace makePass with something more intelligent
 import EDSL(makePass, makeCall, suitLength, minSuitLength, maxSuitLength,
             pointRange)
 import Output((.+))
@@ -23,7 +22,7 @@ makeTransferSignoff = let
         action = do
             setOpener T.North
             B.b1N
-            makePass
+            B.noInterference
             B.gameNoSlam
         explanation =
             "Partner has opened " .+ T.Bid 1 T.Notrump .+ ", and we've " .+
@@ -49,7 +48,7 @@ makeTransferSlam = let
         action = do
             setOpener T.North
             B.b1N
-            makePass
+            B.noInterference
             B.slamInterest
         explanation =
             "Partner has opened " .+ T.Bid 1 T.Notrump .+ ", and we've " .+
@@ -71,7 +70,7 @@ completeTransfer = let
         action = do
             setOpener T.South
             B.b1N
-            makePass
+            B.noInterference
             _ <- partnerBid  -- Make the linter happy
             makePass
         explanation =
@@ -91,7 +90,7 @@ completeTransferDoubleton = let
         action = do
             setOpener T.South
             B.b1N
-            makePass
+            B.noInterference
             _ <- partnerBid  -- Make the linter happy
             makePass
             suitLength (T.suitBid ourBid) 2
@@ -115,7 +114,7 @@ completeTransferSuperfit = let
         action = do
             setOpener T.South
             B.b1N
-            makePass
+            B.noInterference
             _ <- partnerBid  -- Make the linter happy
             makePass
             suitLength (T.suitBid ourBid) 5
@@ -138,7 +137,7 @@ transferSlamInvite = let
         action = do
             setOpener T.North
             B.b1N
-            makePass
+            B.noInterference
             minSuitLength suit 6
             B.slamInvite
         explanation =
@@ -157,7 +156,7 @@ transferSlamInviteDeclined = let
         action = do
             setOpener T.South
             B.b1N
-            makePass
+            B.noInterference
             _ <- transferBid
             makePass
             _ <- acceptBid
@@ -183,7 +182,7 @@ transferSlamInviteAccepted = let
         action = do
             setOpener T.South
             B.b1N
-            makePass
+            B.noInterference
             _ <- transferBid
             makePass
             _ <- acceptBid
