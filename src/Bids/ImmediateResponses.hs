@@ -13,17 +13,22 @@ module Bids.ImmediateResponses(
 import Action(Action)
 import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, impliesThat,
             pointRange, balancedHand, forbid, atLeastAsLong, forEach,
-            equalLength, impliesThat, nameAction)
+            equalLength, impliesThat, nameAction, alternatives)
 import qualified Terminology as T
 
 
 -- TODO: Should we default to Walsh Style or not?
 b1C1D :: Action
 b1C1D = nameAction "sayc_b1C1D" $ do
-    forEach T.majorSuits (T.Diamonds `atLeastAsLong`)
-    minSuitLength T.Diamonds 4
     pointRange 6 40
     forbid b1C1N
+    minSuitLength T.Diamonds 4
+    forEach T.majorSuits (T.Diamonds `atLeastAsLong`)
+    -- If you've got a major, only respond 1D if you're game forcing.
+    -- TODO: what if you've got 6 diamonds and a 4-card major? or even just 5-4
+    alternatives [ forEach T.majorSuits (`maxSuitLength` 3)
+                 , pointRange 13 40
+                 ]
     makeCall $ T.Bid 1 T.Diamonds
 
 
@@ -38,26 +43,26 @@ respondWithMajor_ major = do
 
 b1C1H :: Action
 b1C1H = nameAction "sayc_b1C1H" $ do
-    -- With 4-4 in the majors, start with 1H.
-    T.Hearts `equalLength` T.Spades `impliesThat` suitLength T.Hearts 4
+    -- With equal length in the majors, bid 1H with 4-4.
+    equalLength T.Hearts T.Spades `impliesThat` suitLength T.Hearts 4
     respondWithMajor_ T.Hearts
 
 b1C1S :: Action
 b1C1S = nameAction "sayc_b1C1S" $ do
-    -- With at least 5-5 in the majors, start with 1S.
-    T.Spades `equalLength` T.Hearts `impliesThat` minSuitLength T.Spades 5
+    -- With equal length in the majors, bid 1S with at least 5-5.
+    equalLength T.Hearts T.Spades `impliesThat` minSuitLength T.Spades 5
     respondWithMajor_ T.Spades
 
 b1D1H :: Action
 b1D1H = nameAction "sayc_b1D1H" $ do
-    -- With 4-4 in the majors, start with 1H.
-    T.Hearts `equalLength` T.Spades `impliesThat` suitLength T.Hearts 4
+    -- With equal length in the majors, bid 1H with 4-4.
+    equalLength T.Hearts T.Spades `impliesThat` suitLength T.Hearts 4
     respondWithMajor_ T.Hearts
 
 b1D1S :: Action
 b1D1S = nameAction "sayc_b1D1S" $ do
-    -- With at least 5-5 in the majors, start with 1S.
-    T.Spades `equalLength` T.Hearts `impliesThat` minSuitLength T.Spades 5
+    -- With equal length in the majors, bid 1S with at least 5-5.
+    equalLength T.Hearts T.Spades `impliesThat` minSuitLength T.Spades 5
     respondWithMajor_ T.Spades
 
 
