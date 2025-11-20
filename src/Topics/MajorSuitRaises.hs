@@ -50,6 +50,9 @@ limitRaise = let
     wrapNW $ return sit <~ [(B.b1H, B.b1H3H), (B.b1S, B.b1S3S)]
 
 
+-- Although this is how the BBO robots play 3N, some folks play it as part of a
+-- 2-tier splinter treatment. To avoid ambiguity, don't include this at all.
+{-
 blast3N :: Situations
 blast3N = let
     sit (opening, response) = let
@@ -73,6 +76,7 @@ blast3N = let
   in
     -- You should be an unpassed hand to be game-forcing.
     wrapNW $ return sit <~ [(B.b1H, B.b1H3N), (B.b1S, B.b1S3N)]
+-}
 
 
 topic :: Topic
@@ -80,5 +84,5 @@ topic = makeTopic "natural major-suit raises" "MajRai" situations
   where
     situations = wrap [ simpleRaise
                       , limitRaise
-                      , blast3N
+                      --, blast3N
                       ]
