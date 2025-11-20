@@ -64,6 +64,7 @@ tooWeak = let
             pointRange 0 7
             alternatives [suitLength T.Hearts 4, suitLength T.Spades 4]
             forEach T.majorSuits (`maxSuitLength` 4)
+            -- Remember to forbid Garbage Stayman!
             forbid B.b1N2C
             -- Don't have a crazy hand shape: 5422 or more balanced.
             semibalancedHand
