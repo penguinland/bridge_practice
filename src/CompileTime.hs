@@ -3,7 +3,7 @@
 -- why it's a separate file.
 {-# LANGUAGE TemplateHaskell #-}
 
-module CompileTime(compileTimeAssertUniqueTopicIDs) where
+module CompileTime(compileTimeAssertUniqueTopicIDs, staticAssert) where
 
 import Control.Arrow((&&&))
 import Control.Monad(unless)
@@ -34,3 +34,8 @@ compileTimeAssertUniqueTopicIDs qexp = let
                 fail $ "Duplicate Topic IDs found: " ++ show duplicates
             qexp
         _ -> fail "Expected a list of items"
+
+staticAssert :: Bool -> String -> THS.Q [a]
+staticAssert condition message = do
+    unless condition $ fail ("Compile time assertion failed: " ++ message)
+    return []

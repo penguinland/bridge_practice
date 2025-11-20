@@ -6,6 +6,7 @@ module SupportedTopics(
     topicNames
   , findTopics
   , getNamedTopic
+  , topicList  -- Used in Assertions.hs to do compile-time checks
 ) where
 
 import Data.Aeson(Value, object, (.=))
