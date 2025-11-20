@@ -2,12 +2,37 @@ module Topics.ForcingOneNotrump(topic) where
 
 import qualified Bids.ForcingOneNotrump as B
 import CommonBids(setOpener, noInterference)
-import EDSL(suitLength, maxSuitLength, pointRange, makeCall, forEach)
+import EDSL(suitLength, minSuitLength, maxSuitLength, pointRange, makeCall,
+            forEach)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, Situations, makeTopic, stdWrapNW, stdWrapSE,
              wrapNW, wrapSE)
+
+
+bid1H1S :: Situations
+bid1H1S = let
+    sit = let
+        action = do
+            setOpener T.North
+            B.b1H
+            noInterference T.Hearts
+            -- TODO: replace this with a proper bid eventually
+            minSuitLength T.Spades 4
+            maxSuitLength T.Hearts 2
+            maxSuitLength T.Spades 5
+            -- Don't be tempted to bid a minor instead
+            forEach T.minorSuits (`maxSuitLength` 5)
+            pointRange 6 11
+        explanation =
+            "Partner has opened " .+ T.Bid 1 T.Hearts .+ ". We don't have " .+
+            "a heart fit, but have at least 4 spades. No need to bid " .+
+            "forcing " .+ B.b1H1N .+ " here: just show the spades."
+      in
+        situation "1H1S" action (makeCall (T.Bid 1 T.Spades)) explanation
+  in
+    stdWrapNW sit  -- For us to consider forcing 1N, we must be an unpassed hand.
 
 
 bid1NHearts :: Situations
@@ -315,7 +340,7 @@ wantFlannery = let
 topic :: Topic
 topic = makeTopic ("forcing " .+ T.Bid 1 T.Notrump) "F1N" situations
   where
-    situations = wrap [ wrap [bid1NHearts, bid1NSpades]
+    situations = wrap [ wrap [bid1NHearts, bid1NSpades, bid1H1S]
                       , limitRaise3
                       , raise2
                       , nonjumpRebid

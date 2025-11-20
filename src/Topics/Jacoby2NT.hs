@@ -1,5 +1,7 @@
 module Topics.Jacoby2NT(topic) where
 
+import Control.Monad(join)
+
 import qualified Bids.Jacoby2NT as B
 import CommonBids(setOpener, noInterference)
 import EDSL(minSuitLength, hasTopN, forbid)
@@ -92,39 +94,47 @@ sideSuit = let
 
 badSideSuit :: Situations
 badSideSuit = let
-    sit (openerBid, j2ntBid, longSuit, shortBid) = let
+    sit (openerBid, j2ntBid, otherSuits) dlr vul = let
         suit = T.suitBid openerBid
-        action = do
-            setOpener T.South
-            _ <- openerBid
-            noInterference suit
-            _ <- j2ntBid
-            noInterference suit
-            minSuitLength longSuit 5
-            forbid $ hasTopN longSuit 5 2
-        explanation =
-            "Partner has bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". We have " .+
-            "5 " .+ show longSuit .+ ", but the suit quality is so bad " .+
-            "that it is probably not a good source of tricks. Instead, " .+
-            "just show our shortness at the 3 level."
+        sit' (longSuit, shortBid) = let
+            action = do
+                setOpener T.South
+                _ <- openerBid
+                noInterference suit
+                _ <- j2ntBid
+                noInterference suit
+                minSuitLength longSuit 5
+                forbid $ hasTopN longSuit 5 2
+            explanation =
+                "Partner has bid Jacoby " .+ T.Bid 2 T.Notrump .+ ". We " .+
+                "have 5 " .+ show longSuit .+ ", but the suit quality is " .+
+                "so bad that it is probably not a good source of tricks. " .+
+                "Instead, just show our shortness at the 3 level."
+          in
+            situation "bad5" action shortBid explanation dlr vul
       in
-        situation "bad5" action shortBid explanation
+        return sit' <~ otherSuits
   in
-    -- Partner must be an unpassed hand to be game-forcing.
-    wrapSE $ return sit <~ [ (B.b1H, B.b1H2N, T.Diamonds, B.b1H2N3C)
-                           -- With 5-5 in the majors, we'd open 1S instead
-                           --, (B.b1H, B.b1H2N, T.Spades,   B.b1H2N3C)
-                           , (B.b1H, B.b1H2N, T.Clubs,    B.b1H2N3D)
-                           --, (B.b1H, B.b1H2N, T.Spades,   B.b1H2N3D)
-                           , (B.b1H, B.b1H2N, T.Clubs,    B.b1H2N3S)
-                           , (B.b1H, B.b1H2N, T.Diamonds, B.b1H2N3S)
-                           , (B.b1S, B.b1S2N, T.Diamonds, B.b1S2N3C)
-                           , (B.b1S, B.b1S2N, T.Hearts,   B.b1S2N3C)
-                           , (B.b1S, B.b1S2N, T.Clubs,    B.b1S2N3D)
-                           , (B.b1S, B.b1S2N, T.Hearts,   B.b1S2N3D)
-                           , (B.b1S, B.b1S2N, T.Clubs,    B.b1S2N3H)
-                           , (B.b1S, B.b1S2N, T.Diamonds, B.b1S2N3H)
-                           ]
+    wrap . join $ return sit
+        <~ [ (B.b1H, B.b1H2N, [ (T.Diamonds, B.b1H2N3C)
+                              -- With 5-5 in the majors, we'd open 1S instead
+                              --, (T.Spades,   B.b1H2N3C)
+                              , (T.Clubs,    B.b1H2N3D)
+                              --, (T.Spades,   B.b1H2N3D)
+                              , (T.Clubs,    B.b1H2N3S)
+                              , (T.Diamonds, B.b1H2N3S)
+                              ])
+           , (B.b1S, B.b1S2N, [ (T.Diamonds, B.b1S2N3C)
+                              , (T.Hearts,   B.b1S2N3C)
+                              , (T.Clubs,    B.b1S2N3D)
+                              , (T.Hearts,   B.b1S2N3D)
+                              , (T.Clubs,    B.b1S2N3H)
+                              , (T.Diamonds, B.b1S2N3H)
+                              ])
+           ]
+        -- Partner must be an unpassed hand to be game-forcing.
+        <~ [T.South, T.East]
+        <~ T.allVulnerabilities
 
 
 semibalancedMin :: Situations
