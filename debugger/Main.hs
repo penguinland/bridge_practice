@@ -5,7 +5,7 @@
 
 import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(runState, runStateT)
-import Data.List.Utils(join)
+import Data.Char(isSpace)
 -- We import the Internal implementation of the RNG directly because it has
 -- implementations of Read and ways to get at the inner guts of the StdGen that
 -- the non-Internal version does not have. If we ever upgrade to a newer version
@@ -24,9 +24,7 @@ import Topic(Topic(..), choose)
 -- wool.2D SMGen 14968322863915291149 13964134228407631271
 parse :: String -> (String, String, StdGen)
 parse input = let
-    pieces = words input
-    fullSitName = head pieces
-    innerRngString = join " " . tail $ pieces
+    (fullSitName, innerRngString) = span (not . isSpace) input
     rng = StdGen {unStdGen = read innerRngString}
     (targetName, sitName') = break (== '.') fullSitName
     sitName = tail sitName'  -- Remove the period we broke on.
