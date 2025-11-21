@@ -66,6 +66,9 @@ b1S2C = E.nameAction "b1S2C" $ do
     -- With 5-5 in the minors, start with diamonds. No need to reverse if we're
     -- already in a GF auction.
     T.Clubs `E.longerThan` T.Diamonds
+    -- TODO: with 5-5 in clubs and hearts, which should you bid first? With 4-4,
+    -- it's probably still clubs.
+    T.Clubs `E.longerThan` T.Hearts
     E.forbid E.balancedHand
     E.makeCall $ T.Bid 2 T.Clubs
 
@@ -76,6 +79,9 @@ b1S2D = E.nameAction "b1S2D" $ do
     E.maxSuitLength T.Spades 3
     E.minSuitLength T.Diamonds 4
     T.Diamonds `E.atLeastAsLong` T.Clubs
+    -- TODO: with 5-5 in diamonds and hearts, which should you bid first? With
+    -- 4-4, it's probably still diamonds.
+    T.Diamonds `E.longerThan` T.Hearts
     E.forbid E.balancedHand
     E.makeCall $ T.Bid 2 T.Diamonds
 
