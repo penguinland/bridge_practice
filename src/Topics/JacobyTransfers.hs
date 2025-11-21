@@ -201,9 +201,9 @@ majors55inv2 = let
             B.b1N2D2H
             B.noInterference
         explanation =
-            "Partner has opened a strong " .+ B.b1N .+ ". With 5-" .+
-            "5 in the majors and " .+
-            "game-forcing strength, we first made a Jacoby transfer into " .+
+            "Partner has opened a strong " .+ B.b1N .+ ". With 5-5 " .+
+            "in the majors and " .+
+            "invitational strength, we first made a Jacoby transfer into " .+
             "spades, and now bid " .+ T.Bid 2 T.Spades .+ " afterwards. " .+
             "We definitely have a major-suit fit somewhere: partner has " .+
             "the options of passing with a spade fit and a minimum, " .+
