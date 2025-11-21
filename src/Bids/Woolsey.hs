@@ -221,6 +221,8 @@ b1No2S2N3D = b1No2H2N3D
 b1No2N :: Action
 b1No2N = nameAction "wool_b1No2N" $ do
     twoSuited T.Clubs T.Diamonds
+    -- 5-4 shape isn't enough to push to the 3 level: you should be 5-5.
+    forEach T.minorSuits (`minSuitLength` 5)
     makeAlertableCall (T.Bid 2 T.Notrump) "both minors"
 
 
