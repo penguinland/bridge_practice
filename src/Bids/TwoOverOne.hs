@@ -39,7 +39,7 @@ b1H2C = E.nameAction "b1H2C" $ do
     E.maxSuitLength T.Spades 3
     E.maxSuitLength T.Hearts 3
     E.minSuitLength T.Clubs 4
-    -- TODO: With 5-5 in the minors, which should you bid first?
+    -- With 5-5 or even 4-4 in the minors, bid diamonds first
     T.Clubs `E.longerThan` T.Diamonds
     E.forbid E.balancedHand
     E.makeCall $ T.Bid 2 T.Clubs
@@ -51,11 +51,9 @@ b1H2D = E.nameAction "b1H2D" $ do
     E.maxSuitLength T.Spades 3
     E.maxSuitLength T.Hearts 3
     E.minSuitLength T.Diamonds 4
-    -- TODO: With 5-5 in the minors, which should you bid first?
-    T.Diamonds `E.longerThan` T.Clubs
+    T.Diamonds `E.atLeastAsLong` T.Clubs
     E.forbid E.balancedHand
     E.makeCall $ T.Bid 2 T.Diamonds
-
 
 
 b1S2C :: Action
@@ -63,12 +61,14 @@ b1S2C = E.nameAction "b1S2C" $ do
     _gameForcing
     E.maxSuitLength T.Spades 3
     E.minSuitLength T.Clubs 4
-    -- With 5-5 in the minors, start with diamonds. No need to reverse if we're
-    -- already in a GF auction.
+    -- With 5-5 or even 4-4 in the minors, start with diamonds. No need to
+    -- reverse if we're already in a GF auction.
     T.Clubs `E.longerThan` T.Diamonds
-    -- TODO: with 5-5 in clubs and hearts, which should you bid first? With 4-4,
-    -- it's probably still clubs.
-    T.Clubs `E.longerThan` T.Hearts
+    T.Clubs `E.atLeastAsLong` T.Hearts
+    -- With 5-5 in the rounded suits, start with the major. With 4-4, start with
+    -- the cheaper suit. This way, bidding 2H always shows a 5-card suit.
+    E.minSuitLength T.Clubs 5 `E.impliesThat`
+        (T.Clubs `E.longerThan` T.Hearts)
     E.forbid E.balancedHand
     E.makeCall $ T.Bid 2 T.Clubs
 
@@ -79,9 +79,11 @@ b1S2D = E.nameAction "b1S2D" $ do
     E.maxSuitLength T.Spades 3
     E.minSuitLength T.Diamonds 4
     T.Diamonds `E.atLeastAsLong` T.Clubs
-    -- TODO: with 5-5 in diamonds and hearts, which should you bid first? With
-    -- 4-4, it's probably still diamonds.
-    T.Diamonds `E.longerThan` T.Hearts
+    T.Diamonds `E.atLeastAsLong` T.Hearts
+    -- With 5-5 in the reds, prefer hearts. With 4-4, prefer the cheaper suit.
+    -- This way, bidding 2H always shows a 5-card suit.
+    E.minSuitLength T.Diamonds 5 `E.impliesThat`
+        (T.Diamonds `E.longerThan` T.Hearts)
     E.forbid E.balancedHand
     E.makeCall $ T.Bid 2 T.Diamonds
 
