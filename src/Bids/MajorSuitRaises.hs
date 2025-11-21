@@ -1,12 +1,12 @@
 module Bids.MajorSuitRaises(
-    b1H  -- Re-exported from StandardOpenings
+    b1H    -- Re-exported from StandardOpenings
   , b1H2H
   , b1H3H
-  , b1H3N
-  , b1S  -- Re-exported from StandardOpenings
+  , b1H3N  -- Note: this is how the BBO robots play this bid, others disagree
+  , b1S    -- Re-exported from StandardOpenings
   , b1S2S
   , b1S3S
-  , b1S3N
+  , b1S3N  -- Note: this is how the BBO robots play this bid, others disagree
 ) where
 
 
