@@ -81,7 +81,7 @@ b1S2D = E.nameAction "b1S2D" $ do
     T.Diamonds `E.atLeastAsLong` T.Clubs
     -- If you're 4-4 in the minors, some people would prefer to bid the stronger
     -- one.
-    T.Diamonds `E.StrongerThan` T.Clubs
+    T.Diamonds `E.strongerThan` T.Clubs
     T.Diamonds `E.atLeastAsLong` T.Hearts
     -- With 5-5 in the reds, prefer hearts. With 4-4, prefer the cheaper suit.
     -- This way, bidding 2H always shows a 5-card suit.
