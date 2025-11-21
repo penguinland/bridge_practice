@@ -2,7 +2,7 @@ module Topics.MajorSuitRaises(topic) where
 
 import qualified Bids.MajorSuitRaises as B
 import CommonBids(setOpener, noInterference)
-import Output((.+), Punct(..))
+import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, wrapDlr, wrapNW, Situations, makeTopic)
