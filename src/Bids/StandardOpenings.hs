@@ -14,9 +14,9 @@ module Bids.StandardOpenings(
 
 import Action(Action)
 import CommonBids(strong1NT)
-import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, impliesThat,
+import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall,
             longerThan, pointRange, balancedHand, alternatives, forbidAll,
-            equalLength, atLeastAsLong, forEach, nameAction)
+            atLeastAsLong, forEach, nameAction)
 import qualified Terminology as T
 
 
@@ -41,10 +41,9 @@ b1S :: Action
 b1S = nameAction "sayc_b1S" $ do
     forbidAll [b1N, b2N, b2C]
     minSuitLength T.Spades 5
+    -- If you're at least 5-5 in the majors, always open 1S. You can jump shift
+    -- to 3H if you're sufficiently strong.
     T.Spades `atLeastAsLong` T.Hearts
-    -- If you're equal length in the majors and have enough points to reverse,
-    -- open 1H instead.
-    (T.Hearts `equalLength` T.Spades) `impliesThat` pointRange 0 16
     -- If you have 5 spades and a 6-card minor, it's unclear what to do. Avoid
     -- those entirely.
     forEach T.minorSuits (`maxSuitLength` 5)
@@ -55,11 +54,9 @@ b1H :: Action
 b1H = nameAction "sayc_b1H" $ do
     forbidAll [b1N, b2N, b2C]
     minSuitLength T.Hearts 5
-    T.Hearts `atLeastAsLong` T.Spades
-    -- NOTE: If you've got 6 hearts, 5 spades, and are not strong enough to
-    -- reverse, I'd probably bid the spades first even though the hearts are
-    -- longer: pretend your hand is 5-5.
-    minSuitLength T.Spades 5 `impliesThat` pointRange 17 40
+    -- If you're 5-5, either open 1S and rebid 2H, or open 1S and jump shift to
+    -- 3H if you're strong enough.
+    T.Hearts `longerThan` T.Spades
     -- If you've got 5 hearts and 6 diamonds, probably bid the hearts. If you've
     -- got 5 hearts and 6 clubs, it's not as clear-cut. Avoid that for now.
     maxSuitLength T.Clubs 6

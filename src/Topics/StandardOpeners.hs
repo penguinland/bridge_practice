@@ -66,6 +66,8 @@ oneHeart = let
     stdWrap $ situation "1H" action SO.b1H explanation
 
 
+-- No, consensus seems to be to open 1S and jump shift, rather than reverse.
+{-
 bothMajorsReverse :: Situations
 bothMajorsReverse = let
     action = do
@@ -78,20 +80,22 @@ bothMajorsReverse = let
         T.Bid 2 T.Spades .+ " next turn."
   in
     stdWrap $ situation "MajRev" action SO.b1H explanation
+-}
 
 
-bothMajorsNoReverse :: Situations
-bothMajorsNoReverse = let
+bothMajorsNoJS :: Situations
+bothMajorsNoJS = let
     action = do
         B.setOpener T.South
         minSuitLength T.Spades 5
         minSuitLength T.Hearts 5
+        pointRange 0 15  -- Definitely too weak to jump shift
     explanation =
-        "With at least 5-5 in the majors and not enough strength to\
-      \ reverse, open " .+ T.Bid 1 T.Spades .+ ", planning to rebid " .+
+        "With at least 5-5 in the majors and not enough strength to " .+
+        "jump shift, open " .+ T.Bid 1 T.Spades .+ ", planning to rebid " .+
         T.Bid 2 T.Hearts .+ " next turn."
   in
-    stdWrap $ situation "MajNoRev" action SO.b1S explanation
+    stdWrap $ situation "MajNoJS" action SO.b1S explanation
 
 
 oneDiamond :: Situations
@@ -234,7 +238,7 @@ topic = makeTopic "SAYC opening bids" "StdOpen" situations
                       , twoNotrump
                       , oneSpade
                       , oneHeart
-                      , wrap [bothMajorsReverse, bothMajorsNoReverse]
+                      , wrap [{-bothMajorsReverse,-} bothMajorsNoJS]
                       , wrap [oneDiamond, oneDiamond3Cards]
                       , wrap [oneClub, oneClubEqualMinors]
                       , wrap [bothMinorsNoReverse, bothMinorsNoReverseShortD,
