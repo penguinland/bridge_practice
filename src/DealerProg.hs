@@ -71,8 +71,9 @@ toProgram (DealerProg defns conds) = unlines $
         "action", "    printall"]
 
 
-eval :: T.Direction -> T.Vulnerability -> DealerProg -> Int -> IO (Maybe S.Deal)
-eval dir vul deal seed = let
+eval :: String -> T.Direction -> T.Vulnerability -> DealerProg -> Int ->
+    IO (Maybe S.Deal)
+eval debugRef dir vul deal seed = let
     prog = toProgram deal
 
     result :: IO (Maybe String)
@@ -103,7 +104,8 @@ eval dir vul deal seed = let
      | length output == 11 = Just $ map splitSuit [s, h, d, c]
     -- If that didn't work, we have totally misunderstood something.
     toSuits problem     = error $ unlines
-        ("Unexpected output from dealer invocation:":prog:"Output was:":problem)
+        (("Unexpected output from dealer invocation for " ++ debugRef ++ ":") :
+         prog : "Output was:" : problem)
 
     splitSuit :: String -> [String]
     splitSuit = map strip . wholeMap (fixedWidth (repeat 20))
