@@ -16,10 +16,11 @@ module Topic(
 , stdWrapSE
 , Topic(..)
 , makeTopic
+, collect
 ) where
 
-import Control.Monad.Trans.State.Strict(State)
-import System.Random(StdGen)
+import Control.Monad.Trans.State.Strict(State, runState)
+import System.Random(StdGen, mkStdGen)
 
 import Output(Description, toDescription, Showable)
 import Random(pickItem)
@@ -95,3 +96,15 @@ choose = choose' . topicSituations
     choose' (RawSit s)   = return s
     choose' (SitList ss) = pickItem ss >>= choose'
     choose' (SitState f) = f >>= choose'
+
+
+-- This is used during compile-time assertions to ensure that every Situation
+-- within a Topic has a unique debug string.
+collect :: (Situation -> a) -> Topic -> [a]
+collect f = collect' . topicSituations
+  where
+    collect' (RawSit s)  = [f s]
+    collect' (SitList l) = concatMap collect' l
+    -- We assume that all Situations you could generate from a SitState have the
+    -- same value within. If this changes, revisit this.
+    collect' (SitState s) = collect' . fst . flip runState (mkStdGen 0) $ s
