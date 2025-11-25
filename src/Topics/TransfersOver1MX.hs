@@ -8,7 +8,7 @@ import EDSL(nameAction, pointRange, forEach, suitLength, maxSuitLength,
 import Output((.+), Punct(..))
 import Situation(Situation, situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapDlr, stdWrap, Situations, makeTopic)
+import Topic(Topic, wrap, wrapDlr, wrapNW, stdWrap, Situations, makeTopic)
 
 
 advancerPasses :: Action
@@ -100,12 +100,14 @@ initiateSignoff = let
             "they're unexpectedly strong, we'll figure out something else."
       in situation "initSO" action response explanation
   in
-    wrapDlr $ return sit <~ [ (B.b1H, B.b1HoX, B.b1HoX1N, T.Hearts)
-                            , (B.b1H, B.b1HoX, B.b1HoX2C, T.Hearts)
-                            , (B.b1S, B.b1SoX, B.b1SoX1N, T.Spades)
-                            , (B.b1S, B.b1SoX, B.b1SoX2C, T.Spades)
-                            , (B.b1S, B.b1SoX, B.b1SoX2D, T.Spades)
-                            ]
+    -- Subtle trick: we must be an unpassed hand, because we would have bid a
+    -- weak 2 in most of these positions.
+    wrapNW $ return sit <~ [ (B.b1H, B.b1HoX, B.b1HoX1N, T.Hearts)
+                           , (B.b1H, B.b1HoX, B.b1HoX2C, T.Hearts)
+                           , (B.b1S, B.b1SoX, B.b1SoX1N, T.Spades)
+                           , (B.b1S, B.b1SoX, B.b1SoX2C, T.Spades)
+                           , (B.b1S, B.b1SoX, B.b1SoX2D, T.Spades)
+                           ]
 
 
 initiateLimitRaise :: Situations
