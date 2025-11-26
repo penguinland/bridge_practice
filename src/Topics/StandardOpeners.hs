@@ -155,7 +155,7 @@ oneClubEqualMinors = let
             OpenQuote .+ "up the line with 3s and 4s, from the top with 5s " .+
             "or mores." .+ CloseQuote
       in
-        situation "1C1Suit" action SO.b1C explanation
+        situation "1CEM" action SO.b1C explanation
   in
     wrapDlr $ return sit <~ [3, 4]
 

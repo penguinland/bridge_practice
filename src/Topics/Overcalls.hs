@@ -166,7 +166,7 @@ passNot1 = let
             "RHO has opened the bidding. Although we have a 5-card suit, " .+
             "we are too weak and have too bad a suit to make an overcall. " .+
             "Just pass."
-      in situation "preempt" action (makeCall T.Pass) explanation
+      in situation "pass1" action (makeCall T.Pass) explanation
   in
     wrapDlr $ return sit <~ [ (B.b1C, T.Diamonds)
                             , (B.b1C, T.Hearts)
@@ -193,7 +193,7 @@ passNot2 = let
         explanation =
             "RHO has opened the bidding. Although we have a 5-card suit, " .+
             "we are too weak to make an overcall at the 2 level. Just pass."
-      in situation "preempt" action (makeCall T.Pass) explanation
+      in situation "pass2" action (makeCall T.Pass) explanation
   in
     wrapDlr $ return sit <~ [ (B.b1D, T.Diamonds, T.Clubs)
                             , (B.b1H, T.Hearts,   T.Clubs)
