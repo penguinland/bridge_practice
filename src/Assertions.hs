@@ -3,24 +3,26 @@
 -- (e.g., topicList) must be already compiled in a separate file.
 module Assertions where
 
-import Control.Monad.Extra(mconcatMapM)
-import Data.Tuple.Utils(fst3, thd3)
+--import Control.Monad.Extra(mconcatMapM)
+import Data.Tuple.Utils(fst3)--, thd3)
 
 import CompileTime(staticAssert, duplicatesOf)
-import Output(toMonospace)
-import Situation(sitRef)
+--import Output(toMonospace)
+--import Situation(sitRef)
 import SupportedTopics(topicList)
-import Topic(collect, topicName)
+--import Topic(collect, topicName)
 
 $(let dups = duplicatesOf . map fst3 $ topicList
   in staticAssert (null dups) ("topic list has duplicate IDs: " ++ show dups))
 
+-- Asserting that every situation within a topic has a unique name sounds like
+-- it ought to be a good idea. However, there are times when a topic contains a
+-- `wrap [sitA, sitA, sitB]` to get situation A to be twice as common as
+-- situation B, at which point the situation names are purposely _not_ unique!
+-- Think about ways to improve this in the future, and maybe try again sometime.
 {-
-$(let assertUniqueNames top =
-    (let dups = duplicatesOf . collect sitRef . topicSituations $ top
-     in staticAssert (null dups) ("topic " ++ topicName top ++ " has duplicate situation names: " ++ show dups))
-  in map (assertUniqueNames . thd3) topicList)
--}
-
+-- Something about $(...) seems to mess up indentation parsing, I think? If you
+-- try adding newlines where they logically belong, this becomes unparseable.
 $(let assertUniqueNames topic = (let dups = (duplicatesOf . collect sitRef $ topic) in staticAssert (null dups) ("duplicate situation names for topic " ++ (toMonospace . topicName $ topic) ++ ": " ++ show dups))
   in mconcatMapM (assertUniqueNames . thd3) $ topicList)
+-}
