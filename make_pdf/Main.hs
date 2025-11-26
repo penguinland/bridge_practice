@@ -24,6 +24,7 @@ import qualified Topics.Jacoby2NT as Jacoby2NT
 import qualified Topics.ForcingOneNotrump as ForcingOneNotrump
 import qualified Topics.PuppetStayman as PuppetStayman
 import qualified Topics.MuppetStayman as MuppetStayman
+import qualified Topics.TransfersOver1MX as TransfersOver1MX
 
 import ProblemSet(outputLatex)
 
@@ -52,8 +53,9 @@ main = let
               , TripleFourOne.topic
               , PuppetStayman.topic
               , MuppetStayman.topic
+              , TransfersOver1MX.topic
               ]
-    topics = [ Jacoby2NT.topic
+    topics = [ StandardOpeners.topic
              ]
   in do
     -- outputLatex returns a copy of the contents of the file it wrote, but we
