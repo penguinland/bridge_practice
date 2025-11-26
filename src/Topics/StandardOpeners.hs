@@ -66,21 +66,19 @@ oneHeart = let
     stdWrap $ situation "1H" action SO.b1H explanation
 
 
--- No, consensus seems to be to open 1S and jump shift, rather than reverse.
-{-
-bothMajorsReverse :: Situations
-bothMajorsReverse = let
+bothMajorsJS :: Situations
+bothMajorsJS = let
     action = do
         B.setOpener T.South
         minSuitLength T.Spades 5
         minSuitLength T.Hearts 5
+        pointRange 18 40
     explanation =
-        "With at least 5-5 in the majors and enough strength to reverse,\
-      \ open " .+ T.Bid 1 T.Hearts .+ ", planning to rebid " .+
-        T.Bid 2 T.Spades .+ " next turn."
+        "With at least 5-5 in the majors and a very strong hand, " .+
+        "open " .+ T.Bid 1 T.Spades .+ ", planning to jump shift to " .+
+        T.Bid 3 T.Hearts .+ " next turn."
   in
-    stdWrap $ situation "MajRev" action SO.b1H explanation
--}
+    stdWrap $ situation "MajJS" action SO.b1S explanation
 
 
 bothMajorsNoJS :: Situations
@@ -238,7 +236,7 @@ topic = makeTopic "SAYC opening bids" "StdOpen" situations
                       , twoNotrump
                       , oneSpade
                       , oneHeart
-                      , wrap [{-bothMajorsReverse,-} bothMajorsNoJS]
+                      , wrap [bothMajorsJS, bothMajorsNoJS]
                       , wrap [oneDiamond, oneDiamond3Cards]
                       , wrap [oneClub, oneClubEqualMinors]
                       , wrap [bothMinorsNoReverse, bothMinorsNoReverseShortD,

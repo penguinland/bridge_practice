@@ -55,7 +55,7 @@ main = let
               , MuppetStayman.topic
               , TransfersOver1MX.topic
               ]
-    topics = [ TransfersOver1MX.topic
+    topics = [ StandardOpeners.topic
              ]
   in do
     -- outputLatex returns a copy of the contents of the file it wrote, but we
