@@ -69,7 +69,8 @@ b1D = nameAction "sayc_b1D" $ do
     forEach T.majorSuits (`maxSuitLength` 4)
     minSuitLength T.Diamonds 3
     alternatives [ T.Diamonds `longerThan` T.Clubs
-                 , minSuitLength T.Diamonds 5 -- From the top with 5-5
+                 , forEach T.minorSuits (`suitLength` 5)
+                 , forEach T.minorSuits (`suitLength` 4)
                  , do suitLength T.Clubs 5  -- Both minors, too weak to reverse
                       suitLength T.Diamonds 4
                       pointRange 0 16
@@ -83,8 +84,6 @@ b1C = nameAction "sayc_b1C" $ do
     forEach T.majorSuits (`maxSuitLength` 4)
     minSuitLength T.Clubs 3
     alternatives [ T.Clubs `longerThan` T.Diamonds
-                   -- Up the line with 3's and 4's
                  , forEach T.minorSuits (`suitLength` 3)
-                 , forEach T.minorSuits (`suitLength` 4)
                  ]
     makeCall (T.Bid 1 T.Clubs)
