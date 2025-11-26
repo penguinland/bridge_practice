@@ -153,7 +153,7 @@ findSecondSuit = let
 
 
 topic :: Topic
-topic = makeTopic "DONT over strong notrump" "MW1N" situations
+topic = makeTopic "DONT over strong notrump" "DONT" situations
   where
     situations = wrap [ doubleNoSpades
                       , twoSuited
