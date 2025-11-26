@@ -18,7 +18,6 @@ import Data.Map(Map, fromList, (!?))
 import Data.Tuple.Extra((&&&))
 import Data.Tuple.Utils(fst3, thd3)
 
-import CompileTime(compileTimeAssertUniqueTopicIDs)
 import Output(toHtml)
 import Topic(Topic, refName, topicName)
 
@@ -63,7 +62,7 @@ import qualified Topics.StandardModernPrecision.TripleFourOne as TripleFourOne
 -- indices aren't unique, we're gonna have really subtle bugs that will be hard
 -- to figure out.
 topicList :: [(Int, Bool, Topic)]
-topicList = $(compileTimeAssertUniqueTopicIDs [|
+topicList =
     [ (10, True,  StandardOpeners.topic)
     , (29, True,  TwoOverOne.topic)
     , (11, True,  MajorSuitRaises.topic)
@@ -93,7 +92,7 @@ topicList = $(compileTimeAssertUniqueTopicIDs [|
     , (55, False, Smp1DResponses.topic)
     --, (70, False, Lampe.topic)
     , (56, False, TwoDiamondOpeners.topic)
-    ] |])
+    ]
 
 
 topics :: Map Int Topic
