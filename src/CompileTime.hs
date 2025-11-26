@@ -3,7 +3,11 @@
 -- why it's a separate file.
 {-# LANGUAGE TemplateHaskell #-}
 
-module CompileTime(compileTimeAssertUniqueTopicIDs, staticAssert) where
+module CompileTime(
+    compileTimeAssertUniqueTopicIDs
+  , staticAssert
+  , duplicatesOf
+) where
 
 import Control.Arrow((&&&))
 import Control.Monad(unless)
@@ -12,9 +16,9 @@ import Data.Containers.ListUtils(nubOrd)
 import qualified Language.Haskell.TH.Syntax as THS
 
 
-duplicatesOf_ :: [Int] -> [Int]
-duplicatesOf_ = nubOrd . map fst . filter (uncurry (==)) . uncurry zip .
-                (init &&& tail) . sort
+duplicatesOf :: Ord a => [a] -> [a]
+duplicatesOf = nubOrd . map fst . filter (uncurry (==)) . uncurry zip .
+               (init &&& tail) . sort
 
 
 -- This is used in SupportedTopics.hs to ensure that every Topic has a unique
@@ -29,7 +33,7 @@ compileTimeAssertUniqueTopicIDs qexp = let
     expr <- qexp
     case expr of
         THS.ListE items -> do
-            let duplicates = duplicatesOf_ . map getId $ items
+            let duplicates = duplicatesOf . map getId $ items
             unless (null duplicates) $
                 fail $ "Duplicate Topic IDs found: " ++ show duplicates
             qexp
