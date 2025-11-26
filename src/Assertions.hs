@@ -4,16 +4,22 @@
 module Assertions where
 
 --import Control.Monad.Extra(mconcatMapM)
-import Data.Tuple.Utils(fst3)--, thd3)
+import Data.Tuple.Utils(fst3, thd3)
 
 import CompileTime(staticAssert, duplicatesOf)
---import Output(toMonospace)
+import Output(toMonospace)
 --import Situation(sitRef)
 import SupportedTopics(topicList)
---import Topic(collect, topicName)
+import Topic(topicName)
+
 
 $(let dups = duplicatesOf . map fst3 $ topicList
   in staticAssert (null dups) ("topic list has duplicate IDs: " ++ show dups))
+
+$(let dups = duplicatesOf . map (toMonospace . topicName . thd3) $ topicList
+  in staticAssert (null dups)
+    ("topics have duplicate debug names: " ++ show dups))
+
 
 -- Asserting that every situation within a topic has a unique name sounds like
 -- it ought to be a good idea. However, there are times when a topic contains a
