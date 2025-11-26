@@ -16,6 +16,7 @@ import Topic(Topic(..))
 $(let dups = duplicatesOf . map fst3 $ topicList
   in staticAssert (null dups) ("topic list has duplicate IDs: " ++ show dups))
 
+
 $(let dups = duplicatesOf . map (refName . thd3) $ topicList
   in staticAssert (null dups)
     ("topics have duplicate debug names: " ++ show dups))
