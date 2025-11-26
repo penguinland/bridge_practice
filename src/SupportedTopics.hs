@@ -1,7 +1,3 @@
--- We use a compile-time assertion that every supported Topic has a unique ID. Doing things at
--- compile time requires using Template Haskell.
-{-# LANGUAGE TemplateHaskell #-}
-
 module SupportedTopics(
     topicNames
   , findTopics
