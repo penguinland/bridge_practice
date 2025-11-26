@@ -19,5 +19,5 @@ duplicatesOf = nubOrd . map fst . filter (uncurry (==)) . uncurry zip .
 
 staticAssert :: Bool -> String -> THS.Q [a]
 staticAssert condition message = do
-    unless condition $ fail ("Compile time assertion failed: " ++ message)
+    unless condition $ fail ("Compile-time assertion failed: " ++ message)
     return []
