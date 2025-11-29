@@ -6,7 +6,7 @@ import qualified Bids.StandardOpenings as SO
 import qualified CommonBids as B
 import EDSL(forbid, suitLength, minSuitLength, maxSuitLength, alternatives,
             pointRange, makePass, balancedHand)
-import Output((.+), Punct(..))
+import Output((.+))
 import Situation(situation, (<~))
 import Structures(currentBidder)
 import qualified Terminology as T
@@ -143,35 +143,37 @@ oneClub = let
 
 oneClubEqualMinors :: Situations
 oneClubEqualMinors = let
-    sit len = let
+    sit = let
         action = do
             B.setOpener T.South
-            suitLength T.Diamonds len
-            suitLength T.Clubs len
+            suitLength T.Diamonds 3
+            suitLength T.Clubs 3
         explanation =
-            "With no 5-card major and a hand unsuitable for opening \
-          \ notrump, open " .+ T.Bid 1 T.Clubs .+ " when \
-          \ our minors are of equal, short length. As the saying goes, " .+
-            OpenQuote .+ "up the line with 3s and 4s, from the top with 5s " .+
-            "or mores." .+ CloseQuote
+            "With no 5-card major and a hand unsuitable for opening " .+
+            "notrump, open " .+ T.Bid 1 T.Clubs .+ " when our minors " .+
+            "are of equal, short length."
       in
         situation "1CEM" action SO.b1C explanation
   in
-    wrapDlr $ return sit <~ [3, 4]
+    stdWrap sit
 
 
 bothMinorsNoReverse :: Situations
 bothMinorsNoReverse = let
-    action = do
-        B.setOpener T.South
-        minSuitLength T.Diamonds 5
-        minSuitLength T.Clubs 5
-    explanation =
-        "With both minors but not enough strength to reverse, open, " .+
-        T.Bid 1 T.Diamonds .+ ", planning to rebid " .+
-        T.Bid 2 T.Clubs .+ " next turn."
+    sit len = let
+        action = do
+            B.setOpener T.South
+            pointRange 0 14
+            minSuitLength T.Diamonds len
+            minSuitLength T.Clubs len
+        explanation =
+            "With both minors but not enough strength to reverse or jump " .+
+            "shift, open, " .+ T.Bid 1 T.Diamonds .+ ", planning to rebid " .+
+            T.Bid 2 T.Clubs .+ " next turn."
+      in
+        situation "MinNoRev" action SO.b1D explanation
   in
-    stdWrap $ situation "MinNoRev" action SO.b1D explanation
+    wrapDlr $ return sit <~ [4, 5]
 
 
 bothMinorsNoReverseShortD :: Situations
