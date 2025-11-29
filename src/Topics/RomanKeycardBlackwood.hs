@@ -89,6 +89,33 @@ firstResponse1430 = let
                                   ]
 
 
+firstResponse3014 :: Situations
+firstResponse3014 = let
+    sit (setups, responses) = let
+        inner setup response = let
+            action = do
+                setup `andNextBidderIs` T.North
+                RKC.bRKC4N
+                makePass
+            explanation =
+                "Partner has bid " .+ RKC.bRKC4N .+ " to ask how many " .+
+                "keycards we have. Give them the answer."
+          in situation "resp" action response explanation
+      in return inner <~ setups <~ responses
+  in
+    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.bRKC1430H5C
+                                                     , RKC.bRKC1430H5D
+                                                     , RKC.bRKCH5H
+                                                     , RKC.bRKCH5S
+                                                     ])
+                                  , (setUpAuctionsS, [ RKC.bRKC1430S5C
+                                                     , RKC.bRKC1430S5D
+                                                     , RKC.bRKCS5H
+                                                     , RKC.bRKCS5S
+                                                     ])
+                                  ]
+
+
 topic1430 :: Topic
 topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
   where
@@ -100,5 +127,5 @@ topic3014 :: Topic
 topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
   where
     situations = wrap [ initiate
-                      --, firstResponse3014
+                      , firstResponse3014
                       ]
