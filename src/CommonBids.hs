@@ -11,18 +11,20 @@ module CommonBids(
 , thirdSeatOpener
 , fourthSeatOpener
 , setOpener
+, andNextBidderIs
 , takeoutDouble
 , noInterference
 ) where
 
-import Control.Monad.Trans.State.Strict(get)
+import Control.Monad(when)
+import Control.Monad.Trans.State.Strict(get, put, runState)
 
-import Action(Action, constrain, define)
+import Action(Action, constrain, define, newAuction)
 import EDSL(forbid, pointRange, balancedHand, makeCall, makeAlertableCall,
             makePass, suitLength, minSuitLength, maxSuitLength, alternatives,
             forEach, nameAction)
 import Output(Punct(..), (.+))
-import Structures(currentBidder)
+import Structures(currentBidder, startBidding)
 import qualified Terminology as T
 
 
@@ -147,6 +149,33 @@ setOpener opener = do
       | caller == opener = action
       | otherwise        = cantOpen action >> helper actions (T.next caller)
     helper [] _          = error "Specified a fifth-seat opener!?"
+
+
+-- This is intended for practicing conventions that come very late in the
+-- auction (e.g., Blackwood), and should be the first Action applied. It throws
+-- away all previous parts of the auction, then adjusts the dealer and initial
+-- bidder so that North and South are both unpassed hands, the action is
+-- applied, and the intended direction is the next bidder.
+-- WARNING: this can have surprising behavior! It will change the dealer so that
+-- both North and South are unpassed hands, and will delete the effects of
+-- previous actions.
+andNextBidderIs :: Action -> T.Direction -> Action
+andNextBidderIs action direction = let
+    (_, naiveAuction) = runState action (newAuction T.North)
+    naiveNextBidder = currentBidder . fst $ naiveAuction
+    initialBidder naiveNext wantedNext
+      | wantedNext ==                   naiveNext = T.North
+      | wantedNext ==           T.next  naiveNext = T.East
+      | wantedNext == (T.next . T.next) naiveNext = T.South
+      | otherwise                                 = T.West
+    wantedOpener = initialBidder naiveNextBidder direction
+  in do
+    auction <- get
+    let dealer = currentBidder . fst $ auction
+    when (dealer /= wantedOpener && T.next dealer /= wantedOpener)
+        (put (startBidding . T.next . T.next $ dealer, mempty))
+    setOpener wantedOpener
+    action
 
 
 takeoutDouble :: T.Suit -> Action
