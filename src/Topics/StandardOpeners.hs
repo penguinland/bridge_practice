@@ -6,7 +6,7 @@ import qualified Bids.StandardOpenings as SO
 import qualified CommonBids as B
 import EDSL(forbid, suitLength, minSuitLength, maxSuitLength, alternatives,
             pointRange, makePass, balancedHand)
-import Output((.+), Punct(..))
+import Output((.+))
 import Situation(situation, (<~))
 import Structures(currentBidder)
 import qualified Terminology as T
