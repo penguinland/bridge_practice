@@ -163,11 +163,12 @@ bothMinorsNoReverse = let
     sit len = let
         action = do
             B.setOpener T.South
+            pointRange 0 14
             minSuitLength T.Diamonds len
             minSuitLength T.Clubs len
         explanation =
-            "With both minors but not enough strength to reverse, open, " .+
-            T.Bid 1 T.Diamonds .+ ", planning to rebid " .+
+            "With both minors but not enough strength to reverse or jump " .+
+            "shift, open, " .+ T.Bid 1 T.Diamonds .+ ", planning to rebid " .+
             T.Bid 2 T.Clubs .+ " next turn."
       in
         situation "MinNoRev" action SO.b1D explanation
