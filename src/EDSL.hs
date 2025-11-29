@@ -226,14 +226,14 @@ hasCard :: T.Suit -> Char -> Action
 hasCard suit rank = let
     cardName = rank : T.suitLetter suit
   in
-    constrain ("has_" ++ cardName) ["hasCard(", ", " ++ cardName ++ ")"]
+    constrain ("has_" ++ cardName) ["hascard(", ", " ++ cardName ++ ")"]
 
 
 -- The two numbers are interchangeable, likely 1/4, 3/0, or 2/5.
 keycardCount :: T.Suit -> Int -> Int-> Action
 keycardCount suit countA countB = do
     define ("keycards_" ++ show suit)
-        ["aces(", ") + hascard(", "K" ++ T.suitLetter suit ++ ")"]
+        ["aces(", ") + hascard(", ", K" ++ T.suitLetter suit ++ ")"]
     constrain ("keycards_" ++ show suit ++ show countA ++ show countB)
         ["keycards_" ++ show suit ++ "_", " == " ++ show countA ++ " || " ++
          "keycards_" ++ show suit ++ "_", " == " ++ show countB]
