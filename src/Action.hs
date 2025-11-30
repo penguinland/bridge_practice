@@ -15,6 +15,7 @@ module Action (
 , finish
 , constrain
 , define
+, predeal
 , withholdBid
 , extractLastCall
 ) where
@@ -22,7 +23,7 @@ module Action (
 import Control.Monad.Trans.State.Strict(State, execState, get, put)
 import Data.List.Utils(join)
 
-import DealerProg(DealerProg, addNewReq, addDefn)
+import DealerProg(DealerProg, addNewReq, addDefn, addNewPredeal)
 import Output(Showable(..))
 import Structures(Bidding, startBidding, lastCall, currentBidder)
 import qualified Terminology as T
@@ -77,6 +78,11 @@ constrain = _modifyDealerProg addNewReq
 
 define :: String -> [String] -> Action
 define = _modifyDealerProg addDefn
+
+predeal :: T.Suit -> Int -> Action
+predeal suit len = do
+    (bidding, dealerProg) <- get
+    put (bidding, addNewPredeal suit (currentBidder bidding) len dealerProg)
 
 
 -- Add the constraints in this action without modifying the current Bidding.

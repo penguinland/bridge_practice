@@ -38,7 +38,7 @@ import Control.Monad.Trans.State.Strict(execState, get, put, modify)
 import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
-import Action(Action, newAuction, constrain, define)
+import Action(Action, newAuction, constrain, define, predeal)
 import DealerProg(invert, nameAll)
 import Output(Showable, toDescription)
 import Structures(addCall, currentBidder)
@@ -131,7 +131,9 @@ suitLengthOp op suffix suit len =
               [show suit ++ "(", ") " ++ op ++ " " ++ show len]
 
 suitLength :: T.Suit -> Int -> Action
-suitLength = suitLengthOp "==" "eq"
+suitLength suit len = do
+    suitLengthOp "==" "eq" suit len
+    predeal suit len  -- Performance optimization
 
 minSuitLength :: T.Suit -> Int -> Action
 minSuitLength = suitLengthOp ">=" "ge"
