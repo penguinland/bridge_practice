@@ -186,6 +186,19 @@ signoff3014 = let
       ]
 
 
+-- TODO:
+-- Queen ask
+-- Respond to queen ask
+-- Respond to 4N with a void
+-- Signing off in slam
+-- 5N as king ask
+-- respond to 5N
+-- Going to grand slam?
+-- Placing the contract after partner shows a void?
+-- Unsure how to phrase: trouble when hearts are trump and you have 1 keycard
+--     without the queen (worried about partner responding 5S)
+
+
 topic1430 :: Topic
 topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
   where
