@@ -5,6 +5,7 @@ module EDSL (
 , alternatives
 , impliesThat
 , forEach
+, atLeastOneOf
 , makeCall
 , makeAlertableCall
 , makePass
@@ -76,6 +77,10 @@ impliesThat ifPart thenPart = alternatives [thenPart, forbid ifPart]
 
 forEach :: [a] -> (a -> Action) -> Action
 forEach = flip mapM_
+
+
+atLeastOneOf :: [a] -> (a -> Action) -> Action
+atLeastOneOf as f = alternatives . map f $ as
 
 
 makeCall :: T.Call -> Action
