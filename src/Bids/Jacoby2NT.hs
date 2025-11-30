@@ -50,9 +50,10 @@ module Bids.Jacoby2NT(
 
 import Action(Action)
 import Bids.StandardOpenings(b1H, b1S)
-import EDSL(minSuitLength, maxSuitLength, makeCall, makeAlertableCall,
-            pointRange, soundHolding, maxLoserCount, forbid, forbidAll,
-            shorterThan, atMostAsLong, forEach, hasControl, nameAction)
+import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall,
+            makeAlertableCall, pointRange, soundHolding, maxLoserCount, forbid,
+            forbidAll, shorterThan, atMostAsLong, forEach, hasControl,
+            nameAction)
 import Output((.+))
 import qualified Terminology as T
 
@@ -125,7 +126,11 @@ b1S2N = nameAction "jnt_b1S2N" $ do
 -- Prefer for opener to rebid a 5-card side suit.
 openerSideSuit_ :: T.Suit -> Action
 openerSideSuit_ sideSuit = do
-    minSuitLength sideSuit 5
+    -- Performance optimization: although the side suit should technically set
+    -- the *minimum* suit length, we set the *exact* suit length in order to
+    -- predeal that number of cards, making the dealer program much more likely
+    -- to find a deal that satisfies all constraints.
+    suitLength sideSuit 5
     soundHolding sideSuit  -- Don't do this with a bad 5-card suit
     makeCall $ T.Bid 4 sideSuit
 
