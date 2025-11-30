@@ -34,18 +34,21 @@ b4N = E.makeAlertableCall (T.Bid 4 T.Notrump) "(postalert) keycard ask"
 
 b1430H5C :: Action
 b1430H5C = E.nameAction "RKC1430_H_5C" $ do
+    E.forbidAll [bH5N, bH6C, bH6D, bH6H]
     E.keycardCount T.Hearts 1 4
     E.makeAlertableCall (T.Bid 5 T.Clubs) "(postalert) 1 or 4 keycards"
 
 
 b1430H5D :: Action
 b1430H5D = E.nameAction "RKC1430_H_5D" $ do
+    E.forbidAll [bH5N, bH6C, bH6D, bH6H]
     E.keycardCount T.Hearts 3 0
     E.makeAlertableCall (T.Bid 5 T.Diamonds) "(postalert) 3 or 0 keycards"
 
 
 bH5H :: Action
 bH5H = E.nameAction "RKC_H_5H" $ do
+    E.forbidAll [bH5N, bH6C, bH6D, bH6H]
     E.keycardCount T.Hearts 2 5
     E.forbid (E.hasCard T.Hearts 'Q')
     E.makeAlertableCall (T.Bid 5 T.Hearts) "(postalert) 2 or 5 keycards w/o Q"
@@ -53,6 +56,7 @@ bH5H = E.nameAction "RKC_H_5H" $ do
 
 bH5S :: Action
 bH5S = E.nameAction "RKC_H_5S" $ do
+    E.forbidAll [bH5N, bH6C, bH6D, bH6H]
     E.keycardCount T.Hearts 2 5
     E.hasCard T.Hearts 'Q'
     E.makeAlertableCall (T.Bid 5 T.Spades) "(postalert) 2 or 5 keycards with Q"
@@ -60,18 +64,21 @@ bH5S = E.nameAction "RKC_H_5S" $ do
 
 b1430S5C :: Action
 b1430S5C = E.nameAction "RKC1430_S_5C" $ do
+    E.forbidAll [bS5N, bS6C, bS6D, bS6H]
     E.keycardCount T.Spades 1 4
     E.makeAlertableCall (T.Bid 5 T.Clubs) "(postalert) 1 or 4 keycards"
 
 
 b1430S5D :: Action
 b1430S5D = E.nameAction "RKC1430_S_5D" $ do
+    E.forbidAll [bS5N, bS6C, bS6D, bS6H]
     E.keycardCount T.Spades 3 0
     E.makeAlertableCall (T.Bid 5 T.Diamonds) "(postalert) 3 or 0 keycards"
 
 
 bS5H :: Action
 bS5H = E.nameAction "RKC_S_5H" $ do
+    E.forbidAll [bS5N, bS6C, bS6D, bS6H]
     E.keycardCount T.Spades 2 5
     E.forbid (E.hasCard T.Spades 'Q')
     E.makeAlertableCall (T.Bid 5 T.Hearts) "(postalert) 2 or 5 keycards w/o Q"
@@ -79,6 +86,7 @@ bS5H = E.nameAction "RKC_S_5H" $ do
 
 bS5S :: Action
 bS5S = E.nameAction "RKC_S_5S" $ do
+    E.forbidAll [bS5N, bS6C, bS6D, bS6H]
     E.keycardCount T.Spades 2 5
     E.hasCard T.Spades 'Q'
     E.makeAlertableCall (T.Bid 5 T.Spades) "(postalert) 2 or 5 keycards with Q"
