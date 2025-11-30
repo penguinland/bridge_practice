@@ -52,20 +52,6 @@ bH5S = E.nameAction "RKC_H_5S" $ do
     E.makeAlertableCall (T.Bid 5 T.Spades) "(postalert) 2 or 5 keycards with Q"
 
 
-bH5N :: Action
-bH5N = E.nameAction "RKC_H_5N" $ do
-    -- With 0 keycards, unclear if you really want to show your void. Skip that
-    -- situation entirely.
-    -- TODO: is that the right choice?
-    E.keycardCount T.Hearts 2 4
-    E.alternatives [ E.suitLength T.Clubs 0
-                   , E.suitLength T.Diamonds 0
-                   , E.suitLength T.Spades 0
-                   ]
-    E.makeAlertableCall (T.Bid 5 T.Notrump)
-        "(postalert) even number of keycards with a void"
-
-
 b1430S5C :: Action
 b1430S5C = E.nameAction "RKC1430_S_5C" $ do
     E.keycardCount T.Spades 1 4
@@ -92,18 +78,22 @@ bS5S = E.nameAction "RKC_S_5S" $ do
     E.makeAlertableCall (T.Bid 5 T.Spades) "(postalert) 2 or 5 keycards with Q"
 
 
-bS5N :: Action
-bS5N = E.nameAction "RKC_S_5N" $ do
+b5N_ :: T.Suit -> Action
+b5N_ trumpSuit = do
     -- With 0 keycards, unclear if you really want to show your void. Skip that
     -- situation entirely.
-    -- TODO: is that the right choice?
-    E.keycardCount T.Spades 2 4
-    E.alternatives [ E.suitLength T.Clubs 0
-                   , E.suitLength T.Diamonds 0
-                   , E.suitLength T.Hearts 0
-                   ]
+    -- TODO: What is the right choice there?
+    E.keycardCount trumpSuit 2 4
+    E.atLeastOneOf (filter (/= trumpSuit) T.allSuits) (`E.suitLength` 0)
     E.makeAlertableCall (T.Bid 5 T.Notrump)
         "(postalert) even number of keycards with a void"
+
+bH5N :: Action
+bH5N = E.nameAction "RKC_H_5N" (b5N_ T.Hearts)
+
+
+bS5N :: Action
+bS5N = E.nameAction "RKC_S_5N" (b5N_ T.Spades)
 
 
 -- For RKC3014, reuse as much as possible. To keep changes to the dealer program
