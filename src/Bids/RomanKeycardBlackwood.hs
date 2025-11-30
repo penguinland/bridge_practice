@@ -6,12 +6,14 @@ module Bids.RomanKeycardBlackwood(
   , b3014H5D
   , bH5H
   , bH5S
+  , bH5N
   , b1430S5C
   , b1430S5D
   , b3014S5C
   , b3014S5D
   , bS5H
   , bS5S
+  , bS5N
 ) where
 
 
@@ -21,7 +23,7 @@ import qualified Terminology as T
 
 
 b4N :: Action
-b4N = E.makeAlertableCall (T.Bid 4 T.Notrump) "(postalert) Keycard Ask"
+b4N = E.makeAlertableCall (T.Bid 4 T.Notrump) "(postalert) keycard ask"
 
 
 b1430H5C :: Action
@@ -50,6 +52,20 @@ bH5S = E.nameAction "RKC_H_5S" $ do
     E.makeAlertableCall (T.Bid 5 T.Spades) "(postalert) 2 or 5 keycards with Q"
 
 
+bH5N :: Action
+bH5N = E.nameAction "RKC_H_5N" $ do
+    -- With 0 keycards, unclear if you really want to show your void. Skip that
+    -- situation entirely.
+    -- TODO: is that the right choice?
+    E.keycardCount T.Hearts 2 4
+    E.alternatives [ E.suitLength T.Clubs 0
+                   , E.suitLength T.Diamonds 0
+                   , E.suitLength T.Spades 0
+                   ]
+    E.makeAlertableCall (T.Bid 5 T.Notrump)
+        "(postalert) even number of keycards with a void"
+
+
 b1430S5C :: Action
 b1430S5C = E.nameAction "RKC1430_S_5C" $ do
     E.keycardCount T.Spades 1 4
@@ -74,6 +90,20 @@ bS5S = E.nameAction "RKC_S_5S" $ do
     E.keycardCount T.Spades 2 5
     E.hasCard T.Spades 'Q'
     E.makeAlertableCall (T.Bid 5 T.Spades) "(postalert) 2 or 5 keycards with Q"
+
+
+bS5N :: Action
+bS5N = E.nameAction "RKC_S_5N" $ do
+    -- With 0 keycards, unclear if you really want to show your void. Skip that
+    -- situation entirely.
+    -- TODO: is that the right choice?
+    E.keycardCount T.Spades 2 4
+    E.alternatives [ E.suitLength T.Clubs 0
+                   , E.suitLength T.Diamonds 0
+                   , E.suitLength T.Hearts 0
+                   ]
+    E.makeAlertableCall (T.Bid 5 T.Notrump)
+        "(postalert) even number of keycards with a void"
 
 
 -- For RKC3014, reuse as much as possible. To keep changes to the dealer program
