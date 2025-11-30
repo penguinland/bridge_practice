@@ -1,6 +1,7 @@
 module Topics.RomanKeycardBlackwood(topic1430, topic3014) where
 
 import Control.Monad(join)
+import Data.List(sort)
 
 import Action(Action)
 import qualified Bids.RomanKeycardBlackwood as RKC
@@ -13,15 +14,27 @@ import qualified Terminology as T
 import Topic(Topic, wrap, wrapNW, Situations, makeTopic)
 
 
+takeIndices_ :: [Int] -> [a] -> [a]
+takeIndices_ indices values = takeIndices' values (sort indices)
+  where
+    takeIndices' _ [] = []
+    takeIndices' vals (a:as) = (vals !! a) : rest
+      where
+        rest = takeIndices' (drop (a + 1) vals) (map (subtract (a + 1)) as)
+
+
+-- Reminder: keep track of the indices in these lists! In the Situations where
+-- a player shows a void, we need to filter out only the auctions in which that
+-- player could possibly have a void.
 setUpAuctionsH :: [Action]
-setUpAuctionsH = [ do J2N.b1H
+setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       noInterference T.Hearts
                       J2N.b1H2N
                       noInterference T.Hearts
                       J2N.b1H2N4H
                       makePass
                       pointRange 17 40
-                 , do J2N.b1H
+                 , do J2N.b1H  -- Index 1
                       noInterference T.Hearts
                       J2N.b1H2N
                       noInterference T.Hearts
@@ -31,14 +44,14 @@ setUpAuctionsH = [ do J2N.b1H
                  ]
 
 setUpAuctionsS :: [Action]
-setUpAuctionsS = [ do J2N.b1S
+setUpAuctionsS = [ do J2N.b1S  -- Index 0
                       noInterference T.Spades
                       J2N.b1S2N
                       noInterference T.Spades
                       J2N.b1S2N4S
                       makePass
                       pointRange 17 40
-                 , do J2N.b1S
+                 , do J2N.b1S  -- Index 1
                       noInterference T.Spades
                       J2N.b1S2N
                       noInterference T.Spades
@@ -204,18 +217,18 @@ oddVoid = let
                 "either in small or grand slam."
           in situation "oddVoid" action response explanation
       in return inner <~ setups <~ responses
+    auctionsH = takeIndices_ [1] setUpAuctionsH
+    auctionsS = takeIndices_ [1] setUpAuctionsS
   in
     wrapNW . join $ return sit <~ [
-        (setUpAuctionsH, [RKC.bH6C, RKC.bH6D, RKC.bH6H])
-      , (setUpAuctionsS, [RKC.bS6C, RKC.bS6D, RKC.bS6H])
+        (auctionsH, [RKC.bH6C, RKC.bH6D, RKC.bH6H])
+      , (auctionsS, [RKC.bS6C, RKC.bS6D, RKC.bS6H])
       ]
-
 
 
 -- TODO:
 -- Queen ask
 -- Respond to queen ask
--- Respond to 4N with a void
 -- Signing off in slam
 -- 5N as king ask
 -- respond to 5N
