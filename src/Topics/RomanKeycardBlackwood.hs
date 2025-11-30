@@ -55,9 +55,9 @@ initiate = let
             setup `andNextBidderIs` T.South
         explanation =
             "We've found a trump fit and have slam interest. Time to check " .+
-            "for keycards by bidding " .+ RKC.bRKC4N .+ "! If we're missing " .+
+            "for keycards by bidding " .+ RKC.b4N .+ "! If we're missing " .+
             "two of them, we'll sign off at the 5 level."
-      in situation "init" action RKC.bRKC4N explanation
+      in situation "init" action RKC.b4N explanation
   in
     wrapNW $ return sit <~ (setUpAuctionsH ++ setUpAuctionsS)
 
@@ -68,23 +68,23 @@ firstResponse1430 = let
         inner setup response = let
             action = do
                 setup `andNextBidderIs` T.North
-                RKC.bRKC4N
+                RKC.b4N
                 makePass
             explanation =
-                "Partner has bid " .+ RKC.bRKC4N .+ " to ask how many " .+
+                "Partner has bid " .+ RKC.b4N .+ " to ask how many " .+
                 "keycards we have. Give them the answer."
           in situation "resp" action response explanation
       in return inner <~ setups <~ responses
   in
-    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.bRKC1430H5C
-                                                     , RKC.bRKC1430H5D
-                                                     , RKC.bRKCH5H
-                                                     , RKC.bRKCH5S
+    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.b1430H5C
+                                                     , RKC.b1430H5D
+                                                     , RKC.bH5H
+                                                     , RKC.bH5S
                                                      ])
-                                  , (setUpAuctionsS, [ RKC.bRKC1430S5C
-                                                     , RKC.bRKC1430S5D
-                                                     , RKC.bRKCS5H
-                                                     , RKC.bRKCS5S
+                                  , (setUpAuctionsS, [ RKC.b1430S5C
+                                                     , RKC.b1430S5D
+                                                     , RKC.bS5H
+                                                     , RKC.bS5S
                                                      ])
                                   ]
 
@@ -95,23 +95,23 @@ firstResponse3014 = let
         inner setup response = let
             action = do
                 setup `andNextBidderIs` T.North
-                RKC.bRKC4N
+                RKC.b4N
                 makePass
             explanation =
-                "Partner has bid " .+ RKC.bRKC4N .+ " to ask how many " .+
+                "Partner has bid " .+ RKC.b4N .+ " to ask how many " .+
                 "keycards we have. Give them the answer."
           in situation "resp" action response explanation
       in return inner <~ setups <~ responses
   in
-    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.bRKC1430H5C
-                                                     , RKC.bRKC1430H5D
-                                                     , RKC.bRKCH5H
-                                                     , RKC.bRKCH5S
+    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.b1430H5C
+                                                     , RKC.b1430H5D
+                                                     , RKC.bH5H
+                                                     , RKC.bH5S
                                                      ])
-                                  , (setUpAuctionsS, [ RKC.bRKC1430S5C
-                                                     , RKC.bRKC1430S5D
-                                                     , RKC.bRKCS5H
-                                                     , RKC.bRKCS5S
+                                  , (setUpAuctionsS, [ RKC.b1430S5C
+                                                     , RKC.b1430S5D
+                                                     , RKC.bS5H
+                                                     , RKC.bS5S
                                                      ])
                                   ]
 
@@ -122,7 +122,7 @@ signoff1430 = let
         inner setup (response, countA, countB, signoff) = let
             action = do
                 setup `andNextBidderIs` T.South
-                RKC.bRKC4N
+                RKC.b4N
                 makePass
                 _ <- response
                 makePass
@@ -135,18 +135,18 @@ signoff1430 = let
   in
     wrapNW . join $ return sit <~ [
         (setUpAuctionsH, T.Hearts,
-            [ (RKC.bRKC1430H5C, 2, 5, makeCall (T.Bid 5 T.Hearts))
-            , (RKC.bRKC1430H5D, 3, 0, makeCall (T.Bid 5 T.Hearts))
-            , (RKC.bRKCH5H,     1, 4, makeCall (T.Pass          ))
+            [ (RKC.b1430H5C, 2, 5, makeCall (T.Bid 5 T.Hearts))
+            , (RKC.b1430H5D, 3, 0, makeCall (T.Bid 5 T.Hearts))
+            , (RKC.bH5H,     1, 4, makeCall (T.Pass          ))
             -- If hearts are trump and partner bid 5S, we can't sign off. Handle
             -- this separately.
-            --, (RKC.bRKCH5S,     1, 4, makeCall (trouble         ))
+            --, (RKC.bH5S,     1, 4, makeCall (trouble         ))
             ])
       , (setUpAuctionsS, T.Spades,
-            [ (RKC.bRKC1430S5C, 2, 5, makeCall (T.Bid 5 T.Spades))
-            , (RKC.bRKC1430S5D, 3, 0, makeCall (T.Bid 5 T.Spades))
-            , (RKC.bRKCS5H,     1, 4, makeCall (T.Bid 5 T.Spades))
-            , (RKC.bRKCS5S,     1, 4, makeCall (T.Pass          ))
+            [ (RKC.b1430S5C, 2, 5, makeCall (T.Bid 5 T.Spades))
+            , (RKC.b1430S5D, 3, 0, makeCall (T.Bid 5 T.Spades))
+            , (RKC.bS5H,     1, 4, makeCall (T.Bid 5 T.Spades))
+            , (RKC.bS5S,     1, 4, makeCall (T.Pass          ))
             ])
       ]
 
@@ -157,7 +157,7 @@ signoff3014 = let
         inner setup (response, countA, countB, signoff) = let
             action = do
                 setup `andNextBidderIs` T.South
-                RKC.bRKC4N
+                RKC.b4N
                 makePass
                 _ <- response
                 makePass
@@ -170,18 +170,18 @@ signoff3014 = let
   in
     wrapNW . join $ return sit <~ [
         (setUpAuctionsH, T.Hearts,
-            [ (RKC.bRKC3014H5C, 3, 0, makeCall (T.Bid 5 T.Hearts))
-            , (RKC.bRKC3014H5D, 2, 5, makeCall (T.Bid 5 T.Hearts))
-            , (RKC.bRKCH5H,     1, 4, makeCall (T.Pass          ))
+            [ (RKC.b3014H5C, 3, 0, makeCall (T.Bid 5 T.Hearts))
+            , (RKC.b3014H5D, 2, 5, makeCall (T.Bid 5 T.Hearts))
+            , (RKC.bH5H,     1, 4, makeCall (T.Pass          ))
             -- If hearts are trump and partner bid 5S, we can't sign off. Handle
             -- this separately.
-            --, (RKC.bRKCH5S,     1, 4, makeCall (trouble         ))
+            --, (RKC.bH5S,     1, 4, makeCall (trouble         ))
             ])
       , (setUpAuctionsS, T.Spades,
-            [ (RKC.bRKC3014S5C, 3, 0, makeCall (T.Bid 5 T.Spades))
-            , (RKC.bRKC3014S5D, 2, 5, makeCall (T.Bid 5 T.Spades))
-            , (RKC.bRKCS5H,     1, 4, makeCall (T.Bid 5 T.Spades))
-            , (RKC.bRKCS5S,     1, 4, makeCall (T.Pass          ))
+            [ (RKC.b3014S5C, 3, 0, makeCall (T.Bid 5 T.Spades))
+            , (RKC.b3014S5D, 2, 5, makeCall (T.Bid 5 T.Spades))
+            , (RKC.bS5H,     1, 4, makeCall (T.Bid 5 T.Spades))
+            , (RKC.bS5S,     1, 4, makeCall (T.Pass          ))
             ])
       ]
 
