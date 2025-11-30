@@ -1,0 +1,216 @@
+module Topics.RomanKeycardBlackwood(topic1430, topic3014) where
+
+import Control.Monad(join)
+
+import Action(Action)
+import qualified Bids.RomanKeycardBlackwood as RKC
+import qualified Bids.Jacoby2NT as J2N
+import CommonBids(andNextBidderIs, noInterference)
+import EDSL(makeCall, makePass, pointRange, keycardCount)
+import Output((.+))
+import Situation(situation, (<~))
+import qualified Terminology as T
+import Topic(Topic, wrap, wrapNW, Situations, makeTopic)
+
+
+setUpAuctionsH :: [Action]
+setUpAuctionsH = [ do J2N.b1H
+                      noInterference T.Hearts
+                      J2N.b1H2N
+                      noInterference T.Hearts
+                      J2N.b1H2N4H
+                      makePass
+                      pointRange 17 40
+                 , do J2N.b1H
+                      noInterference T.Hearts
+                      J2N.b1H2N
+                      noInterference T.Hearts
+                      J2N.b1H2N4D
+                      makePass
+                      pointRange 16 40
+                 ]
+
+setUpAuctionsS :: [Action]
+setUpAuctionsS = [ do J2N.b1S
+                      noInterference T.Spades
+                      J2N.b1S2N
+                      noInterference T.Spades
+                      J2N.b1S2N4S
+                      makePass
+                      pointRange 17 40
+                 , do J2N.b1S
+                      noInterference T.Spades
+                      J2N.b1S2N
+                      noInterference T.Spades
+                      J2N.b1S2N4H
+                      makePass
+                      pointRange 16 40
+                 ]
+
+
+initiate :: Situations
+initiate = let
+    sit setup = let
+        action = do
+            setup `andNextBidderIs` T.South
+        explanation =
+            "We've found a trump fit and have slam interest. Time to check " .+
+            "for keycards by bidding " .+ RKC.bRKC4N .+ "! If we're missing " .+
+            "two of them, we'll sign off at the 5 level."
+      in situation "init" action RKC.bRKC4N explanation
+  in
+    wrapNW $ return sit <~ (setUpAuctionsH ++ setUpAuctionsS)
+
+
+firstResponse1430 :: Situations
+firstResponse1430 = let
+    sit (setups, responses) = let
+        inner setup response = let
+            action = do
+                setup `andNextBidderIs` T.North
+                RKC.bRKC4N
+                makePass
+            explanation =
+                "Partner has bid " .+ RKC.bRKC4N .+ " to ask how many " .+
+                "keycards we have. Give them the answer."
+          in situation "resp" action response explanation
+      in return inner <~ setups <~ responses
+  in
+    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.bRKC1430H5C
+                                                     , RKC.bRKC1430H5D
+                                                     , RKC.bRKCH5H
+                                                     , RKC.bRKCH5S
+                                                     ])
+                                  , (setUpAuctionsS, [ RKC.bRKC1430S5C
+                                                     , RKC.bRKC1430S5D
+                                                     , RKC.bRKCS5H
+                                                     , RKC.bRKCS5S
+                                                     ])
+                                  ]
+
+
+firstResponse3014 :: Situations
+firstResponse3014 = let
+    sit (setups, responses) = let
+        inner setup response = let
+            action = do
+                setup `andNextBidderIs` T.North
+                RKC.bRKC4N
+                makePass
+            explanation =
+                "Partner has bid " .+ RKC.bRKC4N .+ " to ask how many " .+
+                "keycards we have. Give them the answer."
+          in situation "resp" action response explanation
+      in return inner <~ setups <~ responses
+  in
+    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.bRKC1430H5C
+                                                     , RKC.bRKC1430H5D
+                                                     , RKC.bRKCH5H
+                                                     , RKC.bRKCH5S
+                                                     ])
+                                  , (setUpAuctionsS, [ RKC.bRKC1430S5C
+                                                     , RKC.bRKC1430S5D
+                                                     , RKC.bRKCS5H
+                                                     , RKC.bRKCS5S
+                                                     ])
+                                  ]
+
+
+signoff1430 :: Situations
+signoff1430 = let
+    sit (setups, suit, followups) = let
+        inner setup (response, countA, countB, signoff) = let
+            action = do
+                setup `andNextBidderIs` T.South
+                RKC.bRKC4N
+                makePass
+                _ <- response
+                makePass
+                keycardCount suit countA countB
+            explanation =
+                "We asked for keycards, but learned we're missing 2 of " .+
+                "them. Slam is likely to fail: sign off at the 5 level."
+          in situation "fail" action signoff explanation
+      in return inner <~ setups <~ followups
+  in
+    wrapNW . join $ return sit <~ [
+        (setUpAuctionsH, T.Hearts,
+            [ (RKC.bRKC1430H5C, 2, 5, makeCall (T.Bid 5 T.Hearts))
+            , (RKC.bRKC1430H5D, 3, 0, makeCall (T.Bid 5 T.Hearts))
+            , (RKC.bRKCH5H,     1, 4, makeCall (T.Pass          ))
+            -- If hearts are trump and partner bid 5S, we can't sign off. Handle
+            -- this separately.
+            --, (RKC.bRKCH5S,     1, 4, makeCall (trouble         ))
+            ])
+      , (setUpAuctionsS, T.Spades,
+            [ (RKC.bRKC1430S5C, 2, 5, makeCall (T.Bid 5 T.Spades))
+            , (RKC.bRKC1430S5D, 3, 0, makeCall (T.Bid 5 T.Spades))
+            , (RKC.bRKCS5H,     1, 4, makeCall (T.Bid 5 T.Spades))
+            , (RKC.bRKCS5S,     1, 4, makeCall (T.Pass          ))
+            ])
+      ]
+
+
+signoff3014 :: Situations
+signoff3014 = let
+    sit (setups, suit, followups) = let
+        inner setup (response, countA, countB, signoff) = let
+            action = do
+                setup `andNextBidderIs` T.South
+                RKC.bRKC4N
+                makePass
+                _ <- response
+                makePass
+                keycardCount suit countA countB
+            explanation =
+                "We asked for keycards, but learned we're missing 2 of " .+
+                "them. Slam is likely to fail: sign off at the 5 level."
+          in situation "fail" action signoff explanation
+      in return inner <~ setups <~ followups
+  in
+    wrapNW . join $ return sit <~ [
+        (setUpAuctionsH, T.Hearts,
+            [ (RKC.bRKC3014H5C, 3, 0, makeCall (T.Bid 5 T.Hearts))
+            , (RKC.bRKC3014H5D, 2, 5, makeCall (T.Bid 5 T.Hearts))
+            , (RKC.bRKCH5H,     1, 4, makeCall (T.Pass          ))
+            -- If hearts are trump and partner bid 5S, we can't sign off. Handle
+            -- this separately.
+            --, (RKC.bRKCH5S,     1, 4, makeCall (trouble         ))
+            ])
+      , (setUpAuctionsS, T.Spades,
+            [ (RKC.bRKC3014S5C, 3, 0, makeCall (T.Bid 5 T.Spades))
+            , (RKC.bRKC3014S5D, 2, 5, makeCall (T.Bid 5 T.Spades))
+            , (RKC.bRKCS5H,     1, 4, makeCall (T.Bid 5 T.Spades))
+            , (RKC.bRKCS5S,     1, 4, makeCall (T.Pass          ))
+            ])
+      ]
+
+
+-- TODO:
+-- Queen ask
+-- Respond to queen ask
+-- Respond to 4N with a void
+-- Signing off in slam
+-- 5N as king ask
+-- respond to 5N
+-- Going to grand slam?
+-- Placing the contract after partner shows a void?
+-- Unsure how to phrase: trouble when hearts are trump and you have 1 keycard
+--     without the queen (worried about partner responding 5S)
+
+
+topic1430 :: Topic
+topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
+  where
+    situations = wrap [ initiate
+                      , firstResponse1430
+                      , signoff1430
+                      ]
+
+topic3014 :: Topic
+topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
+  where
+    situations = wrap [ initiate
+                      , firstResponse3014
+                      , signoff3014
+                      ]
