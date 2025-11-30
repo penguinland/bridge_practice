@@ -2,6 +2,7 @@ module DealerProg(
   DealerProg
 , addDefn
 , addNewReq
+, addNewPredeal
 , invert
 , nameAll
 , eval
@@ -50,9 +51,18 @@ addNewReq name defn (DealerProg p m l) =
   DealerProg p (addDefinition name defn m) (name:l)
 
 
+addNewPredeal :: T.Suit -> T.Direction -> Int -> DealerProg -> DealerProg
+addNewPredeal s d i (DealerProg p m l) = DealerProg ((s, d, i):p) m l
+
+
+-- When inverting a program, throw out all predeal constraints. It's not
+-- possible to use `!=` in a predeal directive, and instead we rely on the
+-- constraints themselves. This can lead to poor performance, but hopefully
+-- inverting a program results in many more possibilities, thus not harming
+-- performance after all.
 invert :: DealerProg -> DealerProg
-invert (DealerProg predeals defns reqs) =
-    DealerProg predeals defns ["!(" ++ join " && " reqs ++ ")"]
+invert (DealerProg _ defns reqs) =
+    DealerProg [] defns ["!(" ++ join " && " reqs ++ ")"]
 
 
 nameAll :: CondName -> DealerProg -> DealerProg
