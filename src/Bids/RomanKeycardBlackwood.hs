@@ -7,6 +7,9 @@ module Bids.RomanKeycardBlackwood(
   , bH5H
   , bH5S
   , bH5N
+  , bH6C
+  , bH6D
+  , bH6H
   , b1430S5C
   , b1430S5D
   , b3014S5C
@@ -14,6 +17,9 @@ module Bids.RomanKeycardBlackwood(
   , bS5H
   , bS5S
   , bS5N
+  , bS6C
+  , bS6D
+  , bS6H
 ) where
 
 
@@ -91,9 +97,35 @@ b5N_ trumpSuit = do
 bH5N :: Action
 bH5N = E.nameAction "RKC_H_5N" (b5N_ T.Hearts)
 
-
 bS5N :: Action
 bS5N = E.nameAction "RKC_S_5N" (b5N_ T.Spades)
+
+
+b6x_ :: T.Suit -> T.Suit -> T.Suit -> Action
+b6x_ trumpSuit voidSuit bidSuit = do
+    E.alternatives [E.keycardCount trumpSuit 1 3, E.keycardCount trumpSuit 5 5]
+    E.suitLength voidSuit 0
+    E.makeAlertableCall (T.Bid 6 bidSuit)
+        ("(postalert) odd number of keycards with a " ++
+            (init . show $ voidSuit) ++ " void")
+
+bH6C :: Action
+bH6C = E.nameAction "RKC_H_6C" (b6x_ T.Hearts T.Clubs    T.Clubs)
+
+bH6D :: Action
+bH6D = E.nameAction "RKC_H_6D" (b6x_ T.Hearts T.Diamonds T.Diamonds)
+
+bH6H :: Action
+bH6H = E.nameAction "RKC_H_6H" (b6x_ T.Hearts T.Spades   T.Hearts)
+
+bS6C :: Action
+bS6C = E.nameAction "RKC_S_6C" (b6x_ T.Spades T.Clubs    T.Clubs)
+
+bS6D :: Action
+bS6D = E.nameAction "RKC_S_6D" (b6x_ T.Spades T.Diamonds T.Diamonds)
+
+bS6H :: Action
+bS6H = E.nameAction "RKC_S_6H" (b6x_ T.Spades T.Hearts   T.Hearts)
 
 
 -- For RKC3014, reuse as much as possible. To keep changes to the dealer program
