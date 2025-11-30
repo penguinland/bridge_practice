@@ -84,11 +84,11 @@ toProgram (DealerProg predeals defns conds) = unlines $
     -- isn't enough, consider removing those situations from practice entirely,
     -- since they'll probably never come up.
     ["generate 10000000", "produce 1", ""] ++
-    map formatPredeal predeals ++
-    toProgDefs defns
-    ++ ["", "condition",
-        "    " ++ (join " && " . reverse $ conds),
-        "action", "    printall"]
+    map formatPredeal predeals ++ [""] ++
+    toProgDefs defns ++
+    ["",
+     "condition", "    " ++ (join " && " . reverse $ conds),
+     "action", "    printall"]
   where
     formatPredeal (suit, dir, len) =
         "predeal " ++ show suit ++ "(" ++ show dir ++ ") == " ++ show len
