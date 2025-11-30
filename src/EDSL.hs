@@ -5,6 +5,7 @@ module EDSL (
 , alternatives
 , impliesThat
 , forEach
+, atLeastOneOf
 , makeCall
 , makeAlertableCall
 , makePass
@@ -37,7 +38,7 @@ import Control.Monad.Trans.State.Strict(execState, get, put, modify)
 import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
-import Action(Action, newAuction, constrain, define)
+import Action(Action, newAuction, constrain, define, predeal)
 import DealerProg(invert, nameAll)
 import Output(Showable, toDescription)
 import Structures(addCall, currentBidder)
@@ -76,6 +77,10 @@ impliesThat ifPart thenPart = alternatives [thenPart, forbid ifPart]
 
 forEach :: [a] -> (a -> Action) -> Action
 forEach = flip mapM_
+
+
+atLeastOneOf :: [a] -> (a -> Action) -> Action
+atLeastOneOf as f = alternatives . map f $ as
 
 
 makeCall :: T.Call -> Action
@@ -126,7 +131,9 @@ suitLengthOp op suffix suit len =
               [show suit ++ "(", ") " ++ op ++ " " ++ show len]
 
 suitLength :: T.Suit -> Int -> Action
-suitLength = suitLengthOp "==" "eq"
+suitLength suit len = do
+    suitLengthOp "==" "eq" suit len
+    predeal suit len  -- Performance optimization
 
 minSuitLength :: T.Suit -> Int -> Action
 minSuitLength = suitLengthOp ">=" "ge"
