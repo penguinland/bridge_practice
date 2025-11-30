@@ -188,8 +188,8 @@ signoff3014 = let
 
 oddVoid :: Situations
 oddVoid = let
-    sit (setups, response) = let
-        inner setup = let
+    sit (setups, responses) = let
+        inner setup response = let
             action = do
                 setup `andNextBidderIs` T.North
                 RKC.b4N
@@ -203,7 +203,7 @@ oddVoid = let
                 "final contract, either in our trump suit or notrump, " .+
                 "either in small or grand slam."
           in situation "oddVoid" action response explanation
-      in return inner <~ setups
+      in return inner <~ setups <~ responses
   in
     wrapNW . join $ return sit <~ [
         (setUpAuctionsH, [RKC.bH6C, RKC.bH6D, RKC.bH6H])
