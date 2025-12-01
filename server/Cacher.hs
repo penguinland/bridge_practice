@@ -1,6 +1,8 @@
 module Cacher(Cacher, newCacher, getProblem) where
 
 import Control.Concurrent.MVar(MVar, newMVar, takeMVar, putMVar)
+import Control.Concurrent.Pool(Pool, newPool, queue)
+import Control.Monad(replicateM)
 import Control.Monad.Trans(liftIO)
 import Control.Monad.Trans.State.Strict(StateT)
 import System.Random(StdGen)
@@ -13,11 +15,15 @@ import SituationInstance(SituationInstance)
 data Cacher = Cacher Topic (MVar [SituationInstance])
 
 
+_threadPool :: Pool (StateT StdGen IO) Cacher a
+_threadPool = newPool 4 False  -- 4 threads, don't return results
+
+
 newCacher :: Topic -> Int -> StateT StdGen IO Cacher
 newCacher topic cacheCount = do
     mv <- liftIO $ newMVar []
     let cacher = Cacher topic mv
-    -- Call `makeProblem_ cacher` cacheCount times in parallel
+    replicateM cacheCount $ queue _threadPool makeProblem_ cacher
     return cacher
 
 
@@ -38,5 +44,5 @@ getProblem c@(Cacher t mv) = do
         return $ newSitInsts !! 0
       (first:rest) -> do
         liftIO $ putMVar mv rest
-        -- Call `makeProblem_ c` in a separate thread
+        queue _threadPool makeProblem_ c
         return first
