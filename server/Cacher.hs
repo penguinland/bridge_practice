@@ -1,8 +1,4 @@
-{-# LANGUAGE TypeSynonymInstances #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
---module Cacher(Cacher, newCacher, getProblem) where
-module Cacher(Cacher, newCacher) where
+module Cacher(Cacher, newCacher, getProblem) where
 
 import Control.Concurrent.MVar(MVar, newMVar, takeMVar, putMVar)
 import Control.Monad(replicateM_)
@@ -32,7 +28,7 @@ makeProblem_ (Cacher t mv _) = do
     sitInsts <- liftIO $ takeMVar mv
     liftIO $ putMVar mv ((sitInst !! 0) : sitInsts)
 
-{-
+
 getProblem :: Cacher -> StIO SituationInstance
 getProblem c@(Cacher t mv p) = do
     sitInsts <- liftIO $ takeMVar mv
@@ -43,6 +39,5 @@ getProblem c@(Cacher t mv p) = do
         return $ newSitInsts !! 0
       (first:rest) -> do
         liftIO $ putMVar mv rest
-        liftIO $ enqueue p (makeProblem_ c) ()
+        liftIO . enqueue p $ makeProblem_ c
         return first
--}
