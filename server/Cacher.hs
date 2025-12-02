@@ -24,6 +24,7 @@ newCacher pool cacheCount topic = do
 
 makeProblem_ :: Cacher -> StIO ()
 makeProblem_ (Cacher t mv _) = do
+    -- TODO: make sure this gets evaluated in a timely manner
     sitInst <- generate 1 [t]
     sitInsts <- liftIO $ takeMVar mv
     liftIO $ putMVar mv ((sitInst !! 0) : sitInsts)

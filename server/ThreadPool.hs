@@ -27,6 +27,7 @@ newThreadPool nThreads = do
     runWorker :: ThreadPool -> StdGen -> IO ()
     runWorker chan rng' = do
         f <- readBoundedChan chan
+        -- TODO: make sure this doesn't crash
         (_, rng'') <- runStateT f rng'
         runWorker chan rng''
 
