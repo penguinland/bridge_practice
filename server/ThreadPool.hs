@@ -1,5 +1,5 @@
 --{-# LANGUAGE BangPatterns #-}
-module ThreadPool(ThreadPool, newThreadPool, enqueue) where
+module ThreadPool(ThreadPool, newThreadPool, enqueue, StIO) where
 
 import Control.Concurrent(forkIO)
 import Control.Concurrent.Classy.BoundedChan(

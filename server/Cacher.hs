@@ -5,37 +5,24 @@
 module Cacher(Cacher, newCacher) where
 
 import Control.Concurrent.MVar(MVar, newMVar, takeMVar, putMVar)
-import Control.Concurrent.Pool(Pool, newPool, queue, Task, runTask)
 import Control.Monad(replicateM_)
 import Control.Monad.Trans(liftIO)
-import Control.Monad.Trans.State.Strict(StateT)
-import System.Random(StdGen)
 
 import ProblemSet(generate)
 import Topic(Topic)
 import SituationInstance(SituationInstance)
 
-
-type StIO = StateT StdGen IO
-type PoolType = Pool StIO () ()
-
-instance Task StIO a r where
-    runTask = liftIO runTask
+import ThreadPool(ThreadPool, enqueue, StIO)
 
 
-data Cacher = Cacher Topic (MVar [SituationInstance]) PoolType
+data Cacher = Cacher Topic (MVar [SituationInstance]) ThreadPool
 
 
-makeThreadPool :: StIO PoolType
-makeThreadPool = newPool 4 False  -- 4 threads, don't return results
-
-
-newCacher :: PoolType -> Int -> Topic -> StIO Cacher
+newCacher :: ThreadPool -> Int -> Topic -> StIO Cacher
 newCacher pool cacheCount topic = do
     mv <- liftIO $ newMVar []
     let cacher = Cacher topic mv pool
-    --liftIO . replicateM_ cacheCount $ queue pool (makeProblem_ cacher) ()
-    queue pool (makeProblem_ cacher) ()
+    liftIO . replicateM_ cacheCount $ enqueue pool (makeProblem_ cacher)
     return cacher
 
 
@@ -56,6 +43,6 @@ getProblem c@(Cacher t mv p) = do
         return $ newSitInsts !! 0
       (first:rest) -> do
         liftIO $ putMVar mv rest
-        liftIO $ queue p (makeProblem_ c) ()
+        liftIO $ enqueue p (makeProblem_ c) ()
         return first
 -}
