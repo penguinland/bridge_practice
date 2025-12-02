@@ -3,7 +3,8 @@ module ThreadPool(ThreadPool, newThreadPool, enqueue, StIO) where
 import Control.Concurrent(forkIO)
 import Control.Concurrent.Classy.BoundedChan(
     BoundedChan, newBoundedChan, writeBoundedChan, readBoundedChan)
-import Control.Monad.Trans.State.Strict(StateT, runStateT)
+import Control.Monad.Trans(liftIO)
+import Control.Monad.Trans.State.Strict(StateT, runStateT, get)
 import System.Random(StdGen, split)
 
 
@@ -11,11 +12,12 @@ type StIO = StateT StdGen IO
 type ThreadPool = BoundedChan IO (StIO ())
 
 
-newThreadPool :: Int -> StdGen -> IO ThreadPool
-newThreadPool nThreads rng = do
-    channel <- newBoundedChan (nThreads * 2)
+newThreadPool :: Int -> StIO ThreadPool
+newThreadPool nThreads = do
+    rng <- get
+    channel <- liftIO $ newBoundedChan (nThreads * 2)
     let rngs = splitRNG nThreads rng
-    sequence_ . map (forkIO . runWorker channel) $ rngs
+    sequence_ . map (liftIO . forkIO . runWorker channel) $ rngs
     return channel
   where
     splitRNG :: Int -> StdGen -> [StdGen]
