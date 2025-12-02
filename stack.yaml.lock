@@ -3,14 +3,7 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/topics/lock_files
 
-packages:
-- completed:
-    hackage: threads-pool-0.1@sha256:d0f8fe1dd1cf50babdc4634590be9a1c3918dbd112b6598e5d0a21ab23000ef4,1617
-    pantry-tree:
-      sha256: edbb6fe38452d90062650df5d56cb3017f7fe5183eef7ce364d68bf25fed29cf
-      size: 274
-  original:
-    hackage: threads-pool-0.1@sha256:d0f8fe1dd1cf50babdc4634590be9a1c3918dbd112b6598e5d0a21ab23000ef4,1617
+packages: []
 snapshots:
 - completed:
     sha256: b73b2b116143aea728c70e65c3239188998bac5bc3be56465813dacd74215dc5

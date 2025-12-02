@@ -49,7 +49,6 @@ executables:
     - mtl
     - Spock
     - text
-    - threads-pool
     - time
     - wai
     - wai-extra

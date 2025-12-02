@@ -40,8 +40,6 @@ packages:
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
 # extra-deps: []
-extra-deps:
-- threads-pool-0.1@sha256:d0f8fe1dd1cf50babdc4634590be9a1c3918dbd112b6598e5d0a21ab23000ef4,1617
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
