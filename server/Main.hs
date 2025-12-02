@@ -19,16 +19,19 @@ import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 import ProblemSet(generate)
 import SupportedTopics(topicNames, findTopics)
 
+import ThreadPool(ThreadPool, newThreadPool)
+
 
 data MySession = EmptySession
-data MyAppState = IoRng (IORef StdGen)
+data MyAppState = IoRng (IORef StdGen) ThreadPool
 
 
 main :: IO ()
 main = do
     rng <- getStdGen
-    ref <- newIORef rng
-    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref)
+    (pool, rng') <- runStateT (newThreadPool 4) rng
+    ref <- newIORef rng'
+    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref pool)
     runSpock 8765 (spock spockCfg app)
 
 
@@ -59,7 +62,7 @@ app = do
         case maybe (Left "no topics selected") findTopics requested of
             Left err -> text . pack $ err
             Right topics -> do
-                (IoRng ioRng) <- getState
+                (IoRng ioRng _) <- getState
                 rng <- liftIO . readIORef $ ioRng
                 (sitInstList, rng') <- liftIO $
                     runStateT (generate 1 topics) rng
