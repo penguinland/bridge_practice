@@ -23,7 +23,7 @@ import ThreadPool(newThreadPool)
 
 
 data MySession = EmptySession
-data MyAppState = IoRng (IORef StdGen) TopicRegistry
+data MyAppState = IOState (IORef StdGen) TopicRegistry
 
 
 main :: IO ()
@@ -32,7 +32,7 @@ main = do
     (pool, rng') <- runStateT (newThreadPool 4) rng
     (registry, rng'') <- runStateT (makeTopicRegistry pool) rng'
     ref <- newIORef rng''
-    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref registry)
+    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IOState ref registry)
     runSpock 8765 (spock spockCfg app)
 
 
@@ -60,10 +60,10 @@ app = do
     get "situation" $ do
         liftIO $ getCurrentTime >>= print
         requested <- param "topics"
+        (IOState ioRng _) <- getState
         case maybe (Left "no topics selected") findTopics requested of
             Left err -> text . pack $ err
             Right topics -> do
-                (IoRng ioRng _) <- getState
                 rng <- liftIO . readIORef $ ioRng
                 (sitInstList, rng') <- liftIO $
                     runStateT (generate 1 topics) rng
