@@ -26,7 +26,7 @@ makeProblem_ :: Cacher -> StIO ()
 makeProblem_ (Cacher t mv _) = do
     -- TODO: make sure this gets evaluated in a timely manner
     sitInstList <- generate 1 [t]
-    let sitInst = sitInstList !! 0
+    let sitInst = head sitInstList
     liftIO . putStrLn $ "Created new SituationInstance: " ++ debugString sitInst
     sitInsts <- liftIO $ takeMVar mv
     liftIO $ putMVar mv (sitInst : sitInsts)
@@ -39,7 +39,7 @@ getProblem c@(Cacher t mv p) = do
       [] -> do
         liftIO $ putMVar mv []
         newSitInsts <- generate 1 [t]
-        return $ newSitInsts !! 0
+        return . head $ newSitInsts
       (first:rest) -> do
         liftIO $ putMVar mv rest
         liftIO . enqueue p $ makeProblem_ c
