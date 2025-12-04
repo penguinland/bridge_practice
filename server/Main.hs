@@ -18,20 +18,21 @@ import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
 import ProblemSet(generate)
 
-import ProvidedTopics(topicNames, findTopics)
-import ThreadPool(ThreadPool, newThreadPool)
+import ProvidedTopics(topicNames, findTopics, TopicRegistry, makeTopicRegistry)
+import ThreadPool(newThreadPool)
 
 
 data MySession = EmptySession
-data MyAppState = IoRng (IORef StdGen) ThreadPool
+data MyAppState = IoRng (IORef StdGen) TopicRegistry
 
 
 main :: IO ()
 main = do
     rng <- getStdGen
     (pool, rng') <- runStateT (newThreadPool 4) rng
-    ref <- newIORef rng'
-    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref pool)
+    (registry, rng'') <- runStateT (makeTopicRegistry pool) rng'
+    ref <- newIORef rng''
+    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref registry)
     runSpock 8765 (spock spockCfg app)
 
 
