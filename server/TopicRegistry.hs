@@ -26,7 +26,9 @@ type TopicRegistry = Map Int Cacher
 
 makeTopicRegistry :: ThreadPool -> StIO TopicRegistry
 makeTopicRegistry pool = do
-    cachers <- sequence . map (encapsulate . second (newCacher pool 3) . (fst3 &&& thd3)) $ topicList
+    cachers <- sequence .
+               map (encapsulate . second (newCacher pool 3) . (fst3 &&& thd3)) $
+               topicList
     return $ fromList cachers
   where
     encapsulate :: (Int, StIO Cacher) -> StIO (Int, Cacher)
@@ -59,12 +61,12 @@ collectResults (Right r : rest) = case collectResults rest of
                                   Right rr -> Right (r : rr)
 
 
--- The argument should be a comma-separated list of indices. We return either a
--- description of which indices we don't recognize, or a list of all the
--- corresponding Cachers.
+-- The String argument should be a comma-separated list of indices. We return
+-- either a description of which indices we don't recognize, or a list of all
+-- the corresponding Cachers.
 findCachers :: TopicRegistry -> String -> Either String [Cacher]
 findCachers registry indices = let
-    results = collectResults . map (getTopic registry . read) . split "," $ indices
+    foundCachers = map (getTopic registry . read) . split "," $ indices
     formatError = ("Unknown indices: " ++) . join "," . map show
   in
-    mapLeft formatError results
+    mapLeft formatError . collectResults $ foundCachers

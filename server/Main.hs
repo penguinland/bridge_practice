@@ -62,7 +62,8 @@ app = do
         liftIO $ getCurrentTime >>= print
         requested <- param "topics"
         (IOState ioRng registry) <- getState
-        case maybe (Left "no topics selected") (findCachers registry) requested of
+        let malformed = Left "no topics selected"
+        case maybe malformed (findCachers registry) requested of
             Left err -> text . pack $ err
             Right cachers -> do
                 rng <- liftIO . readIORef $ ioRng
