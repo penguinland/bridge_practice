@@ -1,21 +1,19 @@
 module SupportedTopics(
-    topicNames
-  , findTopics
-  , getNamedTopic
-  , topicList  -- Used in Assertions.hs to do compile-time checks
+    topicNames     -- Currently used only in the server
+  , findTopics     -- Currently used only in the server
+  , topicList      -- Used in Assertions.hs to do compile-time checks
 ) where
 
 import Data.Aeson(Value, object, (.=))
 import Data.Aeson.Key(fromString)
 import Data.Either.Extra(maybeToEither, mapLeft)
-import Data.List(find)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
 import Data.Tuple.Extra((&&&))
 import Data.Tuple.Utils(fst3, thd3)
 
 import Output(toHtml)
-import Topic(Topic, refName, topicName)
+import Topic(Topic, topicName)
 
 import qualified Topics.StandardOpeners as StandardOpeners
 import qualified Topics.TwoOverOne as TwoOverOne
@@ -132,7 +130,3 @@ findTopics indices = let
     formatError = ("Unknown indices: " ++) . join "," . map show
   in
     mapLeft formatError results
-
-
-getNamedTopic :: String -> Maybe Topic
-getNamedTopic name = find ((== name) . refName) . map thd3 $ topicList

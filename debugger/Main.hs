@@ -6,6 +6,8 @@
 import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(runState, runStateT)
 import Data.Char(isSpace)
+import Data.List(find)
+import Data.Tuple.Utils(thd3)
 -- We import the Internal implementation of the RNG directly because it has
 -- implementations of Read and ways to get at the inner guts of the StdGen that
 -- the non-Internal version does not have. If we ever upgrade to a newer version
@@ -16,7 +18,7 @@ import DealerProg(toProgram)
 import Output(toMonospace)
 import Situation(Situation(..))
 import SituationInstance(instantiate)
-import SupportedTopics(getNamedTopic)
+import SupportedTopics(topicList)
 import Topic(Topic(..), choose)
 
 
@@ -42,6 +44,10 @@ debug topic sitName rng = do
         Nothing      -> error "Couldn't instantiate situation!?"
         Just sitInst -> return $ (toProgram . sitDealerProg $ sit) ++ "\n\n" ++
                                  toMonospace sitInst
+
+
+getNamedTopic :: String -> Maybe Topic
+getNamedTopic name = find ((== name) . refName) . map thd3 $ topicList
 
 
 main :: IO ()
