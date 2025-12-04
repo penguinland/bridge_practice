@@ -17,7 +17,9 @@ import Web.Spock(SpockM, file, text, get, root, spock, runSpock, json,
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
 import ProblemSet(generate)
+import Random(pickItem)
 
+import Cacher(getProblem)
 import ProvidedTopics(topicNames, findTopics, TopicRegistry, makeTopicRegistry)
 import ThreadPool(newThreadPool)
 
@@ -60,12 +62,12 @@ app = do
     get "situation" $ do
         liftIO $ getCurrentTime >>= print
         requested <- param "topics"
-        (IOState ioRng _) <- getState
-        case maybe (Left "no topics selected") findTopics requested of
+        (IOState ioRng registry) <- getState
+        case maybe (Left "no topics selected") (findTopics registry) requested of
             Left err -> text . pack $ err
-            Right topics -> do
+            Right cachers -> do
                 rng <- liftIO . readIORef $ ioRng
                 (sitInstList, rng') <- liftIO $
-                    runStateT (generate 1 topics) rng
+                    runStateT (cachers >>= pickItem >>= getProblem) rng
                 liftIO . writeIORef ioRng $ rng'
                 json . head $ sitInstList

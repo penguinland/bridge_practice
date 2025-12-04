@@ -15,7 +15,7 @@ import Data.Tuple.Utils(fst3, thd3)
 
 import Output(toHtml)
 import SupportedTopics(topicList)
-import Topic(Topic, topicName)
+import Topic(topicName)
 
 import Cacher(Cacher, newCacher)
 import ThreadPool(ThreadPool, StIO)
@@ -33,10 +33,6 @@ makeTopicRegistry pool = do
     encapsulate (a, mb) = mb >>= (\b -> return (a, b))
 
 
-topics :: Map Int Topic
-topics = fromList . map (fst3 &&& thd3) $ topicList
-
-
 topicNames :: [Value]
 topicNames = map toObject topicList
   where
@@ -47,8 +43,8 @@ topicNames = map toObject topicList
                ]
 
 
-getTopic :: Int -> Either Int Topic
-getTopic i = maybeToEither i (topics !? i)
+getTopic :: TopicRegistry -> Int -> Either Int Cacher
+getTopic registry i = maybeToEither i (registry !? i)
 
 
 -- If there are any Left results, we'll return all of them, and otherwise we'll
@@ -65,10 +61,10 @@ collectResults (Right r : rest) = case collectResults rest of
 
 -- The argument should be a comma-separated list of indices. We return either a
 -- description of which indices we don't recognize, or a list of all the
--- corresponding topics.
-findTopics :: String -> Either String [Topic]
-findTopics indices = let
-    results = collectResults . map (getTopic . read) . split "," $ indices
+-- corresponding Cachers.
+findTopics :: TopicRegistry -> String -> Either String [Cacher]
+findTopics registry indices = let
+    results = collectResults . map (getTopic registry . read) . split "," $ indices
     formatError = ("Unknown indices: " ++) . join "," . map show
   in
     mapLeft formatError results
