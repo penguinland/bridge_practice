@@ -16,7 +16,6 @@ import Web.Spock(SpockM, file, text, get, root, spock, runSpock, json,
                  getState, middleware, param, request)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
-import ProblemSet(generate)
 import Random(pickItem)
 
 import Cacher(getProblem)
@@ -67,7 +66,7 @@ app = do
             Left err -> text . pack $ err
             Right cachers -> do
                 rng <- liftIO . readIORef $ ioRng
-                (sitInstList, rng') <- liftIO $
-                    runStateT (cachers >>= pickItem >>= getProblem) rng
+                (sitInst, rng') <- liftIO $
+                    runStateT (pure cachers >>= pickItem >>= getProblem) rng
                 liftIO . writeIORef ioRng $ rng'
-                json . head $ sitInstList
+                json sitInst
