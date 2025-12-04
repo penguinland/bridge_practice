@@ -1,5 +1,6 @@
 module SituationInstance (
   SituationInstance(..)
+, debugString
 , instantiate
 ) where
 
@@ -24,13 +25,13 @@ data SituationInstance =
 
 
 instance Showable SituationInstance where
-    toLatex (SituationInstance bidding answer explanation deal debugString) =
+    toLatex (SituationInstance bidding answer explanation deal debugStr) =
         "\\problem{%\n" ++
             join "%\n}{%\n" [ toLatex deal
                             , toLatex bidding
                             , toLatex answer
                             , toLatex explanation
-                            , debugString
+                            , debugStr
                             ] ++
             "%\n}"
     toHtml _ = "todo"
@@ -51,6 +52,10 @@ instance ToJSON SituationInstance where
         , ("deal",         toJSON d)
         , ("debug_string", toJSON ds)
         ]
+
+
+debugString :: SituationInstance -> String
+debugString (SituationInstance _ _ _ _ ds) = ds
 
 
 instantiate :: String -> Situation -> StateT StdGen IO (Maybe SituationInstance)

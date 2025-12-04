@@ -6,7 +6,7 @@ import Control.Monad.Trans(liftIO)
 
 import ProblemSet(generate)
 import Topic(Topic)
-import SituationInstance(SituationInstance)
+import SituationInstance(SituationInstance, debugString)
 
 import ThreadPool(ThreadPool, enqueue, StIO)
 
@@ -25,9 +25,11 @@ newCacher pool cacheCount topic = do
 makeProblem_ :: Cacher -> StIO ()
 makeProblem_ (Cacher t mv _) = do
     -- TODO: make sure this gets evaluated in a timely manner
-    sitInst <- generate 1 [t]
+    sitInstList <- generate 1 [t]
+    let sitInst = sitInstList !! 0
+    liftIO . putStrLn $ "Created new SituationInstance: " ++ debugString sitInst
     sitInsts <- liftIO $ takeMVar mv
-    liftIO $ putMVar mv ((sitInst !! 0) : sitInsts)
+    liftIO $ putMVar mv (sitInst : sitInsts)
 
 
 getProblem :: Cacher -> StIO SituationInstance
