@@ -1,6 +1,8 @@
 module ProvidedTopics(
     topicNames
   , findTopics
+  , TopicRegistry
+  , makeTopicRegistry
 ) where
 
 import Data.Aeson(Value, object, (.=))
@@ -8,12 +10,27 @@ import Data.Aeson.Key(fromString)
 import Data.Either.Extra(maybeToEither, mapLeft)
 import Data.List.Utils(join, split)
 import Data.Map(Map, fromList, (!?))
-import Data.Tuple.Extra((&&&))
+import Data.Tuple.Extra((&&&), second)
 import Data.Tuple.Utils(fst3, thd3)
 
 import Output(toHtml)
 import SupportedTopics(topicList)
 import Topic(Topic, topicName)
+
+import Cacher(Cacher, newCacher)
+import ThreadPool(ThreadPool, StIO)
+
+
+type TopicRegistry = Map Int Cacher
+
+
+makeTopicRegistry :: ThreadPool -> StIO TopicRegistry
+makeTopicRegistry pool = do
+    cachers <- sequence . map (encapsulate . second (newCacher pool 3) . (fst3 &&& thd3)) $ topicList
+    return $ fromList cachers
+  where
+    encapsulate :: (Int, StIO Cacher) -> StIO (Int, Cacher)
+    encapsulate (a, mb) = mb >>= (\b -> return (a, b))
 
 
 topics :: Map Int Topic
