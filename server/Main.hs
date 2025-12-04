@@ -19,7 +19,7 @@ import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 import Random(pickItem)
 
 import Cacher(getProblem)
-import ProvidedTopics(topicNames, findTopics, TopicRegistry, makeTopicRegistry)
+import TopicRegistry(topicNames, findCachers, TopicRegistry, makeTopicRegistry)
 import ThreadPool(newThreadPool)
 
 
@@ -62,7 +62,7 @@ app = do
         liftIO $ getCurrentTime >>= print
         requested <- param "topics"
         (IOState ioRng registry) <- getState
-        case maybe (Left "no topics selected") (findTopics registry) requested of
+        case maybe (Left "no topics selected") (findCachers registry) requested of
             Left err -> text . pack $ err
             Right cachers -> do
                 rng <- liftIO . readIORef $ ioRng

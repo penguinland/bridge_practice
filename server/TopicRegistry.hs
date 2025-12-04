@@ -1,6 +1,6 @@
-module ProvidedTopics(
+module TopicRegistry(
     topicNames
-  , findTopics
+  , findCachers
   , TopicRegistry
   , makeTopicRegistry
 ) where
@@ -62,8 +62,8 @@ collectResults (Right r : rest) = case collectResults rest of
 -- The argument should be a comma-separated list of indices. We return either a
 -- description of which indices we don't recognize, or a list of all the
 -- corresponding Cachers.
-findTopics :: TopicRegistry -> String -> Either String [Cacher]
-findTopics registry indices = let
+findCachers :: TopicRegistry -> String -> Either String [Cacher]
+findCachers registry indices = let
     results = collectResults . map (getTopic registry . read) . split "," $ indices
     formatError = ("Unknown indices: " ++) . join "," . map show
   in
