@@ -38,8 +38,7 @@ makeProblem_ (Cacher t mv _) = do
     liftIO . putStrLn $
         "Created new SituationInstance: " ++ debugString sitInst ++ " in " ++
         show elapsed
-    sitInsts <- liftIO $ takeMVar mv
-    liftIO $ putMVar mv (sitInst : sitInsts)
+    liftIO $ takeMVar mv >>= (putMVar mv . (sitInst:))
 
 
 getProblem :: Cacher -> StIO SituationInstance
