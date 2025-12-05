@@ -51,8 +51,7 @@ getProblem c@(Cacher t mv p) = do
         -- cache size, and if it's a topic that has generated a bunch of errors
         -- instead of a bunch of SituationInstances, try refilling it again.
         liftIO . replicateM_ targetCacheSize_ $ enqueue p (makeProblem_ c)
-        newSitInsts <- generate 1 [t]
-        return . head $ newSitInsts
+        generate 1 [t] >>= return . head
       (first:rest) -> do
         liftIO $ putMVar mv rest
         liftIO . enqueue p $ makeProblem_ c
