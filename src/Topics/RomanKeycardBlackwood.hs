@@ -265,6 +265,7 @@ evenVoid = let
 -- Placing the contract after partner shows a void?
 -- Unsure how to phrase: trouble when hearts are trump and you have 1 keycard
 --     without the queen (worried about partner responding 5S)
+-- Queen ask when hearts are trump and partner has responded 5D
 
 
 topic1430 :: Topic
