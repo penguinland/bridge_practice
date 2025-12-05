@@ -219,7 +219,7 @@ oddVoid = let
                 "void is. After this, it is up to partner to place the " .+
                 "final contract, either in our trump suit or notrump, " .+
                 "either in small or grand slam."
-          in situation "oddVoid" action response explanation
+          in situation "oddV" action response explanation
       in return inner <~ setups <~ responses
   in
     wrapNW . join $ return sit <~ [
@@ -230,6 +230,28 @@ oddVoid = let
         -- have a void in hearts
       , (takeIndices_ [1] setUpAuctionsS, [RKC.bS6C, RKC.bS6D])
       ]
+
+
+evenVoid :: Situations
+evenVoid = let
+    sit (setups, response) = let
+        inner setup = let
+            action = do
+                setup `andNextBidderIs` T.North
+                RKC.b4N
+                makePass
+            explanation =
+                "Partner initiated a keycard ask. We have an even number of " .+
+                "keycards and a void, so bid " .+ response .+ " to show " .+
+                "this. Afterwards, it is up to partner to place the final " .+
+                "contract, either in our trump suit or notrump, either in " .+
+                "small or grand slam."
+          in situation "evenV" action response explanation
+      in return inner <~ setups
+  in
+    wrapNW . join $ return sit <~ [ (takeIndices_ [1] setUpAuctionsH, RKC.bH5N)
+                                  , (takeIndices_ [1] setUpAuctionsS, RKC.bS5N)
+                                  ]
 
 
 -- TODO:
@@ -250,7 +272,7 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
     situations = wrap [ initiate
                       , firstResponse1430
                       , signoff1430
-                      , oddVoid
+                      , wrap [oddVoid, evenVoid]
                       ]
 
 topic3014 :: Topic
@@ -259,5 +281,5 @@ topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
     situations = wrap [ initiate
                       , firstResponse3014
                       , signoff3014
-                      , oddVoid
+                      , wrap [oddVoid, evenVoid]
                       ]
