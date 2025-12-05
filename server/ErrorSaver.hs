@@ -4,6 +4,7 @@ import Control.Concurrent(forkIO)
 import Control.Concurrent.Classy.BoundedChan(
     BoundedChan, newBoundedChan, writeBoundedChan, readBoundedChan)
 import Control.Exception(SomeException)
+import Control.Monad(forever)
 
 
 type ErrorSaver = BoundedChan IO SomeException
@@ -20,10 +21,8 @@ newErrorSaver = do
     return channel
   where
     runWorker :: ErrorSaver -> IO ()
-    runWorker chan = do
-        e <- readBoundedChan chan
-        appendFile "errors.log" ('\n':'\n':show e)
-        runWorker chan
+    runWorker chan = forever $
+        readBoundedChan chan >>= (appendFile "errors.log" . (++ "\n\n") . show)
 
 
 saveError :: ErrorSaver -> SomeException -> IO ()
