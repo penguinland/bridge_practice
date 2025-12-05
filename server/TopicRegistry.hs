@@ -50,11 +50,11 @@ makeTopicRegistry pool =
 collectResults_ :: [Either a b] -> Either [a] [b]
 collectResults_ [] = Right []
 collectResults_ (Left l : rest) = case collectResults_ rest of
-                                 Left ll -> Left (l : ll)
-                                 Right _ -> Left [l]
+                                  Left ll -> Left (l : ll)
+                                  Right _ -> Left [l]
 collectResults_ (Right r : rest) = case collectResults_ rest of
-                                  Left l -> Left l
-                                  Right rr -> Right (r : rr)
+                                   Left l -> Left l
+                                   Right rr -> Right (r : rr)
 
 
 -- The String argument should be a comma-separated list of indices. We return
