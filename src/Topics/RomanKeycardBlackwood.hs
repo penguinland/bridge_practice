@@ -221,12 +221,14 @@ oddVoid = let
                 "either in small or grand slam."
           in situation "oddVoid" action response explanation
       in return inner <~ setups <~ responses
-    auctionsH = takeIndices_ [1] setUpAuctionsH
-    auctionsS = takeIndices_ [1] setUpAuctionsS
   in
     wrapNW . join $ return sit <~ [
-        (auctionsH, [RKC.bH6C, RKC.bH6D, RKC.bH6H])
-      , (auctionsS, [RKC.bS6C, RKC.bS6D, RKC.bS6H])
+        -- The keycard teller has already shown a natural diamond suit: can't
+        -- have a void in diamonds
+        (takeIndices_ [1] setUpAuctionsH, [RKC.bH6C, RKC.bH6H])
+        -- The keycard teller has already shown a natural heart suit: can't
+        -- have a void in hearts
+      , (takeIndices_ [1] setUpAuctionsS, [RKC.bS6C, RKC.bS6D])
       ]
 
 
