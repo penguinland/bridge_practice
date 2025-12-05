@@ -7,7 +7,7 @@ import Action(Action)
 import qualified Bids.RomanKeycardBlackwood as RKC
 import qualified Bids.Jacoby2NT as J2N
 import CommonBids(andNextBidderIs, noInterference)
-import EDSL(makeCall, makePass, pointRange, keycardCount)
+import EDSL(makeCall, makePass, pointRange, keycardCount, suitLength)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -29,6 +29,7 @@ takeIndices_ indices values = takeIndices' values (sort indices)
 setUpAuctionsH :: [Action]
 setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       noInterference T.Hearts
+                      suitLength T.Hearts 4  -- Speed up performance
                       J2N.b1H2N
                       noInterference T.Hearts
                       J2N.b1H2N4H
@@ -36,6 +37,7 @@ setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       pointRange 17 40
                  , do J2N.b1H  -- Index 1
                       noInterference T.Hearts
+                      suitLength T.Hearts 4  -- Speed up performance
                       J2N.b1H2N
                       noInterference T.Hearts
                       J2N.b1H2N4D
@@ -46,6 +48,7 @@ setUpAuctionsH = [ do J2N.b1H  -- Index 0
 setUpAuctionsS :: [Action]
 setUpAuctionsS = [ do J2N.b1S  -- Index 0
                       noInterference T.Spades
+                      suitLength T.Spades 4  -- Speed up performance
                       J2N.b1S2N
                       noInterference T.Spades
                       J2N.b1S2N4S
@@ -53,6 +56,7 @@ setUpAuctionsS = [ do J2N.b1S  -- Index 0
                       pointRange 17 40
                  , do J2N.b1S  -- Index 1
                       noInterference T.Spades
+                      suitLength T.Spades 4  -- Speed up performance
                       J2N.b1S2N
                       noInterference T.Spades
                       J2N.b1S2N4H
