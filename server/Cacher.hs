@@ -31,7 +31,6 @@ newCacher pool topic = do
 makeProblem_ :: Cacher -> StIO ()
 makeProblem_ (Cacher t mv _) = do
     start <- liftIO getCurrentTime
-    -- TODO: make sure this gets evaluated in a timely manner
     sitInstList <- generate 1 [t]
     stop <- liftIO getCurrentTime
     let sitInst = head sitInstList
