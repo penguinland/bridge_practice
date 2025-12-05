@@ -35,20 +35,22 @@ newThreadPool nThreads = do
     runWorker :: ThreadPool -> ErrorSaver -> StdGen -> IO ()
     runWorker chan errorSaver rng1 = do
         f <- readBoundedChan chan
-        (_, rng2) <- handle (recordError errorSaver) (runStateT f rng1)
+        (_, rng2) <- handle (recordError errorSaver f rng1) (runStateT f rng1)
         runWorker chan errorSaver rng2
       where
-        recordError saver e = do
+        recordError saver f r e = do
             saveError saver e
+            -- Re-enqueue a failed run: we still need to precompute a
+            -- SituationInstance for this Cacher. However, do it from a separate
+            -- thread! If the channel is full, enqueuing will block until there
+            -- is capacity, and this thread itself is the thing that can free up
+            -- more capacity.
+            _ <- forkIO $ enqueue chan f  -- Ignore the threadID: we don't care
             -- If this situation failed only because it's rare and our RNG got
             -- unlucky, change the RNG seed for next time in the hopes that it
             -- can succeed again later.
-            let (_, rng2) = split rng1
-            -- No need to re-enqueue a failed run: if the Cacher becomes empty,
-            -- it will fill itself up again.
-            -- TODO: revisit this if we get so much traffic that a temporarily
-            -- empty Cacher becomes an actual issue.
-            return ((), rng2)
+            let (_, r') = split r
+            return ((), r')
 
 
 enqueue :: ThreadPool -> StIO () -> IO ()
