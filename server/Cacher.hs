@@ -15,11 +15,15 @@ import ThreadPool(ThreadPool, enqueue, StIO)
 data Cacher = Cacher Topic (MVar [SituationInstance]) ThreadPool
 
 
-newCacher :: ThreadPool -> Int -> Topic -> StIO Cacher
-newCacher pool cacheCount topic = do
+targetCacheSize_ :: Int
+targetCacheSize_ = 3
+
+
+newCacher :: ThreadPool -> Topic -> StIO Cacher
+newCacher pool topic = do
     mv <- liftIO $ newMVar []
     let cacher = Cacher topic mv pool
-    liftIO . replicateM_ cacheCount $ enqueue pool (makeProblem_ cacher)
+    liftIO . replicateM_ targetCacheSize_ $ enqueue pool (makeProblem_ cacher)
     return cacher
 
 
@@ -44,6 +48,10 @@ getProblem c@(Cacher t mv p) = do
     case sitInsts of
       [] -> do
         liftIO $ putMVar mv []
+        -- Why is the Cacher empty? If it's a very popular Topic, increase the
+        -- cache size, and if it's a topic that has generated a bunch of errors
+        -- instead of a bunch of SituationInstances, try refilling it again.
+        liftIO . replicateM_ targetCacheSize_ $ enqueue p (makeProblem_ c)
         newSitInsts <- generate 1 [t]
         return . head $ newSitInsts
       (first:rest) -> do

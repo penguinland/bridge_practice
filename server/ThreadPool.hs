@@ -43,10 +43,10 @@ newThreadPool nThreads = do
             -- unlucky, change the RNG seed for next time in the hopes that it
             -- can succeed again later.
             let (_, rng2) = split rng1
-            -- TODO: do we want to try re-enqueuing the failed `f`? If not, we
-            -- might run out of precomputed SituationInstances for this Topic,
-            -- but if we do, we might get into an infinite loop of failure. Skip
-            -- for now and hope it's not very common...
+            -- No need to re-enqueue a failed run: if the Cacher becomes empty,
+            -- it will fill itself up again.
+            -- TODO: revisit this if we get so much traffic that a temporarily
+            -- empty Cacher becomes an actual issue.
             return ((), rng2)
 
 

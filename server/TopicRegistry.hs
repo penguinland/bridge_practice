@@ -27,7 +27,7 @@ type TopicRegistry = Map Int Cacher
 makeTopicRegistry :: ThreadPool -> StIO TopicRegistry
 makeTopicRegistry pool = do
     cachers <- sequence .
-               map (encapsulate . second (newCacher pool 3) . (fst3 &&& thd3)) $
+               map (encapsulate . second (newCacher pool) . (fst3 &&& thd3)) $
                topicList
     return $ fromList cachers
   where
@@ -45,8 +45,8 @@ topicNames = map toObject topicList
                ]
 
 
-getTopic :: TopicRegistry -> Int -> Either Int Cacher
-getTopic registry i = maybeToEither i (registry !? i)
+getCacher :: TopicRegistry -> Int -> Either Int Cacher
+getCacher registry i = maybeToEither i (registry !? i)
 
 
 -- If there are any Left results, we'll return all of them, and otherwise we'll
@@ -66,7 +66,7 @@ collectResults (Right r : rest) = case collectResults rest of
 -- the corresponding Cachers.
 findCachers :: TopicRegistry -> String -> Either String [Cacher]
 findCachers registry indices = let
-    foundCachers = map (getTopic registry . read) . split "," $ indices
+    foundCachers = map (getCacher registry . read) . split "," $ indices
     formatError = ("Unknown indices: " ++) . join "," . map show
   in
     mapLeft formatError . collectResults $ foundCachers
