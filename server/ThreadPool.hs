@@ -35,7 +35,6 @@ newThreadPool nThreads = do
     runWorker :: ThreadPool -> ErrorSaver -> StdGen -> IO ()
     runWorker chan errorSaver rng1 = do
         f <- readBoundedChan chan
-        -- TODO: make sure this doesn't crash
         (_, rng2) <- handle (recordError errorSaver) (runStateT f rng1)
         runWorker chan errorSaver rng2
       where
