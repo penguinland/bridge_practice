@@ -3,6 +3,7 @@ module Cacher(Cacher, newCacher, getProblem) where
 import Control.Concurrent.MVar(MVar, newMVar, takeMVar, putMVar)
 import Control.Monad(replicateM_)
 import Control.Monad.Trans(liftIO)
+import Data.Time(getCurrentTime, diffUTCTime)
 
 import ProblemSet(generate)
 import Topic(Topic)
@@ -24,10 +25,15 @@ newCacher pool cacheCount topic = do
 
 makeProblem_ :: Cacher -> StIO ()
 makeProblem_ (Cacher t mv _) = do
+    start <- liftIO getCurrentTime
     -- TODO: make sure this gets evaluated in a timely manner
     sitInstList <- generate 1 [t]
+    stop <- liftIO getCurrentTime
     let sitInst = head sitInstList
-    liftIO . putStrLn $ "Created new SituationInstance: " ++ debugString sitInst
+        elapsed = diffUTCTime stop start
+    liftIO . putStrLn $
+        "Created new SituationInstance: " ++ debugString sitInst ++ " in " ++
+        show elapsed
     sitInsts <- liftIO $ takeMVar mv
     liftIO $ putMVar mv (sitInst : sitInsts)
 
