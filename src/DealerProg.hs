@@ -9,6 +9,7 @@ module DealerProg(
 , toProgram  -- Useful when debugging
 ) where
 
+import Data.Containers.ListUtils(nubOrd)
 import Data.List(transpose)
 import Data.List.Utils(join, split, wholeMap, fixedWidth)
 import Data.String.Utils(strip)
@@ -34,7 +35,9 @@ type Predeal = (T.Suit, T.Direction, Int)
 
 instance Semigroup DealerProg where
     (DealerProg predealA defnsA reqsA) <> (DealerProg predealB defnsB reqsB) =
-        DealerProg (predealA ++ predealB) (defnsA <> defnsB) (reqsB ++ reqsA)
+        DealerProg (nubOrd $ predealA ++ predealB)
+                   (defnsA <> defnsB)
+                   (reqsB ++ reqsA)
 
 
 instance Monoid DealerProg where
@@ -52,7 +55,9 @@ addNewReq name defn (DealerProg p m l) =
 
 
 addNewPredeal :: T.Suit -> T.Direction -> Int -> DealerProg -> DealerProg
-addNewPredeal s d i (DealerProg p m l) = DealerProg ((s, d, i):p) m l
+addNewPredeal s d i (DealerProg p m l)
+  | (s, d, i) `elem` p = DealerProg (          p) m l  -- Already included
+  | otherwise          = DealerProg ((s, d, i):p) m l
 
 
 -- When inverting a program, throw out all predeal constraints. It's not
@@ -68,8 +73,9 @@ invert (DealerProg _ defns reqs) =
 nameAll :: CondName -> DealerProg -> DealerProg
 nameAll name (DealerProg predeals defns reqs) =
     if (length reqs > 0)
-    then addNewReq name (join " && " . reverse $ reqs)
-        (DealerProg predeals defns mempty)
+    then addNewReq name
+                   (join " && " . reverse $ reqs)
+                   (DealerProg predeals defns mempty)
     else DealerProg predeals defns reqs  -- Unchanged
 
 
