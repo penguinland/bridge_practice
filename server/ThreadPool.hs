@@ -6,6 +6,7 @@ import Control.Concurrent.Classy.BoundedChan(
 import Control.Exception(handle)
 import Control.Monad.Trans(liftIO)
 import Control.Monad.Trans.State.Strict(runStateT, get, put)
+import Data.Tuple.Extra(first)
 import System.Random(StdGen, split)
 
 import Types(StIO)
@@ -35,11 +36,11 @@ newThreadPool nThreads = do
     runWorker :: ThreadPool -> ErrorSaver -> StdGen -> IO ()
     runWorker chan errorSaver rng1 = do
         f <- readBoundedChan chan
-        (_, rng2) <- handle (recordError errorSaver f rng1) (runStateT f rng1)
+        (_, rng2) <- handle (recordError f) (runStateT f rng1)
         runWorker chan errorSaver rng2
       where
-        recordError saver f r e = do
-            saveError saver e
+        recordError f e = do
+            saveError errorSaver e
             -- Re-enqueue a failed run: we still need to precompute a
             -- SituationInstance for this Cacher. However, do it from a separate
             -- thread! If the channel is full, enqueuing will block until there
@@ -48,9 +49,8 @@ newThreadPool nThreads = do
             _ <- forkIO $ enqueue chan f  -- Ignore the threadID: we don't care
             -- If this situation failed only because it's rare and our RNG got
             -- unlucky, change the RNG seed for next time in the hopes that it
-            -- can succeed again later.
-            let (_, r') = split r
-            return ((), r')
+            -- can succeed next time.
+            return $ first (const ()) . split $ rng1
 
 
 enqueue :: ThreadPool -> StIO () -> IO ()
