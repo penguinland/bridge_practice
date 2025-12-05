@@ -243,9 +243,10 @@ evenVoid = let
             explanation =
                 "Partner initiated a keycard ask. We have an even number of " .+
                 "keycards and a void, so bid " .+ response .+ " to show " .+
-                "this. Afterwards, it is up to partner to place the final " .+
-                "contract, either in our trump suit or notrump, either in " .+
-                "small or grand slam."
+                "this. Afterwards, it is up to partner to infer where your " .+
+                "void might be (which can sometimes be a guess) and place " .+
+                "the final contract, either in our trump suit or notrump, " .+
+                "either in small or grand slam."
           in situation "evenV" action response explanation
       in return inner <~ setups
   in
