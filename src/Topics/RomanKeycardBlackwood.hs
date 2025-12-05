@@ -266,6 +266,7 @@ evenVoid = let
 -- Unsure how to phrase: trouble when hearts are trump and you have 1 keycard
 --     without the queen (worried about partner responding 5S)
 -- Queen ask when hearts are trump and partner has responded 5D
+-- Show 0 or 3 keycards when you have 0 and a void, rather than 5N?
 
 
 topic1430 :: Topic
