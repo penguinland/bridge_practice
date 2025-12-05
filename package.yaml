@@ -45,6 +45,7 @@ executables:
     - -threaded
     dependencies:
     - bridge-practice
+    - concurrency
     - mtl
     - Spock
     - text

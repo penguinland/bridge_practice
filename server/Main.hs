@@ -16,19 +16,23 @@ import Web.Spock(SpockM, file, text, get, root, spock, runSpock, json,
                  getState, middleware, param, request)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
-import ProblemSet(generate)
-import SupportedTopics(topicNames, findTopics)
+import Random(pickItem)
+
+import Cacher(getProblem)
+import TopicRegistry(topicNames, findCachers, TopicRegistry, makeTopicRegistry)
+import ThreadPool(newThreadPool)
 
 
 data MySession = EmptySession
-data MyAppState = IoRng (IORef StdGen)
+data MyAppState = IOState (IORef StdGen) TopicRegistry
 
 
 main :: IO ()
 main = do
     rng <- getStdGen
-    ref <- newIORef rng
-    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IoRng ref)
+    (registry, rng') <- runStateT (newThreadPool 4 >>= makeTopicRegistry) rng
+    ref <- newIORef rng'
+    spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IOState ref registry)
     runSpock 8765 (spock spockCfg app)
 
 
@@ -56,12 +60,13 @@ app = do
     get "situation" $ do
         liftIO $ getCurrentTime >>= print
         requested <- param "topics"
-        case maybe (Left "no topics selected") findTopics requested of
+        (IOState ioRng registry) <- getState
+        let malformed = Left "no topics selected"
+        case maybe malformed (findCachers registry) requested of
             Left err -> text . pack $ err
-            Right topics -> do
-                (IoRng ioRng) <- getState
+            Right cachers -> do
                 rng <- liftIO . readIORef $ ioRng
-                (sitInstList, rng') <- liftIO $
-                    runStateT (generate 1 topics) rng
+                (sitInst, rng') <- liftIO $
+                    runStateT (pure cachers >>= pickItem >>= getProblem) rng
                 liftIO . writeIORef ioRng $ rng'
-                json . head $ sitInstList
+                json sitInst

@@ -5,7 +5,7 @@ module ProblemSet(
 
 import Control.Monad(when)
 import Control.Monad.Trans.Class(lift)
-import Control.Monad.Trans.State.Strict(get, StateT, mapStateT)
+import Control.Monad.Trans.State.Strict(get, mapStateT)
 import Data.Functor.Identity(runIdentity)
 import Data.List.Utils(join, replace)
 import System.IO(hFlush, stdout)
@@ -16,6 +16,7 @@ import Random(pickItem)
 import Situation(Situation(..))
 import SituationInstance(instantiate, SituationInstance)
 import Topic(Topic, topicName, refName, choose)
+import Types(StIO)
 
 
 reference :: String -> String -> StdGen -> String
@@ -28,14 +29,13 @@ reference topic sit g = let
     topic ++ "." ++ sit ++ " " ++ randomSeed
 
 
-generate :: Int -> [Topic] -> StateT StdGen IO [SituationInstance]
+generate :: Int -> [Topic] -> StIO [SituationInstance]
 generate 0 _      = return []
 generate n topics = do
     topic <- pickItem topics
     gen <- get
-    -- We use mapStateT to convert from a `State StdGen Situation` to a `StateT
-    -- StdGen IO Situation`. This lets us keep the IO monad out of the rest of
-    -- the code.
+    -- We use mapStateT to convert from a `State StdGen Situation` to a `StIO
+    -- Situation`. This lets us keep the IO monad out of the rest of the code.
     situation <- mapStateT (return . runIdentity) $ choose topic
     let ref = reference (refName topic) (sitRef situation) gen
     maybeSit <- instantiate ref situation
@@ -47,7 +47,7 @@ generate n topics = do
             return $ d:rest
 
 
-outputLatex :: Int -> [Topic] -> String -> StateT StdGen IO String
+outputLatex :: Int -> [Topic] -> String -> StIO String
 outputLatex numHands topics filename = do
     problems <- generate numHands topics
     let topicNames = join ", " . map (toLatex . topicName) $ topics
