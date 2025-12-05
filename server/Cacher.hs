@@ -47,9 +47,9 @@ getProblem c@(Cacher t mv p) = do
     case sitInsts of
       [] -> do
         liftIO $ putMVar mv []
-        -- Why is the Cacher empty? If it's a very popular Topic, increase the
-        -- cache size, and if it's a topic that has generated a bunch of errors
-        -- instead of a bunch of SituationInstances, try refilling it again.
+        -- Why is the Cacher empty? Demand for this Topic must be high and
+        -- generating SituationInstances must be slow. Increase the cache size
+        -- so we can try to stock up during periods of low traffic.
         liftIO . replicateM_ targetCacheSize_ $ enqueue p (makeProblem_ c)
         generate 1 [t] >>= return . head
       (first:rest) -> do
