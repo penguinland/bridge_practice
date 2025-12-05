@@ -15,7 +15,7 @@ import Data.Tuple.Utils(fst3, thd3)
 
 import Output(toHtml)
 import SupportedTopics(topicList)
-import Topic(topicName)
+import Topic(Topic, topicName)
 import Types(StIO)
 
 import Cacher(Cacher, newCacher)
@@ -26,12 +26,11 @@ type TopicRegistry = Map Int Cacher
 
 
 makeTopicRegistry :: ThreadPool -> StIO TopicRegistry
-makeTopicRegistry pool = do
-    cachers <- sequence .
-               map (encapsulate . second (newCacher pool) . (fst3 &&& thd3)) $
-               topicList
-    return $ fromList cachers
+makeTopicRegistry pool =
+    sequence (map toCacher topicList) >>= (return . fromList)
   where
+    toCacher :: (Int, Bool, Topic) -> StIO (Int, Cacher)
+    toCacher = encapsulate . second (newCacher pool) . (fst3 &&& thd3)
     encapsulate :: (Int, StIO Cacher) -> StIO (Int, Cacher)
     encapsulate (a, mb) = mb >>= (\b -> return (a, b))
 
