@@ -1,16 +1,17 @@
-module ThreadPool(ThreadPool, newThreadPool, enqueue, StIO) where
+module ThreadPool(ThreadPool, newThreadPool, enqueue) where
 
 import Control.Concurrent(forkIO)
 import Control.Concurrent.Classy.BoundedChan(
     BoundedChan, newBoundedChan, writeBoundedChan, readBoundedChan)
 import Control.Exception(handle)
 import Control.Monad.Trans(liftIO)
-import Control.Monad.Trans.State.Strict(StateT, runStateT, get, put)
+import Control.Monad.Trans.State.Strict(runStateT, get, put)
 import System.Random(StdGen, split)
+
+import Types(StIO)
 
 import ErrorSaver(ErrorSaver, newErrorSaver, saveError)
 
-type StIO = StateT StdGen IO
 type ThreadPool = BoundedChan IO (StIO ())
 
 

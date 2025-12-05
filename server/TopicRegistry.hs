@@ -16,9 +16,10 @@ import Data.Tuple.Utils(fst3, thd3)
 import Output(toHtml)
 import SupportedTopics(topicList)
 import Topic(topicName)
+import Types(StIO)
 
 import Cacher(Cacher, newCacher)
-import ThreadPool(ThreadPool, StIO)
+import ThreadPool(ThreadPool)
 
 
 type TopicRegistry = Map Int Cacher

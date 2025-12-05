@@ -8,8 +8,9 @@ import Data.Time(getCurrentTime, diffUTCTime)
 import ProblemSet(generate)
 import Topic(Topic)
 import SituationInstance(SituationInstance, debugString)
+import Types(StIO)
 
-import ThreadPool(ThreadPool, enqueue, StIO)
+import ThreadPool(ThreadPool, enqueue)
 
 
 data Cacher = Cacher Topic (MVar [SituationInstance]) ThreadPool

@@ -6,18 +6,19 @@ module SituationInstance (
 
 
 import Control.Monad.Trans.Class(lift)
-import Control.Monad.Trans.State.Strict(StateT, state)
+import Control.Monad.Trans.State.Strict(state)
 import Data.Aeson(ToJSON, toJSON)
 import Data.Bifunctor(first)
 import Data.List.Utils(join)
 import Data.Map(fromList)
-import System.Random(StdGen, genWord64)
+import System.Random(genWord64)
 
 import DealerProg(eval)
 import Output(Showable(..), Description)
 import Situation(Situation(..))
 import Structures(Bidding, Deal)
 import Terminology(CompleteCall)
+import Types(StIO)
 
 
 data SituationInstance =
@@ -58,7 +59,7 @@ debugString :: SituationInstance -> String
 debugString (SituationInstance _ _ _ _ ds) = ds
 
 
-instantiate :: String -> Situation -> StateT StdGen IO (Maybe SituationInstance)
+instantiate :: String -> Situation -> StIO (Maybe SituationInstance)
 instantiate reference (Situation _ b dl c s dn v) = do
     n <- state (first fromIntegral . genWord64)
     maybeDeal <- lift $ eval reference dn v dl n
