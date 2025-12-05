@@ -50,7 +50,7 @@ newThreadPool nThreads = do
             -- If this situation failed only because it's rare and our RNG got
             -- unlucky, change the RNG seed for next time in the hopes that it
             -- can succeed next time.
-            return $ first (const ()) . split $ rng1
+            return . first (const ()) . split $ rng1
 
 
 enqueue :: ThreadPool -> StIO () -> IO ()
