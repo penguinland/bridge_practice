@@ -1,8 +1,8 @@
 module TopicRegistry(
-    topicNames
-  , findCachers
-  , TopicRegistry
+    TopicRegistry
+  , topicNames
   , makeTopicRegistry
+  , findCachers
 ) where
 
 import Data.Aeson(Value, object, (.=))
@@ -25,16 +25,6 @@ import ThreadPool(ThreadPool)
 type TopicRegistry = Map Int Cacher
 
 
-makeTopicRegistry :: ThreadPool -> StIO TopicRegistry
-makeTopicRegistry pool =
-    sequence (map toCacher topicList) >>= (return . fromList)
-  where
-    toCacher :: (Int, Bool, Topic) -> StIO (Int, Cacher)
-    toCacher = encapsulate . second (newCacher pool) . (fst3 &&& thd3)
-    encapsulate :: (Int, StIO Cacher) -> StIO (Int, Cacher)
-    encapsulate (a, mb) = mb >>= (\b -> return (a, b))
-
-
 topicNames :: [Value]
 topicNames = map toObject topicList
   where
@@ -45,18 +35,24 @@ topicNames = map toObject topicList
                ]
 
 
-getCacher :: TopicRegistry -> Int -> Either Int Cacher
-getCacher registry i = maybeToEither i (registry !? i)
+makeTopicRegistry :: ThreadPool -> StIO TopicRegistry
+makeTopicRegistry pool =
+    sequence (map toCacher topicList) >>= (return . fromList)
+  where
+    toCacher :: (Int, Bool, Topic) -> StIO (Int, Cacher)
+    toCacher = encapsulate . second (newCacher pool) . (fst3 &&& thd3)
+    encapsulate :: (Int, StIO Cacher) -> StIO (Int, Cacher)
+    encapsulate (a, mb) = mb >>= (\b -> return (a, b))
 
 
 -- If there are any Left results, we'll return all of them, and otherwise we'll
 -- return all the Right results.
-collectResults :: [Either a b] -> Either [a] [b]
-collectResults [] = Right []
-collectResults (Left l : rest) = case collectResults rest of
+collectResults_ :: [Either a b] -> Either [a] [b]
+collectResults_ [] = Right []
+collectResults_ (Left l : rest) = case collectResults_ rest of
                                  Left ll -> Left (l : ll)
                                  Right _ -> Left [l]
-collectResults (Right r : rest) = case collectResults rest of
+collectResults_ (Right r : rest) = case collectResults_ rest of
                                   Left l -> Left l
                                   Right rr -> Right (r : rr)
 
@@ -66,7 +62,8 @@ collectResults (Right r : rest) = case collectResults rest of
 -- the corresponding Cachers.
 findCachers :: TopicRegistry -> String -> Either String [Cacher]
 findCachers registry indices = let
-    foundCachers = map (getCacher registry . read) . split "," $ indices
+    getCacher i = maybeToEither i (registry !? i)
+    foundCachers = map (getCacher . read) . split "," $ indices
     formatError = ("Unknown indices: " ++) . join "," . map show
   in
-    mapLeft formatError . collectResults $ foundCachers
+    mapLeft formatError . collectResults_ $ foundCachers
