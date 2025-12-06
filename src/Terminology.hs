@@ -25,7 +25,7 @@ import Data.List(singleton)
 import Output(Showable(..), Description)
 
 
-data Direction = North | East | South | West deriving Eq
+data Direction = North | East | South | West deriving (Eq, Ord)
 
 instance Showable Direction where
     toLatex North = "N"

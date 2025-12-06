@@ -2,12 +2,14 @@ module DealerProg(
   DealerProg
 , addDefn
 , addNewReq
+, addNewPredeal
 , invert
 , nameAll
 , eval
 , toProgram  -- Useful when debugging
 ) where
 
+import Data.Containers.ListUtils(nubOrd)
 import Data.List(transpose)
 import Data.List.Utils(join, split, wholeMap, fixedWidth)
 import Data.String.Utils(strip)
@@ -20,42 +22,65 @@ import qualified Terminology as T
 
 
 -- Contains all definitions and then required conditions
-data DealerProg = DealerProg DealerDefs [CondName]
+data DealerProg = DealerProg [Predeal] DealerDefs [CondName]
+
+
+-- Performance optimization: for rare auctions (e.g., slam investigations), we
+-- can greatly speed up how long it takes to generate a board by specifying
+-- exactly how long certain suits are in certain hands. Inequalities don't work
+-- here: they must be exactly that long.
+-- These get turned into dealer syntax like `predeal spades(north) == 1`
+type Predeal = (T.Suit, T.Direction, Int)
 
 
 instance Semigroup DealerProg where
-    (DealerProg defnsA reqsA) <> (DealerProg defnsB reqsB) =
-        DealerProg (defnsA <> defnsB) (reqsB ++ reqsA)
+    (DealerProg predealA defnsA reqsA) <> (DealerProg predealB defnsB reqsB) =
+        DealerProg (nubOrd $ predealA ++ predealB)
+                   (defnsA <> defnsB)
+                   (reqsB ++ reqsA)
 
 
 instance Monoid DealerProg where
-    mempty = DealerProg mempty []
+    mempty = DealerProg [] mempty []
 
 
 addDefn :: CondName -> CondDefn -> DealerProg -> DealerProg
-addDefn name defn (DealerProg m l) =
-  DealerProg (addDefinition name defn m) l
+addDefn name defn (DealerProg p m l) =
+  DealerProg p (addDefinition name defn m) l
 
 
 addNewReq :: CondName -> CondDefn -> DealerProg -> DealerProg
-addNewReq name defn (DealerProg m l) =
-  DealerProg (addDefinition name defn m) (name:l)
+addNewReq name defn (DealerProg p m l) =
+  DealerProg p (addDefinition name defn m) (name:l)
 
 
+addNewPredeal :: T.Suit -> T.Direction -> Int -> DealerProg -> DealerProg
+addNewPredeal s d i (DealerProg p m l)
+  | (s, d, i) `elem` p = DealerProg (          p) m l  -- Already included
+  | otherwise          = DealerProg ((s, d, i):p) m l
+
+
+-- When inverting a program, throw out all predeal constraints. It's not
+-- possible to use `!=` in a predeal directive, and instead we rely on the
+-- constraints themselves. This can lead to poor performance, but hopefully
+-- inverting a program results in many more possibilities, thus not harming
+-- performance after all.
 invert :: DealerProg -> DealerProg
-invert (DealerProg defns reqs) =
-    DealerProg defns ["!(" ++ join " && " reqs ++ ")"]
+invert (DealerProg _ defns reqs) =
+    DealerProg [] defns ["!(" ++ join " && " reqs ++ ")"]
 
 
 nameAll :: CondName -> DealerProg -> DealerProg
-nameAll name (DealerProg defns reqs) =
+nameAll name (DealerProg predeals defns reqs) =
     if (length reqs > 0)
-    then addNewReq name (join " && " . reverse $ reqs) (DealerProg defns mempty)
-    else DealerProg defns reqs  -- Unchanged
+    then addNewReq name
+                   (join " && " . reverse $ reqs)
+                   (DealerProg predeals defns mempty)
+    else DealerProg predeals defns reqs  -- Unchanged
 
 
 toProgram :: DealerProg -> String
-toProgram (DealerProg defns conds) = unlines $
+toProgram (DealerProg predeals defns conds) = unlines $
     -- This used to generate 1 million boards, but some situations are extremely
     -- rare (e.g., North opens a Precision 1D with 5 hearts and South responds
     -- 2N: occurs less than twice in a million deals), and if you run the dealer
@@ -65,10 +90,14 @@ toProgram (DealerProg defns conds) = unlines $
     -- isn't enough, consider removing those situations from practice entirely,
     -- since they'll probably never come up.
     ["generate 10000000", "produce 1", ""] ++
-    toProgDefs defns
-    ++ ["", "condition",
-        "    " ++ (join " && " . reverse $ conds),
-        "action", "    printall"]
+    map formatPredeal predeals ++ [""] ++
+    toProgDefs defns ++
+    ["",
+     "condition", "    " ++ (join " && " . reverse $ conds),
+     "action", "    printall"]
+  where
+    formatPredeal (suit, dir, len) =
+        "predeal " ++ show suit ++ "(" ++ show dir ++ ") == " ++ show len
 
 
 eval :: String -> T.Direction -> T.Vulnerability -> DealerProg -> Int ->
