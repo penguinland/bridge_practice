@@ -89,58 +89,47 @@ initiate = let
     wrapNW $ return sit <~ (setUpAuctionsH ++ setUpAuctionsS)
 
 
-firstResponse1430 :: Situations
-firstResponse1430 = let
-    sit (setups, responses) = let
-        inner setup response = let
-            action = do
-                setup `andNextBidderIs` T.North
-                RKC.b4N
-                makePass
-            explanation =
-                "Partner has bid " .+ RKC.b4N .+ " to ask how many " .+
-                "keycards we have. Give them the answer."
-          in situation "resp" action response explanation
-      in return inner <~ setups <~ responses
-  in
-    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.b1430H5C
-                                                     , RKC.b1430H5D
-                                                     , RKC.bH5H
-                                                     , RKC.bH5S
-                                                     ])
-                                  , (setUpAuctionsS, [ RKC.b1430S5C
-                                                     , RKC.b1430S5D
-                                                     , RKC.bS5H
-                                                     , RKC.bS5S
-                                                     ])
-                                  ]
+firstResponse_ :: ([Action], [Action]) ->
+    State StdGen (T.Direction -> T.Vulnerability -> Situation)
+firstResponse_ (setups, responses) = let
+    inner setup response = let
+        action = do
+            setup `andNextBidderIs` T.North
+            RKC.b4N
+            makePass
+        explanation =
+            "Partner has bid " .+ RKC.b4N .+ " to ask how many " .+
+            "keycards we have. Give them the answer."
+      in situation "resp" action response explanation
+  in return inner <~ setups <~ responses
 
+firstResponse1430 :: Situations
+firstResponse1430 = wrapNW . join $ return firstResponse_
+    <~ [ (setUpAuctionsH, [ RKC.b1430H5C
+                          , RKC.b1430H5D
+                          , RKC.bH5H
+                          , RKC.bH5S
+                          ])
+       , (setUpAuctionsS, [ RKC.b1430S5C
+                          , RKC.b1430S5D
+                          , RKC.bS5H
+                          , RKC.bS5S
+                          ])
+       ]
 
 firstResponse3014 :: Situations
-firstResponse3014 = let
-    sit (setups, responses) = let
-        inner setup response = let
-            action = do
-                setup `andNextBidderIs` T.North
-                RKC.b4N
-                makePass
-            explanation =
-                "Partner has bid " .+ RKC.b4N .+ " to ask how many " .+
-                "keycards we have. Give them the answer."
-          in situation "resp" action response explanation
-      in return inner <~ setups <~ responses
-  in
-    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.b3014H5C
-                                                     , RKC.b3014H5D
-                                                     , RKC.bH5H
-                                                     , RKC.bH5S
-                                                     ])
-                                  , (setUpAuctionsS, [ RKC.b3014S5C
-                                                     , RKC.b3014S5D
-                                                     , RKC.bS5H
-                                                     , RKC.bS5S
-                                                     ])
-                                  ]
+firstResponse3014 = wrapNW . join $ return firstResponse_
+    <~ [ (setUpAuctionsH, [ RKC.b3014H5C
+                          , RKC.b3014H5D
+                          , RKC.bH5H
+                          , RKC.bH5S
+                          ])
+       , (setUpAuctionsS, [ RKC.b3014S5C
+                          , RKC.b3014S5D
+                          , RKC.bS5H
+                          , RKC.bS5S
+                          ])
+       ]
 
 
 signoff1430 :: Situations
