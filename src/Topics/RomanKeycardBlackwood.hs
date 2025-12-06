@@ -128,13 +128,13 @@ firstResponse3014 = let
           in situation "resp" action response explanation
       in return inner <~ setups <~ responses
   in
-    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.b1430H5C
-                                                     , RKC.b1430H5D
+    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.b3014H5C
+                                                     , RKC.b3014H5D
                                                      , RKC.bH5H
                                                      , RKC.bH5S
                                                      ])
-                                  , (setUpAuctionsS, [ RKC.b1430S5C
-                                                     , RKC.b1430S5D
+                                  , (setUpAuctionsS, [ RKC.b3014S5C
+                                                     , RKC.b3014S5D
                                                      , RKC.bS5H
                                                      , RKC.bS5S
                                                      ])
