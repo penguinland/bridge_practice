@@ -21,9 +21,9 @@ module Bids.RomanKeycardBlackwood(
   , bH5C5D6C
   , bH5C5D6D
   , bH5C5D6H
---  , bH5D5S5N
---  , bH5D5S6C
---  , bH5D5S6D
+  , bH5D5S5N
+  , bH5D5S6C
+  , bH5D5S6D
   , bH5D5S6H
 
   , bH5H
@@ -386,7 +386,29 @@ bH5C5D6H = E.nameAction "RKC_H_5C5D6H" $ do
     E.makeAlertableCall (T.Bid 6 T.Hearts)
                         (T.Hearts .+ "Q, no side king")
 
--- TODO: define responses when 5S is the queen ask
+bH5D5S5N :: Action
+bH5D5S5N = E.nameAction "RKC_H_5D5S5N" $ do
+    E.hasCard T.Hearts 'Q'
+    E.forbid $ E.hasCard T.Clubs 'K'
+    E.forbid $ E.hasCard T.Diamonds 'K'
+    E.makeAlertableCall (T.Bid 5 T.Notrump)
+                        (T.Hearts .+ "Q, no minor king")
+
+bH5D5S6C :: Action
+bH5D5S6C = E.nameAction "RKC_H_5D5S6C" $ do
+    E.hasCard T.Hearts 'Q'
+    E.hasCard T.Clubs 'K'
+    E.makeAlertableCall (T.Bid 6 T.Clubs)
+                        (T.Hearts .+ "Q, " .+ T.Clubs .+ "K")
+
+bH5D5S6D :: Action
+bH5D5S6D = E.nameAction "RKC_H_5D5S6D" $ do
+    E.hasCard T.Hearts 'Q'
+    E.forbid $ E.hasCard T.Clubs 'K'
+    E.hasCard T.Diamonds 'K'
+    E.makeAlertableCall (T.Bid 6 T.Diamonds)
+                        (T.Hearts .+ "Q, " .+ T.Diamonds .+ "K, " .+
+                         "no " .+ T.Clubs .+ "K")
 
 
 bS5C5D5H :: Action
