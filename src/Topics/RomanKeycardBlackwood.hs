@@ -1,9 +1,7 @@
 module Topics.RomanKeycardBlackwood(topic1430, topic3014) where
 
 import Control.Monad(join)
-import Control.Monad.Trans.State.Strict(State)
 import Data.List(sort)
-import System.Random(StdGen)
 
 import Action(Action)
 import qualified Bids.RomanKeycardBlackwood as RKC
@@ -11,7 +9,7 @@ import qualified Bids.Jacoby2NT as J2N
 import CommonBids(andNextBidderIs, noInterference)
 import EDSL(makePass, pointRange, suitLength)
 import Output((.+))
-import Situation(Situation, situation, (<~))
+import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, wrapNW, Situations, makeTopic)
 
@@ -89,96 +87,93 @@ initiate = let
     wrapNW $ return sit <~ (setUpAuctionsH ++ setUpAuctionsS)
 
 
-firstResponse_ :: ([Action], [Action]) ->
-    State StdGen (T.Direction -> T.Vulnerability -> Situation)
-firstResponse_ (setups, responses) = let
-    inner setup response = let
-        action = do
-            setup `andNextBidderIs` T.North
-            RKC.b4N
-            makePass
-        explanation =
-            "Partner has bid " .+ RKC.b4N .+ " to ask how many " .+
-            "keycards we have. Give them the answer."
-      in situation "resp" action response explanation
-  in return inner <~ setups <~ responses
-
 firstResponse1430 :: Situations
-firstResponse1430 = wrapNW . join $ return firstResponse_
-    <~ [ (setUpAuctionsH, [ RKC.b1430H5C
-                          , RKC.b1430H5D
-                          , RKC.bH5H
-                          , RKC.bH5S
-                          ])
-       , (setUpAuctionsS, [ RKC.b1430S5C
-                          , RKC.b1430S5D
-                          , RKC.bS5H
-                          , RKC.bS5S
-                          ])
-       ]
-
 firstResponse3014 :: Situations
-firstResponse3014 = wrapNW . join $ return firstResponse_
-    <~ [ (setUpAuctionsH, [ RKC.b3014H5C
-                          , RKC.b3014H5D
-                          , RKC.bH5H
-                          , RKC.bH5S
-                          ])
-       , (setUpAuctionsS, [ RKC.b3014S5C
-                          , RKC.b3014S5D
-                          , RKC.bS5H
-                          , RKC.bS5S
-                          ])
-       ]
+(firstResponse1430, firstResponse3014) =
+    (firstResponse1430', firstResponse3014')
+  where
+    firstResponse (setups, responses) = let
+        inner setup response = let
+            action = do
+                setup `andNextBidderIs` T.North
+                RKC.b4N
+                makePass
+            explanation =
+                "Partner has bid " .+ RKC.b4N .+ " to ask how many " .+
+                "keycards we have. Give them the answer."
+          in situation "resp" action response explanation
+      in return inner <~ setups <~ responses
+    firstResponse1430' = wrapNW . join $ return firstResponse
+        <~ [ (setUpAuctionsH, [ RKC.b1430H5C
+                              , RKC.b1430H5D
+                              , RKC.bH5H
+                              , RKC.bH5S
+                              ])
+           , (setUpAuctionsS, [ RKC.b1430S5C
+                              , RKC.b1430S5D
+                              , RKC.bS5H
+                              , RKC.bS5S
+                              ])
+           ]
+    firstResponse3014' = wrapNW . join $ return firstResponse
+        <~ [ (setUpAuctionsH, [ RKC.b3014H5C
+                              , RKC.b3014H5D
+                              , RKC.bH5H
+                              , RKC.bH5S
+                              ])
+           , (setUpAuctionsS, [ RKC.b3014S5C
+                              , RKC.b3014S5D
+                              , RKC.bS5H
+                              , RKC.bS5S
+                              ])
+           ]
 
-
-signoff_ :: ([Action], [(Action, Action)]) ->
-    State StdGen (T.Direction -> T.Vulnerability -> Situation)
-signoff_ (setups, followups) = let
-    inner setup (response, signoff) = let
-        action = do
-            setup `andNextBidderIs` T.South
-            RKC.b4N
-            makePass
-            _ <- response
-            makePass
-        explanation =
-            "We asked for keycards, but learned we're missing 2 of " .+
-            "them. Slam is likely to fail: sign off at the 5 level."
-      in situation "signoff" action signoff explanation
-  in return inner <~ setups <~ followups
 
 signoff1430 :: Situations
-signoff1430 = wrapNW . join $ return signoff_
-    <~ [ (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5H)
-                          , (RKC.b1430H5D, RKC.b1430H5D5H)
-                          , (RKC.bH5H,     RKC.bH5HP)
-                          -- If hearts are trump and partner bid 5S, we
-                          -- can't sign off. Handle this separately.
-                          --, (RKC.bH5S,     trouble)
-                          ])
-       , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5S)
-                          , (RKC.b1430S5D, RKC.b1430S5D5S)
-                          , (RKC.bS5H,     RKC.bS5H5S)
-                          , (RKC.bS5S,     RKC.bS5SP)
-                          ])
-       ]
-
 signoff3014 :: Situations
-signoff3014 = wrapNW . join $ return signoff_
-    <~ [ (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5H)
-                          , (RKC.b3014H5D, RKC.b3014H5D5H)
-                          , (RKC.bH5H,     RKC.bH5HP)
-                          -- If hearts are trump and partner bid 5S, we
-                          -- can't sign off. Handle this separately.
-                          --, (RKC.bH5S,     trouble)
-                          ])
-       , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5S)
-                          , (RKC.b3014S5D, RKC.b3014S5D5S)
-                          , (RKC.bS5H,     RKC.bS5H5S)
-                          , (RKC.bS5S,     RKC.bS5SP)
-                          ])
-       ]
+(signoff1430, signoff3014) = (signoff1430', signoff3014')
+  where
+    signoff (setups, followups) = let
+        inner setup (response, signoffBid) = let
+            action = do
+                setup `andNextBidderIs` T.South
+                RKC.b4N
+                makePass
+                _ <- response
+                makePass
+            explanation =
+                "We asked for keycards, but learned we're missing 2 of " .+
+                "them. Slam is likely to fail: sign off at the 5 level."
+          in situation "signoff" action signoffBid explanation
+      in return inner <~ setups <~ followups
+    signoff1430' = wrapNW . join $ return signoff
+        <~ [ (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5H)
+                              , (RKC.b1430H5D, RKC.b1430H5D5H)
+                              , (RKC.bH5H,     RKC.bH5HP)
+                              -- If hearts are trump and partner bid 5S, we
+                              -- can't sign off. Handle this separately.
+                              --, (RKC.bH5S,     trouble)
+                              ])
+           , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5S)
+                              , (RKC.b1430S5D, RKC.b1430S5D5S)
+                              , (RKC.bS5H,     RKC.bS5H5S)
+                              , (RKC.bS5S,     RKC.bS5SP)
+                              ])
+           ]
+    signoff3014' = wrapNW . join $ return signoff
+        <~ [ (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5H)
+                              , (RKC.b3014H5D, RKC.b3014H5D5H)
+                              , (RKC.bH5H,     RKC.bH5HP)
+                              -- If hearts are trump and partner bid 5S, we
+                              -- can't sign off. Handle this separately.
+                              --, (RKC.bH5S,     trouble)
+                              ])
+           , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5S)
+                              , (RKC.b3014S5D, RKC.b3014S5D5S)
+                              , (RKC.bS5H,     RKC.bS5H5S)
+                              , (RKC.bS5S,     RKC.bS5SP)
+                              ])
+           ]
 
 
 oddVoid :: Situations
@@ -233,45 +228,42 @@ evenVoid = let
                                   ]
 
 
--- This is a helper function used in 2 different Situations, immediately below
-queenAsk_ :: ([Action], Action, Action, Bool) ->
-    State StdGen (T.Direction -> T.Vulnerability -> Situation)
-queenAsk_ (setups, response, queenAsk, awkward) = let
-    inner setup = let
-        action = do
-            setup `andNextBidderIs` T.South
-            RKC.b4N
-            makePass
-            _ <- response
-            makePass
-        explanation =
-            "We are missing at most 1 keycard, but don't yet know " .+
-            "whether we also have the queen of trump. Make the cheapest " .+
-            "non-signoff bid to ask about the queen. " .+ (
-                if awkward
-                then "(If hearts are trump and the cheapest relay is " .+
-                     T.Bid 5 T.Spades .+ ", asking about the queen pushes " .+
-                     "to slam no matter what. Make sure you're okay with " .+
-                     "that no matter what partner does.)"
-                else "" .+ "")  -- Use (.+) to get the types consistent
-      in situation "qask" action queenAsk explanation
-  in return inner <~ setups
-
 queenAsk1430 :: Situations
-queenAsk1430 = wrapNW . join $ return queenAsk_
-    <~ [ (setUpAuctionsH, RKC.b1430H5C, RKC.b1430H5C5D, False)
-       , (setUpAuctionsH, RKC.b1430H5D, RKC.b1430H5D5S, True)
-       , (setUpAuctionsS, RKC.b1430S5C, RKC.b1430S5C5D, False)
-       , (setUpAuctionsS, RKC.b1430S5D, RKC.b1430S5D5H, False)
-       ]
-
 queenAsk3014 :: Situations
-queenAsk3014 = wrapNW . join $ return queenAsk_
-    <~ [ (setUpAuctionsH, RKC.b3014H5C, RKC.b3014H5C5D, False)
-       , (setUpAuctionsH, RKC.b3014H5D, RKC.b3014H5D5S, True)
-       , (setUpAuctionsS, RKC.b3014S5C, RKC.b3014S5C5D, False)
-       , (setUpAuctionsS, RKC.b3014S5D, RKC.b3014S5D5H, False)
-       ]
+(queenAsk1430, queenAsk3014) = (queenAsk1430', queenAsk3014')
+  where
+    queenAsk (setups, response, askingBid, awkward) = let
+        inner setup = let
+            action = do
+                setup `andNextBidderIs` T.South
+                RKC.b4N
+                makePass
+                _ <- response
+                makePass
+            explanation =
+                "We are missing at most 1 keycard, but don't yet know " .+
+                "whether we also have the queen of trump. Make the cheapest " .+
+                "non-signoff bid to ask about the queen. " .+ (
+                    if awkward
+                    then "(If hearts are trump and the cheapest relay is " .+
+                         T.Bid 5 T.Spades .+ ", asking about the queen " .+
+                         "pushes to slam no matter what. Make sure you're " .+
+                         "okay with that no matter what partner does.)"
+                    else "" .+ "")  -- Use (.+) to get the types consistent
+          in situation "qask" action askingBid explanation
+      in return inner <~ setups
+    queenAsk1430' = wrapNW . join $ return queenAsk
+        <~ [ (setUpAuctionsH, RKC.b1430H5C, RKC.b1430H5C5D, False)
+           , (setUpAuctionsH, RKC.b1430H5D, RKC.b1430H5D5S, True)
+           , (setUpAuctionsS, RKC.b1430S5C, RKC.b1430S5C5D, False)
+           , (setUpAuctionsS, RKC.b1430S5D, RKC.b1430S5D5H, False)
+           ]
+    queenAsk3014' = wrapNW . join $ return queenAsk
+        <~ [ (setUpAuctionsH, RKC.b3014H5C, RKC.b3014H5C5D, False)
+           , (setUpAuctionsH, RKC.b3014H5D, RKC.b3014H5D5S, True)
+           , (setUpAuctionsS, RKC.b3014S5C, RKC.b3014S5C5D, False)
+           , (setUpAuctionsS, RKC.b3014S5D, RKC.b3014S5D5H, False)
+           ]
 
 
 -- TODO:
