@@ -32,6 +32,9 @@ setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       suitLength T.Hearts 4  -- Speed up performance
                       J2N.b1H2N
                       noInterference T.Hearts
+                      -- Unlike index 1, don't force opener to have only 5
+                      -- hearts. Maybe they have 6 and we're going to practice
+                      -- pretending to have the queen with a 10-card fit.
                       J2N.b1H2N4H
                       makePass
                       pointRange 17 40
@@ -40,6 +43,7 @@ setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       suitLength T.Hearts 4  -- Speed up performance
                       J2N.b1H2N
                       noInterference T.Hearts
+                      suitLength T.Hearts 5  -- Speed up performance
                       J2N.b1H2N4D
                       makePass
                       pointRange 16 40
@@ -51,6 +55,9 @@ setUpAuctionsS = [ do J2N.b1S  -- Index 0
                       suitLength T.Spades 4  -- Speed up performance
                       J2N.b1S2N
                       noInterference T.Spades
+                      -- Unlike index 1, don't force opener to have only 5
+                      -- spades. Maybe they have 6 and we're going to practice
+                      -- pretending to have the queen with a 10-card fit.
                       J2N.b1S2N4S
                       makePass
                       pointRange 17 40
@@ -59,6 +66,7 @@ setUpAuctionsS = [ do J2N.b1S  -- Index 0
                       suitLength T.Spades 4  -- Speed up performance
                       J2N.b1S2N
                       noInterference T.Spades
+                      suitLength T.Spades 5  -- Speed up performance
                       J2N.b1S2N4H
                       makePass
                       pointRange 16 40
