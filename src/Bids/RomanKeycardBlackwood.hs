@@ -56,10 +56,10 @@ module Bids.RomanKeycardBlackwood(
   , bS5C5D6S
   , bS5D5H5S
   --, bS5D5H5N  -- Too hard to define
---  , bS5D5H6C
---  , bS5D5H6D
---  , bS5D5H6H
---  , bS5D5H6S
+  , bS5D5H6C
+  , bS5D5H6D
+  , bS5D5H6H
+  , bS5D5H6S
 
   , bS5H
   , bS5H5S
@@ -421,5 +421,40 @@ bS5C5D6S = E.nameAction "RKC_S_5C5D6S" $ do
     E.forbid $ E.hasCard T.Hearts 'K'
     E.forbid $ E.hasCard T.Clubs 'K'
     E.forbid $ E.hasCard T.Diamonds 'K'
+    E.makeAlertableCall (T.Bid 6 T.Spades)
+                        (T.Spades .+ "Q, no side king")
+
+
+bS5D5H6C :: Action
+bS5D5H6C = E.nameAction "RKC_S_5D5H6C" $ do
+    E.hasCard T.Spades 'Q'
+    E.hasCard T.Clubs 'K'
+    E.makeAlertableCall (T.Bid 6 T.Clubs)
+                        (T.Spades .+ "Q, " .+ T.Clubs .+ "K")
+
+bS5D5H6D :: Action
+bS5D5H6D = E.nameAction "RKC_S_5D5H6D" $ do
+    E.hasCard T.Spades 'Q'
+    E.forbid $ E.hasCard T.Clubs 'K'
+    E.hasCard T.Diamonds 'K'
+    E.makeAlertableCall (T.Bid 6 T.Diamonds)
+                        (T.Spades .+ "Q, " .+ T.Diamonds .+ "K, " .+
+                         "no " .+ T.Clubs .+ "K")
+
+bS5D5H6H :: Action
+bS5D5H6H = E.nameAction "RKC_S_5D5H6H" $ do
+    E.hasCard T.Spades 'Q'
+    E.forbid $ E.hasCard T.Clubs 'K'
+    E.forbid $ E.hasCard T.Diamonds 'K'
+    E.hasCard T.Hearts 'K'
+    E.makeAlertableCall (T.Bid 6 T.Hearts)
+                        (T.Spades .+ "S, " .+ T.Hearts .+ "K, no minor king")
+
+bS5D5H6S :: Action
+bS5D5H6S = E.nameAction "RKC_S_5D5H6S" $ do
+    E.hasCard T.Spades 'Q'
+    E.forbid $ E.hasCard T.Clubs 'K'
+    E.forbid $ E.hasCard T.Diamonds 'K'
+    E.forbid $ E.hasCard T.Hearts 'K'
     E.makeAlertableCall (T.Bid 6 T.Spades)
                         (T.Spades .+ "Q, no side king")
