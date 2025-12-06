@@ -1,7 +1,9 @@
 module Topics.RomanKeycardBlackwood(topic1430, topic3014) where
 
 import Control.Monad(join)
+import Control.Monad.Trans.State.Strict(State)
 import Data.List(sort)
+import System.Random(StdGen)
 
 import Action(Action)
 import qualified Bids.RomanKeycardBlackwood as RKC
@@ -9,7 +11,7 @@ import qualified Bids.Jacoby2NT as J2N
 import CommonBids(andNextBidderIs, noInterference)
 import EDSL(makePass, pointRange, suitLength)
 import Output((.+))
-import Situation(situation, (<~))
+import Situation(Situation, situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, wrapNW, Situations, makeTopic)
 
@@ -257,66 +259,45 @@ evenVoid = let
                                   ]
 
 
-queenAsk1430 :: Situations
-queenAsk1430 = let
-    sit (setups, response, queenAsk, awkward) = let
-        inner setup = let
-            action = do
-                setup `andNextBidderIs` T.South
-                RKC.b4N
-                makePass
-                _ <- response
-                makePass
-            explanation =
-                "We are missing at most 1 keycard, but don't yet know " .+
-                "whether we also have the queen of trump. Make the cheapest " .+
-                "non-signoff bid to ask about the queen. " .+ (
-                    if awkward
-                    then "(If hearts are trump and the cheapest relay is " .+
-                         T.Bid 5 T.Spades .+ ", you are pushing to slam no " .+
-                         "matter what. Make sure you're okay with that no " .+
-                         "matter what partner does.)"
-                    else "" .+ "")  -- Use (.+) to get the types consistent
-          in situation "qask" action queenAsk explanation
-      in return inner <~ setups
-  in
-    wrapNW . join $ return sit
-        <~ [ (setUpAuctionsH, RKC.b1430H5C, RKC.b1430H5C5D, False)
-           , (setUpAuctionsH, RKC.b1430H5D, RKC.b1430H5D5S, True)
-           , (setUpAuctionsS, RKC.b1430S5C, RKC.b1430S5C5D, False)
-           , (setUpAuctionsS, RKC.b1430S5D, RKC.b1430S5D5H, False)
-           ]
+-- This is a helper function used in 2 different Situations, immediately below
+queenAsk_ :: ([Action], Action, Action, Bool) ->
+    State StdGen (T.Direction -> T.Vulnerability -> Situation)
+queenAsk_ (setups, response, queenAsk, awkward) = let
+    inner setup = let
+        action = do
+            setup `andNextBidderIs` T.South
+            RKC.b4N
+            makePass
+            _ <- response
+            makePass
+        explanation =
+            "We are missing at most 1 keycard, but don't yet know " .+
+            "whether we also have the queen of trump. Make the cheapest " .+
+            "non-signoff bid to ask about the queen. " .+ (
+                if awkward
+                then "(If hearts are trump and the cheapest relay is " .+
+                     T.Bid 5 T.Spades .+ ", asking about the queen pushes " .+
+                     "to slam no matter what. Make sure you're okay with " .+
+                     "that no matter what partner does.)"
+                else "" .+ "")  -- Use (.+) to get the types consistent
+      in situation "qask" action queenAsk explanation
+  in return inner <~ setups
 
+queenAsk1430 :: Situations
+queenAsk1430 = wrapNW . join $ return queenAsk_
+    <~ [ (setUpAuctionsH, RKC.b1430H5C, RKC.b1430H5C5D, False)
+       , (setUpAuctionsH, RKC.b1430H5D, RKC.b1430H5D5S, True)
+       , (setUpAuctionsS, RKC.b1430S5C, RKC.b1430S5C5D, False)
+       , (setUpAuctionsS, RKC.b1430S5D, RKC.b1430S5D5H, False)
+       ]
 
 queenAsk3014 :: Situations
-queenAsk3014 = let
-    sit (setups, response, queenAsk, awkward) = let
-        inner setup = let
-            action = do
-                setup `andNextBidderIs` T.South
-                RKC.b4N
-                makePass
-                _ <- response
-                makePass
-            explanation =
-                "We are missing at most 1 keycard, but don't yet know " .+
-                "whether we also have the queen of trump. Make the cheapest " .+
-                "non-signoff bid to ask about the queen. " .+ (
-                    if awkward
-                    then "(If hearts are trump and the cheapest relay is " .+
-                         T.Bid 5 T.Spades .+ ", you are pushing to slam no " .+
-                         "matter what. Make sure you're okay with that no " .+
-                         "matter what partner does.)"
-                    else "" .+ "")  -- Use (.+) to get the types consistent
-          in situation "qask" action queenAsk explanation
-      in return inner <~ setups
-  in
-    wrapNW . join $ return sit
-        <~ [ (setUpAuctionsH, RKC.b3014H5C, RKC.b3014H5C5D, False)
-           , (setUpAuctionsH, RKC.b3014H5D, RKC.b3014H5D5S, True)
-           , (setUpAuctionsS, RKC.b3014S5C, RKC.b3014S5C5D, False)
-           , (setUpAuctionsS, RKC.b3014S5D, RKC.b3014S5D5H, False)
-           ]
+queenAsk3014 = wrapNW . join $ return queenAsk_
+    <~ [ (setUpAuctionsH, RKC.b3014H5C, RKC.b3014H5C5D, False)
+       , (setUpAuctionsH, RKC.b3014H5D, RKC.b3014H5D5S, True)
+       , (setUpAuctionsS, RKC.b3014S5C, RKC.b3014S5C5D, False)
+       , (setUpAuctionsS, RKC.b3014S5D, RKC.b3014S5D5H, False)
+       ]
 
 
 -- TODO:
