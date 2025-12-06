@@ -22,7 +22,7 @@ import qualified Topics.Cappelletti as Cappelletti
 import qualified Topics.Woolsey as Woolsey
 import qualified Topics.Lebensohl as Lebensohl
 import qualified Topics.Jacoby2NT as Jacoby2NT
-import qualified Topics.RomanKeycardBlackwood as RKC
+--import qualified Topics.RomanKeycardBlackwood as RKC
 
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
 import qualified Topics.StandardModernPrecision.OneClubResponses as Smp1CResponses
@@ -63,8 +63,8 @@ topicList = [ (10, True,  StandardOpeners.topic)
             , (21, False, Woolsey.topic)
             , (20, False, Lebensohl.topic)
             , (17, True,  Jacoby2NT.topic)
-            , (30, False, RKC.topic1430)
-            , (31, False, RKC.topic3014)
+            --, (30, False, RKC.topic1430)
+            --, (31, False, RKC.topic3014)
             , (25, False, TransfersOver1MX.topic)
             , (50, False, SmpOpenings.topic)
             , (51, False, Smp1CResponses.topic)
