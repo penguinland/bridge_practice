@@ -88,35 +88,11 @@ initiate = let
 
 
 firstResponse1430 :: Situations
-firstResponse1430 = let
-    sit (setups, responses) = let
-        inner setup response = let
-            action = do
-                setup `andNextBidderIs` T.North
-                RKC.b4N
-                makePass
-            explanation =
-                "Partner has bid " .+ RKC.b4N .+ " to ask how many " .+
-                "keycards we have. Give them the answer."
-          in situation "resp" action response explanation
-      in return inner <~ setups <~ responses
-  in
-    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.b1430H5C
-                                                     , RKC.b1430H5D
-                                                     , RKC.bH5H
-                                                     , RKC.bH5S
-                                                     ])
-                                  , (setUpAuctionsS, [ RKC.b1430S5C
-                                                     , RKC.b1430S5D
-                                                     , RKC.bS5H
-                                                     , RKC.bS5S
-                                                     ])
-                                  ]
-
-
 firstResponse3014 :: Situations
-firstResponse3014 = let
-    sit (setups, responses) = let
+(firstResponse1430, firstResponse3014) =
+    (firstResponse1430', firstResponse3014')
+  where
+    firstResponse (setups, responses) = let
         inner setup response = let
             action = do
                 setup `andNextBidderIs` T.North
@@ -127,24 +103,38 @@ firstResponse3014 = let
                 "keycards we have. Give them the answer."
           in situation "resp" action response explanation
       in return inner <~ setups <~ responses
-  in
-    wrapNW . join $ return sit <~ [ (setUpAuctionsH, [ RKC.b1430H5C
-                                                     , RKC.b1430H5D
-                                                     , RKC.bH5H
-                                                     , RKC.bH5S
-                                                     ])
-                                  , (setUpAuctionsS, [ RKC.b1430S5C
-                                                     , RKC.b1430S5D
-                                                     , RKC.bS5H
-                                                     , RKC.bS5S
-                                                     ])
-                                  ]
+    firstResponse1430' = wrapNW . join $ return firstResponse
+        <~ [ (setUpAuctionsH, [ RKC.b1430H5C
+                              , RKC.b1430H5D
+                              , RKC.bH5H
+                              , RKC.bH5S
+                              ])
+           , (setUpAuctionsS, [ RKC.b1430S5C
+                              , RKC.b1430S5D
+                              , RKC.bS5H
+                              , RKC.bS5S
+                              ])
+           ]
+    firstResponse3014' = wrapNW . join $ return firstResponse
+        <~ [ (setUpAuctionsH, [ RKC.b3014H5C
+                              , RKC.b3014H5D
+                              , RKC.bH5H
+                              , RKC.bH5S
+                              ])
+           , (setUpAuctionsS, [ RKC.b3014S5C
+                              , RKC.b3014S5D
+                              , RKC.bS5H
+                              , RKC.bS5S
+                              ])
+           ]
 
 
 signoff1430 :: Situations
-signoff1430 = let
-    sit (setups, followups) = let
-        inner setup (response, signoff) = let
+signoff3014 :: Situations
+(signoff1430, signoff3014) = (signoff1430', signoff3014')
+  where
+    signoff (setups, followups) = let
+        inner setup (response, signoffBid) = let
             action = do
                 setup `andNextBidderIs` T.South
                 RKC.b4N
@@ -154,10 +144,9 @@ signoff1430 = let
             explanation =
                 "We asked for keycards, but learned we're missing 2 of " .+
                 "them. Slam is likely to fail: sign off at the 5 level."
-          in situation "signoff" action signoff explanation
+          in situation "signoff" action signoffBid explanation
       in return inner <~ setups <~ followups
-  in
-    wrapNW . join $ return sit
+    signoff1430' = wrapNW . join $ return signoff
         <~ [ (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5H)
                               , (RKC.b1430H5D, RKC.b1430H5D5H)
                               , (RKC.bH5H,     RKC.bH5HP)
@@ -171,25 +160,7 @@ signoff1430 = let
                               , (RKC.bS5S,     RKC.bS5SP)
                               ])
            ]
-
-
-signoff3014 :: Situations
-signoff3014 = let
-    sit (setups, followups) = let
-        inner setup (response, signoff) = let
-            action = do
-                setup `andNextBidderIs` T.South
-                RKC.b4N
-                makePass
-                _ <- response
-                makePass
-            explanation =
-                "We asked for keycards, but learned we're missing 2 of " .+
-                "them. Slam is likely to fail: sign off at the 5 level."
-          in situation "signoff" action signoff explanation
-      in return inner <~ setups <~ followups
-  in
-    wrapNW . join $ return sit
+    signoff3014' = wrapNW . join $ return signoff
         <~ [ (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5H)
                               , (RKC.b3014H5D, RKC.b3014H5D5H)
                               , (RKC.bH5H,     RKC.bH5HP)
@@ -258,8 +229,10 @@ evenVoid = let
 
 
 queenAsk1430 :: Situations
-queenAsk1430 = let
-    sit (setups, response, queenAsk, awkward) = let
+queenAsk3014 :: Situations
+(queenAsk1430, queenAsk3014) = (queenAsk1430', queenAsk3014')
+  where
+    queenAsk (setups, response, askingBid, awkward) = let
         inner setup = let
             action = do
                 setup `andNextBidderIs` T.South
@@ -273,45 +246,19 @@ queenAsk1430 = let
                 "non-signoff bid to ask about the queen. " .+ (
                     if awkward
                     then "(If hearts are trump and the cheapest relay is " .+
-                         T.Bid 5 T.Spades .+ ", you are pushing to slam no " .+
-                         "matter what. Make sure you're okay with that no " .+
-                         "matter what partner does.)"
+                         T.Bid 5 T.Spades .+ ", asking about the queen " .+
+                         "pushes to slam no matter what. Make sure you're " .+
+                         "okay with that no matter what partner does.)"
                     else "" .+ "")  -- Use (.+) to get the types consistent
-          in situation "qask" action queenAsk explanation
+          in situation "qask" action askingBid explanation
       in return inner <~ setups
-  in
-    wrapNW . join $ return sit
+    queenAsk1430' = wrapNW . join $ return queenAsk
         <~ [ (setUpAuctionsH, RKC.b1430H5C, RKC.b1430H5C5D, False)
            , (setUpAuctionsH, RKC.b1430H5D, RKC.b1430H5D5S, True)
            , (setUpAuctionsS, RKC.b1430S5C, RKC.b1430S5C5D, False)
            , (setUpAuctionsS, RKC.b1430S5D, RKC.b1430S5D5H, False)
            ]
-
-
-queenAsk3014 :: Situations
-queenAsk3014 = let
-    sit (setups, response, queenAsk, awkward) = let
-        inner setup = let
-            action = do
-                setup `andNextBidderIs` T.South
-                RKC.b4N
-                makePass
-                _ <- response
-                makePass
-            explanation =
-                "We are missing at most 1 keycard, but don't yet know " .+
-                "whether we also have the queen of trump. Make the cheapest " .+
-                "non-signoff bid to ask about the queen. " .+ (
-                    if awkward
-                    then "(If hearts are trump and the cheapest relay is " .+
-                         T.Bid 5 T.Spades .+ ", you are pushing to slam no " .+
-                         "matter what. Make sure you're okay with that no " .+
-                         "matter what partner does.)"
-                    else "" .+ "")  -- Use (.+) to get the types consistent
-          in situation "qask" action queenAsk explanation
-      in return inner <~ setups
-  in
-    wrapNW . join $ return sit
+    queenAsk3014' = wrapNW . join $ return queenAsk
         <~ [ (setUpAuctionsH, RKC.b3014H5C, RKC.b3014H5C5D, False)
            , (setUpAuctionsH, RKC.b3014H5D, RKC.b3014H5D5S, True)
            , (setUpAuctionsS, RKC.b3014S5C, RKC.b3014S5C5D, False)
