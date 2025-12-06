@@ -2,16 +2,36 @@ module Bids.RomanKeycardBlackwood(
     b4N
   , b1430H5C
   , b1430H5C5D
+  , b1430H5C5D5H
+  , b1430H5C5D5S
+  --, b1430H5C5D5N  -- Too hard to define
+  , b1430H5C5D6C
+  , b1430H5C5D6D
+  , b1430H5C5D6H
   , b1430H5C5H
   , b1430H5D
   , b1430H5D5H
   , b1430H5D5S
+  , b1430H5D5S5N
+  , b1430H5D5S6C
+  , b1430H5D5S6D
+  , b1430H5D5S6H
   , b3014H5C
   , b3014H5C5D
+  , b3014H5C5D5H
+  , b3014H5C5D5S
+  --, b3014H5C5D5N  -- Too hard to define
+  , b3014H5C5D6C
+  , b3014H5C5D6D
+  , b3014H5C5D6H
   , b3014H5C5H
   , b3014H5D
   , b3014H5D5H
   , b3014H5D5S
+  , b3014H5D5S5N
+  , b3014H5D5S6C
+  , b3014H5D5S6D
+  , b3014H5D5S6H
   , bH5H
   , bH5HP
   , bH5S
@@ -21,15 +41,39 @@ module Bids.RomanKeycardBlackwood(
   , bH6H
   , b1430S5C
   , b1430S5C5D
+  , b1430S5C5D5H
+  , b1430S5C5D5S
+  --, b1430S5C5D5N  -- Too hard to define
+  , b1430S5C5D6C
+  , b1430S5C5D6D
+  , b1430S5C5D6S
   , b1430S5C5S
   , b1430S5D
   , b1430S5D5H
+  , b1430S5D5H5S
+  --, b1430S5D5H5N  -- Too hard to define
+  , b1430S5D5H6C
+  , b1430S5D5H6D
+  , b1430S5D5H6H
+  , b1430S5D5H6S
   , b1430S5D5S
   , b3014S5C
   , b3014S5C5D
+  , b3014S5C5D5H
+  , b3014S5C5D5S
+  --, b3014S5C5D5N  -- Too hard to define
+  , b3014S5C5D6C
+  , b3014S5C5D6D
+  , b3014S5C5D6S
   , b3014S5C5S
   , b3014S5D
   , b3014S5D5H
+  , b3014S5D5H5S
+  --, b3014S5D5H5N  -- Too hard to define
+  , b3014S5D5H6C
+  , b3014S5D5H6D
+  , b3014S5D5H6H
+  , b3014S5D5H6S
   , b3014S5D5S
   , bS5H
   , bS5H5S
