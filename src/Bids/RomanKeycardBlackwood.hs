@@ -1,13 +1,17 @@
 module Bids.RomanKeycardBlackwood(
     b4N
   , b1430H5C
+  , b1430H5C5D
   , b1430H5C5H
   , b1430H5D
   , b1430H5D5H
+  , b1430H5D5S
   , b3014H5C
+  , b3014H5C5D
   , b3014H5C5H
   , b3014H5D
   , b3014H5D5H
+  , b3014H5D5S
   , bH5H
   , bH5HP
   , bH5S
@@ -16,12 +20,16 @@ module Bids.RomanKeycardBlackwood(
   , bH6D
   , bH6H
   , b1430S5C
+  , b1430S5C5D
   , b1430S5C5S
   , b1430S5D
+  , b1430S5D5H
   , b1430S5D5S
   , b3014S5C
+  , b3014S5C5D
   , b3014S5C5S
   , b3014S5D
+  , b3014S5D5H
   , b3014S5D5S
   , bS5H
   , bS5H5S
@@ -238,3 +246,51 @@ bS5SP :: Action
 bS5SP = E.nameAction "RKC1430_S_5SP" $ do
     E.keycardCount T.Spades 1 4
     E.makeCall $ T.Pass
+
+
+-- Queen asks
+queenAsk_ :: T.Suit -> Action -> T.Call -> Action
+queenAsk_ trumpSuit signoff bid = do
+    E.forbid signoff  -- We must be missing at most 1 keycard
+    E.forbid (E.hasCard trumpSuit 'Q')  -- We must not know where the queen is
+    -- NOTE: we should also not know we have a 10-card fit, but that's much
+    -- harder to describe, and probably depends on the preceding bids.
+    E.makeAlertableCall bid "(postalert) queen ask"
+
+b1430H5C5D :: Action
+b1430H5C5D = E.nameAction "RKC1430_H_5C5D" $ do
+    queenAsk_ T.Hearts b1430H5C5H (T.Bid 5 T.Diamonds)
+
+b1430H5D5S :: Action
+b1430H5D5S = E.nameAction "RKC1430_H_5D5S" $ do
+    -- This bid obligates us to slam even if partner is missing the queen. To be
+    -- on the safe side, we should have all the keycards.
+    E.keycardCount T.Hearts 2 5
+    queenAsk_ T.Hearts b1430H5D5H (T.Bid 5 T.Spades)
+
+b3014H5C5D :: Action
+b3014H5C5D = E.nameAction "RKC3014_H_5C5D" $ do
+    queenAsk_ T.Hearts b3014H5C5H (T.Bid 5 T.Diamonds)
+
+b3014H5D5S :: Action
+b3014H5D5S = E.nameAction "RKC3014_H_5D5S" $ do
+    -- This bid obligates us to slam even if partner is missing the queen. To be
+    -- on the safe side, we should have all the keycards.
+    E.keycardCount T.Hearts 1 4
+    queenAsk_ T.Hearts b3014H5D5H (T.Bid 5 T.Spades)
+
+b1430S5C5D :: Action
+b1430S5C5D = E.nameAction "RKC1430_S_5C5D" $ do
+    queenAsk_ T.Spades b1430S5C5S (T.Bid 5 T.Diamonds)
+
+b1430S5D5H :: Action
+b1430S5D5H = E.nameAction "RKC1430_S_5D5H" $ do
+    queenAsk_ T.Spades b1430S5D5S (T.Bid 5 T.Hearts)
+
+b3014S5C5D :: Action
+b3014S5C5D = E.nameAction "RKC3014_S_5C5D" $ do
+    queenAsk_ T.Spades b3014S5C5S (T.Bid 5 T.Diamonds)
+
+b3014S5D5H :: Action
+b3014S5D5H = E.nameAction "RKC3014_S_5D5H" $ do
+    queenAsk_ T.Spades b3014S5D5S (T.Bid 5 T.Hearts)
