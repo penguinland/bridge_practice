@@ -40,6 +40,7 @@ newThreadPool nThreads = do
         runWorker chan errorSaver rng2
       where
         recordError f e = do
+            putStrLn "ERROR running in thread pool! This should be recorded."
             saveError errorSaver e
             -- Re-enqueue a failed run: we still need to precompute a
             -- SituationInstance for this Cacher. However, do it from a separate
