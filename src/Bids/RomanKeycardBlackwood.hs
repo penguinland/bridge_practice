@@ -1,16 +1,12 @@
 module Bids.RomanKeycardBlackwood(
     b4N
   , b1430H5C
-  --, b1430H5C5D
   , b1430H5C5H
   , b1430H5D
-  -- TODO: queen ask over 5D
   , b1430H5D5H
   , b3014H5C
-  --, b3014H5C5D
   , b3014H5C5H
   , b3014H5D
-  -- TODO: queen ask over 5D
   , b3014H5D5H
   , bH5H
   , bH5HP
@@ -20,16 +16,12 @@ module Bids.RomanKeycardBlackwood(
   , bH6D
   , bH6H
   , b1430S5C
-  --, b1430S5C5D
   , b1430S5C5S
   , b1430S5D
-  --, b1430S5D5H
   , b1430S5D5S
   , b3014S5C
-  --, b3014S5C5D
   , b3014S5C5S
   , b3014S5D
-  --, b3014S5D5H
   , b3014S5D5S
   , bS5H
   , bS5H5S
@@ -246,12 +238,3 @@ bS5SP :: Action
 bS5SP = E.nameAction "RKC1430_S_5SP" $ do
     E.keycardCount T.Hearts 1 4
     E.makeCall $ T.Pass
-
-
--- Queen asks
-
-_queenAsk :: T.Suit -> Action -> T.Call -> Action
-_queenAsk trumpSuit signoff bid = do
-    E.forbid $ E.hasCard trumpSuit 'Q'
-    E.forbid signoff
-    E.makeCall bid
