@@ -1,9 +1,13 @@
 module Bids.RomanKeycardBlackwood(
     b4N
   , b1430H5C
+  --, b1430H5C5D
   , b1430H5D
+  -- TODO: queen ask over 5D
   , b3014H5C
+  --, b3014H5C5D
   , b3014H5D
+  -- TODO: queen ask over 5D
   , bH5H
   , bH5S
   , bH5N
@@ -11,9 +15,13 @@ module Bids.RomanKeycardBlackwood(
   , bH6D
   , bH6H
   , b1430S5C
+  --, b1430S5C5D
   , b1430S5D
+  --, b1430S5D5H
   , b3014S5C
+  --, b3014S5C5D
   , b3014S5D
+  --, b3014S5D5H
   , bS5H
   , bS5S
   , bS5N
@@ -158,3 +166,12 @@ b3014S5D :: Action
 b3014S5D = E.nameAction "RKC3014_S_5D" $ do
     E.forbid (E.forbid b1430S5C)
     E.makeAlertableCall (T.Bid 5 T.Diamonds) "(postalert) 1 or 4 keycards"
+
+
+-- Queen asks
+
+_queenAsk :: T.Suit -> Action -> T.Call -> Action
+_queenAsk trumpSuit signoff bid = do
+    E.forbid $ E.hasCard trumpSuit 'Q'
+    E.forbid signoff
+    E.makeCall bid
