@@ -236,5 +236,5 @@ bS5H5S = E.nameAction "RKC1430_S_5H5S" $ do
 
 bS5SP :: Action
 bS5SP = E.nameAction "RKC1430_S_5SP" $ do
-    E.keycardCount T.Hearts 1 4
+    E.keycardCount T.Spades 1 4
     E.makeCall $ T.Pass
