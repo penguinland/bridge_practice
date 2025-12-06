@@ -14,17 +14,17 @@ module Bids.RomanKeycardBlackwood(
   , b3014H5D5H
   , b3014H5D5S
 
---  -- Queen ask responses are the same for 1430 and 3014.
---  , bH5C5D5H
+  -- Queen ask responses are the same for 1430 and 3014.
+  , bH5C5D5H
 --  , bH5C5D5S
---  --, bH5C5D5N  -- Too hard to define
+  --, bH5C5D5N  -- Too hard to define
 --  , bH5C5D6C
 --  , bH5C5D6D
 --  , bH5C5D6H
 --  , bH5D5S5N
 --  , bH5D5S6C
 --  , bH5D5S6D
---  , bH5D5S6H
+  , bH5D5S6H
 
   , bH5H
   , bH5HP
@@ -47,15 +47,15 @@ module Bids.RomanKeycardBlackwood(
   , b3014S5D5H
   , b3014S5D5S
 
---  -- Queen ask responses
+  -- Queen ask responses
 --  , bS5C5D5H
---  , bS5C5D5S
---  --, bS5C5D5N  -- Too hard to define
+  , bS5C5D5S
+  --, bS5C5D5N  -- Too hard to define
 --  , bS5C5D6C
 --  , bS5C5D6D
 --  , bS5C5D6S
---  , bS5D5H5S
---  --, bS5D5H5N  -- Too hard to define
+  , bS5D5H5S
+  --, bS5D5H5N  -- Too hard to define
 --  , bS5D5H6C
 --  , bS5D5H6D
 --  , bS5D5H6H
@@ -324,3 +324,26 @@ b3014S5C5D = E.nameAction "RKC3014_S_5C5D" $ do
 b3014S5D5H :: Action
 b3014S5D5H = E.nameAction "RKC3014_S_5D5H" $ do
     queenAsk_ T.Spades b3014S5D5S (T.Bid 5 T.Hearts)
+
+
+-- Queen ask responses
+bH5C5D5H :: Action
+bH5C5D5H = E.nameAction "RKC_H_5C5D5H" $ do
+    E.forbid $ E.hasCard T.Hearts 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Hearts) "no queen of trump"
+
+bH5D5S6H :: Action
+bH5D5S6H = E.nameAction "RKC_H_5D5S6H" $ do
+    E.forbid $ E.hasCard T.Hearts 'Q'
+    E.makeAlertableCall (T.Bid 6 T.Hearts) "no queen of trump"
+
+bS5C5D5S :: Action
+bS5C5D5S = E.nameAction "RKC_S_5C5D5S" $ do
+    E.forbid $ E.hasCard T.Spades 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Spades) "no queen of trump"
+
+bS5D5H5S :: Action
+bS5D5H5S = E.nameAction "RKC_S_5D5H5S" $ do
+    E.forbid $ E.hasCard T.Spades 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Spades) "no queen of trump"
+
