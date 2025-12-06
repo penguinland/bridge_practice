@@ -257,8 +257,63 @@ evenVoid = let
                                   ]
 
 
+queenAsk1430 :: Situations
+queenAsk1430 = let
+    sit (setups, response, queenAsk) = let
+        inner setup = let
+            action = do
+                setup `andNextBidderIs` T.North
+                RKC.b4N
+                makePass
+                _ <- response
+                makePass
+            explanation =
+                "We are missing at most 1 keycard, but don't yet know " .+
+                "whether we also have the queen of trump. Make the cheapest " .+
+                "non-signoff bid to ask about the queen. (If hearts are " .+
+                "trump and the cheapest relay is " .+ T.Bid 5 T.Spades .+
+                ", you are pushing to slam no matter what. Make sure you're " .+
+                "okay with that no matter what partner does.)"
+          in situation "qask" action queenAsk explanation
+      in return inner <~ setups
+  in
+    wrapNW . join $ return sit
+        <~ [ (setUpAuctionsH, RKC.b1430H5C, RKC.b1430H5C5D)
+           , (setUpAuctionsH, RKC.b1430H5D, RKC.b1430H5D5S)
+           , (setUpAuctionsS, RKC.b1430S5C, RKC.b1430S5C5D)
+           , (setUpAuctionsS, RKC.b1430S5D, RKC.b1430S5D5H)
+           ]
+
+
+queenAsk3014 :: Situations
+queenAsk3014 = let
+    sit (setups, response, queenAsk) = let
+        inner setup = let
+            action = do
+                setup `andNextBidderIs` T.North
+                RKC.b4N
+                makePass
+                _ <- response
+                makePass
+            explanation =
+                "We are missing at most 1 keycard, but don't yet know " .+
+                "whether we also have the queen of trump. Make the cheapest " .+
+                "non-signoff bid to ask about the queen. (If hearts are " .+
+                "trump and the cheapest relay is " .+ T.Bid 5 T.Spades .+
+                ", you are pushing to slam no matter what. Make sure you're " .+
+                "okay with that no matter what partner does.)"
+          in situation "qask" action queenAsk explanation
+      in return inner <~ setups
+  in
+    wrapNW . join $ return sit
+        <~ [ (setUpAuctionsH, RKC.b3014H5C, RKC.b3014H5C5D)
+           , (setUpAuctionsH, RKC.b3014H5D, RKC.b3014H5D5S)
+           , (setUpAuctionsS, RKC.b3014S5C, RKC.b3014S5C5D)
+           , (setUpAuctionsS, RKC.b3014S5D, RKC.b3014S5D5H)
+           ]
+
+
 -- TODO:
--- Queen ask
 -- Respond to queen ask
 -- Signing off in slam
 -- 5N as king ask
@@ -267,7 +322,6 @@ evenVoid = let
 -- Placing the contract after partner shows a void?
 -- Unsure how to phrase: trouble when hearts are trump and you have 1 keycard
 --     without the queen (worried about partner responding 5S)
--- Queen ask when hearts are trump and partner has responded 5D
 -- Show 0 or 3 keycards when you have 0 and a void, rather than 5N?
 
 
@@ -278,6 +332,7 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
                       , firstResponse1430
                       , signoff1430
                       , wrap [oddVoid, evenVoid]
+                      , queenAsk1430
                       ]
 
 topic3014 :: Topic
@@ -287,4 +342,5 @@ topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
                       , firstResponse3014
                       , signoff3014
                       , wrap [oddVoid, evenVoid]
+                      , queenAsk3014
                       ]
