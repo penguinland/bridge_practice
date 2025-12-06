@@ -40,7 +40,7 @@ import qualified Terminology as T
 
 
 b4N :: Action
-b4N = do
+b4N = E.nameAction "RKC_4N" $ do
     E.forEach T.allSuits (`E.minSuitLength` 1)  -- Don't bid RKC with a void
     E.makeAlertableCall (T.Bid 4 T.Notrump) "(postalert) keycard ask"
 
