@@ -132,68 +132,53 @@ firstResponse3014 = wrapNW . join $ return firstResponse_
        ]
 
 
-signoff1430 :: Situations
-signoff1430 = let
-    sit (setups, followups) = let
-        inner setup (response, signoff) = let
-            action = do
-                setup `andNextBidderIs` T.South
-                RKC.b4N
-                makePass
-                _ <- response
-                makePass
-            explanation =
-                "We asked for keycards, but learned we're missing 2 of " .+
-                "them. Slam is likely to fail: sign off at the 5 level."
-          in situation "signoff" action signoff explanation
-      in return inner <~ setups <~ followups
-  in
-    wrapNW . join $ return sit
-        <~ [ (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5H)
-                              , (RKC.b1430H5D, RKC.b1430H5D5H)
-                              , (RKC.bH5H,     RKC.bH5HP)
-                              -- If hearts are trump and partner bid 5S, we
-                              -- can't sign off. Handle this separately.
-                              --, (RKC.bH5S,     trouble)
-                              ])
-           , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5S)
-                              , (RKC.b1430S5D, RKC.b1430S5D5S)
-                              , (RKC.bS5H,     RKC.bS5H5S)
-                              , (RKC.bS5S,     RKC.bS5SP)
-                              ])
-           ]
+signoff_ :: ([Action], [(Action, Action)]) ->
+    State StdGen (T.Direction -> T.Vulnerability -> Situation)
+signoff_ (setups, followups) = let
+    inner setup (response, signoff) = let
+        action = do
+            setup `andNextBidderIs` T.South
+            RKC.b4N
+            makePass
+            _ <- response
+            makePass
+        explanation =
+            "We asked for keycards, but learned we're missing 2 of " .+
+            "them. Slam is likely to fail: sign off at the 5 level."
+      in situation "signoff" action signoff explanation
+  in return inner <~ setups <~ followups
 
+signoff1430 :: Situations
+signoff1430 = wrapNW . join $ return signoff_
+    <~ [ (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5H)
+                          , (RKC.b1430H5D, RKC.b1430H5D5H)
+                          , (RKC.bH5H,     RKC.bH5HP)
+                          -- If hearts are trump and partner bid 5S, we
+                          -- can't sign off. Handle this separately.
+                          --, (RKC.bH5S,     trouble)
+                          ])
+       , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5S)
+                          , (RKC.b1430S5D, RKC.b1430S5D5S)
+                          , (RKC.bS5H,     RKC.bS5H5S)
+                          , (RKC.bS5S,     RKC.bS5SP)
+                          ])
+       ]
 
 signoff3014 :: Situations
-signoff3014 = let
-    sit (setups, followups) = let
-        inner setup (response, signoff) = let
-            action = do
-                setup `andNextBidderIs` T.South
-                RKC.b4N
-                makePass
-                _ <- response
-                makePass
-            explanation =
-                "We asked for keycards, but learned we're missing 2 of " .+
-                "them. Slam is likely to fail: sign off at the 5 level."
-          in situation "signoff" action signoff explanation
-      in return inner <~ setups <~ followups
-  in
-    wrapNW . join $ return sit
-        <~ [ (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5H)
-                              , (RKC.b3014H5D, RKC.b3014H5D5H)
-                              , (RKC.bH5H,     RKC.bH5HP)
-                              -- If hearts are trump and partner bid 5S, we
-                              -- can't sign off. Handle this separately.
-                              --, (RKC.bH5S,     trouble)
-                              ])
-           , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5S)
-                              , (RKC.b3014S5D, RKC.b3014S5D5S)
-                              , (RKC.bS5H,     RKC.bS5H5S)
-                              , (RKC.bS5S,     RKC.bS5SP)
-                              ])
-           ]
+signoff3014 = wrapNW . join $ return signoff_
+    <~ [ (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5H)
+                          , (RKC.b3014H5D, RKC.b3014H5D5H)
+                          , (RKC.bH5H,     RKC.bH5HP)
+                          -- If hearts are trump and partner bid 5S, we
+                          -- can't sign off. Handle this separately.
+                          --, (RKC.bH5S,     trouble)
+                          ])
+       , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5S)
+                          , (RKC.b3014S5D, RKC.b3014S5D5S)
+                          , (RKC.bS5H,     RKC.bS5H5S)
+                          , (RKC.bS5S,     RKC.bS5SP)
+                          ])
+       ]
 
 
 oddVoid :: Situations
