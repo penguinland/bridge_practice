@@ -2,13 +2,18 @@ module Bids.RomanKeycardBlackwood(
     b4N
   , b1430H5C
   --, b1430H5C5D
+  , b1430H5C5H
   , b1430H5D
   -- TODO: queen ask over 5D
+  , b1430H5D5H
   , b3014H5C
   --, b3014H5C5D
+  , b3014H5C5H
   , b3014H5D
   -- TODO: queen ask over 5D
+  , b3014H5D5H
   , bH5H
+  , bH5HP
   , bH5S
   , bH5N
   , bH6C
@@ -16,14 +21,20 @@ module Bids.RomanKeycardBlackwood(
   , bH6H
   , b1430S5C
   --, b1430S5C5D
+  , b1430S5C5S
   , b1430S5D
   --, b1430S5D5H
+  , b1430S5D5S
   , b3014S5C
   --, b3014S5C5D
+  , b3014S5C5S
   , b3014S5D
   --, b3014S5D5H
+  , b3014S5D5S
   , bS5H
+  , bS5H5S
   , bS5S
+  , bS5SP
   , bS5N
   , bS6C
   , bS6D
@@ -37,7 +48,9 @@ import qualified Terminology as T
 
 
 b4N :: Action
-b4N = E.makeAlertableCall (T.Bid 4 T.Notrump) "(postalert) keycard ask"
+b4N = do
+    E.forEach T.allSuits (`E.minSuitLength` 1)  -- Don't bid RKC with a void
+    E.makeAlertableCall (T.Bid 4 T.Notrump) "(postalert) keycard ask"
 
 
 b1430H5C :: Action
@@ -166,6 +179,73 @@ b3014S5D :: Action
 b3014S5D = E.nameAction "RKC3014_S_5D" $ do
     E.forbid (E.forbid b1430S5C)
     E.makeAlertableCall (T.Bid 5 T.Diamonds) "(postalert) 1 or 4 keycards"
+
+
+-- Signoffs
+b1430H5C5H :: Action
+b1430H5C5H = E.nameAction "RKC1430_H_5C5H" $ do
+    E.keycardCount T.Hearts 2 5
+    E.makeCall $ T.Bid 5 T.Hearts
+
+
+b1430H5D5H :: Action
+b1430H5D5H = E.nameAction "RKC1430_H_5D5H" $ do
+    E.keycardCount T.Hearts 3 0
+    E.makeCall $ T.Bid 5 T.Hearts
+
+
+b3014H5C5H :: Action
+b3014H5C5H = E.nameAction "RKC3014_H_5C5H" $ do
+    E.keycardCount T.Hearts 3 0
+    E.makeCall $ T.Bid 5 T.Hearts
+
+
+b3014H5D5H :: Action
+b3014H5D5H = E.nameAction "RKC3014_H_5D5H" $ do
+    E.keycardCount T.Hearts 2 5
+    E.makeCall $ T.Bid 5 T.Hearts
+
+
+bH5HP :: Action
+bH5HP = E.nameAction "RKC1430_H_5HP" $ do
+    E.keycardCount T.Hearts 1 4
+    E.makeCall $ T.Pass
+
+
+b1430S5C5S :: Action
+b1430S5C5S = E.nameAction "RKC1430_S_5C5S" $ do
+    E.keycardCount T.Spades 2 5
+    E.makeCall $ T.Bid 5 T.Spades
+
+
+b1430S5D5S :: Action
+b1430S5D5S = E.nameAction "RKC1430_S_5D5S" $ do
+    E.keycardCount T.Spades 3 0
+    E.makeCall $ T.Bid 5 T.Spades
+
+
+b3014S5C5S :: Action
+b3014S5C5S = E.nameAction "RKC3014_S_5C5S" $ do
+    E.keycardCount T.Spades 3 0
+    E.makeCall $ T.Bid 5 T.Spades
+
+
+b3014S5D5S :: Action
+b3014S5D5S = E.nameAction "RKC3014_S_5D5S" $ do
+    E.keycardCount T.Spades 2 5
+    E.makeCall $ T.Bid 5 T.Spades
+
+
+bS5H5S :: Action
+bS5H5S = E.nameAction "RKC1430_S_5H5S" $ do
+    E.keycardCount T.Spades 1 4
+    E.makeCall $ T.Bid 5 T.Spades
+
+
+bS5SP :: Action
+bS5SP = E.nameAction "RKC1430_S_5SP" $ do
+    E.keycardCount T.Hearts 1 4
+    E.makeCall $ T.Pass
 
 
 -- Queen asks
