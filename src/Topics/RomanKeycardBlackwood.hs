@@ -7,7 +7,7 @@ import Action(Action)
 import qualified Bids.RomanKeycardBlackwood as RKC
 import qualified Bids.Jacoby2NT as J2N
 import CommonBids(andNextBidderIs, noInterference)
-import EDSL(makeCall, makePass, pointRange, keycardCount, suitLength)
+import EDSL(makePass, pointRange, suitLength)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -135,15 +135,14 @@ firstResponse3014 = let
 
 signoff1430 :: Situations
 signoff1430 = let
-    sit (setups, suit, followups) = let
-        inner setup (response, countA, countB, signoff) = let
+    sit (setups, followups) = let
+        inner setup (response, signoff) = let
             action = do
                 setup `andNextBidderIs` T.South
                 RKC.b4N
                 makePass
                 _ <- response
                 makePass
-                keycardCount suit countA countB
             explanation =
                 "We asked for keycards, but learned we're missing 2 of " .+
                 "them. Slam is likely to fail: sign off at the 5 level."
@@ -151,34 +150,31 @@ signoff1430 = let
       in return inner <~ setups <~ followups
   in
     wrapNW . join $ return sit <~ [
-        (setUpAuctionsH, T.Hearts,
-            [ (RKC.b1430H5C, 2, 5, makeCall (T.Bid 5 T.Hearts))
-            , (RKC.b1430H5D, 3, 0, makeCall (T.Bid 5 T.Hearts))
-            , (RKC.bH5H,     1, 4, makeCall (T.Pass          ))
-            -- If hearts are trump and partner bid 5S, we can't sign off. Handle
-            -- this separately.
-            --, (RKC.bH5S,     1, 4, makeCall (trouble         ))
-            ])
-      , (setUpAuctionsS, T.Spades,
-            [ (RKC.b1430S5C, 2, 5, makeCall (T.Bid 5 T.Spades))
-            , (RKC.b1430S5D, 3, 0, makeCall (T.Bid 5 T.Spades))
-            , (RKC.bS5H,     1, 4, makeCall (T.Bid 5 T.Spades))
-            , (RKC.bS5S,     1, 4, makeCall (T.Pass          ))
-            ])
+        (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5H)
+                         , (RKC.b1430H5D, RKC.b1430H5D5H)
+                         , (RKC.bH5H,     RKC.bH5HP)
+                         -- If hearts are trump and partner bid 5S, we can't
+                         -- sign off. Handle this separately.
+                         --, (RKC.bH5S,     trouble)
+                         ])
+      , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5S)
+                         , (RKC.b1430S5D, RKC.b1430S5D5S)
+                         , (RKC.bS5H,     RKC.bS5H5S)
+                         , (RKC.bS5S,     RKC.bS5SP)
+                         ])
       ]
 
 
 signoff3014 :: Situations
 signoff3014 = let
-    sit (setups, suit, followups) = let
-        inner setup (response, countA, countB, signoff) = let
+    sit (setups, followups) = let
+        inner setup (response, signoff) = let
             action = do
                 setup `andNextBidderIs` T.South
                 RKC.b4N
                 makePass
                 _ <- response
                 makePass
-                keycardCount suit countA countB
             explanation =
                 "We asked for keycards, but learned we're missing 2 of " .+
                 "them. Slam is likely to fail: sign off at the 5 level."
@@ -186,20 +182,18 @@ signoff3014 = let
       in return inner <~ setups <~ followups
   in
     wrapNW . join $ return sit <~ [
-        (setUpAuctionsH, T.Hearts,
-            [ (RKC.b3014H5C, 3, 0, makeCall (T.Bid 5 T.Hearts))
-            , (RKC.b3014H5D, 2, 5, makeCall (T.Bid 5 T.Hearts))
-            , (RKC.bH5H,     1, 4, makeCall (T.Pass          ))
-            -- If hearts are trump and partner bid 5S, we can't sign off. Handle
-            -- this separately.
-            --, (RKC.bH5S,     1, 4, makeCall (trouble         ))
-            ])
-      , (setUpAuctionsS, T.Spades,
-            [ (RKC.b3014S5C, 3, 0, makeCall (T.Bid 5 T.Spades))
-            , (RKC.b3014S5D, 2, 5, makeCall (T.Bid 5 T.Spades))
-            , (RKC.bS5H,     1, 4, makeCall (T.Bid 5 T.Spades))
-            , (RKC.bS5S,     1, 4, makeCall (T.Pass          ))
-            ])
+        (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5H)
+                         , (RKC.b3014H5D, RKC.b3014H5D5H)
+                         , (RKC.bH5H,     RKC.bH5HP)
+                         -- If hearts are trump and partner bid 5S, we can't
+                         -- sign off. Handle this separately.
+                         --, (RKC.bH5S,     trouble)
+                         ])
+      , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5S)
+                         , (RKC.b3014S5D, RKC.b3014S5D5S)
+                         , (RKC.bS5H,     RKC.bS5H5S)
+                         , (RKC.bS5S,     RKC.bS5SP)
+                         ])
       ]
 
 
