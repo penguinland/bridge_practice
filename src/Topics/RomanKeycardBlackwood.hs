@@ -154,23 +154,23 @@ signoff1430 = let
             explanation =
                 "We asked for keycards, but learned we're missing 2 of " .+
                 "them. Slam is likely to fail: sign off at the 5 level."
-          in situation "fail" action signoff explanation
+          in situation "signoff" action signoff explanation
       in return inner <~ setups <~ followups
   in
-    wrapNW . join $ return sit <~ [
-        (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5H)
-                         , (RKC.b1430H5D, RKC.b1430H5D5H)
-                         , (RKC.bH5H,     RKC.bH5HP)
-                         -- If hearts are trump and partner bid 5S, we can't
-                         -- sign off. Handle this separately.
-                         --, (RKC.bH5S,     trouble)
-                         ])
-      , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5S)
-                         , (RKC.b1430S5D, RKC.b1430S5D5S)
-                         , (RKC.bS5H,     RKC.bS5H5S)
-                         , (RKC.bS5S,     RKC.bS5SP)
-                         ])
-      ]
+    wrapNW . join $ return sit
+        <~ [ (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5H)
+                              , (RKC.b1430H5D, RKC.b1430H5D5H)
+                              , (RKC.bH5H,     RKC.bH5HP)
+                              -- If hearts are trump and partner bid 5S, we
+                              -- can't sign off. Handle this separately.
+                              --, (RKC.bH5S,     trouble)
+                              ])
+           , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5S)
+                              , (RKC.b1430S5D, RKC.b1430S5D5S)
+                              , (RKC.bS5H,     RKC.bS5H5S)
+                              , (RKC.bS5S,     RKC.bS5SP)
+                              ])
+           ]
 
 
 signoff3014 :: Situations
@@ -186,23 +186,23 @@ signoff3014 = let
             explanation =
                 "We asked for keycards, but learned we're missing 2 of " .+
                 "them. Slam is likely to fail: sign off at the 5 level."
-          in situation "fail" action signoff explanation
+          in situation "signoff" action signoff explanation
       in return inner <~ setups <~ followups
   in
-    wrapNW . join $ return sit <~ [
-        (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5H)
-                         , (RKC.b3014H5D, RKC.b3014H5D5H)
-                         , (RKC.bH5H,     RKC.bH5HP)
-                         -- If hearts are trump and partner bid 5S, we can't
-                         -- sign off. Handle this separately.
-                         --, (RKC.bH5S,     trouble)
-                         ])
-      , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5S)
-                         , (RKC.b3014S5D, RKC.b3014S5D5S)
-                         , (RKC.bS5H,     RKC.bS5H5S)
-                         , (RKC.bS5S,     RKC.bS5SP)
-                         ])
-      ]
+    wrapNW . join $ return sit
+        <~ [ (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5H)
+                              , (RKC.b3014H5D, RKC.b3014H5D5H)
+                              , (RKC.bH5H,     RKC.bH5HP)
+                              -- If hearts are trump and partner bid 5S, we
+                              -- can't sign off. Handle this separately.
+                              --, (RKC.bH5S,     trouble)
+                              ])
+           , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5S)
+                              , (RKC.b3014S5D, RKC.b3014S5D5S)
+                              , (RKC.bS5H,     RKC.bS5H5S)
+                              , (RKC.bS5S,     RKC.bS5SP)
+                              ])
+           ]
 
 
 oddVoid :: Situations
@@ -224,14 +224,14 @@ oddVoid = let
           in situation "oddV" action response explanation
       in return inner <~ setups <~ responses
   in
-    wrapNW . join $ return sit <~ [
-        -- The keycard teller has already shown a natural diamond suit: can't
-        -- have a void in diamonds
-        (takeIndices_ [1] setUpAuctionsH, [RKC.bH6C, RKC.bH6H])
-        -- The keycard teller has already shown a natural heart suit: can't
-        -- have a void in hearts
-      , (takeIndices_ [1] setUpAuctionsS, [RKC.bS6C, RKC.bS6D])
-      ]
+    wrapNW . join $ return sit
+        <~ [ -- The keycard teller has already shown a natural diamond suit:
+             -- can't have a void in diamonds
+             ([setUpAuctionsH !! 1], [RKC.bH6C, RKC.bH6H])
+             -- The keycard teller has already shown a natural heart suit: can't
+             -- have a void in hearts
+           , ([setUpAuctionsS !! 1], [RKC.bS6C, RKC.bS6D])
+           ]
 
 
 evenVoid :: Situations
