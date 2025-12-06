@@ -16,11 +16,11 @@ module Bids.RomanKeycardBlackwood(
 
   -- Queen ask responses are the same for 1430 and 3014.
   , bH5C5D5H
---  , bH5C5D5S
+  , bH5C5D5S
   --, bH5C5D5N  -- Too hard to define
---  , bH5C5D6C
---  , bH5C5D6D
---  , bH5C5D6H
+  , bH5C5D6C
+  , bH5C5D6D
+  , bH5C5D6H
 --  , bH5D5S5N
 --  , bH5D5S6C
 --  , bH5D5S6D
@@ -74,6 +74,7 @@ module Bids.RomanKeycardBlackwood(
 
 import Action(Action)
 import qualified EDSL as E
+import Output((.+))
 import qualified Terminology as T
 
 
@@ -327,6 +328,7 @@ b3014S5D5H = E.nameAction "RKC3014_S_5D5H" $ do
 
 
 -- Queen ask responses
+
 bH5C5D5H :: Action
 bH5C5D5H = E.nameAction "RKC_H_5C5D5H" $ do
     E.forbid $ E.hasCard T.Hearts 'Q'
@@ -346,4 +348,39 @@ bS5D5H5S :: Action
 bS5D5H5S = E.nameAction "RKC_S_5D5H5S" $ do
     E.forbid $ E.hasCard T.Spades 'Q'
     E.makeAlertableCall (T.Bid 5 T.Spades) "no queen of trump"
+
+
+bH5C5D5S :: Action
+bH5C5D5S = E.nameAction "RKC_H_5C5D5S" $ do
+    E.hasCard T.Hearts 'Q'
+    E.hasCard T.Spades 'K'
+    E.makeAlertableCall (T.Bid 5 T.Spades)
+                        (T.Hearts .+ "Q, " .+ T.Spades .+ "K")
+
+bH5C5D6C :: Action
+bH5C5D6C = E.nameAction "RKC_H_5C5D6C" $ do
+    E.hasCard T.Hearts 'Q'
+    E.forbid $ E.hasCard T.Spades 'K'
+    E.hasCard T.Clubs 'K'
+    E.makeAlertableCall (T.Bid 6 T.Clubs)
+                        (T.Hearts .+ "Q, " .+ T.Clubs .+ "K, " .+
+                         "no " .+ T.Spades .+ "K")
+
+bH5C5D6D :: Action
+bH5C5D6D = E.nameAction "RKC_H_5C5D6D" $ do
+    E.hasCard T.Hearts 'Q'
+    E.forbid $ E.hasCard T.Spades 'K'
+    E.forbid $ E.hasCard T.Clubs 'K'
+    E.hasCard T.Diamonds 'K'
+    E.makeAlertableCall (T.Bid 6 T.Diamonds)
+                        (T.Hearts .+ "Q, " .+ T.Diamonds .+ "K, no black king")
+
+bH5C5D6H :: Action
+bH5C5D6H = E.nameAction "RKC_H_5C5D6H" $ do
+    E.hasCard T.Hearts 'Q'
+    E.forbid $ E.hasCard T.Spades 'K'
+    E.forbid $ E.hasCard T.Clubs 'K'
+    E.forbid $ E.hasCard T.Diamonds 'K'
+    E.makeAlertableCall (T.Bid 6 T.Hearts)
+                        (T.Hearts .+ "Q, no side king")
 
