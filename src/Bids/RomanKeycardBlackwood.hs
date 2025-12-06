@@ -48,12 +48,12 @@ module Bids.RomanKeycardBlackwood(
   , b3014S5D5S
 
   -- Queen ask responses
---  , bS5C5D5H
+  , bS5C5D5H
   , bS5C5D5S
   --, bS5C5D5N  -- Too hard to define
---  , bS5C5D6C
---  , bS5C5D6D
---  , bS5C5D6S
+  , bS5C5D6C
+  , bS5C5D6D
+  , bS5C5D6S
   , bS5D5H5S
   --, bS5D5H5N  -- Too hard to define
 --  , bS5D5H6C
@@ -327,7 +327,7 @@ b3014S5D5H = E.nameAction "RKC3014_S_5D5H" $ do
     queenAsk_ T.Spades b3014S5D5S (T.Bid 5 T.Hearts)
 
 
--- Queen ask responses
+-- Negative queen ask responses
 
 bH5C5D5H :: Action
 bH5C5D5H = E.nameAction "RKC_H_5C5D5H" $ do
@@ -349,6 +349,8 @@ bS5D5H5S = E.nameAction "RKC_S_5D5H5S" $ do
     E.forbid $ E.hasCard T.Spades 'Q'
     E.makeAlertableCall (T.Bid 5 T.Spades) "no queen of trump"
 
+
+-- Positive responses to the queen ask
 
 bH5C5D5S :: Action
 bH5C5D5S = E.nameAction "RKC_H_5C5D5S" $ do
@@ -384,3 +386,40 @@ bH5C5D6H = E.nameAction "RKC_H_5C5D6H" $ do
     E.makeAlertableCall (T.Bid 6 T.Hearts)
                         (T.Hearts .+ "Q, no side king")
 
+-- TODO: define responses when 5S is the queen ask
+
+
+bS5C5D5H :: Action
+bS5C5D5H = E.nameAction "RKC_S_5C5D5H" $ do
+    E.hasCard T.Spades 'Q'
+    E.hasCard T.Hearts 'K'
+    E.makeAlertableCall (T.Bid 5 T.Hearts)
+                        (T.Spades .+ "S, " .+ T.Hearts .+ "K")
+
+bS5C5D6C :: Action
+bS5C5D6C = E.nameAction "RKC_S_5C5D6C" $ do
+    E.hasCard T.Spades 'Q'
+    E.forbid $ E.hasCard T.Hearts 'K'
+    E.hasCard T.Clubs 'K'
+    E.makeAlertableCall (T.Bid 6 T.Clubs)
+                        (T.Spades .+ "Q, " .+ T.Clubs .+ "K, " .+
+                         "no " .+ T.Hearts .+ "K")
+
+bS5C5D6D :: Action
+bS5C5D6D = E.nameAction "RKC_S_5C5D6D" $ do
+    E.hasCard T.Spades 'Q'
+    E.forbid $ E.hasCard T.Hearts 'K'
+    E.forbid $ E.hasCard T.Clubs 'K'
+    E.hasCard T.Diamonds 'K'
+    E.makeAlertableCall (T.Bid 6 T.Diamonds)
+                        (T.Spades .+ "Q, " .+ T.Diamonds .+ "K, " .+
+                         "no other side king")
+
+bS5C5D6S :: Action
+bS5C5D6S = E.nameAction "RKC_S_5C5D6S" $ do
+    E.hasCard T.Spades 'Q'
+    E.forbid $ E.hasCard T.Hearts 'K'
+    E.forbid $ E.hasCard T.Clubs 'K'
+    E.forbid $ E.hasCard T.Diamonds 'K'
+    E.makeAlertableCall (T.Bid 6 T.Spades)
+                        (T.Spades .+ "Q, no side king")
