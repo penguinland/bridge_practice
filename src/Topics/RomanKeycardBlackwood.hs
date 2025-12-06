@@ -262,7 +262,7 @@ queenAsk1430 = let
     sit (setups, response, queenAsk) = let
         inner setup = let
             action = do
-                setup `andNextBidderIs` T.North
+                setup `andNextBidderIs` T.South
                 RKC.b4N
                 makePass
                 _ <- response
@@ -290,7 +290,7 @@ queenAsk3014 = let
     sit (setups, response, queenAsk) = let
         inner setup = let
             action = do
-                setup `andNextBidderIs` T.North
+                setup `andNextBidderIs` T.South
                 RKC.b4N
                 makePass
                 _ <- response
