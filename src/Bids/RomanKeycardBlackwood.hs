@@ -329,22 +329,22 @@ b3014S5D5H = E.nameAction "RKC3014_S_5D5H" $ do
 bH5C5D5H :: Action
 bH5C5D5H = E.nameAction "RKC_H_5C5D5H" $ do
     E.forbid $ E.hasCard T.Hearts 'Q'
-    E.makeAlertableCall (T.Bid 5 T.Hearts) "no queen of trump"
+    E.makeAlertableCall (T.Bid 5 T.Hearts) "(postalert) no queen of trump"
 
 bH5D5S6H :: Action
 bH5D5S6H = E.nameAction "RKC_H_5D5S6H" $ do
     E.forbid $ E.hasCard T.Hearts 'Q'
-    E.makeAlertableCall (T.Bid 6 T.Hearts) "no queen of trump"
+    E.makeAlertableCall (T.Bid 6 T.Hearts) "(postalert) no queen of trump"
 
 bS5C5D5S :: Action
 bS5C5D5S = E.nameAction "RKC_S_5C5D5S" $ do
     E.forbid $ E.hasCard T.Spades 'Q'
-    E.makeAlertableCall (T.Bid 5 T.Spades) "no queen of trump"
+    E.makeAlertableCall (T.Bid 5 T.Spades) "(postalert) no queen of trump"
 
 bS5D5H5S :: Action
 bS5D5H5S = E.nameAction "RKC_S_5D5H5S" $ do
     E.forbid $ E.hasCard T.Spades 'Q'
-    E.makeAlertableCall (T.Bid 5 T.Spades) "no queen of trump"
+    E.makeAlertableCall (T.Bid 5 T.Spades) "(postalert) no queen of trump"
 
 
 -- Positive responses to the queen ask
