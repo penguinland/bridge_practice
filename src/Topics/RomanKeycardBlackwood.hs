@@ -73,6 +73,52 @@ setUpAuctionsS = [ do J2N.b1S  -- Index 0
                       pointRange 16 40
                  ]
 
+-- Auctions where the next bid should be RKC but the keycard teller should
+-- definitely not lie and pretend they have the queen if they don't
+setUpAuctionsHNoQ :: [Action]
+setUpAuctionsHNoQ = [ do J2N.b1H  -- Index 0
+                         noInterference T.Hearts
+                         suitLength T.Hearts 4  -- Speed up performance
+                         J2N.b1H2N
+                         noInterference T.Hearts
+                         suitLength T.Hearts 5  -- With 6+, pretend to have Q
+                         J2N.b1H2N4H
+                         makePass
+                         pointRange 17 40
+                    , do J2N.b1H  -- Index 1
+                         noInterference T.Hearts
+                         suitLength T.Hearts 4  -- Speed up performance
+                         J2N.b1H2N
+                         noInterference T.Hearts
+                         suitLength T.Hearts 5  -- Speed up performance
+                         J2N.b1H2N4D
+                         makePass
+                         pointRange 16 40
+                    ]
+
+-- Auctions where the next bid should be RKC but the keycard teller should
+-- definitely not lie and pretend they have the queen if they don't
+setUpAuctionsSNoQ :: [Action]
+setUpAuctionsSNoQ = [ do J2N.b1S  -- Index 0
+                         noInterference T.Spades
+                         suitLength T.Spades 4  -- Speed up performance
+                         J2N.b1S2N
+                         noInterference T.Spades
+                         suitLength T.Hearts 5  -- With 6+, pretend to have Q
+                         J2N.b1S2N4S
+                         makePass
+                         pointRange 17 40
+                    , do J2N.b1S  -- Index 1
+                         noInterference T.Spades
+                         suitLength T.Spades 4  -- Speed up performance
+                         J2N.b1S2N
+                         noInterference T.Spades
+                         suitLength T.Spades 5  -- Speed up performance
+                         J2N.b1S2N4H
+                         makePass
+                         pointRange 16 40
+                    ]
+
 
 initiate :: Situations
 initiate = let
@@ -285,20 +331,20 @@ noQueen1430, noQueen3014 :: Situations
           in situation "noQ" action signoff explanation
       in return inner <~ setups <~ followups
     noQueen1430' = wrapNW . join $ return noQueen
-        <~ [ (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5D, RKC.bH5C5D5H)
-                              , (RKC.b1430H5D, RKC.b1430H5D5S, RKC.bH5D5S6H)
-                              ])
-           , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5D, RKC.bS5C5D5S)
-                              , (RKC.b1430S5D, RKC.b1430S5D5H, RKC.bS5D5H5S)
-                              ])
+        <~ [ (setUpAuctionsHNoQ, [ (RKC.b1430H5C, RKC.b1430H5C5D, RKC.bH5C5D5H)
+                                 , (RKC.b1430H5D, RKC.b1430H5D5S, RKC.bH5D5S6H)
+                                 ])
+           , (setUpAuctionsSNoQ, [ (RKC.b1430S5C, RKC.b1430S5C5D, RKC.bS5C5D5S)
+                                 , (RKC.b1430S5D, RKC.b1430S5D5H, RKC.bS5D5H5S)
+                                 ])
            ]
     noQueen3014' = wrapNW . join $ return noQueen
-        <~ [ (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5D, RKC.bH5C5D5H)
-                              , (RKC.b3014H5D, RKC.b3014H5D5S, RKC.bH5D5S6H)
-                              ])
-           , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5D, RKC.bS5C5D5S)
-                              , (RKC.b3014S5D, RKC.b3014S5D5H, RKC.bS5D5H5S)
-                              ])
+        <~ [ (setUpAuctionsHNoQ, [ (RKC.b3014H5C, RKC.b3014H5C5D, RKC.bH5C5D5H)
+                                 , (RKC.b3014H5D, RKC.b3014H5D5S, RKC.bH5D5S6H)
+                                 ])
+           , (setUpAuctionsSNoQ, [ (RKC.b3014S5C, RKC.b3014S5C5D, RKC.bS5C5D5S)
+                                 , (RKC.b3014S5D, RKC.b3014S5D5H, RKC.bS5D5H5S)
+                                 ])
            ]
 
 
