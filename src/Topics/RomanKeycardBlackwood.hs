@@ -87,8 +87,7 @@ initiate = let
     wrapNW $ return sit <~ (setUpAuctionsH ++ setUpAuctionsS)
 
 
-firstResponse1430 :: Situations
-firstResponse3014 :: Situations
+firstResponse1430, firstResponse3014 :: Situations
 (firstResponse1430, firstResponse3014) =
     (firstResponse1430', firstResponse3014')
   where
@@ -129,8 +128,7 @@ firstResponse3014 :: Situations
            ]
 
 
-signoff1430 :: Situations
-signoff3014 :: Situations
+signoff1430, signoff3014 :: Situations
 (signoff1430, signoff3014) = (signoff1430', signoff3014')
   where
     signoff (setups, followups) = let
@@ -228,8 +226,7 @@ evenVoid = let
                                   ]
 
 
-queenAsk1430 :: Situations
-queenAsk3014 :: Situations
+queenAsk1430, queenAsk3014 :: Situations
 (queenAsk1430, queenAsk3014) = (queenAsk1430', queenAsk3014')
   where
     queenAsk (setups, response, askingBid, awkward) = let
