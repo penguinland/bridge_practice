@@ -5,7 +5,7 @@ import Control.Concurrent.Classy.BoundedChan(
     BoundedChan, newBoundedChan, writeBoundedChan, readBoundedChan)
 import Control.Exception(handle)
 import Control.Monad.Trans(liftIO)
-import Control.Monad.Trans.State.Strict(runStateT, get, put)
+import Control.Monad.Trans.State.Strict(runStateT, state)
 import Data.Tuple.Extra(first)
 import System.Random(StdGen, split)
 
@@ -20,9 +20,7 @@ type ThreadPool = BoundedChan IO (StIO ())
 newThreadPool :: Int -> StIO ThreadPool
 newThreadPool nThreads = do
     errorSaver <- liftIO $ newErrorSaver
-    rng <- get
-    let (rngs, finalRng) = splitRNG nThreads rng
-    put finalRng
+    rngs <- state $ splitRNG nThreads
     channel <- liftIO $ newBoundedChan (nThreads * 2)
     sequence_ . map (liftIO . forkIO . runWorker channel errorSaver) $ rngs
     return channel
