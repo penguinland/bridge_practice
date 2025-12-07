@@ -280,9 +280,8 @@ noQueen1430, noQueen3014 :: Situations
             explanation =
                 "Partner has made a queen ask, but we don't have it. Sign " .+
                 "off in our trump suit as cheaply as possible to show this. " .+
-                "Partner will likely pass, but could correct to " .+
-                T.Bid 6 T.Notrump .+ " in rare situations, especially at " .+
-                "matchpoint scoring."
+                "Partner will likely pass, but could correct to other " .+
+                "contracts in rare situations."
           in situation "noQ" action signoff explanation
       in return inner <~ setups <~ followups
     noQueen1430' = wrapNW . join $ return noQueen
@@ -369,7 +368,7 @@ queenNoKing5N1430, queenNoKing5N3014 :: Situations
             "as jumping to small slam. Consequently, the bid to show " .+
             "the queen but no showable (minor-suit) king is to bid " .+
             RKC.bH5D5S5N .+ " instead."
-      in situation "QnoK" action RKC.bH5D5S5N explanation
+      in situation "QnoK5S" action RKC.bH5D5S5N explanation
     queenNoKing1430' = wrapNW $
         (return $ queenNoKing RKC.b1430H5D RKC.b1430H5D5S) <~ setUpAuctionsH
     queenNoKing3014' = wrapNW $
