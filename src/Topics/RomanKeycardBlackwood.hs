@@ -375,6 +375,78 @@ queenNoKing5N1430, queenNoKing5N3014 :: Situations
         (return $ queenNoKing RKC.b3014H5D RKC.b3014H5D5S) <~ setUpAuctionsH
 
 
+queenKing1430, queenKing3014 :: Situations
+(queenKing1430, queenKing3014) = (queenKing1430', queenKing3014')
+  where
+    queenKing (setups, middle, followups) = let
+        inner setup answer = let
+            action = do
+                setup `andNextBidderIs` T.North
+                RKC.b4N
+                makePass
+                middle
+            explanation =
+                "Partner has made a queen ask. We have the queen and at " .+
+                "least one side-suit king. Bid our cheapest side-suit king " .+
+                "to show that one and deny any kings in cheaper suits. " .+
+                "Partner will place the final contract from here."
+          in situation "QK" action answer explanation
+      in return inner <~ setups <~ followups
+    queenKing1430' = wrapNW . join $ return queenKing
+        <~ [ (setUpAuctionsH,
+              do RKC.b1430H5C
+                 makePass
+                 RKC.b1430H5C5D
+                 makePass,
+              [RKC.bH5C5D5S, RKC.bH5C5D6C, RKC.bH5C5D6D])
+           , (setUpAuctionsH,
+              do RKC.b1430H5D
+                 makePass
+                 RKC.b1430H5D5S
+                 makePass,
+              [RKC.bH5D5S6C, RKC.bH5D5S6D])
+           , (setUpAuctionsS,
+              do RKC.b1430S5C
+                 makePass
+                 RKC.b1430S5C5D
+                 makePass,
+              [RKC.bS5C5D5H, RKC.bS5C5D6C, RKC.bS5C5D6D])
+           , (setUpAuctionsS,
+              do RKC.b1430S5D
+                 makePass
+                 RKC.b1430S5D5H
+                 makePass,
+              [RKC.bS5D5H6C, RKC.bS5D5H6D, RKC.bS5D5H6H])
+           ]
+    queenKing3014' = wrapNW . join $ return queenKing
+        <~ [ (setUpAuctionsH,
+              do RKC.b3014H5C
+                 makePass
+                 RKC.b3014H5C5D
+                 makePass,
+              [RKC.bH5C5D5S, RKC.bH5C5D6C, RKC.bH5C5D6D])
+           , (setUpAuctionsH,
+              do RKC.b3014H5D
+                 makePass
+                 RKC.b3014H5D5S
+                 makePass,
+              [RKC.bH5D5S6C, RKC.bH5D5S6D])
+           , (setUpAuctionsS,
+              do RKC.b3014S5C
+                 makePass
+                 RKC.b3014S5C5D
+                 makePass,
+              [RKC.bS5C5D5H, RKC.bS5C5D6C, RKC.bS5C5D6D])
+           , (setUpAuctionsS,
+              do RKC.b3014S5D
+                 makePass
+                 RKC.b3014S5D5H
+                 makePass,
+              [RKC.bS5D5H6C, RKC.bS5D5H6D, RKC.bS5D5H6H])
+           ]
+
+
+
 -- TODO:
 -- Respond to queen ask
 -- Signing off in slam
@@ -401,6 +473,106 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
                              , queenNoKing1430
                              , queenNoKing5N1430
                              ]
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
+                      , queenKing1430
                       ]
 
 topic3014 :: Topic
@@ -417,4 +589,5 @@ topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
                              , queenNoKing3014
                              , queenNoKing5N3014
                              ]
+                      , queenKing3014
                       ]
