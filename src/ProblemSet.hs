@@ -33,7 +33,7 @@ generate :: Int -> [Topic] -> StIO [SituationInstance]
 generate 0 _      = return []
 generate n topics = do
     topic <- pickItem topics
-    gen <- get
+    gen <- get  -- Save a copy of the RNG to use in the debug string later
     -- We use mapStateT to convert from a `State StdGen Situation` to a `StIO
     -- Situation`. This lets us keep the IO monad out of the rest of the code.
     situation <- mapStateT (return . runIdentity) $ choose topic
