@@ -289,7 +289,7 @@ noQueen1430, noQueen3014 :: Situations
         <~ [ (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5D, RKC.bH5C5D5H)
                               , (RKC.b1430H5D, RKC.b1430H5D5S, RKC.bH5D5S6H)
                               ])
-           , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5D, RKC.bS5C5D5H)
+           , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5D, RKC.bS5C5D5S)
                               , (RKC.b1430S5D, RKC.b1430S5D5H, RKC.bS5D5H5S)
                               ])
            ]
@@ -297,7 +297,7 @@ noQueen1430, noQueen3014 :: Situations
         <~ [ (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5D, RKC.bH5C5D5H)
                               , (RKC.b3014H5D, RKC.b3014H5D5S, RKC.bH5D5S6H)
                               ])
-           , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5D, RKC.bS5C5D5H)
+           , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5D, RKC.bS5C5D5S)
                               , (RKC.b3014S5D, RKC.b3014S5D5H, RKC.bS5D5H5S)
                               ])
            ]

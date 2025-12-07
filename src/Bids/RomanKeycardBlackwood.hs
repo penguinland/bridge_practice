@@ -354,7 +354,7 @@ bH5C5D5S = E.nameAction "RKC_H_5C5D5S" $ do
     E.hasCard T.Hearts 'Q'
     E.hasCard T.Spades 'K'
     E.makeAlertableCall (T.Bid 5 T.Spades)
-                        (T.Hearts .+ "Q, " .+ T.Spades .+ "K")
+                        ("have " .+ T.Hearts .+ "Q, " .+ T.Spades .+ "K")
 
 bH5C5D6C :: Action
 bH5C5D6C = E.nameAction "RKC_H_5C5D6C" $ do
@@ -362,7 +362,7 @@ bH5C5D6C = E.nameAction "RKC_H_5C5D6C" $ do
     E.forbid $ E.hasCard T.Spades 'K'
     E.hasCard T.Clubs 'K'
     E.makeAlertableCall (T.Bid 6 T.Clubs)
-                        (T.Hearts .+ "Q, " .+ T.Clubs .+ "K, " .+
+                        ("have " .+ T.Hearts .+ "Q, " .+ T.Clubs .+ "K, " .+
                          "no " .+ T.Spades .+ "K")
 
 bH5C5D6D :: Action
@@ -372,7 +372,7 @@ bH5C5D6D = E.nameAction "RKC_H_5C5D6D" $ do
     E.forbid $ E.hasCard T.Clubs 'K'
     E.hasCard T.Diamonds 'K'
     E.makeAlertableCall (T.Bid 6 T.Diamonds)
-                        (T.Hearts .+ "Q, " .+ T.Diamonds .+ "K, no black king")
+                        ("have " .+ T.Hearts .+ "Q, " .+ T.Diamonds .+ "K, no black king")
 
 bH5C5D6H :: Action
 bH5C5D6H = E.nameAction "RKC_H_5C5D6H" $ do
@@ -381,7 +381,7 @@ bH5C5D6H = E.nameAction "RKC_H_5C5D6H" $ do
     E.forbid $ E.hasCard T.Clubs 'K'
     E.forbid $ E.hasCard T.Diamonds 'K'
     E.makeAlertableCall (T.Bid 6 T.Hearts)
-                        (T.Hearts .+ "Q, no side king")
+                        ("have " .+ T.Hearts .+ "Q, no side king")
 
 bH5D5S5N :: Action
 bH5D5S5N = E.nameAction "RKC_H_5D5S5N" $ do
@@ -389,14 +389,14 @@ bH5D5S5N = E.nameAction "RKC_H_5D5S5N" $ do
     E.forbid $ E.hasCard T.Clubs 'K'
     E.forbid $ E.hasCard T.Diamonds 'K'
     E.makeAlertableCall (T.Bid 5 T.Notrump)
-                        (T.Hearts .+ "Q, no minor king")
+                        ("have " .+ T.Hearts .+ "Q, no minor king")
 
 bH5D5S6C :: Action
 bH5D5S6C = E.nameAction "RKC_H_5D5S6C" $ do
     E.hasCard T.Hearts 'Q'
     E.hasCard T.Clubs 'K'
     E.makeAlertableCall (T.Bid 6 T.Clubs)
-                        (T.Hearts .+ "Q, " .+ T.Clubs .+ "K")
+                        ("have " .+ T.Hearts .+ "Q, " .+ T.Clubs .+ "K")
 
 bH5D5S6D :: Action
 bH5D5S6D = E.nameAction "RKC_H_5D5S6D" $ do
@@ -404,7 +404,7 @@ bH5D5S6D = E.nameAction "RKC_H_5D5S6D" $ do
     E.forbid $ E.hasCard T.Clubs 'K'
     E.hasCard T.Diamonds 'K'
     E.makeAlertableCall (T.Bid 6 T.Diamonds)
-                        (T.Hearts .+ "Q, " .+ T.Diamonds .+ "K, " .+
+                        ("have " .+ T.Hearts .+ "Q, " .+ T.Diamonds .+ "K, " .+
                          "no " .+ T.Clubs .+ "K")
 
 
@@ -413,7 +413,7 @@ bS5C5D5H = E.nameAction "RKC_S_5C5D5H" $ do
     E.hasCard T.Spades 'Q'
     E.hasCard T.Hearts 'K'
     E.makeAlertableCall (T.Bid 5 T.Hearts)
-                        (T.Spades .+ "S, " .+ T.Hearts .+ "K")
+                        ("have " .+ T.Spades .+ "S, " .+ T.Hearts .+ "K")
 
 bS5C5D6C :: Action
 bS5C5D6C = E.nameAction "RKC_S_5C5D6C" $ do
@@ -421,7 +421,7 @@ bS5C5D6C = E.nameAction "RKC_S_5C5D6C" $ do
     E.forbid $ E.hasCard T.Hearts 'K'
     E.hasCard T.Clubs 'K'
     E.makeAlertableCall (T.Bid 6 T.Clubs)
-                        (T.Spades .+ "Q, " .+ T.Clubs .+ "K, " .+
+                        ("have " .+ T.Spades .+ "Q, " .+ T.Clubs .+ "K, " .+
                          "no " .+ T.Hearts .+ "K")
 
 bS5C5D6D :: Action
@@ -431,7 +431,7 @@ bS5C5D6D = E.nameAction "RKC_S_5C5D6D" $ do
     E.forbid $ E.hasCard T.Clubs 'K'
     E.hasCard T.Diamonds 'K'
     E.makeAlertableCall (T.Bid 6 T.Diamonds)
-                        (T.Spades .+ "Q, " .+ T.Diamonds .+ "K, " .+
+                        ("have " .+ T.Spades .+ "Q, " .+ T.Diamonds .+ "K, " .+
                          "no other side king")
 
 bS5C5D6S :: Action
@@ -441,7 +441,7 @@ bS5C5D6S = E.nameAction "RKC_S_5C5D6S" $ do
     E.forbid $ E.hasCard T.Clubs 'K'
     E.forbid $ E.hasCard T.Diamonds 'K'
     E.makeAlertableCall (T.Bid 6 T.Spades)
-                        (T.Spades .+ "Q, no side king")
+                        ("have " .+ T.Spades .+ "Q, no side king")
 
 
 bS5D5H6C :: Action
@@ -449,7 +449,7 @@ bS5D5H6C = E.nameAction "RKC_S_5D5H6C" $ do
     E.hasCard T.Spades 'Q'
     E.hasCard T.Clubs 'K'
     E.makeAlertableCall (T.Bid 6 T.Clubs)
-                        (T.Spades .+ "Q, " .+ T.Clubs .+ "K")
+                        ("have " .+ T.Spades .+ "Q, " .+ T.Clubs .+ "K")
 
 bS5D5H6D :: Action
 bS5D5H6D = E.nameAction "RKC_S_5D5H6D" $ do
@@ -457,7 +457,7 @@ bS5D5H6D = E.nameAction "RKC_S_5D5H6D" $ do
     E.forbid $ E.hasCard T.Clubs 'K'
     E.hasCard T.Diamonds 'K'
     E.makeAlertableCall (T.Bid 6 T.Diamonds)
-                        (T.Spades .+ "Q, " .+ T.Diamonds .+ "K, " .+
+                        ("have " .+ T.Spades .+ "Q, " .+ T.Diamonds .+ "K, " .+
                          "no " .+ T.Clubs .+ "K")
 
 bS5D5H6H :: Action
@@ -467,7 +467,8 @@ bS5D5H6H = E.nameAction "RKC_S_5D5H6H" $ do
     E.forbid $ E.hasCard T.Diamonds 'K'
     E.hasCard T.Hearts 'K'
     E.makeAlertableCall (T.Bid 6 T.Hearts)
-                        (T.Spades .+ "S, " .+ T.Hearts .+ "K, no minor king")
+                        ("have " .+ T.Spades .+ "S, " .+ T.Hearts .+ "K, " .+
+                         "no minor king")
 
 bS5D5H6S :: Action
 bS5D5H6S = E.nameAction "RKC_S_5D5H6S" $ do
@@ -476,4 +477,4 @@ bS5D5H6S = E.nameAction "RKC_S_5D5H6S" $ do
     E.forbid $ E.hasCard T.Diamonds 'K'
     E.forbid $ E.hasCard T.Hearts 'K'
     E.makeAlertableCall (T.Bid 6 T.Spades)
-                        (T.Spades .+ "Q, no side king")
+                        ("have " .+ T.Spades .+ "Q, no side king")
