@@ -494,10 +494,11 @@ queenKing1430, queenKing3014 :: Situations
 
 
 -- TODO:
--- Respond to queen ask
--- Signing off in slam
 -- 5N as king ask
 -- respond to 5N
+-- Pretending to have the Q with a 10-card fit as the teller
+-- Pretending to have the Q with a 10-card fit as the asker
+-- Signing off in slam?
 -- Going to grand slam?
 -- Placing the contract after partner shows a void?
 -- Unsure how to phrase: trouble when hearts are trump and you have 1 keycard
