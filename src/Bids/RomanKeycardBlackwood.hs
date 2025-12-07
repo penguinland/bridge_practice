@@ -72,7 +72,7 @@ module Bids.RomanKeycardBlackwood(
 ) where
 
 
-import Action(Action)
+import Action(Action, withholdBid)
 import qualified EDSL as E
 import Output((.+))
 import qualified Terminology as T
@@ -188,27 +188,24 @@ bS6H :: Action
 bS6H = E.nameAction "RKC_S_6H" (b6x_ T.Spades T.Hearts   T.Hearts)
 
 
--- For RKC3014, reuse as much as possible. To keep changes to the dealer program
--- while ignoring the bids, forbid forbidding the original.
-
 b3014H5C :: Action
 b3014H5C = E.nameAction "RKC3014_H_5C" $ do
-    E.forbid (E.forbid b1430H5D)
+    withholdBid b1430H5D
     E.makeAlertableCall (T.Bid 5 T.Clubs) "(postalert) 3 or 0 keycards"
 
 b3014H5D :: Action
 b3014H5D = E.nameAction "RKC3014_H_5D" $ do
-    E.forbid (E.forbid b1430H5C)
+    withholdBid b1430H5C
     E.makeAlertableCall (T.Bid 5 T.Diamonds) "(postalert) 1 or 4 keycards"
 
 b3014S5C :: Action
 b3014S5C = E.nameAction "RKC3014_S_5C" $ do
-    E.forbid (E.forbid b1430S5D)
+    withholdBid b1430S5D
     E.makeAlertableCall (T.Bid 5 T.Clubs) "(postalert) 3 or 0 keycards"
 
 b3014S5D :: Action
 b3014S5D = E.nameAction "RKC3014_S_5D" $ do
-    E.forbid (E.forbid b1430S5C)
+    withholdBid b1430S5C
     E.makeAlertableCall (T.Bid 5 T.Diamonds) "(postalert) 1 or 4 keycards"
 
 
