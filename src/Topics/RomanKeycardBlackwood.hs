@@ -26,7 +26,8 @@ takeIndices_ indices values = takeIndices' values (sort indices)
 -- Reminder: keep track of the indices in these lists! In the Situations where
 -- a player shows a void, we need to filter out only the auctions in which that
 -- player could possibly have a void.
-setUpAuctionsH :: [Action]
+
+setUpAuctionsH :: [Action]  -- Auctions where the next bid should be RKC for H
 setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       noInterference T.Hearts
                       suitLength T.Hearts 4  -- Speed up performance
@@ -49,7 +50,7 @@ setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       pointRange 16 40
                  ]
 
-setUpAuctionsS :: [Action]
+setUpAuctionsS :: [Action]  -- Auctions where the next bid should be RKC for S
 setUpAuctionsS = [ do J2N.b1S  -- Index 0
                       noInterference T.Spades
                       suitLength T.Spades 4  -- Speed up performance
@@ -263,6 +264,45 @@ queenAsk1430, queenAsk3014 :: Situations
            ]
 
 
+noQueen1430, noQueen3014 :: Situations
+(noQueen1430, noQueen3014) = (noQueen1430', noQueen3014')
+  where
+    noQueen (setups, followups) = let
+        inner setup (response, queenAsk, signoff) = let
+            action = do
+                setup `andNextBidderIs` T.North
+                RKC.b4N
+                makePass
+                _ <- response
+                makePass
+                _ <- queenAsk
+                makePass
+            explanation =
+                "Partner has made a queen ask, but we don't have it. Sign " .+
+                "off in our trump suit as cheaply as possible to show this. " .+
+                "Partner will likely pass, but could correct to " .+
+                T.Bid 6 T.Notrump .+ " in rare situations, especially at " .+
+                "matchpoint scoring."
+          in situation "noQ" action signoff explanation
+      in return inner <~ setups <~ followups
+    noQueen1430' = wrapNW . join $ return noQueen
+        <~ [ (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5D, RKC.bH5C5D5H)
+                              , (RKC.b1430H5D, RKC.b1430H5D5S, RKC.bH5D5S6H)
+                              ])
+           , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5D, RKC.bS5C5D5H)
+                              , (RKC.b1430S5D, RKC.b1430S5D5H, RKC.bS5D5H5S)
+                              ])
+           ]
+    noQueen3014' = wrapNW . join $ return noQueen
+        <~ [ (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5D, RKC.bH5C5D5H)
+                              , (RKC.b3014H5D, RKC.b3014H5D5S, RKC.bH5D5S6H)
+                              ])
+           , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5D, RKC.bS5C5D5H)
+                              , (RKC.b3014S5D, RKC.b3014S5D5H, RKC.bS5D5H5S)
+                              ])
+           ]
+
+
 -- TODO:
 -- Respond to queen ask
 -- Signing off in slam
@@ -283,6 +323,7 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
                       , signoff1430
                       , wrap [oddVoid, evenVoid]
                       , queenAsk1430
+                      , noQueen1430
                       ]
 
 topic3014 :: Topic
@@ -293,4 +334,5 @@ topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
                       , signoff3014
                       , wrap [oddVoid, evenVoid]
                       , queenAsk3014
+                      , noQueen3014
                       ]
