@@ -350,6 +350,32 @@ queenNoKing1430, queenNoKing3014 :: Situations
            ]
 
 
+queenNoKing5N1430, queenNoKing5N3014 :: Situations
+(queenNoKing5N1430, queenNoKing5N3014) = (queenNoKing1430', queenNoKing3014')
+  where
+    queenNoKing response queenAsk setup = let
+        action = do
+            setup `andNextBidderIs` T.North
+            RKC.b4N
+            makePass
+            _ <- response
+            makePass
+            _ <- queenAsk
+            makePass
+        explanation =
+            "Partner has made a queen ask, but it is higher than 5 " .+
+            "of our trump suit. This means that denying the queen (by " .+
+            "bidding our trump suit as cheaply as possible) is the same " .+
+            "as jumping to small slam. Consequently, the bid to show " .+
+            "the queen but no showable (minor-suit) king is to bid " .+
+            RKC.bH5D5S5N .+ " instead."
+      in situation "QnoK" action RKC.bH5D5S5N explanation
+    queenNoKing1430' = wrapNW $
+        (return $ queenNoKing RKC.b1430H5D RKC.b1430H5D5S) <~ setUpAuctionsH
+    queenNoKing3014' = wrapNW $
+        (return $ queenNoKing RKC.b3014H5D RKC.b3014H5D5S) <~ setUpAuctionsH
+
+
 -- TODO:
 -- Respond to queen ask
 -- Signing off in slam
@@ -371,7 +397,11 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
                       , wrap [oddVoid, evenVoid]
                       , queenAsk1430
                       , noQueen1430
-                      , queenNoKing1430
+                      , wrap [ queenNoKing1430
+                             , queenNoKing1430
+                             , queenNoKing1430
+                             , queenNoKing5N1430
+                             ]
                       ]
 
 topic3014 :: Topic
@@ -383,5 +413,9 @@ topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
                       , wrap [oddVoid, evenVoid]
                       , queenAsk3014
                       , noQueen3014
-                      , queenNoKing3014
+                      , wrap [ queenNoKing3014
+                             , queenNoKing3014
+                             , queenNoKing3014
+                             , queenNoKing5N3014
+                             ]
                       ]
