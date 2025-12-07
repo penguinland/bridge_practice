@@ -85,15 +85,7 @@ setUpAuctionsHNoQ = [ do J2N.b1H  -- Index 0
                          J2N.b1H2N4H
                          makePass
                          pointRange 17 40
-                    , do J2N.b1H  -- Index 1
-                         noInterference T.Hearts
-                         suitLength T.Hearts 4  -- Speed up performance
-                         J2N.b1H2N
-                         noInterference T.Hearts
-                         suitLength T.Hearts 5  -- Speed up performance
-                         J2N.b1H2N4D
-                         makePass
-                         pointRange 16 40
+                    , setUpAuctionsH !! 1  -- Index 1
                     ]
 
 -- Auctions where the next bid should be RKC but the keycard teller should
@@ -108,15 +100,7 @@ setUpAuctionsSNoQ = [ do J2N.b1S  -- Index 0
                          J2N.b1S2N4S
                          makePass
                          pointRange 17 40
-                    , do J2N.b1S  -- Index 1
-                         noInterference T.Spades
-                         suitLength T.Spades 4  -- Speed up performance
-                         J2N.b1S2N
-                         noInterference T.Spades
-                         suitLength T.Spades 5  -- Speed up performance
-                         J2N.b1S2N4H
-                         makePass
-                         pointRange 16 40
+                    , setUpAuctionsH !! 1  -- Index 1
                     ]
 
 
