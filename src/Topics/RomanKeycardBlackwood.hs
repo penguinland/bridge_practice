@@ -303,6 +303,53 @@ noQueen1430, noQueen3014 :: Situations
            ]
 
 
+queenNoKing1430, queenNoKing3014 :: Situations
+(queenNoKing1430, queenNoKing3014) = (queenNoKing1430', queenNoKing3014')
+  where
+    queenNoKing (setups, followups) = let
+        inner setup (response, queenAsk, signoff) = let
+            action = do
+                setup `andNextBidderIs` T.North
+                RKC.b4N
+                makePass
+                _ <- response
+                makePass
+                _ <- queenAsk
+                makePass
+            explanation =
+                "Partner has made a queen ask. We have the queen but no " .+
+                "side-suit king. Sign off in small slam. Partner will " .+
+                "likely pass, but could correct to " .+
+                T.Bid 6 T.Notrump .+ " in rare situations, especially at " .+
+                "matchpoint scoring. (This practice system is not very " .+
+                "nuanced. Sometimes, you'll prefer to bid " .+
+                T.Bid 5 T.Notrump .+ " to show the queen of trump, no " .+
+                "side-suit king, but unexpected extra strength. That is " .+
+                "too subtle to easily program, so we have skipped it. If " .+
+                "you wanted to bid " .+ T.Bid 5 T.Notrump .+ " here instead " .+
+                "of " .+ signoff .+ ", that might be the right choice.)"
+          in situation "QnoK" action signoff explanation
+      in return inner <~ setups <~ followups
+    queenNoKing1430' = wrapNW . join $ return queenNoKing
+        <~ [ (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5D, RKC.bH5C5D6H)
+                              -- Have separate commentary for this one
+                              --, (RKC.b1430H5D, RKC.b1430H5D5S, RKC.bH5D5S5N)
+                              ])
+           , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5D, RKC.bS5C5D6S)
+                              , (RKC.b1430S5D, RKC.b1430S5D5H, RKC.bS5D5H6S)
+                              ])
+           ]
+    queenNoKing3014' = wrapNW . join $ return queenNoKing
+        <~ [ (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5D, RKC.bH5C5D6H)
+                              -- Have separate commentary for this one
+                              --, (RKC.b3014H5D, RKC.b3014H5D5S, RKC.bH5D5S5N)
+                              ])
+           , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5D, RKC.bS5C5D6S)
+                              , (RKC.b3014S5D, RKC.b3014S5D5H, RKC.bS5D5H6S)
+                              ])
+           ]
+
+
 -- TODO:
 -- Respond to queen ask
 -- Signing off in slam
@@ -324,6 +371,7 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
                       , wrap [oddVoid, evenVoid]
                       , queenAsk1430
                       , noQueen1430
+                      , queenNoKing1430
                       ]
 
 topic3014 :: Topic
@@ -335,4 +383,5 @@ topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
                       , wrap [oddVoid, evenVoid]
                       , queenAsk3014
                       , noQueen3014
+                      , queenNoKing3014
                       ]
