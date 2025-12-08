@@ -5,6 +5,7 @@ import Control.Concurrent.Classy.BoundedChan(
     BoundedChan, newBoundedChan, writeBoundedChan, readBoundedChan)
 import Control.Exception(SomeException)
 import Control.Monad(forever)
+import Data.Time(getCurrentTime)
 
 
 type ErrorSaver = BoundedChan IO SomeException
@@ -23,9 +24,10 @@ newErrorSaver = do
     runWorker :: ErrorSaver -> IO ()
     runWorker chan = forever $ do
         err <- readBoundedChan chan
-        putStrLn "got err from channel! Writing to file..."
-        appendFile "errors.log" . (++ "\n\n\n") . ("New Error: " ++) $ show err
-        putStrLn "finished writing err to file!"
+        now <- getCurrentTime
+        let prefix = show now ++ " New Error:\n"
+            suffix = "\n" ++ replicate 80 '-' ++ "\n"
+        appendFile "errors.log" .  (++ suffix) . (prefix ++) $ show err
 
 
 saveError :: ErrorSaver -> SomeException -> IO ()
