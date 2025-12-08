@@ -15,7 +15,8 @@ module Action (
 , finish
 , constrain
 , define
-, predeal
+, predealLength
+, predealCard
 , withholdBid
 , extractLastCall
 ) where
@@ -23,7 +24,7 @@ module Action (
 import Control.Monad.Trans.State.Strict(State, execState, get, put)
 import Data.List.Utils(join)
 
-import DealerProg(DealerProg, addNewReq, addDefn, addNewPredeal)
+import DealerProg(DealerProg, addNewReq, addDefn, Predeal(..), addNewPredeal)
 import Output(Showable(..))
 import Structures(Bidding, startBidding, lastCall, currentBidder)
 import qualified Terminology as T
@@ -61,28 +62,29 @@ finish :: T.Direction -> State Auction a -> Auction
 finish firstBidder = flip execState (newAuction firstBidder)
 
 
--- _modifyDealerProg takes the name of a constraint and pieces of a definition
--- that should be joined together with the name of the bidder.
--- TODO: consider making the pieces a String -> String function instead?
-_modifyDealerProg :: (String -> String -> DealerProg -> DealerProg) ->
-        String -> [String] -> Action
-_modifyDealerProg op name defnPieces = do
-    (bidding, dealerProg) <- get
-    let bidderName = show . currentBidder $ bidding
-        fullName = name ++ "_" ++ bidderName
-        fullDefn = join bidderName defnPieces
-    put (bidding, op fullName fullDefn dealerProg)
-
 constrain :: String -> [String] -> Action
-constrain = _modifyDealerProg addNewReq
+define    :: String -> [String] -> Action
+(constrain, define) = let
+    -- The helper takes the name of a constraint and pieces of a definition
+    -- that should be joined together with the name of the bidder.
+    -- TODO: consider making the pieces a String -> String function instead?
+    helper fn name defnPieces = do
+        (bidding, dealerProg) <- get
+        let bidderName = show . currentBidder $ bidding
+            fullName = name ++ "_" ++ bidderName
+            fullDefn = join bidderName defnPieces
+        put (bidding, fn fullName fullDefn dealerProg)
+  in (helper addNewReq, helper addDefn)
 
-define :: String -> [String] -> Action
-define = _modifyDealerProg addDefn
 
-predeal :: T.Suit -> Int -> Action
-predeal suit len = do
-    (bidding, dealerProg) <- get
-    put (bidding, addNewPredeal suit (currentBidder bidding) len dealerProg)
+predealLength :: T.Suit -> Int -> Action
+predealCard :: T.Suit -> Char -> Action
+(predealLength, predealCard) = let
+    helper fn suit val = do
+        (bidding, dealerProg) <- get
+        let pd = fn suit (currentBidder bidding) val
+        put (bidding, addNewPredeal pd dealerProg)
+  in (helper PredealLength, helper PredealCard)
 
 
 -- Add the constraints in this action without modifying the current Bidding.
