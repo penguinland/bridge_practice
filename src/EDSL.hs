@@ -38,7 +38,7 @@ import Control.Monad.Trans.State.Strict(execState, get, put, modify)
 import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
-import Action(Action, newAuction, constrain, define, predeal)
+import Action(Action, newAuction, constrain, define, predealLength, predealCard)
 import DealerProg(invert, nameAll)
 import Output(Showable, toDescription)
 import Structures(addCall, currentBidder)
@@ -133,7 +133,7 @@ suitLengthOp op suffix suit len =
 suitLength :: T.Suit -> Int -> Action
 suitLength suit len = do
     suitLengthOp "==" "eq" suit len
-    predeal suit len  -- Performance optimization
+    predealLength suit len  -- Performance optimization
 
 minSuitLength :: T.Suit -> Int -> Action
 minSuitLength = suitLengthOp ">=" "ge"
@@ -232,8 +232,8 @@ maxLoserCount = loserComparison "at_most" "<="
 hasCard :: T.Suit -> Char -> Action
 hasCard suit rank = let
     cardName = rank : T.suitLetter suit
-  in
-    constrain ("has_" ++ cardName) ["hascard(", ", " ++ cardName ++ ")"]
+  in do constrain ("has_" ++ cardName) ["hascard(", ", " ++ cardName ++ ")"]
+        predealCard suit rank
 
 
 -- The two numbers are interchangeable, likely 1/4, 3/0, or 2/5.

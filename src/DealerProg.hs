@@ -1,5 +1,6 @@
 module DealerProg(
   DealerProg
+, Predeal(..)
 , addDefn
 , addNewReq
 , addNewPredeal
@@ -28,9 +29,12 @@ data DealerProg = DealerProg [Predeal] DealerDefs [CondName]
 -- Performance optimization: for rare auctions (e.g., slam investigations), we
 -- can greatly speed up how long it takes to generate a board by specifying
 -- exactly how long certain suits are in certain hands. Inequalities don't work
--- here: they must be exactly that long.
--- These get turned into dealer syntax like `predeal spades(north) == 1`
-type Predeal = (T.Suit, T.Direction, Int)
+-- here: they must be exactly that long. Similarly, you can force a specific
+-- hand to have a specific card, which also greatly speeds things up.
+--                                                    -- Examples:
+data Predeal = PredealLength T.Suit T.Direction Int   -- spades(north) == 1
+             | PredealCard   T.Suit T.Direction Char  -- north SQ
+             deriving (Eq, Ord)
 
 
 instance Semigroup DealerProg where
@@ -54,10 +58,10 @@ addNewReq name defn (DealerProg p m l) =
   DealerProg p (addDefinition name defn m) (name:l)
 
 
-addNewPredeal :: T.Suit -> T.Direction -> Int -> DealerProg -> DealerProg
-addNewPredeal s d i (DealerProg p m l)
-  | (s, d, i) `elem` p = DealerProg (          p) m l  -- Already included
-  | otherwise          = DealerProg ((s, d, i):p) m l
+addNewPredeal :: Predeal -> DealerProg -> DealerProg
+addNewPredeal p (DealerProg ps m l)
+  | p `elem` ps = DealerProg (  ps) m l  -- Already included
+  | otherwise   = DealerProg (p:ps) m l
 
 
 -- When inverting a program, throw out all predeal constraints. It's not
@@ -96,8 +100,10 @@ toProgram (DealerProg predeals defns conds) = unlines $
      "condition", "    " ++ (join " && " . reverse $ conds),
      "action", "    printall"]
   where
-    formatPredeal (suit, dir, len) =
+    formatPredeal (PredealLength suit dir len) =
         "predeal " ++ show suit ++ "(" ++ show dir ++ ") == " ++ show len
+    formatPredeal (PredealCard suit dir rank) =
+        "predeal " ++ show dir ++ " " ++ T.suitLetter suit ++ [rank]
 
 
 eval :: String -> T.Direction -> T.Vulnerability -> DealerProg -> Int ->
