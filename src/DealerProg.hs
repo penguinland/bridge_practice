@@ -111,10 +111,7 @@ eval debugRef dir vul deal seed = let
             "dealer" ["-s", show seed] prog
         if exitCode == ExitSuccess
         then return $ Just stdout
-        else do putStrLn "Error!"
-                putStrLn stderr
-                putStrLn prog
-                return Nothing
+        else error $ stderr ++ "\n" ++ prog
 
     toSuits :: [String] -> Maybe [[String]]
     -- The dealer output, when everything went right, contains the following:

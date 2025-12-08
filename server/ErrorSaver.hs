@@ -16,13 +16,16 @@ newErrorSaver = do
     -- concurrently, your data can get all interleaved. Instead, spin up a new
     -- thread to append to the file, and send things to it via a thread safe
     -- channel.
-    channel <- newBoundedChan 3
+    channel <- newBoundedChan 1
     _ <- forkIO $ runWorker channel  -- Throw away the threadID: we don't care
     return channel
   where
     runWorker :: ErrorSaver -> IO ()
-    runWorker chan = forever $
-        readBoundedChan chan >>= (appendFile "errors.log" . (++ "\n\n") . show)
+    runWorker chan = forever $ do
+        err <- readBoundedChan chan
+        putStrLn "got err from channel! Writing to file..."
+        appendFile "errors.log" . (++ "\n\n\n") . ("New Error: " ++) $ show err
+        putStrLn "finished writing err to file!"
 
 
 saveError :: ErrorSaver -> SomeException -> IO ()
