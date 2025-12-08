@@ -29,7 +29,7 @@ newErrorSaver = do
             suffix = "\n" ++ replicate 80 '-' ++ "\n"
         -- Sneaky trick alert: put `show err` after the `$` instead of just
         -- `err`, or else the error gets re-thrown as it is evaluated.
-        appendFile "errors.log" .  (++ suffix) . (prefix ++) $ show err
+        appendFile "errors.log" . (prefix ++) . (++ suffix) $ show err
 
 
 saveError :: ErrorSaver -> SomeException -> IO ()
