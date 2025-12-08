@@ -233,7 +233,7 @@ hasCard :: T.Suit -> Char -> Action
 hasCard suit rank = let
     cardName = rank : T.suitLetter suit
   in do constrain ("has_" ++ cardName) ["hascard(", ", " ++ cardName ++ ")"]
-        predealCard suit rank
+        predealCard suit rank  -- Performance optimization
 
 
 -- The two numbers are interchangeable, likely 1/4, 3/0, or 2/5.
