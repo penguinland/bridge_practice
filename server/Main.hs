@@ -22,15 +22,12 @@ import Cacher(getProblem)
 import TopicRegistry(topicNames, findCachers, TopicRegistry, makeTopicRegistry)
 import ThreadPool(newThreadPool)
 
-import Test(tryIt)
-
 data MySession = EmptySession
 data MyAppState = IOState (IORef StdGen) TopicRegistry
 
 
 main :: IO ()
 main = do
-    tryIt
     rng <- getStdGen
     (registry, rng') <- runStateT (newThreadPool 4 >>= makeTopicRegistry) rng
     ref <- newIORef rng'
