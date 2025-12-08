@@ -82,17 +82,14 @@ define = _modifyDealerProg addDefn
 
 
 predealLength :: T.Suit -> Int -> Action
-predealLength suit len = do
-    (bidding, dealerProg) <- get
-    let pd = PredealLength suit (currentBidder bidding) len
-    put (bidding, addNewPredeal pd dealerProg)
-
-
 predealCard :: T.Suit -> Char -> Action
-predealCard suit rank = do
-    (bidding, dealerProg) <- get
-    let pd = PredealCard suit (currentBidder bidding) rank
-    put (bidding, addNewPredeal pd dealerProg)
+(predealLength, predealCard) = let
+    helper fn suit val = do
+        (bidding, dealerProg) <- get
+        let pd = fn suit (currentBidder bidding) val
+        put (bidding, addNewPredeal pd dealerProg)
+  in
+    (helper PredealLength, helper PredealCard)
 
 
 -- Add the constraints in this action without modifying the current Bidding.
