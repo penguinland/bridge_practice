@@ -30,7 +30,9 @@ solution that appears incorrect.
 
 You will need the following external tools installed:
 - Haskell and Stack
-  - On Ubuntu, this is `sudo apt-get install haskell-stack`
+  - On Ubuntu, this is `sudo apt-get install haskell-stack zlib1g-dev` (you'll
+    need zlib header files for one of the indirect dependencies, hence the
+    second package being installed).
   - On a Mac, do this with `brew install haskell-stack`
 - Dealer, a domain-specific language to generate bridge hands
   - On Ubuntu, run `sudo apt-get install dealer`
@@ -40,7 +42,7 @@ You will need the following external tools installed:
     (you'll need `make`, GCC, flex, and yacc installed). Then, copy the binary
     (`dealer`) to somewhere in your shell path.
 - XeLaTeX (only used when generating PDFs, not the webserver)
-  - On Ubuntu, run `sudo apt-get install texlive-xetex`
+  - On Ubuntu, run `sudo apt-get install texlive-xetex texlive-fonts-extra`
   - On a Mac, run `brew cask install mactex`
 
 Disclaimer: I haven't had a Mac to run this on in several years, and it's
