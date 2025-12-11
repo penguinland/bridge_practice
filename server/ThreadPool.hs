@@ -7,6 +7,7 @@ import Control.Exception(handle)
 import Control.Monad.Trans(liftIO)
 import Control.Monad.Trans.State.Strict(runStateT, state)
 import Data.Tuple.Extra(first)
+import GHC.Utils.Misc(nTimes)
 import System.Random(StdGen, split)
 
 import Types(StIO)
@@ -20,17 +21,13 @@ type ThreadPool = BoundedChan IO (StIO ())
 newThreadPool :: Int -> StIO ThreadPool
 newThreadPool nThreads = do
     errorSaver <- liftIO $ newErrorSaver
-    rngs <- state $ splitRNG nThreads
+    rngs <- state $ (\rng -> nTimes nThreads splitRng ([], rng))
     channel <- liftIO $ newBoundedChan (nThreads * 2)
     sequence_ . map (liftIO . forkIO . runWorker channel errorSaver) $ rngs
     return channel
   where
-    splitRNG :: Int -> StdGen -> ([StdGen], StdGen)
-    splitRNG 0 finalRng = ([], finalRng)
-    splitRNG n rng1 = let
-        (rng2, rng3) = split rng1
-        (rngs, finalRng) = splitRNG (n - 1) rng3
-      in (rng2:rngs, finalRng)
+    splitRng (rngs, rng1) = let (rng2, rng3) = split rng1
+                            in (rng2:rngs, rng3)
     -- TODO: there's probably some way to change the type to `ThreadPool ->
     -- ErrorSaver -> StIO ()`, but I can't figure it out right now. The trouble
     -- comes with the call to `handle`, which expects the IO monad and nothing
