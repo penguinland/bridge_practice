@@ -65,8 +65,8 @@ app = do
         case maybe malformed (findCachers registry) requested of
             Left err -> text . pack $ err
             Right cachers -> do
-                rng <- liftIO . readIORef $ ioRng
+                rng <- liftIO $ readIORef ioRng
                 (sitInst, rng') <- liftIO $
                     runStateT (pure cachers >>= pickItem >>= getProblem) rng
-                liftIO . writeIORef ioRng $ rng'
+                liftIO $ writeIORef ioRng rng'
                 json sitInst
