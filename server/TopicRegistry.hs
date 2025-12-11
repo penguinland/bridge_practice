@@ -16,7 +16,6 @@ import Data.Tuple.Utils(fst3, thd3)
 import Output(toHtml)
 import SupportedTopics(topicList)
 import Topic(Topic, topicName)
-import Types(StIO)
 
 import Cacher(Cacher, newCacher)
 import ThreadPool(ThreadPool)
@@ -35,26 +34,14 @@ topicNames = map toObject topicList
                ]
 
 
-makeTopicRegistry :: ThreadPool -> StIO TopicRegistry
+makeTopicRegistry :: ThreadPool -> IO TopicRegistry
 makeTopicRegistry pool =
     sequence (map toCacher topicList) >>= (return . fromList)
   where
-    toCacher :: (Int, Bool, Topic) -> StIO (Int, Cacher)
+    toCacher :: (Int, Bool, Topic) -> IO (Int, Cacher)
     toCacher = encapsulate . second (newCacher pool) . (fst3 &&& thd3)
-    encapsulate :: (Int, StIO Cacher) -> StIO (Int, Cacher)
+    encapsulate :: (Int, IO Cacher) -> IO (Int, Cacher)
     encapsulate (a, mb) = mb >>= (\b -> return (a, b))
-
-
--- If there are any Left results, we'll return all of them, and otherwise we'll
--- return all the Right results.
-collectResults_ :: [Either a b] -> Either [a] [b]
-collectResults_ [] = Right []
-collectResults_ (Left l : rest) = case collectResults_ rest of
-                                  Left ll -> Left (l : ll)
-                                  Right _ -> Left [l]
-collectResults_ (Right r : rest) = case collectResults_ rest of
-                                   Left l -> Left l
-                                   Right rr -> Right (r : rr)
 
 
 -- The String argument should be a comma-separated list of indices. We return
@@ -65,5 +52,15 @@ findCachers registry indices = let
     getCacher i = maybeToEither i (registry !? i)
     foundCachers = map (getCacher . read) . split "," $ indices
     formatError = ("Unknown indices: " ++) . join "," . map show
+    -- If there are any Left results, we'll return all of them, and otherwise
+    -- we'll return all the Right results.
+    collectResults :: [Either a b] -> Either [a] [b]
+    collectResults [] = Right []
+    collectResults (Left l : rest) = case collectResults rest of
+                                     Left ll -> Left (l : ll)
+                                     Right _ -> Left [l]
+    collectResults (Right r : rest) = case collectResults rest of
+                                      Left l -> Left l
+                                      Right rr -> Right (r : rr)
   in
-    mapLeft formatError . collectResults_ $ foundCachers
+    mapLeft formatError . collectResults $ foundCachers

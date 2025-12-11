@@ -46,6 +46,7 @@ executables:
     dependencies:
     - bridge-practice
     - concurrency
+    - ghc
     - mtl
     - Spock
     - text

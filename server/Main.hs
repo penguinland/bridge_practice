@@ -29,9 +29,9 @@ data MyAppState = IOState (IORef StdGen) TopicRegistry
 
 main :: IO ()
 main = do
-    rng <- getStdGen
-    (registry, rng') <- runStateT (newThreadPool 4 >>= makeTopicRegistry) rng
-    ref <- newIORef rng'
+    (pool, rng) <- getStdGen >>= runStateT (newThreadPool 4)
+    registry <- makeTopicRegistry pool
+    ref <- newIORef rng
     spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IOState ref registry)
     runSpock 8765 (spock spockCfg app)
 
@@ -65,8 +65,8 @@ app = do
         case maybe malformed (findCachers registry) requested of
             Left err -> text . pack $ err
             Right cachers -> do
-                rng <- liftIO . readIORef $ ioRng
+                rng <- liftIO $ readIORef ioRng
                 (sitInst, rng') <- liftIO $
                     runStateT (pure cachers >>= pickItem >>= getProblem) rng
-                liftIO . writeIORef ioRng $ rng'
+                liftIO $ writeIORef ioRng rng'
                 json sitInst

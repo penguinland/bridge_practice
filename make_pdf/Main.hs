@@ -1,4 +1,6 @@
+import Control.Monad.Trans.Class(lift)
 import Control.Monad.Trans.State.Strict(runStateT)
+import Data.List.Utils(join, replace)
 import System.Random(mkStdGen)
 
 import qualified Topics.JacobyTransfers as JacobyTransfers
@@ -27,7 +29,23 @@ import qualified Topics.MuppetStayman as MuppetStayman
 import qualified Topics.TransfersOver1MX as TransfersOver1MX
 import qualified Topics.RomanKeycardBlackwood as RKC
 
-import ProblemSet(outputLatex)
+import Output(toLatex)
+import ProblemSet(generate)
+import Topic(Topic, topicName)
+import Types(StIO)
+
+
+outputLatex :: Int -> [Topic] -> String -> StIO ()
+outputLatex numHands topics filename = do
+    problems <- generate numHands topics
+    let topicNames = join ", " . map (toLatex . topicName) $ topics
+        problemSet = unlines . map toLatex $ problems
+    template <- lift $ readFile "template.tex"
+    let doc = replace "%<TOPICS>" topicNames .
+              replace "%<PROBLEMS>" problemSet $ template
+    let fullFilename = filename ++ ".tex"
+    lift $ writeFile fullFilename doc
+    lift $ putStrLn ("Output written to " ++ fullFilename)
 
 
 main :: IO ()
@@ -61,7 +79,4 @@ main = let
     topics = [ RKC.topic1430
              ]
   in do
-    -- outputLatex returns a copy of the contents of the file it wrote, but we
-    -- ignore that.
-    _ <- runStateT (outputLatex 100 topics "test") (mkStdGen 0)
-    return ()
+    runStateT (outputLatex 100 topics "test") (mkStdGen 0) >>= return . fst
