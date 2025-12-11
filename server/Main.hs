@@ -30,8 +30,8 @@ data MyAppState = IOState (IORef StdGen) TopicRegistry
 main :: IO ()
 main = do
     rng <- getStdGen
-    (registry, rng') <- runStateT
-        (newThreadPool 4 >>= (liftIO . makeTopicRegistry)) rng
+    (pool, rng') <- runStateT (newThreadPool 4) rng
+    registry <- makeTopicRegistry pool
     ref <- newIORef rng'
     spockCfg <- defaultSpockCfg EmptySession PCNoDatabase (IOState ref registry)
     runSpock 8765 (spock spockCfg app)
