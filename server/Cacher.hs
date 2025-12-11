@@ -20,11 +20,11 @@ targetCacheSize_ :: Int
 targetCacheSize_ = 3
 
 
-newCacher :: ThreadPool -> Topic -> StIO Cacher
+newCacher :: ThreadPool -> Topic -> IO Cacher
 newCacher pool topic = do
-    mv <- liftIO $ newMVar []
+    mv <- newMVar []
     let cacher = Cacher topic mv pool
-    liftIO . replicateM_ targetCacheSize_ $ enqueue pool (makeProblem_ cacher)
+    replicateM_ targetCacheSize_ $ enqueue pool (makeProblem_ cacher)
     return cacher
 
 
