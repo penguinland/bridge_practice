@@ -31,6 +31,10 @@ newThreadPool nThreads = do
         (rng2, rng3) = split rng1
         (rngs, finalRng) = splitRNG (n - 1) rng3
       in (rng2:rngs, finalRng)
+    -- TODO: there's probably some way to change the type to `ThreadPool ->
+    -- ErrorSaver -> StIO ()`, but I can't figure it out right now. The trouble
+    -- comes with the call to `handle`, which expects the IO monad and nothing
+    -- else.
     runWorker :: ThreadPool -> ErrorSaver -> StdGen -> IO ()
     runWorker chan errorSaver rng1 = do
         f <- readBoundedChan chan
