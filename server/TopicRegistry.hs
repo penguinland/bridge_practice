@@ -44,18 +44,6 @@ makeTopicRegistry pool =
     encapsulate (a, mb) = mb >>= (\b -> return (a, b))
 
 
--- If there are any Left results, we'll return all of them, and otherwise we'll
--- return all the Right results.
-collectResults_ :: [Either a b] -> Either [a] [b]
-collectResults_ [] = Right []
-collectResults_ (Left l : rest) = case collectResults_ rest of
-                                  Left ll -> Left (l : ll)
-                                  Right _ -> Left [l]
-collectResults_ (Right r : rest) = case collectResults_ rest of
-                                   Left l -> Left l
-                                   Right rr -> Right (r : rr)
-
-
 -- The String argument should be a comma-separated list of indices. We return
 -- either a description of which indices we don't recognize, or a list of all
 -- the corresponding Cachers.
@@ -64,5 +52,15 @@ findCachers registry indices = let
     getCacher i = maybeToEither i (registry !? i)
     foundCachers = map (getCacher . read) . split "," $ indices
     formatError = ("Unknown indices: " ++) . join "," . map show
+    -- If there are any Left results, we'll return all of them, and otherwise
+    -- we'll return all the Right results.
+    collectResults :: [Either a b] -> Either [a] [b]
+    collectResults [] = Right []
+    collectResults (Left l : rest) = case collectResults rest of
+                                     Left ll -> Left (l : ll)
+                                     Right _ -> Left [l]
+    collectResults (Right r : rest) = case collectResults rest of
+                                      Left l -> Left l
+                                      Right rr -> Right (r : rr)
   in
-    mapLeft formatError . collectResults_ $ foundCachers
+    mapLeft formatError . collectResults $ foundCachers
