@@ -1,21 +1,18 @@
 module ProblemSet(
   generate
-, outputLatex
 ) where
 
 import Control.Monad(when)
 import Control.Monad.Trans.Class(lift)
 import Control.Monad.Trans.State.Strict(get, mapStateT)
 import Data.Functor.Identity(runIdentity)
-import Data.List.Utils(join, replace)
 import System.IO(hFlush, stdout)
 import System.Random(StdGen)
 
-import Output(toLatex)
 import Random(pickItem)
 import Situation(Situation(..))
 import SituationInstance(instantiate, SituationInstance)
-import Topic(Topic, topicName, refName, choose)
+import Topic(Topic, refName, choose)
 import Types(StIO)
 
 
@@ -44,17 +41,3 @@ generate n topics = do
         Just d  -> do
             rest <- generate (n - 1) topics
             return $ d:rest
-
-
-outputLatex :: Int -> [Topic] -> String -> StIO String
-outputLatex numHands topics filename = do
-    problems <- generate numHands topics
-    let topicNames = join ", " . map (toLatex . topicName) $ topics
-        problemSet = unlines . map toLatex $ problems
-    template <- lift $ readFile "template.tex"
-    let doc = replace "%<TOPICS>" topicNames .
-              replace "%<PROBLEMS>" problemSet $ template
-    let fullFilename = filename ++ ".tex"
-    lift $ writeFile fullFilename doc
-    lift $ putStrLn ("Output written to " ++ fullFilename)
-    return doc
