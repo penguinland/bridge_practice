@@ -32,7 +32,7 @@ generate n topics = sequence . map getOneSituation $ [1..n]
     -- SituationInstances we generate.
     getOneSituation i = do
         topic <- pickItem topics
-        gen <- get  -- Save a copy of the RNG to use in the debug string later
+        gen <- get  -- Save a copy of the RNG to use in the debug string later.
         -- We use mapStateT to convert from a `State StdGen Situation` to a
         -- `StIO Situation`. This lets us keep the IO monad out of the rest of
         -- the code.
