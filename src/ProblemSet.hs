@@ -20,13 +20,12 @@ import Types(StIO)
 
 
 reference :: String -> String -> StdGen -> String
-reference topic sit g = let
+reference topic sit g = topic ++ "." ++ sit ++ " " ++ randomSeed
+  where
     -- The StdGen is something like "StdGen {unStdGen = SMGen 1 2}", but all we
     -- really need is the "SMGen 1 2".
     -- NOTE: if we ever change PRNG implementations, this might break!
     randomSeed = init . unwords . drop 3 . words . show $ g
-  in
-    topic ++ "." ++ sit ++ " " ++ randomSeed
 
 
 generate :: Int -> [Topic] -> StIO [SituationInstance]
