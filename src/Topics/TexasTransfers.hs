@@ -346,7 +346,7 @@ completeTransferOverInterference = let
 
 completeTransferOverInterferenceCuebid :: Situations
 completeTransferOverInterferenceCuebid = let
-    sit (overcall, transferBid, completedTransfer, isShort) = let
+    sit (overcall, transferBid, completedTransfer) isShort = let
         action = do
             setOpener T.South
             B.b1N
@@ -359,15 +359,14 @@ completeTransferOverInterferenceCuebid = let
             "player interfered. As long as they only bid at the 2 or 3 " .+
             "level, Texas transfers are still on! Partner's bid is a " .+
             "Texas transfer, not a cue bid: complete the transfer" .+
-            (if isShort then ", even if we're short in the suit." else "") .+
+            (if isShort then ", even if we're short in the suit" else "") .+
             "."
         in situation "intCue" action completedTransfer explanation
   in
-    wrapSE $ return sit <~ [ (DONT.b1No3D, B.b1N4D, B.b1N4D4H, True)
-                           , (DONT.b1No3H, B.b1N4H, B.b1N4H4S, True)
-                           , (DONT.b1No3D, B.b1N4D, B.b1N4D4H, False)
-                           , (DONT.b1No3H, B.b1N4H, B.b1N4H4S, False)
+    wrapSE $ return sit <~ [ (DONT.b1No3D, B.b1N4D, B.b1N4D4H)
+                           , (DONT.b1No3H, B.b1N4H, B.b1N4H4S)
                            ]
+                        <~ [True, False]
 
 
 -- TODO: More situations:
