@@ -290,7 +290,7 @@ completeTransferOverInterference = let
             "We opened " .+ T.Bid 1 T.Notrump .+ ", and the next " .+
             "player interfered. As long as they only bid at the 2 or 3 " .+
             "level, Texas transfers are still on! Complete partner's transfer."
-        in situation "intC" action completedTransfer explanation
+        in situation "intComp" action completedTransfer explanation
   in
     wrapSE $ return sit <~ [ (Nat.b1No2C,  B.b1N4D, B.b1N4D4H)
                            , (Nat.b1No2D,  B.b1N4D, B.b1N4D4H)
