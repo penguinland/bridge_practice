@@ -76,7 +76,7 @@ main = let
               , RKC.topic1430
               , RKC.topic3014
               ]
-    topics = [ RKC.topic1430
+    topics = [ TexasTransfers.topic
              ]
   in do
     runStateT (outputLatex 100 topics "test") (mkStdGen 0) >>= return . fst

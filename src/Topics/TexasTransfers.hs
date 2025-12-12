@@ -288,7 +288,7 @@ completeTransferOverInterference = let
             "We opened " .+ T.Bid 1 T.Notrump .+ ", and the next " .+
             "player interfered. As long as they only bid at the 2 or 3 " .+
             "level, Texas transfers are still on! Complete partner's transfer."
-        in situation "int" action completedTransfer explanation
+        in situation "intC" action completedTransfer explanation
   in
     wrapSE $ return sit <~ [ (Nat.b1No2C,  B.b1N4D, B.b1N4D4H)
                            , (Nat.b1No2D,  B.b1N4D, B.b1N4D4H)
@@ -361,7 +361,7 @@ completeTransferOverInterferenceCuebid = let
             "Texas transfer, not a cue bid: complete the transfer" .+
             (if isShort then ", even if we're short in the suit." else "") .+
             "."
-        in situation "int" action completedTransfer explanation
+        in situation "intCue" action completedTransfer explanation
   in
     wrapSE $ return sit <~ [ (DONT.b1No3D, B.b1N4D, B.b1N4D4H, True)
                            , (DONT.b1No3H, B.b1N4H, B.b1N4H4S, True)
