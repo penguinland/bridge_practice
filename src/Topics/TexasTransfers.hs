@@ -232,7 +232,10 @@ transferOverInterference = let
                            --, (MW.b1No2H,   B.b1N4D, T.Hearts)
                            , (MW.b1No2S,   B.b1N4D, T.Hearts)
                            , (MW.b1No2N,   B.b1N4D, T.Hearts)
-                           , (Capp.b1NoX,  B.b1N4D, T.Hearts)
+                           -- If partner has at least 15 HCPs and we have at
+                           -- least 10, the opponents aren't strong enough to
+                           -- make a penalty double.
+                           --, (Capp.b1NoX,  B.b1N4D, T.Hearts)
                            , (Capp.b1No2C, B.b1N4D, T.Hearts)
                            --, (Capp.b1No2D, B.b1N4D, T.Hearts)
                            --, (Capp.b1No2H, B.b1N4D, T.Hearts)
@@ -257,7 +260,9 @@ transferOverInterference = let
                            , (MW.b1No2H,   B.b1N4H, T.Spades)
                            --, (MW.b1No2S,   B.b1N4H, T.Spades)
                            , (MW.b1No2N,   B.b1N4H, T.Spades)
-                           , (Capp.b1NoX,  B.b1N4H, T.Spades)
+                           -- Again, not enough points in the deck for a penalty
+                           -- double here.
+                           --, (Capp.b1NoX,  B.b1N4H, T.Spades)
                            , (Capp.b1No2C, B.b1N4H, T.Spades)
                            --, (Capp.b1No2D, B.b1N4H, T.Spades)
                            , (Capp.b1No2H, B.b1N4H, T.Spades)
@@ -353,7 +358,7 @@ completeTransferOverInterferenceCuebid = let
             _ <- overcall
             _ <- transferBid
             makePass
-            when isShort $ maxSuitLength (T.suitBid completedTransfer) 2
+            when isShort $ suitLength (T.suitBid completedTransfer) 2
         explanation =
             "We opened " .+ T.Bid 1 T.Notrump .+ ", and the next " .+
             "player interfered. As long as they only bid at the 2 or 3 " .+
