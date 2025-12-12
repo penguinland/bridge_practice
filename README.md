@@ -30,9 +30,10 @@ solution that appears incorrect.
 
 You will need the following external tools installed:
 - Haskell and Stack
-  - On Ubuntu, this is `sudo apt-get install haskell-stack zlib1g-dev` (you'll
-    need zlib header files for one of the indirect dependencies, hence the
-    second package being installed).
+  - On Ubuntu, this is
+    `sudo apt-get install haskell-stack zlib1g-dev libncurses-dev` (you'll
+    need zlib and ncurses header files for the indirect dependencies, hence the
+    other two packages being installed).
   - On a Mac, do this with `brew install haskell-stack`
 - Dealer, a domain-specific language to generate bridge hands
   - On Ubuntu, run `sudo apt-get install dealer`
