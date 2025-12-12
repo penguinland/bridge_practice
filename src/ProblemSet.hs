@@ -26,18 +26,21 @@ reference topic sit g = topic ++ "." ++ sit ++ " " ++ randomSeed
 
 
 generate :: Int -> [Topic] -> StIO [SituationInstance]
-generate 0 _      = return []
-generate n topics = do
-    topic <- pickItem topics
-    gen <- get  -- Save a copy of the RNG to use in the debug string later
-    -- We use mapStateT to convert from a `State StdGen Situation` to a `StIO
-    -- Situation`. This lets us keep the IO monad out of the rest of the code.
-    situation <- mapStateT (return . runIdentity) $ choose topic
-    let ref = reference (refName topic) (sitRef situation) gen
-    maybeSit <- instantiate ref situation
-    when (n `mod` 10 == 0) (lift $ putStr "." >> hFlush stdout)
-    case maybeSit of
-        Nothing -> generate n topics  -- Try again
-        Just d  -> do
-            rest <- generate (n - 1) topics
-            return $ d:rest
+generate n topics = sequence . map getOneSituation $ [1..n]
+  where
+    -- We keep the index i around solely so we can print a dot every 10
+    -- SituationInstances we generate.
+    getOneSituation i = do
+        topic <- pickItem topics
+        gen <- get  -- Save a copy of the RNG to use in the debug string later.
+        -- We use mapStateT to convert from a `State StdGen Situation` to a
+        -- `StIO Situation`. This lets us keep the IO monad out of the rest of
+        -- the code.
+        situation <- mapStateT (return . runIdentity) $ choose topic
+        let ref = reference (refName topic) (sitRef situation) gen
+        maybeSit <- instantiate ref situation
+        case maybeSit of
+            Nothing -> getOneSituation i  -- Try again
+            Just d  -> do
+                when (i `mod` 10 == 0) (lift $ putStr "." >> hFlush stdout)
+                return d

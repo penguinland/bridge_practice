@@ -129,7 +129,10 @@ noInterference = nameAction "no_interference" $ do
 texasTransfer_ :: T.Suit -> Action
 texasTransfer_ suit = do
     alternatives [gameNoSlam, slamInterest]
-    minSuitLength suit 6
+    -- Performance optimization: this should really be minSuitLength, but we
+    -- make the length exactly 6 instead of maybe 7 or 8 in order to speed up
+    -- generating the deal.
+    suitLength suit 6
     -- If you're 6-4, bid Stayman, and *then* make a Texas Transfer if necessary
     maxSuitLength (T.otherMajor suit) 3
     -- If you're 6-6, which suit to use is a matter of judgment, and you won't

@@ -229,7 +229,10 @@ transferOverInterference = let
                            --, (MW.b1No2H,   B.b1N4D)
                            , (MW.b1No2S,   B.b1N4D)
                            , (MW.b1No2N,   B.b1N4D)
-                           , (Capp.b1NoX,  B.b1N4D)
+                           -- If partner has at least 15 HCPs and we have at
+                           -- least 10, the opponents aren't strong enough to
+                           -- make a penalty double.
+                           --, (Capp.b1NoX,  B.b1N4D)
                            , (Capp.b1No2C, B.b1N4D)
                            --, (Capp.b1No2D, B.b1N4D)
                            --, (Capp.b1No2H, B.b1N4D)
@@ -254,7 +257,9 @@ transferOverInterference = let
                            , (MW.b1No2H,   B.b1N4H)
                            --, (MW.b1No2S,   B.b1N4H)
                            , (MW.b1No2N,   B.b1N4H)
-                           , (Capp.b1NoX,  B.b1N4H)
+                           -- Again, not enough points in the deck for a penalty
+                           -- double here.
+                           --, (Capp.b1NoX,  B.b1N4H)
                            , (Capp.b1No2C, B.b1N4H)
                            --, (Capp.b1No2D, B.b1N4H)
                            , (Capp.b1No2H, B.b1N4H)
@@ -285,7 +290,7 @@ completeTransferOverInterference = let
             "We opened " .+ T.Bid 1 T.Notrump .+ ", and the next " .+
             "player interfered. As long as they only bid at the 2 or 3 " .+
             "level, Texas transfers are still on! Complete partner's transfer."
-        in situation "int" action completedTransfer explanation
+        in situation "intComp" action completedTransfer explanation
   in
     wrapSE $ return sit <~ [ (Nat.b1No2C,  B.b1N4D, B.b1N4D4H)
                            , (Nat.b1No2D,  B.b1N4D, B.b1N4D4H)
@@ -343,28 +348,27 @@ completeTransferOverInterference = let
 
 completeTransferOverInterferenceCuebid :: Situations
 completeTransferOverInterferenceCuebid = let
-    sit (overcall, transferBid, completedTransfer, isShort) = let
+    sit (overcall, transferBid, completedTransfer) isShort = let
         action = do
             setOpener T.South
             B.b1N
             _ <- overcall
             _ <- transferBid
             makePass
-            when isShort $ maxSuitLength (T.suitBid completedTransfer) 2
+            when isShort $ suitLength (T.suitBid completedTransfer) 2
         explanation =
             "We opened " .+ T.Bid 1 T.Notrump .+ ", and the next " .+
             "player interfered. As long as they only bid at the 2 or 3 " .+
             "level, Texas transfers are still on! Partner's bid is a " .+
             "Texas transfer, not a cue bid: complete the transfer" .+
-            (if isShort then ", even if we're short in the suit." else "") .+
+            (if isShort then ", even if we're short in the suit" else "") .+
             "."
-        in situation "int" action completedTransfer explanation
+        in situation "intCue" action completedTransfer explanation
   in
-    wrapSE $ return sit <~ [ (DONT.b1No3D, B.b1N4D, B.b1N4D4H, True)
-                           , (DONT.b1No3H, B.b1N4H, B.b1N4H4S, True)
-                           , (DONT.b1No3D, B.b1N4D, B.b1N4D4H, False)
-                           , (DONT.b1No3H, B.b1N4H, B.b1N4H4S, False)
+    wrapSE $ return sit <~ [ (DONT.b1No3D, B.b1N4D, B.b1N4D4H)
+                           , (DONT.b1No3H, B.b1N4H, B.b1N4H4S)
                            ]
+                        <~ [True, False]
 
 
 -- TODO: More situations:
