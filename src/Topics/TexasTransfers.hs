@@ -207,68 +207,71 @@ transferSlamInviteAccepted = let
 
 transferOverInterference :: Situations
 transferOverInterference = let
-    sit (overcall, transferBid) = let
+    sit (overcall, transferBid, suit) = let
         action = do
             setOpener T.North
             B.b1N
-            overcall
+            _ <- overcall
+            -- Performance optimization: have exactly a 6-card suit to make
+            -- these boards generate much faster
+            suitLength suit 6
         explanation =
             "Partner opened " .+ T.Bid 1 T.Notrump .+ ", and the next " .+
             "player interfered. As long as they only bid at the 2 or 3 " .+
             "level, Texas transfers are still on!"
         in situation "int" action transferBid explanation
   in
-    wrapNW $ return sit <~ [ (Nat.b1No2C,  B.b1N4D)
-                           , (Nat.b1No2D,  B.b1N4D)
+    wrapNW $ return sit <~ [ (Nat.b1No2C,  B.b1N4D, T.Hearts)
+                           , (Nat.b1No2D,  B.b1N4D, T.Hearts)
                            -- Don't make a transfer to the opponent's suit!
-                           --, (Nat.b1No2H,  B.b1N4D)
-                           , (Nat.b1No2S,  B.b1N4D)
-                           , (MW.b1NoX,    B.b1N4D)
-                           , (MW.b1No2C,   B.b1N4D)
-                           , (MW.b1No2D,   B.b1N4D)
-                           --, (MW.b1No2H,   B.b1N4D)
-                           , (MW.b1No2S,   B.b1N4D)
-                           , (MW.b1No2N,   B.b1N4D)
-                           , (Capp.b1NoX,  B.b1N4D)
-                           , (Capp.b1No2C, B.b1N4D)
-                           --, (Capp.b1No2D, B.b1N4D)
-                           --, (Capp.b1No2H, B.b1N4D)
-                           , (Capp.b1No2S, B.b1N4D)
-                           , (Capp.b1No2N, B.b1N4D)
-                           , (DONT.b1NoX,  B.b1N4D)
-                           , (DONT.b1No2C, B.b1N4D)
-                           , (DONT.b1No2D, B.b1N4D)
-                           --, (DONT.b1No2H, B.b1N4D)
-                           , (DONT.b1No2S, B.b1N4D)
-                           , (DONT.b1No3C, B.b1N4D)
-                           , (DONT.b1No3D, B.b1N4D)
-                           --, (DONT.b1No3H, B.b1N4D)
-                           , (DONT.b1No3S, B.b1N4D)
-                           , (Nat.b1No2C,  B.b1N4H)
-                           , (Nat.b1No2D,  B.b1N4H)
-                           , (Nat.b1No2H,  B.b1N4H)
-                           --, (Nat.b1No2S,  B.b1N4H)
-                           , (MW.b1NoX,    B.b1N4H)
-                           , (MW.b1No2C,   B.b1N4H)
-                           , (MW.b1No2D,   B.b1N4H)
-                           , (MW.b1No2H,   B.b1N4H)
-                           --, (MW.b1No2S,   B.b1N4H)
-                           , (MW.b1No2N,   B.b1N4H)
-                           , (Capp.b1NoX,  B.b1N4H)
-                           , (Capp.b1No2C, B.b1N4H)
-                           --, (Capp.b1No2D, B.b1N4H)
-                           , (Capp.b1No2H, B.b1N4H)
-                           --, (Capp.b1No2S, B.b1N4H)
-                           , (Capp.b1No2N, B.b1N4H)
-                           , (DONT.b1NoX,  B.b1N4H)
-                           , (DONT.b1No2C, B.b1N4H)
-                           , (DONT.b1No2D, B.b1N4H)
-                           --, (DONT.b1No2H, B.b1N4H)
-                           --, (DONT.b1No2S, B.b1N4H)
-                           , (DONT.b1No3C, B.b1N4H)
-                           , (DONT.b1No3D, B.b1N4H)
-                           , (DONT.b1No3H, B.b1N4H)
-                           --, (DONT.b1No3S, B.b1N4H)
+                           --, (Nat.b1No2H,  B.b1N4D, T.Hearts)
+                           , (Nat.b1No2S,  B.b1N4D, T.Hearts)
+                           , (MW.b1NoX,    B.b1N4D, T.Hearts)
+                           , (MW.b1No2C,   B.b1N4D, T.Hearts)
+                           , (MW.b1No2D,   B.b1N4D, T.Hearts)
+                           --, (MW.b1No2H,   B.b1N4D, T.Hearts)
+                           , (MW.b1No2S,   B.b1N4D, T.Hearts)
+                           , (MW.b1No2N,   B.b1N4D, T.Hearts)
+                           , (Capp.b1NoX,  B.b1N4D, T.Hearts)
+                           , (Capp.b1No2C, B.b1N4D, T.Hearts)
+                           --, (Capp.b1No2D, B.b1N4D, T.Hearts)
+                           --, (Capp.b1No2H, B.b1N4D, T.Hearts)
+                           , (Capp.b1No2S, B.b1N4D, T.Hearts)
+                           , (Capp.b1No2N, B.b1N4D, T.Hearts)
+                           , (DONT.b1NoX,  B.b1N4D, T.Hearts)
+                           , (DONT.b1No2C, B.b1N4D, T.Hearts)
+                           , (DONT.b1No2D, B.b1N4D, T.Hearts)
+                           --, (DONT.b1No2H, B.b1N4D, T.Hearts)
+                           , (DONT.b1No2S, B.b1N4D, T.Hearts)
+                           , (DONT.b1No3C, B.b1N4D, T.Hearts)
+                           , (DONT.b1No3D, B.b1N4D, T.Hearts)
+                           --, (DONT.b1No3H, B.b1N4D, T.Hearts)
+                           , (DONT.b1No3S, B.b1N4D, T.Hearts)
+                           , (Nat.b1No2C,  B.b1N4H, T.Spades)
+                           , (Nat.b1No2D,  B.b1N4H, T.Spades)
+                           , (Nat.b1No2H,  B.b1N4H, T.Spades)
+                           --, (Nat.b1No2S,  B.b1N4H, T.Spades)
+                           , (MW.b1NoX,    B.b1N4H, T.Spades)
+                           , (MW.b1No2C,   B.b1N4H, T.Spades)
+                           , (MW.b1No2D,   B.b1N4H, T.Spades)
+                           , (MW.b1No2H,   B.b1N4H, T.Spades)
+                           --, (MW.b1No2S,   B.b1N4H, T.Spades)
+                           , (MW.b1No2N,   B.b1N4H, T.Spades)
+                           , (Capp.b1NoX,  B.b1N4H, T.Spades)
+                           , (Capp.b1No2C, B.b1N4H, T.Spades)
+                           --, (Capp.b1No2D, B.b1N4H, T.Spades)
+                           , (Capp.b1No2H, B.b1N4H, T.Spades)
+                           --, (Capp.b1No2S, B.b1N4H, T.Spades)
+                           , (Capp.b1No2N, B.b1N4H, T.Spades)
+                           , (DONT.b1NoX,  B.b1N4H, T.Spades)
+                           , (DONT.b1No2C, B.b1N4H, T.Spades)
+                           , (DONT.b1No2D, B.b1N4H, T.Spades)
+                           --, (DONT.b1No2H, B.b1N4H, T.Spades)
+                           --, (DONT.b1No2S, B.b1N4H, T.Spades)
+                           , (DONT.b1No3C, B.b1N4H, T.Spades)
+                           , (DONT.b1No3D, B.b1N4H, T.Spades)
+                           , (DONT.b1No3H, B.b1N4H, T.Spades)
+                           --, (DONT.b1No3S, B.b1N4H, T.Spades)
                            ]
 
 
