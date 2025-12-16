@@ -27,8 +27,8 @@ module Topic(
 , collect
 ) where
 
-import Control.Monad.Trans.State.Strict(State, runState)
-import System.Random(StdGen, mkStdGen)
+import Control.Monad.Trans.State.Strict(State)
+import System.Random(StdGen)
 
 import Output(Description, toDescription, Showable)
 import Random(pickItem)
@@ -45,19 +45,19 @@ type Situations = Collection Situation
 
 
 class Collectable r c where
-    _collect :: c -> Collection r
+    collect :: c -> Collection r
 
 instance Collectable r r where
-    _collect = CollectionRaw
+    collect = CollectionRaw
 instance (Collectable r c) => Collectable r [c] where
-    _collect = CollectionList . map _collect
+    collect = CollectionList . map collect
 instance (Collectable r c) => Collectable r (State StdGen c) where
-    _collect = CollectionState . fmap _collect
+    collect = CollectionState . fmap collect
 instance Collectable r (Collection r) where
-    _collect = id
+    collect = id
 
 wrap :: Collectable Situation c => c -> Situations
-wrap = _collect
+wrap = collect
 
 
 -- The most common Situation parameters are letting anyone be vulnerable, and
@@ -111,6 +111,9 @@ choose = choose' . topicSituations
     choose' (CollectionState f) = f >>= choose'
 
 
+-- This should get re-enabled when we're ready to do the assertion it's for, but
+-- in the meantime I'm reusing the name elsewhere.
+{-
 -- This is used during compile-time assertions to ensure that every Situation
 -- within a Topic has a unique debug string.
 collect :: (Situation -> a) -> Topic -> [a]
@@ -121,3 +124,4 @@ collect f = collect' . topicSituations
     -- We assume that all Situations you could generate from a CollectionState have the
     -- same value within. If this changes, revisit this.
     collect' (CollectionState s) = collect' . fst . flip runState (mkStdGen 0) $ s
+-}
