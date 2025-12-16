@@ -2,6 +2,7 @@ module Situation (
   Situation(..)
 , situation
 , (<~)
+, (<~<)
 ) where
 
 
@@ -9,7 +10,7 @@ import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
 import Action(Action, finish, extractLastCall, withholdBid)
-import Collection(choose, collect, Collectable)
+import Collection(choose, collect, Collectable, Collection)
 import DealerProg(DealerProg)
 import Output(Showable, Description, toDescription)
 import Structures(Bidding)
@@ -43,3 +44,6 @@ situation r a c s d v = Situation r bidding deal answer (toDescription s) d v
 -- get compiler errors about overlapping instances for Collectable).
 (<~) :: (Collectable a a) => State StdGen (a -> b) -> [a] -> State StdGen b
 sf <~ as = sf <*> (choose . collect $ as)
+
+(<~<) :: State StdGen (a -> b) -> [Collection a] -> State StdGen b
+sf <~< as = sf <*> (choose . collect $ as)
