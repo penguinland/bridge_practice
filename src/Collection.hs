@@ -32,7 +32,7 @@ choose (CollectionList aa) = pickItem aa >>= choose
 choose (CollectionState f) = f >>= choose
 
 
-class Collectable r c where
+class Collectable r c where  -- c is a collection of raw r values
     collect :: c -> Collection r
 
 instance Collectable r r where
