@@ -14,12 +14,13 @@ import Data.Tuple.Utils(thd3)
 -- of System.Random, this might break.
 import System.Random.Internal(StdGen(..))
 
+import Collection(choose)
 import DealerProg(toProgram)
 import Output(toMonospace)
 import Situation(Situation(..))
 import SituationInstance(instantiate)
 import SupportedTopics(topicList)
-import Topic(Topic(..), choose)
+import Topic(Topic(..))
 
 
 -- Example string to parse:

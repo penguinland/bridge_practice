@@ -9,10 +9,11 @@ import Data.Functor.Identity(runIdentity)
 import System.IO(hFlush, stdout)
 import System.Random(StdGen)
 
+import Collection(choose)
 import Random(pickItem)
 import Situation(Situation(..))
 import SituationInstance(instantiate, SituationInstance)
-import Topic(Topic(..), refName, choose)
+import Topic(Topic(..), refName)
 import Types(StIO)
 
 
