@@ -29,20 +29,22 @@ import Terminology(
     Direction(..), allDirections, Vulnerability, allVulnerabilities)
 
 
-data Situations = RawSit Situation
-                | SitList [Situations]
-                | SitState (State StdGen Situations)
+data Collection a = CollectionRaw a
+                  | CollectionList [Collection a]
+                  | CollectionState (State StdGen (Collection a))
+
+type Situations = Collection Situation
 
 
 class Situationable s where
     wrap :: s -> Situations
 
 instance Situationable Situation where
-    wrap = RawSit
+    wrap = CollectionRaw
 instance (Situationable s) => Situationable [s] where
-    wrap = SitList . map wrap
+    wrap = CollectionList . map wrap
 instance (Situationable s) => Situationable (State StdGen s) where
-    wrap = SitState . fmap wrap
+    wrap = CollectionState . fmap wrap
 instance Situationable Situations where
     wrap = id
 
@@ -93,9 +95,9 @@ makeTopic d n s = Topic (toDescription d) n s
 choose :: Topic -> State StdGen Situation
 choose = choose' . topicSituations
   where
-    choose' (RawSit s)   = return s
-    choose' (SitList ss) = pickItem ss >>= choose'
-    choose' (SitState f) = f >>= choose'
+    choose' (CollectionRaw s)   = return s
+    choose' (CollectionList ss) = pickItem ss >>= choose'
+    choose' (CollectionState f) = f >>= choose'
 
 
 -- This is used during compile-time assertions to ensure that every Situation
@@ -103,8 +105,8 @@ choose = choose' . topicSituations
 collect :: (Situation -> a) -> Topic -> [a]
 collect f = collect' . topicSituations
   where
-    collect' (RawSit s)  = [f s]
-    collect' (SitList l) = concatMap collect' l
-    -- We assume that all Situations you could generate from a SitState have the
+    collect' (CollectionRaw s)  = [f s]
+    collect' (CollectionList l) = concatMap collect' l
+    -- We assume that all Situations you could generate from a CollectionState have the
     -- same value within. If this changes, revisit this.
-    collect' (SitState s) = collect' . fst . flip runState (mkStdGen 0) $ s
+    collect' (CollectionState s) = collect' . fst . flip runState (mkStdGen 0) $ s
