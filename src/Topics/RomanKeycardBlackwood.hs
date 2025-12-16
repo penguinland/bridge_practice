@@ -4,10 +4,11 @@ import Control.Monad(join)
 import Data.List(sort)
 
 import Action(Action)
-import qualified Bids.RomanKeycardBlackwood as RKC
 import qualified Bids.Jacoby2NT as J2N
+import qualified Bids.OneNotrump as NT
+import qualified Bids.RomanKeycardBlackwood as RKC
 import CommonBids(andNextBidderIs, noInterference)
-import EDSL(makePass, pointRange, suitLength)
+import qualified EDSL as E
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -30,47 +31,81 @@ takeIndices_ indices values = takeIndices' values (sort indices)
 setUpAuctionsH :: [Action]  -- Auctions where the next bid should be RKC for H
 setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       noInterference T.Hearts
-                      suitLength T.Hearts 4  -- Speed up performance
+                      E.suitLength T.Hearts 4  -- Speed up performance
                       J2N.b1H2N
                       noInterference T.Hearts
                       -- Unlike index 1, don't force opener to have only 5
                       -- hearts. Maybe they have 6 and we're going to practice
                       -- pretending to have the queen with a 10-card fit.
                       J2N.b1H2N4H
-                      makePass
-                      pointRange 17 40
+                      E.makePass
+                      E.pointRange 17 40
                  , do J2N.b1H  -- Index 1
                       noInterference T.Hearts
-                      suitLength T.Hearts 4  -- Speed up performance
+                      E.suitLength T.Hearts 4  -- Speed up performance
                       J2N.b1H2N
                       noInterference T.Hearts
-                      suitLength T.Hearts 5  -- Speed up performance
+                      E.suitLength T.Hearts 5  -- Speed up performance
                       J2N.b1H2N4D
-                      makePass
-                      pointRange 16 40
+                      E.makePass
+                      E.pointRange 16 40
+                 , do NT.b1N  -- Index 2
+                      NT.noInterference
+                      NT.b1N4D
+                      E.makePass
+                      NT.b1N4D4H
+                      E.makePass
+                      NT.slamInterest
+                      E.forbid $ E.hasControl T.Spades
+                 , do NT.b1N  -- Index 3
+                      NT.noInterference
+                      NT.b1N2D
+                      E.makePass
+                      NT.b1N2D2H
+                      E.makePass
+                      NT.b1N2D2H4H
+                      E.makePass
+                      E.forbid $ E.hasControl T.Spades
+                      E.pointRange 17 40
                  ]
 
 setUpAuctionsS :: [Action]  -- Auctions where the next bid should be RKC for S
 setUpAuctionsS = [ do J2N.b1S  -- Index 0
                       noInterference T.Spades
-                      suitLength T.Spades 4  -- Speed up performance
+                      E.suitLength T.Spades 4  -- Speed up performance
                       J2N.b1S2N
                       noInterference T.Spades
                       -- Unlike index 1, don't force opener to have only 5
                       -- spades. Maybe they have 6 and we're going to practice
                       -- pretending to have the queen with a 10-card fit.
                       J2N.b1S2N4S
-                      makePass
-                      pointRange 17 40
+                      E.makePass
+                      E.pointRange 17 40
                  , do J2N.b1S  -- Index 1
                       noInterference T.Spades
-                      suitLength T.Spades 4  -- Speed up performance
+                      E.suitLength T.Spades 4  -- Speed up performance
                       J2N.b1S2N
                       noInterference T.Spades
-                      suitLength T.Spades 5  -- Speed up performance
+                      E.suitLength T.Spades 5  -- Speed up performance
                       J2N.b1S2N4H
-                      makePass
-                      pointRange 16 40
+                      E.makePass
+                      E.pointRange 16 40
+                 , do NT.b1N  -- Index 2
+                      NT.noInterference
+                      NT.b1N4H
+                      E.makePass
+                      NT.b1N4H4S
+                      E.makePass
+                      NT.slamInterest
+                 , do NT.b1N  -- Index 3
+                      NT.noInterference
+                      NT.b1N2H
+                      E.makePass
+                      NT.b1N2H2S
+                      E.makePass
+                      NT.b1N2H2S4S
+                      E.makePass
+                      E.pointRange 17 40
                  ]
 
 -- Auctions where the next bid should be RKC but the keycard teller should
@@ -78,13 +113,13 @@ setUpAuctionsS = [ do J2N.b1S  -- Index 0
 setUpAuctionsHNoQ :: [Action]
 setUpAuctionsHNoQ = [ do J2N.b1H  -- Index 0
                          noInterference T.Hearts
-                         suitLength T.Hearts 4  -- Speed up performance
+                         E.suitLength T.Hearts 4  -- Speed up performance
                          J2N.b1H2N
                          noInterference T.Hearts
-                         suitLength T.Hearts 5  -- With 6+, pretend to have Q
+                         E.suitLength T.Hearts 5  -- With 6+, pretend to have Q
                          J2N.b1H2N4H
-                         makePass
-                         pointRange 17 40
+                         E.makePass
+                         E.pointRange 17 40
                     , setUpAuctionsH !! 1  -- Index 1
                     ]
 
@@ -93,13 +128,13 @@ setUpAuctionsHNoQ = [ do J2N.b1H  -- Index 0
 setUpAuctionsSNoQ :: [Action]
 setUpAuctionsSNoQ = [ do J2N.b1S  -- Index 0
                          noInterference T.Spades
-                         suitLength T.Spades 4  -- Speed up performance
+                         E.suitLength T.Spades 4  -- Speed up performance
                          J2N.b1S2N
                          noInterference T.Spades
-                         suitLength T.Hearts 5  -- With 6+, pretend to have Q
+                         E.suitLength T.Hearts 5  -- With 6+, pretend to have Q
                          J2N.b1S2N4S
-                         makePass
-                         pointRange 17 40
+                         E.makePass
+                         E.pointRange 17 40
                     , setUpAuctionsH !! 1  -- Index 1
                     ]
 
@@ -127,7 +162,7 @@ firstResponse1430, firstResponse3014 :: Situations
             action = do
                 setup `andNextBidderIs` T.North
                 RKC.b4N
-                makePass
+                E.makePass
             explanation =
                 "Partner has bid " .+ RKC.b4N .+ " to ask how many " .+
                 "keycards we have. Give them the answer."
@@ -167,9 +202,9 @@ signoff1430, signoff3014 :: Situations
             action = do
                 setup `andNextBidderIs` T.South
                 RKC.b4N
-                makePass
+                E.makePass
                 _ <- response
-                makePass
+                E.makePass
             explanation =
                 "We asked for keycards, but learned we're missing 2 of " .+
                 "them. Slam is likely to fail: sign off at the 5 level."
@@ -212,7 +247,7 @@ oddVoid = let
             action = do
                 setup `andNextBidderIs` T.North
                 RKC.b4N
-                makePass
+                E.makePass
             explanation =
                 "Partner initiated a keycard ask. We have an odd number of " .+
                 "keycards and a void, so bid the void suit at the 6 level. " .+
@@ -241,7 +276,7 @@ evenVoid = let
             action = do
                 setup `andNextBidderIs` T.North
                 RKC.b4N
-                makePass
+                E.makePass
             explanation =
                 "Partner initiated a keycard ask. We have an even number of " .+
                 "keycards and a void, so bid " .+ response .+ " to show " .+
@@ -265,9 +300,9 @@ queenAsk1430, queenAsk3014 :: Situations
             action = do
                 setup `andNextBidderIs` T.South
                 RKC.b4N
-                makePass
+                E.makePass
                 _ <- response
-                makePass
+                E.makePass
             explanation =
                 "We are missing at most 1 keycard, but don't yet know " .+
                 "whether we also have the queen of trump. Make the cheapest " .+
@@ -302,11 +337,11 @@ noQueen1430, noQueen3014 :: Situations
             action = do
                 setup `andNextBidderIs` T.North
                 RKC.b4N
-                makePass
+                E.makePass
                 _ <- response
-                makePass
+                E.makePass
                 _ <- queenAsk
-                makePass
+                E.makePass
             explanation =
                 "Partner has made a queen ask, but we don't have it. Sign " .+
                 "off in our trump suit as cheaply as possible to show this. " .+
@@ -340,11 +375,11 @@ queenNoKing1430, queenNoKing3014 :: Situations
             action = do
                 setup `andNextBidderIs` T.North
                 RKC.b4N
-                makePass
+                E.makePass
                 _ <- response
-                makePass
+                E.makePass
                 _ <- queenAsk
-                makePass
+                E.makePass
             explanation =
                 "Partner has made a queen ask. We have the queen but no " .+
                 "side-suit king. Sign off in small slam. Partner will " .+
@@ -386,11 +421,11 @@ queenNoKing5N1430, queenNoKing5N3014 :: Situations
         action = do
             setup `andNextBidderIs` T.North
             RKC.b4N
-            makePass
+            E.makePass
             _ <- response
-            makePass
+            E.makePass
             _ <- queenAsk
-            makePass
+            E.makePass
         explanation =
             "Partner has made a queen ask, but it is higher than 5 " .+
             "of our trump suit. This means that denying the queen (by " .+
@@ -413,7 +448,7 @@ queenKing1430, queenKing3014 :: Situations
             action = do
                 setup `andNextBidderIs` T.North
                 RKC.b4N
-                makePass
+                E.makePass
                 middle
             explanation =
                 "Partner has made a queen ask. We have the queen and at " .+
@@ -425,53 +460,53 @@ queenKing1430, queenKing3014 :: Situations
     queenKing1430' = wrapNW . join $ return queenKing
         <~ [ (setUpAuctionsH,
               do RKC.b1430H5C
-                 makePass
+                 E.makePass
                  RKC.b1430H5C5D
-                 makePass,
+                 E.makePass,
               [RKC.bH5C5D5S, RKC.bH5C5D6C, RKC.bH5C5D6D])
            , (setUpAuctionsH,
               do RKC.b1430H5D
-                 makePass
+                 E.makePass
                  RKC.b1430H5D5S
-                 makePass,
+                 E.makePass,
               [RKC.bH5D5S6C, RKC.bH5D5S6D])
            , (setUpAuctionsS,
               do RKC.b1430S5C
-                 makePass
+                 E.makePass
                  RKC.b1430S5C5D
-                 makePass,
+                 E.makePass,
               [RKC.bS5C5D5H, RKC.bS5C5D6C, RKC.bS5C5D6D])
            , (setUpAuctionsS,
               do RKC.b1430S5D
-                 makePass
+                 E.makePass
                  RKC.b1430S5D5H
-                 makePass,
+                 E.makePass,
               [RKC.bS5D5H6C, RKC.bS5D5H6D, RKC.bS5D5H6H])
            ]
     queenKing3014' = wrapNW . join $ return queenKing
         <~ [ (setUpAuctionsH,
               do RKC.b3014H5C
-                 makePass
+                 E.makePass
                  RKC.b3014H5C5D
-                 makePass,
+                 E.makePass,
               [RKC.bH5C5D5S, RKC.bH5C5D6C, RKC.bH5C5D6D])
            , (setUpAuctionsH,
               do RKC.b3014H5D
-                 makePass
+                 E.makePass
                  RKC.b3014H5D5S
-                 makePass,
+                 E.makePass,
               [RKC.bH5D5S6C, RKC.bH5D5S6D])
            , (setUpAuctionsS,
               do RKC.b3014S5C
-                 makePass
+                 E.makePass
                  RKC.b3014S5C5D
-                 makePass,
+                 E.makePass,
               [RKC.bS5C5D5H, RKC.bS5C5D6C, RKC.bS5C5D6D])
            , (setUpAuctionsS,
               do RKC.b3014S5D
-                 makePass
+                 E.makePass
                  RKC.b3014S5D5H
-                 makePass,
+                 E.makePass,
               [RKC.bS5D5H6C, RKC.bS5D5H6D, RKC.bS5D5H6H])
            ]
 
