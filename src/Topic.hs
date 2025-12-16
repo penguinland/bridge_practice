@@ -1,4 +1,4 @@
--- In order to add the State monad to the Situationable typeclass, we need this
+-- In order to add the State monad to the Collectable typeclass, we need this
 -- pragma. State is an alias for a trivial version of a more complicated monad,
 -- and the default compiler doesn't let that be in a type class because not all
 -- its arguments are type variables.
@@ -36,16 +36,16 @@ data Collection a = CollectionRaw a
 type Situations = Collection Situation
 
 
-class Situationable s where
+class Collectable s where
     wrap :: s -> Situations
 
-instance Situationable Situation where
+instance Collectable Situation where
     wrap = CollectionRaw
-instance (Situationable s) => Situationable [s] where
+instance (Collectable s) => Collectable [s] where
     wrap = CollectionList . map wrap
-instance (Situationable s) => Situationable (State StdGen s) where
+instance (Collectable s) => Collectable (State StdGen s) where
     wrap = CollectionState . fmap wrap
-instance Situationable Situations where
+instance Collectable Situations where
     wrap = id
 
 
