@@ -7,8 +7,6 @@
 -- and the thing doing the collecting. Consequently, we need to allow multiple
 -- parameters in typeclasses.
 {-# LANGUAGE MultiParamTypeClasses #-}
--- I think this adds support for (~) in type signatures?
-{-# LANGUAGE TypeFamilies #-}
 
 
 module Collection(
@@ -37,7 +35,7 @@ choose (CollectionState f) = f >>= choose
 class Collectable r c where
     collect :: c -> Collection r
 
-instance {-# OVERLAPPABLE #-} (a ~ b) => Collectable a b where
+instance Collectable r r where
     collect = CollectionRaw
 instance (Collectable r c) => Collectable r [c] where
     collect = CollectionList . map collect
