@@ -2,7 +2,7 @@ module Situation (
   Situation(..)
 , situation
 , (<~)
-, (<~<)
+, (<<~)
 ) where
 
 
@@ -45,5 +45,8 @@ situation r a c s d v = Situation r bidding deal answer (toDescription s) d v
 (<~) :: (Collectable a a) => State StdGen (a -> b) -> [a] -> State StdGen b
 sf <~ as = sf <*> (choose . collect $ as)
 
-(<~<) :: State StdGen (a -> b) -> [Collection a] -> State StdGen b
-sf <~< as = sf <*> (choose . collect $ as)
+-- TODO: Figure out how to generalize (<~) so that the second argument is a
+-- Collectable a c, then get rid of this. So far, I've been unable to convince
+-- the compiler that it's okay.
+(<<~) :: State StdGen (a -> b) -> [Collection a] -> State StdGen b
+sf <<~ as = sf <*> (choose . collect $ as)
