@@ -3,6 +3,14 @@
 -- and the default compiler doesn't let that be in a type class because not all
 -- its arguments are type variables.
 {-# LANGUAGE FlexibleInstances #-}
+-- The Collectable typeclass takes 2 type arguments: the thing being collected
+-- and the thing doing the collecting. Consequently, we need to allow multiple
+-- parameters in typeclasses.
+{-# LANGUAGE MultiParamTypeClasses #-}
+-- The type signature of wrap needs to bind some but not all type parameters to
+-- the Collectable typeclass; FlexibleContexts lets us do this.
+{-# LANGUAGE FlexibleContexts #-}
+
 
 module Topic(
   Situations  -- Note that constructors aren't public: use wrap instead.
@@ -36,17 +44,20 @@ data Collection a = CollectionRaw a
 type Situations = Collection Situation
 
 
-class Collectable s where
-    wrap :: s -> Situations
+class Collectable r c where
+    _collect :: c -> Collection r
 
-instance Collectable Situation where
-    wrap = CollectionRaw
-instance (Collectable s) => Collectable [s] where
-    wrap = CollectionList . map wrap
-instance (Collectable s) => Collectable (State StdGen s) where
-    wrap = CollectionState . fmap wrap
-instance Collectable Situations where
-    wrap = id
+instance Collectable r r where
+    _collect = CollectionRaw
+instance (Collectable r c) => Collectable r [c] where
+    _collect = CollectionList . map _collect
+instance (Collectable r c) => Collectable r (State StdGen c) where
+    _collect = CollectionState . fmap _collect
+instance Collectable r (Collection r) where
+    _collect = id
+
+wrap :: Collectable Situation c => c -> Situations
+wrap = _collect
 
 
 -- The most common Situation parameters are letting anyone be vulnerable, and
