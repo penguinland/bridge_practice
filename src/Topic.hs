@@ -103,12 +103,10 @@ makeTopic :: Showable a => a -> String -> Situations -> Topic
 makeTopic d n s = Topic (toDescription d) n s
 
 
-choose :: Topic -> State StdGen Situation
-choose = choose' . topicSituations
-  where
-    choose' (CollectionRaw s)   = return s
-    choose' (CollectionList ss) = pickItem ss >>= choose'
-    choose' (CollectionState f) = f >>= choose'
+choose :: Situations -> State StdGen Situation
+choose (CollectionRaw s)   = return s
+choose (CollectionList ss) = pickItem ss >>= choose
+choose (CollectionState f) = f >>= choose
 
 
 -- This should get re-enabled when we're ready to do the assertion it's for, but
