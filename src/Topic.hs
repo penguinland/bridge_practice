@@ -103,9 +103,9 @@ makeTopic :: Showable a => a -> String -> Situations -> Topic
 makeTopic d n s = Topic (toDescription d) n s
 
 
-choose :: Situations -> State StdGen Situation
-choose (CollectionRaw s)   = return s
-choose (CollectionList ss) = pickItem ss >>= choose
+choose :: Collection a -> State StdGen a
+choose (CollectionRaw a)   = return a
+choose (CollectionList aa) = pickItem aa >>= choose
 choose (CollectionState f) = f >>= choose
 
 
