@@ -78,47 +78,91 @@ setUpAuctionsH = [ collect $ do  -- Index 0
 
 setUpAuctionsS :: [Collection Action]  -- The next bid should be RKC for S
 setUpAuctionsS = [ collect $ do  -- Index 0
-                      J2N.b1S
-                      noInterference T.Spades
-                      E.suitLength T.Spades 4  -- Speed up performance
-                      J2N.b1S2N
-                      noInterference T.Spades
-                      -- Unlike index 1, don't force opener to have only 5
-                      -- spades. Maybe they have 6 and we're going to practice
-                      -- pretending to have the queen with a 10-card fit.
-                      J2N.b1S2N4S
-                      E.makePass
-                      E.pointRange 17 40
+                     J2N.b1S
+                     noInterference T.Spades
+                     E.suitLength T.Spades 4  -- Speed up performance
+                     J2N.b1S2N
+                     noInterference T.Spades
+                     -- Unlike index 1, don't force opener to have only 5
+                     -- spades. Maybe they have 6 and we're going to practice
+                     -- pretending to have the queen with a 10-card fit.
+                     J2N.b1S2N4S
+                     E.makePass
+                     E.pointRange 17 40
                  , collect $ do  -- Index 1
-                      J2N.b1S
-                      noInterference T.Spades
-                      E.suitLength T.Spades 4  -- Speed up performance
-                      J2N.b1S2N
-                      noInterference T.Spades
-                      E.suitLength T.Spades 5  -- Speed up performance
-                      J2N.b1S2N4H
-                      E.makePass
-                      E.pointRange 16 40
+                     J2N.b1S
+                     noInterference T.Spades
+                     E.suitLength T.Spades 4  -- Speed up performance
+                     J2N.b1S2N
+                     noInterference T.Spades
+                     E.suitLength T.Spades 5  -- Speed up performance
+                     J2N.b1S2N4H
+                     E.makePass
+                     E.pointRange 16 40
                  , collect $ do  -- Index 2
-                      NT.b1N
-                      NT.noInterference
-                      NT.b1N4H
-                      E.makePass
-                      NT.b1N4H4S
-                      E.makePass
-                      NT.slamInterest
-                 , collect $ do  -- Index 3
-                      NT.b1N
-                      NT.noInterference
-                      E.suitLength T.Spades 6  -- Speed up performance
-                      NT.b1N2H
-                      NT.noInterference
-                      E.suitLength T.Spades 3  -- Speed up performance
-                      NT.b1N2H2S
-                      E.makePass
-                      NT.b1N2H2S4S
-                      E.makePass
-                      E.pointRange 17 40
+                     NT.b1N
+                     NT.noInterference
+                     NT.b1N4H
+                     E.makePass
+                     NT.b1N4H4S
+                     E.makePass
+                     NT.slamInterest
+                 , collect $ [  -- Index 3
+                     -- Performance improvement: setting the specific length of
+                     -- suits can greatly speed up generating the deal. So, make
+                     -- RHO have between 2 and 5 clubs. Pick randomly between
+                     -- these before sending to the dealer engine. It should
+                     -- speed up generating the deal but not be noticed by the
+                     -- user.
+                     do NT.b1N
+                        NT.noInterference
+                        E.suitLength T.Spades 6
+                        NT.b1N2H
+                        E.suitLength T.Clubs 2
+                        NT.noInterference
+                        E.suitLength T.Spades 3
+                        NT.b1N2H2S
+                        E.makePass
+                        NT.b1N2H2S4S
+                        E.makePass
+                        E.pointRange 17 40
+                   , do NT.b1N
+                        NT.noInterference
+                        E.suitLength T.Spades 6
+                        NT.b1N2H
+                        E.suitLength T.Clubs 3
+                        NT.noInterference
+                        E.suitLength T.Spades 3
+                        NT.b1N2H2S
+                        E.makePass
+                        NT.b1N2H2S4S
+                        E.makePass
+                        E.pointRange 17 40
+                   , do NT.b1N
+                        NT.noInterference
+                        E.suitLength T.Spades 6
+                        NT.b1N2H
+                        E.suitLength T.Clubs 4
+                        NT.noInterference
+                        E.suitLength T.Spades 3
+                        NT.b1N2H2S
+                        E.makePass
+                        NT.b1N2H2S4S
+                        E.makePass
+                        E.pointRange 17 40
+                   , do NT.b1N
+                        NT.noInterference
+                        E.suitLength T.Spades 6
+                        NT.b1N2H
+                        E.suitLength T.Clubs 5
+                        NT.noInterference
+                        E.suitLength T.Spades 3
+                        NT.b1N2H2S
+                        E.makePass
+                        NT.b1N2H2S4S
+                        E.makePass
+                        E.pointRange 17 40
+                     ]
                  ]
 
 -- Auctions where the next bid should be RKC but the keycard teller should
@@ -146,7 +190,7 @@ setUpAuctionsSNoQ = [ collect $ do  -- Index 0
                          E.suitLength T.Spades 4  -- Speed up performance
                          J2N.b1S2N
                          noInterference T.Spades
-                         E.suitLength T.Hearts 5  -- With 6+, pretend to have Q
+                         E.suitLength T.Spades 5  -- With 6+, pretend to have Q
                          J2N.b1S2N4S
                          E.makePass
                          E.pointRange 17 40
@@ -226,32 +270,39 @@ signoff1430, signoff3014 :: Situations
           in situation "signoff" action signoffBid explanation
       in return inner <<~ setups <~ followups
     signoff1430' = wrapNW . join $ return signoff
-        <~ [ (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5H)
-                              , (RKC.b1430H5D, RKC.b1430H5D5H)
-                              , (RKC.bH5H,     RKC.bH5HP)
-                              -- If hearts are trump and partner bid 5S, we
-                              -- can't sign off. Handle this separately.
-                              --, (RKC.bH5S,     trouble)
-                              ])
-           , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5S)
-                              , (RKC.b1430S5D, RKC.b1430S5D5S)
-                              , (RKC.bS5H,     RKC.bS5H5S)
-                              , (RKC.bS5S,     RKC.bS5SP)
-                              ])
+        -- Empirically, most of the setups are very unlikely to only have 3
+        -- keycards. The only one that seems semi-common is 1M-2N-4M-4N, so
+        -- focus on that.
+        <~ [ (takeIndices_ [0] setUpAuctionsH,
+             [ (RKC.b1430H5C, RKC.b1430H5C5H)
+             , (RKC.b1430H5D, RKC.b1430H5D5H)
+             , (RKC.bH5H,     RKC.bH5HP)
+             -- If hearts are trump and partner bid 5S, we can't sign off.
+             -- Handle this separately.
+             --, (RKC.bH5S,     trouble)
+             ])
+           , (takeIndices_ [0] setUpAuctionsS,
+              [ (RKC.b1430S5C, RKC.b1430S5C5S)
+              , (RKC.b1430S5D, RKC.b1430S5D5S)
+              , (RKC.bS5H,     RKC.bS5H5S)
+              , (RKC.bS5S,     RKC.bS5SP)
+              ])
            ]
     signoff3014' = wrapNW . join $ return signoff
-        <~ [ (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5H)
-                              , (RKC.b3014H5D, RKC.b3014H5D5H)
-                              , (RKC.bH5H,     RKC.bH5HP)
-                              -- If hearts are trump and partner bid 5S, we
-                              -- can't sign off. Handle this separately.
-                              --, (RKC.bH5S,     trouble)
-                              ])
-           , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5S)
-                              , (RKC.b3014S5D, RKC.b3014S5D5S)
-                              , (RKC.bS5H,     RKC.bS5H5S)
-                              , (RKC.bS5S,     RKC.bS5SP)
-                              ])
+        <~ [ (takeIndices_ [0] setUpAuctionsH,
+              [ (RKC.b3014H5C, RKC.b3014H5C5H)
+              , (RKC.b3014H5D, RKC.b3014H5D5H)
+              , (RKC.bH5H,     RKC.bH5HP)
+              -- If hearts are trump and partner bid 5S, we can't sign off.
+              -- Handle this separately.
+              --, (RKC.bH5S,     trouble)
+              ])
+           , (takeIndices_ [0] setUpAuctionsS,
+              [ (RKC.b3014S5C, RKC.b3014S5C5S)
+              , (RKC.b3014S5D, RKC.b3014S5D5S)
+              , (RKC.bS5H,     RKC.bS5H5S)
+              , (RKC.bS5S,     RKC.bS5SP)
+              ])
            ]
 
 
@@ -410,22 +461,29 @@ queenNoKing1430, queenNoKing3014 :: Situations
           in situation "QnoK" action signoff explanation
       in return inner <<~ setups <~ followups
     queenNoKing1430' = wrapNW . join $ return queenNoKing
-        <~ [ (setUpAuctionsH, [ (RKC.b1430H5C, RKC.b1430H5C5D, RKC.bH5C5D6H)
-                              -- Have separate commentary for this one
-                              --, (RKC.b1430H5D, RKC.b1430H5D5S, RKC.bH5D5S5N)
-                              ])
-           , (setUpAuctionsS, [ (RKC.b1430S5C, RKC.b1430S5C5D, RKC.bS5C5D6S)
-                              , (RKC.b1430S5D, RKC.b1430S5D5H, RKC.bS5D5H6S)
-                              ])
+        -- Performance improvement: empirically, an auction starting
+        -- 1N-4D-4H-4N, the 1N bidder nearly always has a side-suit king. So,
+        -- skip those setups (index 2).
+        <~ [ (takeIndices_ [0, 1, 3] setUpAuctionsH,
+              [ (RKC.b1430H5C, RKC.b1430H5C5D, RKC.bH5C5D6H)
+              -- Have separate commentary for this one
+              --, (RKC.b1430H5D, RKC.b1430H5D5S, RKC.bH5D5S5N)
+              ])
+           , (takeIndices_ [0, 1, 3] setUpAuctionsS,
+              [ (RKC.b1430S5C, RKC.b1430S5C5D, RKC.bS5C5D6S)
+              , (RKC.b1430S5D, RKC.b1430S5D5H, RKC.bS5D5H6S)
+              ])
            ]
     queenNoKing3014' = wrapNW . join $ return queenNoKing
-        <~ [ (setUpAuctionsH, [ (RKC.b3014H5C, RKC.b3014H5C5D, RKC.bH5C5D6H)
-                              -- Have separate commentary for this one
-                              --, (RKC.b3014H5D, RKC.b3014H5D5S, RKC.bH5D5S5N)
-                              ])
-           , (setUpAuctionsS, [ (RKC.b3014S5C, RKC.b3014S5C5D, RKC.bS5C5D6S)
-                              , (RKC.b3014S5D, RKC.b3014S5D5H, RKC.bS5D5H6S)
-                              ])
+        <~ [ (takeIndices_ [0, 1, 3] setUpAuctionsH,
+              [ (RKC.b3014H5C, RKC.b3014H5C5D, RKC.bH5C5D6H)
+              -- Have separate commentary for this one
+              --, (RKC.b3014H5D, RKC.b3014H5D5S, RKC.bH5D5S5N)
+              ])
+           , (takeIndices_ [0, 1, 3] setUpAuctionsS,
+              [ (RKC.b3014S5C, RKC.b3014S5C5D, RKC.bS5C5D6S)
+              , (RKC.b3014S5D, RKC.b3014S5D5H, RKC.bS5D5H6S)
+              ])
            ]
 
 
