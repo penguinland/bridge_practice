@@ -59,8 +59,10 @@ setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       E.forbid $ E.hasControl T.Spades
                  , do NT.b1N  -- Index 3
                       NT.noInterference
+                      E.suitLength T.Hearts 6  -- Speed up performance
                       NT.b1N2D
-                      E.makePass
+                      NT.noInterference
+                      E.suitLength T.Hearts 3  -- Speed up performance
                       NT.b1N2D2H
                       E.makePass
                       NT.b1N2D2H4H
@@ -99,8 +101,10 @@ setUpAuctionsS = [ do J2N.b1S  -- Index 0
                       NT.slamInterest
                  , do NT.b1N  -- Index 3
                       NT.noInterference
+                      E.suitLength T.Spades 6  -- Speed up performance
                       NT.b1N2H
-                      E.makePass
+                      NT.noInterference
+                      E.suitLength T.Spades 3  -- Speed up performance
                       NT.b1N2H2S
                       E.makePass
                       NT.b1N2H2S4S
