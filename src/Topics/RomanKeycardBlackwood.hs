@@ -257,10 +257,10 @@ oddVoid = let
     wrapNW . join $ return sit
         <~ [ -- The keycard teller has already shown a natural diamond suit:
              -- can't have a void in diamonds
-             ([setUpAuctionsH !! 1], [RKC.bH6C, RKC.bH6H])
+             (takeIndices_ [1] setUpAuctionsH, [RKC.bH6C, RKC.bH6H])
              -- The keycard teller has already shown a natural heart suit: can't
              -- have a void in hearts
-           , ([setUpAuctionsS !! 1], [RKC.bS6C, RKC.bS6D])
+           , (takeIndices_ [1] setUpAuctionsS, [RKC.bS6C, RKC.bS6D])
            ]
 
 
