@@ -5,7 +5,6 @@
 
 module Topic(
   Situations  -- Note that constructors aren't public: use wrap instead.
-, Collectable(..)
 , wrap
 , wrapDlr
 , wrapNW
