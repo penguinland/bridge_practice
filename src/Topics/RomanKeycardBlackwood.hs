@@ -107,62 +107,18 @@ setUpAuctionsS = [ collect $ do  -- Index 0
                      NT.b1N4H4S
                      E.makePass
                      NT.slamInterest
-                 , collect $ [  -- Index 3
-                     -- Performance improvement: setting the specific length of
-                     -- suits can greatly speed up generating the deal. So, make
-                     -- RHO have between 2 and 5 clubs. Pick randomly between
-                     -- these before sending to the dealer engine. It should
-                     -- speed up generating the deal but not be noticed by the
-                     -- user.
-                     do NT.b1N
-                        NT.noInterference
-                        E.suitLength T.Spades 6
-                        NT.b1N2H
-                        E.suitLength T.Clubs 2
-                        NT.noInterference
-                        E.suitLength T.Spades 3
-                        NT.b1N2H2S
-                        E.makePass
-                        NT.b1N2H2S4S
-                        E.makePass
-                        E.pointRange 17 40
-                   , do NT.b1N
-                        NT.noInterference
-                        E.suitLength T.Spades 6
-                        NT.b1N2H
-                        E.suitLength T.Clubs 3
-                        NT.noInterference
-                        E.suitLength T.Spades 3
-                        NT.b1N2H2S
-                        E.makePass
-                        NT.b1N2H2S4S
-                        E.makePass
-                        E.pointRange 17 40
-                   , do NT.b1N
-                        NT.noInterference
-                        E.suitLength T.Spades 6
-                        NT.b1N2H
-                        E.suitLength T.Clubs 4
-                        NT.noInterference
-                        E.suitLength T.Spades 3
-                        NT.b1N2H2S
-                        E.makePass
-                        NT.b1N2H2S4S
-                        E.makePass
-                        E.pointRange 17 40
-                   , do NT.b1N
-                        NT.noInterference
-                        E.suitLength T.Spades 6
-                        NT.b1N2H
-                        E.suitLength T.Clubs 5
-                        NT.noInterference
-                        E.suitLength T.Spades 3
-                        NT.b1N2H2S
-                        E.makePass
-                        NT.b1N2H2S4S
-                        E.makePass
-                        E.pointRange 17 40
-                     ]
+                 , collect $ do  -- Index 3
+                    NT.b1N
+                    NT.noInterference
+                    E.suitLength T.Spades 6
+                    NT.b1N2H
+                    NT.noInterference
+                    E.suitLength T.Spades 3
+                    NT.b1N2H2S
+                    E.makePass
+                    NT.b1N2H2S4S
+                    E.makePass
+                    E.pointRange 17 40
                  ]
 
 -- Auctions where the next bid should be RKC but the keycard teller should
