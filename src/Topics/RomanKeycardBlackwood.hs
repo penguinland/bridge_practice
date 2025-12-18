@@ -396,9 +396,10 @@ queenNoKing1430, queenNoKing3014 :: Situations
       in return inner <~ setups <~ followups
     -- Performance improvement: empirically, an auction starting 1N-4D-4H-4N,
     -- the 1N bidder nearly always has a side-suit king. So, skip those setups
-    -- (index 2). Same with auctions starting 1N-2D-2H-4H
-    setupsH = takeIndices_ [0, 1] setUpAuctionsH
-    setupsS = takeIndices_ [0, 1] setUpAuctionsS
+    -- (index 2). Same with auctions starting 1N-2D-2H-4H, and auctions starting
+    -- 1H-2N-4D
+    setupsH = takeIndices_ [0] setUpAuctionsH
+    setupsS = takeIndices_ [0] setUpAuctionsS
     queenNoKing1430' = wrapNW . join $ return queenNoKing
         <~ [ (setupsH, [ (RKC.b1430H5C, RKC.b1430H5C5D, RKC.bH5C5D6H)
                        -- Have separate commentary for this one
