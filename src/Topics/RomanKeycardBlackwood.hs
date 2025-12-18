@@ -41,7 +41,7 @@ setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       E.suitLength T.Hearts 5  -- Speed up performance
                       J2N.b1H2N4H
                       E.makePass
-                      E.pointRange 17 40
+                      E.alternatives [E.pointRange 17 40, E.maxLoserCount 5]
                  , do J2N.b1H  -- Index 1
                       noInterference T.Hearts
                       E.suitLength T.Hearts 4  -- Speed up performance
@@ -50,7 +50,7 @@ setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       E.suitLength T.Hearts 5  -- Speed up performance
                       J2N.b1H2N4D
                       E.makePass
-                      E.pointRange 16 40
+                      E.alternatives [E.pointRange 16 40, E.maxLoserCount 5]
                  , do NT.b1N  -- Index 2
                       NT.noInterference
                       NT.b1N4D
@@ -86,7 +86,7 @@ setUpAuctionsS = [ do J2N.b1S  -- Index 0
                       E.suitLength T.Spades 5  -- Speed up performance
                       J2N.b1S2N4S
                       E.makePass
-                      E.pointRange 17 40
+                      E.alternatives [E.pointRange 17 40, E.maxLoserCount 5]
                  , do J2N.b1S  -- Index 1
                       noInterference T.Spades
                       E.suitLength T.Spades 4  -- Speed up performance
@@ -95,7 +95,7 @@ setUpAuctionsS = [ do J2N.b1S  -- Index 0
                       E.suitLength T.Spades 5  -- Speed up performance
                       J2N.b1S2N4H
                       E.makePass
-                      E.pointRange 16 40
+                      E.alternatives [E.pointRange 16 40, E.maxLoserCount 5]
                  , do NT.b1N  -- Index 2
                       NT.noInterference
                       NT.b1N4H
