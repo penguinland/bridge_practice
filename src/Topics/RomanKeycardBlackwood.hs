@@ -34,9 +34,11 @@ setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       E.suitLength T.Hearts 4  -- Speed up performance
                       J2N.b1H2N
                       noInterference T.Hearts
-                      -- Unlike index 1, don't force opener to have only 5
-                      -- hearts. Maybe they have 6 and we're going to practice
-                      -- pretending to have the queen with a 10-card fit.
+                      -- NOTE: We can't use this setup for times when we have a
+                      -- 10-card fit and want to pretend we have the queen. Redo
+                      -- this auction separately but set the heart length to 6
+                      -- for that.
+                      E.suitLength T.Hearts 5  -- Speed up performance
                       J2N.b1H2N4H
                       E.makePass
                       E.pointRange 17 40
@@ -77,9 +79,11 @@ setUpAuctionsS = [ do J2N.b1S  -- Index 0
                       E.suitLength T.Spades 4  -- Speed up performance
                       J2N.b1S2N
                       noInterference T.Spades
-                      -- Unlike index 1, don't force opener to have only 5
-                      -- spades. Maybe they have 6 and we're going to practice
-                      -- pretending to have the queen with a 10-card fit.
+                      -- NOTE: We can't use this setup for times when we have a
+                      -- 10-card fit and want to pretend we have the queen. Redo
+                      -- this auction separately but set the spade length to 6
+                      -- for that.
+                      E.suitLength T.Spades 5  -- Speed up performance
                       J2N.b1S2N4S
                       E.makePass
                       E.pointRange 17 40
