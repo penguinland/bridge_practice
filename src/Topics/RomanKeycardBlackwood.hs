@@ -313,8 +313,10 @@ queenAsk1430, queenAsk3014 :: Situations
     -- Performance improvement: auctions starting 1N-2D-2H-4H-4N only generate
     -- queen-asks at a rate around 1 in 3 million boards, so sometimes time out
     -- after 10 million boards without finding one. Skip those.
-    setupsH = takeIndices_ [0, 1, 2] setUpAuctionsH
-    setupsS = takeIndices_ [0, 1, 2] setUpAuctionsS
+    -- Also, auctions starting 1H-2N-4D-4N occur about one in 4 million times.
+    -- So, skip index 1 also.
+    setupsH = takeIndices_ [0, 2] setUpAuctionsH
+    setupsS = takeIndices_ [0, 2] setUpAuctionsS
     queenAsk1430' = wrapNW . join $ return queenAsk
         <~ [ (setupsH, RKC.b1430H5C, RKC.b1430H5C5D, False)
            , (setupsH, RKC.b1430H5D, RKC.b1430H5D5S, True)
@@ -469,9 +471,10 @@ queenKing1430, queenKing3014 :: Situations
           in situation "QK" action answer explanation
       in return inner <~ setups <~ followups
     -- Performance improvement: auctions starting 1N-2D-2H-4H are very unlikely
-    -- to show up here. So, skip index 3.
-    setupsH = takeIndices_ [0, 1, 2] setUpAuctionsH
-    setupsS = takeIndices_ [0, 1, 2] setUpAuctionsS
+    -- to show up here. So, skip index 3. Also 1H-2N-4D-4N is about a 1-in-5M
+    -- chance, so skip index 1.
+    setupsH = takeIndices_ [0, 2] setUpAuctionsH
+    setupsS = takeIndices_ [0, 2] setUpAuctionsS
     queenKing1430' = wrapNW . join $ return queenKing
         <~ [ (setupsH,
               do RKC.b1430H5C
