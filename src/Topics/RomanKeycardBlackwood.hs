@@ -441,8 +441,9 @@ queenNoKing5N1430, queenNoKing5N3014 :: Situations
       in situation "QnoK5S" action RKC.bH5D5S5N explanation
     -- Performance improvement: empirically, an auction starting 1N-4D-4H-4N,
     -- the 1N bidder nearly always has a side-suit king. So, skip those setups
-    -- (index 2). Same with auctions starting 1N-2D-2H-4H
-    setupsH = takeIndices_ [0, 1] setUpAuctionsH
+    -- (index 2). Same with auctions starting 1N-2D-2H-4H. Auctions starting
+    -- 1H-2N-4D-4N are also very rare, about one in every 8 million deals.
+    setupsH = takeIndices_ [0] setUpAuctionsH
     queenNoKing1430' = wrapNW $
         (return $ queenNoKing RKC.b1430H5D RKC.b1430H5D5S) <~ setupsH
     queenNoKing3014' = wrapNW $
