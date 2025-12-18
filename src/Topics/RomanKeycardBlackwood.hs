@@ -7,11 +7,10 @@ import Action(Action)
 import qualified Bids.Jacoby2NT as J2N
 import qualified Bids.OneNotrump as NT
 import qualified Bids.RomanKeycardBlackwood as RKC
-import Collection(Collection, collect)
 import CommonBids(andNextBidderIs, noInterference)
 import qualified EDSL as E
 import Output((.+))
-import Situation(situation, (<~), (<<~))
+import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, wrapNW, Situations, makeTopic)
 
@@ -29,9 +28,8 @@ takeIndices_ indices values = takeIndices' values (sort indices)
 -- a player shows a void, we need to filter out only the auctions in which that
 -- player could possibly have a void.
 
-setUpAuctionsH :: [Collection Action]  -- The next bid should be RKC for H
-setUpAuctionsH = [ collect $ do  -- Index 0
-                      J2N.b1H
+setUpAuctionsH :: [Action]  -- The next bid should be RKC for H
+setUpAuctionsH = [ do J2N.b1H  -- Index 0
                       noInterference T.Hearts
                       E.suitLength T.Hearts 4  -- Speed up performance
                       J2N.b1H2N
@@ -42,8 +40,7 @@ setUpAuctionsH = [ collect $ do  -- Index 0
                       J2N.b1H2N4H
                       E.makePass
                       E.pointRange 17 40
-                 , collect $ do  -- Index 1
-                      J2N.b1H
+                 , do J2N.b1H  -- Index 1
                       noInterference T.Hearts
                       E.suitLength T.Hearts 4  -- Speed up performance
                       J2N.b1H2N
@@ -52,8 +49,7 @@ setUpAuctionsH = [ collect $ do  -- Index 0
                       J2N.b1H2N4D
                       E.makePass
                       E.pointRange 16 40
-                 , collect $ do  -- Index 2
-                      NT.b1N
+                 , do NT.b1N  -- Index 2
                       NT.noInterference
                       NT.b1N4D
                       E.makePass
@@ -61,8 +57,7 @@ setUpAuctionsH = [ collect $ do  -- Index 0
                       E.makePass
                       NT.slamInterest
                       E.forbid $ E.hasControl T.Spades
-                 , collect $ do  -- Index 3
-                      NT.b1N
+                 , do NT.b1N  -- Index 3
                       NT.noInterference
                       E.suitLength T.Hearts 6  -- Speed up performance
                       NT.b1N2D
@@ -76,56 +71,51 @@ setUpAuctionsH = [ collect $ do  -- Index 0
                       E.pointRange 17 40
                  ]
 
-setUpAuctionsS :: [Collection Action]  -- The next bid should be RKC for S
-setUpAuctionsS = [ collect $ do  -- Index 0
-                     J2N.b1S
-                     noInterference T.Spades
-                     E.suitLength T.Spades 4  -- Speed up performance
-                     J2N.b1S2N
-                     noInterference T.Spades
-                     -- Unlike index 1, don't force opener to have only 5
-                     -- spades. Maybe they have 6 and we're going to practice
-                     -- pretending to have the queen with a 10-card fit.
-                     J2N.b1S2N4S
-                     E.makePass
-                     E.pointRange 17 40
-                 , collect $ do  -- Index 1
-                     J2N.b1S
-                     noInterference T.Spades
-                     E.suitLength T.Spades 4  -- Speed up performance
-                     J2N.b1S2N
-                     noInterference T.Spades
-                     E.suitLength T.Spades 5  -- Speed up performance
-                     J2N.b1S2N4H
-                     E.makePass
-                     E.pointRange 16 40
-                 , collect $ do  -- Index 2
-                     NT.b1N
-                     NT.noInterference
-                     NT.b1N4H
-                     E.makePass
-                     NT.b1N4H4S
-                     E.makePass
-                     NT.slamInterest
-                 , collect $ do  -- Index 3
-                    NT.b1N
-                    NT.noInterference
-                    E.suitLength T.Spades 6
-                    NT.b1N2H
-                    NT.noInterference
-                    E.suitLength T.Spades 3
-                    NT.b1N2H2S
-                    E.makePass
-                    NT.b1N2H2S4S
-                    E.makePass
-                    E.pointRange 17 40
+setUpAuctionsS :: [Action]  -- The next bid should be RKC for S
+setUpAuctionsS = [ do J2N.b1S  -- Index 0
+                      noInterference T.Spades
+                      E.suitLength T.Spades 4  -- Speed up performance
+                      J2N.b1S2N
+                      noInterference T.Spades
+                      -- Unlike index 1, don't force opener to have only 5
+                      -- spades. Maybe they have 6 and we're going to practice
+                      -- pretending to have the queen with a 10-card fit.
+                      J2N.b1S2N4S
+                      E.makePass
+                      E.pointRange 17 40
+                 , do J2N.b1S  -- Index 1
+                      noInterference T.Spades
+                      E.suitLength T.Spades 4  -- Speed up performance
+                      J2N.b1S2N
+                      noInterference T.Spades
+                      E.suitLength T.Spades 5  -- Speed up performance
+                      J2N.b1S2N4H
+                      E.makePass
+                      E.pointRange 16 40
+                 , do NT.b1N  -- Index 2
+                      NT.noInterference
+                      NT.b1N4H
+                      E.makePass
+                      NT.b1N4H4S
+                      E.makePass
+                      NT.slamInterest
+                 , do NT.b1N  -- Index 3
+                      NT.noInterference
+                      E.suitLength T.Spades 6
+                      NT.b1N2H
+                      NT.noInterference
+                      E.suitLength T.Spades 3
+                      NT.b1N2H2S
+                      E.makePass
+                      NT.b1N2H2S4S
+                      E.makePass
+                      E.pointRange 17 40
                  ]
 
 -- Auctions where the next bid should be RKC but the keycard teller should
 -- definitely not lie and pretend they have the queen if they don't
-setUpAuctionsHNoQ :: [Collection Action]
-setUpAuctionsHNoQ = [ collect $ do  -- Index 0
-                         J2N.b1H
+setUpAuctionsHNoQ :: [Action]
+setUpAuctionsHNoQ = [ do J2N.b1H  -- Index 0
                          noInterference T.Hearts
                          E.suitLength T.Hearts 4  -- Speed up performance
                          J2N.b1H2N
@@ -139,9 +129,8 @@ setUpAuctionsHNoQ = [ collect $ do  -- Index 0
 
 -- Auctions where the next bid should be RKC but the keycard teller should
 -- definitely not lie and pretend they have the queen if they don't
-setUpAuctionsSNoQ :: [Collection Action]
-setUpAuctionsSNoQ = [ collect $ do  -- Index 0
-                         J2N.b1S
+setUpAuctionsSNoQ :: [Action]
+setUpAuctionsSNoQ = [ do J2N.b1S  -- Index 0
                          noInterference T.Spades
                          E.suitLength T.Spades 4  -- Speed up performance
                          J2N.b1S2N
@@ -165,7 +154,7 @@ initiate = let
             "two of them, we'll sign off at the 5 level."
       in situation "init" action RKC.b4N explanation
   in
-    wrapNW $ return sit <<~ (setUpAuctionsH ++ setUpAuctionsS)
+    wrapNW $ return sit <~ (setUpAuctionsH ++ setUpAuctionsS)
 
 
 firstResponse1430, firstResponse3014 :: Situations
@@ -182,7 +171,7 @@ firstResponse1430, firstResponse3014 :: Situations
                 "Partner has bid " .+ RKC.b4N .+ " to ask how many " .+
                 "keycards we have. Give them the answer."
           in situation "resp" action response explanation
-      in return inner <<~ setups <~ responses
+      in return inner <~ setups <~ responses
     firstResponse1430' = wrapNW . join $ return firstResponse
         <~ [ (setUpAuctionsH, [ RKC.b1430H5C
                               , RKC.b1430H5D
@@ -224,7 +213,7 @@ signoff1430, signoff3014 :: Situations
                 "We asked for keycards, but learned we're missing 2 of " .+
                 "them. Slam is likely to fail: sign off at the 5 level."
           in situation "signoff" action signoffBid explanation
-      in return inner <<~ setups <~ followups
+      in return inner <~ setups <~ followups
     signoff1430' = wrapNW . join $ return signoff
         -- Empirically, most of the setups are very unlikely to only have 3
         -- keycards. The only one that seems semi-common is 1M-2N-4M-4N, so
@@ -279,7 +268,7 @@ oddVoid = let
                 "final contract, either in our trump suit or notrump, " .+
                 "either in small or grand slam."
           in situation "oddV" action response explanation
-      in return inner <<~ setups <~ responses
+      in return inner <~ setups <~ responses
   in
     wrapNW . join $ return sit
         <~ [ -- The keycard teller has already shown a natural diamond suit:
@@ -307,7 +296,7 @@ evenVoid = let
                 "the final contract, either in our trump suit or notrump, " .+
                 "either in small or grand slam."
           in situation "evenV" action response explanation
-      in return inner <<~ setups
+      in return inner <~ setups
   in
     wrapNW . join $ return sit <~ [ (takeIndices_ [1] setUpAuctionsH, RKC.bH5N)
                                   , (takeIndices_ [1] setUpAuctionsS, RKC.bS5N)
@@ -336,7 +325,7 @@ queenAsk1430, queenAsk3014 :: Situations
                          "okay with that no matter what partner does.)"
                     else "" .+ "")  -- Use (.+) to get the types consistent
           in situation "qask" action askingBid explanation
-      in return inner <<~ setups
+      in return inner <~ setups
     -- Performance improvement: auctions starting 1N-2D-2H-4H-4N only generate
     -- queen-asks at a rate around 1 in 3 million boards, so sometimes time out
     -- after 10 million boards without finding one. Skip those.
@@ -375,7 +364,7 @@ noQueen1430, noQueen3014 :: Situations
                 "Partner will likely pass, but could correct to other " .+
                 "contracts in rare situations."
           in situation "noQ" action signoff explanation
-      in return inner <<~ setups <~ followups
+      in return inner <~ setups <~ followups
     noQueen1430' = wrapNW . join $ return noQueen
         <~ [ (setUpAuctionsHNoQ, [ (RKC.b1430H5C, RKC.b1430H5C5D, RKC.bH5C5D5H)
                                  , (RKC.b1430H5D, RKC.b1430H5D5S, RKC.bH5D5S6H)
@@ -420,7 +409,7 @@ queenNoKing1430, queenNoKing3014 :: Situations
                 "you wanted to bid " .+ T.Bid 5 T.Notrump .+ " here instead " .+
                 "of " .+ signoff .+ ", that might be the right choice.)"
           in situation "QnoK" action signoff explanation
-      in return inner <<~ setups <~ followups
+      in return inner <~ setups <~ followups
     -- Performance improvement: empirically, an auction starting 1N-4D-4H-4N,
     -- the 1N bidder nearly always has a side-suit king. So, skip those setups
     -- (index 2). Same with auctions starting 1N-2D-2H-4H
@@ -467,9 +456,9 @@ queenNoKing5N1430, queenNoKing5N3014 :: Situations
             RKC.bH5D5S5N .+ " instead."
       in situation "QnoK5S" action RKC.bH5D5S5N explanation
     queenNoKing1430' = wrapNW $
-        (return $ queenNoKing RKC.b1430H5D RKC.b1430H5D5S) <<~ setUpAuctionsH
+        (return $ queenNoKing RKC.b1430H5D RKC.b1430H5D5S) <~ setUpAuctionsH
     queenNoKing3014' = wrapNW $
-        (return $ queenNoKing RKC.b3014H5D RKC.b3014H5D5S) <<~ setUpAuctionsH
+        (return $ queenNoKing RKC.b3014H5D RKC.b3014H5D5S) <~ setUpAuctionsH
 
 
 queenKing1430, queenKing3014 :: Situations
@@ -488,7 +477,7 @@ queenKing1430, queenKing3014 :: Situations
                 "to show that one and deny any kings in cheaper suits. " .+
                 "Partner will place the final contract from here."
           in situation "QK" action answer explanation
-      in return inner <<~ setups <~ followups
+      in return inner <~ setups <~ followups
     -- Performance improvement: auctions starting 1N-2D-2H-4H are very unlikely
     -- to show up here. So, skip index 3.
     setupsH = takeIndices_ [0, 1, 2] setUpAuctionsH
