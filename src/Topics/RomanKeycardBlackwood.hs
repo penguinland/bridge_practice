@@ -117,34 +117,14 @@ setUpAuctionsS = [ do J2N.b1S  -- Index 0
                  ]
 
 -- Auctions where the next bid should be RKC but the keycard teller should
--- definitely not lie and pretend they have the queen if they don't
+-- definitely not lie and pretend they have the queen if they don't.
+-- Note that index 1 could work also, but empirically that only has no queen
+-- about once every 7 million deals, so skip it for performance reasons.
 setUpAuctionsHNoQ :: [Action]
-setUpAuctionsHNoQ = [ do J2N.b1H  -- Index 0
-                         noInterference T.Hearts
-                         E.suitLength T.Hearts 4  -- Speed up performance
-                         J2N.b1H2N
-                         noInterference T.Hearts
-                         E.suitLength T.Hearts 5  -- With 6+, pretend to have Q
-                         J2N.b1H2N4H
-                         E.makePass
-                         E.pointRange 17 40
-                    , setUpAuctionsH !! 1  -- Index 1
-                    ]
+setUpAuctionsHNoQ = takeIndices_ [0] setUpAuctionsH
 
--- Auctions where the next bid should be RKC but the keycard teller should
--- definitely not lie and pretend they have the queen if they don't
 setUpAuctionsSNoQ :: [Action]
-setUpAuctionsSNoQ = [ do J2N.b1S  -- Index 0
-                         noInterference T.Spades
-                         E.suitLength T.Spades 4  -- Speed up performance
-                         J2N.b1S2N
-                         noInterference T.Spades
-                         E.suitLength T.Spades 5  -- With 6+, pretend to have Q
-                         J2N.b1S2N4S
-                         E.makePass
-                         E.pointRange 17 40
-                    , setUpAuctionsS !! 1  -- Index 1
-                    ]
+setUpAuctionsSNoQ = takeIndices_ [0] setUpAuctionsS
 
 
 initiate :: Situations
