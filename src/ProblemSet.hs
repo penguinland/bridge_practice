@@ -9,10 +9,11 @@ import Data.Functor.Identity(runIdentity)
 import System.IO(hFlush, stdout)
 import System.Random(StdGen)
 
+import Collection(choose)
 import Random(pickItem)
 import Situation(Situation(..))
 import SituationInstance(instantiate, SituationInstance)
-import Topic(Topic, refName, choose)
+import Topic(Topic(..), refName)
 import Types(StIO)
 
 
@@ -36,7 +37,8 @@ generate n topics = sequence . map getOneSituation $ [1..n]
         -- We use mapStateT to convert from a `State StdGen Situation` to a
         -- `StIO Situation`. This lets us keep the IO monad out of the rest of
         -- the code.
-        situation <- mapStateT (return . runIdentity) $ choose topic
+        situation <- mapStateT (return . runIdentity) . choose .
+                     topicSituations $ topic
         let ref = reference (refName topic) (sitRef situation) gen
         maybeSit <- instantiate ref situation
         case maybeSit of

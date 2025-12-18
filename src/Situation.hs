@@ -2,6 +2,7 @@ module Situation (
   Situation(..)
 , situation
 , (<~)
+, (<<~)
 ) where
 
 
@@ -9,9 +10,9 @@ import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
 import Action(Action, finish, extractLastCall, withholdBid)
+import Collection(choose, collect, Collectable, Collection)
 import DealerProg(DealerProg)
 import Output(Showable, Description, toDescription)
-import Random(pickItem)
 import Structures(Bidding)
 import Terminology(CompleteCall, Direction, Vulnerability)
 
@@ -38,5 +39,14 @@ situation r a c s d v = Situation r bidding deal answer (toDescription s) d v
     answer = extractLastCall c
 
 
-(<~) :: State StdGen (a -> b) -> [a] -> State StdGen b
-sf <~ as = sf <*> pickItem as
+-- Claude inserted the (Collectable a a) type constraint. It couldn't adequately
+-- explain to me _why_ that's important, but empirically it is (without it, you
+-- get compiler errors about overlapping instances for Collectable).
+(<~) :: (Collectable a a) => State StdGen (a -> b) -> [a] -> State StdGen b
+sf <~ as = sf <*> (choose . collect $ as)
+
+-- TODO: Figure out how to generalize (<~) so that the second argument is a
+-- Collectable a c, then get rid of this. So far, I've been unable to convince
+-- the compiler that it's okay.
+(<<~) :: State StdGen (a -> b) -> [Collection a] -> State StdGen b
+sf <<~ as = sf <*> (choose . collect $ as)

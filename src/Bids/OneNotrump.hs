@@ -89,7 +89,7 @@ maxNotrumpStrength = 17
 strengthNeededForGame :: Int
 strengthNeededForGame = 25
 strengthNeededForSlam :: Int
-strengthNeededForSlam = 30  -- TODO: is this the right number?
+strengthNeededForSlam = 29  -- TODO: is this the right number?
 
 gameForcing :: Action  -- Could be stronger
 gameForcing = pointRange (strengthNeededForGame - minNotrumpStrength) 40

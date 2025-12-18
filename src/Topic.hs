@@ -1,12 +1,10 @@
--- In order to add the State monad to the Situationable typeclass, we need this
--- pragma. State is an alias for a trivial version of a more complicated monad,
--- and the default compiler doesn't let that be in a type class because not all
--- its arguments are type variables.
-{-# LANGUAGE FlexibleInstances #-}
+-- The type signature of wrap needs to bind some but not all type parameters to
+-- the Collectable typeclass; FlexibleContexts lets us do this.
+{-# LANGUAGE FlexibleContexts #-}
+
 
 module Topic(
   Situations  -- Note that constructors aren't public: use wrap instead.
-, choose
 , wrap
 , wrapDlr
 , wrapNW
@@ -16,35 +14,26 @@ module Topic(
 , stdWrapSE
 , Topic(..)
 , makeTopic
-, collect
 ) where
 
-import Control.Monad.Trans.State.Strict(State, runState)
-import System.Random(StdGen, mkStdGen)
+import Control.Monad.Trans.State.Strict(State)
+import System.Random(StdGen)
 
+import Collection(Collection, collect, Collectable)
 import Output(Description, toDescription, Showable)
-import Random(pickItem)
 import Situation(Situation, (<~))
 import Terminology(
     Direction(..), allDirections, Vulnerability, allVulnerabilities)
 
 
-data Situations = RawSit Situation
-                | SitList [Situations]
-                | SitState (State StdGen Situations)
+type Situations = Collection Situation
 
-
-class Situationable s where
-    wrap :: s -> Situations
-
-instance Situationable Situation where
-    wrap = RawSit
-instance (Situationable s) => Situationable [s] where
-    wrap = SitList . map wrap
-instance (Situationable s) => Situationable (State StdGen s) where
-    wrap = SitState . fmap wrap
-instance Situationable Situations where
-    wrap = id
+-- Syntactic sugar: if you use `collect` nested multiple times to create a
+-- `Topic`, the type checker gets stuck with ambiguous type variables. Using
+-- `wrap` instead tells the type checker that we're wrapping a Situation,
+-- without needing to copy and paste type signatures dozens of times.
+wrap :: Collectable Situation c => c -> Situations
+wrap = collect
 
 
 -- The most common Situation parameters are letting anyone be vulnerable, and
@@ -90,21 +79,17 @@ makeTopic :: Showable a => a -> String -> Situations -> Topic
 makeTopic d n s = Topic (toDescription d) n s
 
 
-choose :: Topic -> State StdGen Situation
-choose = choose' . topicSituations
-  where
-    choose' (RawSit s)   = return s
-    choose' (SitList ss) = pickItem ss >>= choose'
-    choose' (SitState f) = f >>= choose'
-
-
+-- This should get re-enabled when we're ready to do the assertion it's for, but
+-- in the meantime I'm reusing the name elsewhere.
+{-
 -- This is used during compile-time assertions to ensure that every Situation
 -- within a Topic has a unique debug string.
 collect :: (Situation -> a) -> Topic -> [a]
 collect f = collect' . topicSituations
   where
-    collect' (RawSit s)  = [f s]
-    collect' (SitList l) = concatMap collect' l
-    -- We assume that all Situations you could generate from a SitState have the
+    collect' (CollectionRaw s)  = [f s]
+    collect' (CollectionList l) = concatMap collect' l
+    -- We assume that all Situations you could generate from a CollectionState have the
     -- same value within. If this changes, revisit this.
-    collect' (SitState s) = collect' . fst . flip runState (mkStdGen 0) $ s
+    collect' (CollectionState s) = collect' . fst . flip runState (mkStdGen 0) $ s
+-}

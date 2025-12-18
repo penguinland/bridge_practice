@@ -14,12 +14,13 @@ import Data.Tuple.Utils(thd3)
 -- of System.Random, this might break.
 import System.Random.Internal(StdGen(..))
 
+import Collection(choose)
 import DealerProg(toProgram)
 import Output(toMonospace)
 import Situation(Situation(..))
 import SituationInstance(instantiate)
 import SupportedTopics(topicList)
-import Topic(Topic(..), choose)
+import Topic(Topic(..))
 
 
 -- Example string to parse:
@@ -36,7 +37,7 @@ parse input = let
 
 debug :: Topic -> String -> StdGen -> IO String
 debug topic sitName rng = do
-    let (sit, rng') = runState (choose topic) rng
+    let (sit, rng') = runState (choose . topicSituations $ topic) rng
     when (sitName /= sitRef sit)
         (error "Assertion error: situation name doesn't match")
     (maybeSitInst, _) <- runStateT (instantiate "" sit) rng'
