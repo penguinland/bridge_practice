@@ -139,7 +139,7 @@ setUpAuctionsSNoQ = [ do J2N.b1S  -- Index 0
                          J2N.b1S2N4S
                          E.makePass
                          E.pointRange 17 40
-                    , setUpAuctionsH !! 1  -- Index 1
+                    , setUpAuctionsS !! 1  -- Index 1
                     ]
 
 
