@@ -439,10 +439,14 @@ queenNoKing5N1430, queenNoKing5N3014 :: Situations
             "the queen but no showable (minor-suit) king is to bid " .+
             RKC.bH5D5S5N .+ " instead."
       in situation "QnoK5S" action RKC.bH5D5S5N explanation
+    -- Performance improvement: empirically, an auction starting 1N-4D-4H-4N,
+    -- the 1N bidder nearly always has a side-suit king. So, skip those setups
+    -- (index 2). Same with auctions starting 1N-2D-2H-4H
+    setupsH = takeIndices_ [0, 1] setUpAuctionsH
     queenNoKing1430' = wrapNW $
-        (return $ queenNoKing RKC.b1430H5D RKC.b1430H5D5S) <~ setUpAuctionsH
+        (return $ queenNoKing RKC.b1430H5D RKC.b1430H5D5S) <~ setupsH
     queenNoKing3014' = wrapNW $
-        (return $ queenNoKing RKC.b3014H5D RKC.b3014H5D5S) <~ setUpAuctionsH
+        (return $ queenNoKing RKC.b3014H5D RKC.b3014H5D5S) <~ setupsH
 
 
 queenKing1430, queenKing3014 :: Situations
