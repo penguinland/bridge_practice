@@ -17,7 +17,7 @@ data Cacher = Cacher Topic (MVar [SituationInstance]) ThreadPool
 
 
 targetCacheSize_ :: Int
-targetCacheSize_ = 3
+targetCacheSize_ = 5
 
 
 newCacher :: ThreadPool -> Topic -> IO Cacher
