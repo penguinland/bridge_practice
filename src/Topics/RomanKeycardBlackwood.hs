@@ -381,17 +381,22 @@ queenAsk1430, queenAsk3014 :: Situations
                     else "" .+ "")  -- Use (.+) to get the types consistent
           in situation "qask" action askingBid explanation
       in return inner <<~ setups
+    -- Performance improvement: auctions starting 1N-2D-2H-4H-4N only generate
+    -- queen-asks at a rate around 1 in 3 million boards, so sometimes time out
+    -- after 10 million boards without finding one. Skip those.
+    setupsH = takeIndices_ [0, 1, 2] setUpAuctionsH
+    setupsS = takeIndices_ [0, 1, 2] setUpAuctionsS
     queenAsk1430' = wrapNW . join $ return queenAsk
-        <~ [ (setUpAuctionsH, RKC.b1430H5C, RKC.b1430H5C5D, False)
-           , (setUpAuctionsH, RKC.b1430H5D, RKC.b1430H5D5S, True)
-           , (setUpAuctionsS, RKC.b1430S5C, RKC.b1430S5C5D, False)
-           , (setUpAuctionsS, RKC.b1430S5D, RKC.b1430S5D5H, False)
+        <~ [ (setupsH, RKC.b1430H5C, RKC.b1430H5C5D, False)
+           , (setupsH, RKC.b1430H5D, RKC.b1430H5D5S, True)
+           , (setupsS, RKC.b1430S5C, RKC.b1430S5C5D, False)
+           , (setupsS, RKC.b1430S5D, RKC.b1430S5D5H, False)
            ]
     queenAsk3014' = wrapNW . join $ return queenAsk
-        <~ [ (setUpAuctionsH, RKC.b3014H5C, RKC.b3014H5C5D, False)
-           , (setUpAuctionsH, RKC.b3014H5D, RKC.b3014H5D5S, True)
-           , (setUpAuctionsS, RKC.b3014S5C, RKC.b3014S5C5D, False)
-           , (setUpAuctionsS, RKC.b3014S5D, RKC.b3014S5D5H, False)
+        <~ [ (setupsH, RKC.b3014H5C, RKC.b3014H5C5D, False)
+           , (setupsH, RKC.b3014H5D, RKC.b3014H5D5S, True)
+           , (setupsS, RKC.b3014S5C, RKC.b3014S5C5D, False)
+           , (setupsS, RKC.b3014S5D, RKC.b3014S5D5H, False)
            ]
 
 
@@ -460,30 +465,28 @@ queenNoKing1430, queenNoKing3014 :: Situations
                 "of " .+ signoff .+ ", that might be the right choice.)"
           in situation "QnoK" action signoff explanation
       in return inner <<~ setups <~ followups
+    -- Performance improvement: empirically, an auction starting 1N-4D-4H-4N,
+    -- the 1N bidder nearly always has a side-suit king. So, skip those setups
+    -- (index 2). Same with auctions starting 1N-2D-2H-4H
+    setupsH = takeIndices_ [0, 1] setUpAuctionsH
+    setupsS = takeIndices_ [0, 1] setUpAuctionsS
     queenNoKing1430' = wrapNW . join $ return queenNoKing
-        -- Performance improvement: empirically, an auction starting
-        -- 1N-4D-4H-4N, the 1N bidder nearly always has a side-suit king. So,
-        -- skip those setups (index 2).
-        <~ [ (takeIndices_ [0, 1, 3] setUpAuctionsH,
-              [ (RKC.b1430H5C, RKC.b1430H5C5D, RKC.bH5C5D6H)
-              -- Have separate commentary for this one
-              --, (RKC.b1430H5D, RKC.b1430H5D5S, RKC.bH5D5S5N)
-              ])
-           , (takeIndices_ [0, 1, 3] setUpAuctionsS,
-              [ (RKC.b1430S5C, RKC.b1430S5C5D, RKC.bS5C5D6S)
-              , (RKC.b1430S5D, RKC.b1430S5D5H, RKC.bS5D5H6S)
-              ])
+        <~ [ (setupsH, [ (RKC.b1430H5C, RKC.b1430H5C5D, RKC.bH5C5D6H)
+                       -- Have separate commentary for this one
+                       --, (RKC.b1430H5D, RKC.b1430H5D5S, RKC.bH5D5S5N)
+                       ])
+           , (setupsS, [ (RKC.b1430S5C, RKC.b1430S5C5D, RKC.bS5C5D6S)
+                       , (RKC.b1430S5D, RKC.b1430S5D5H, RKC.bS5D5H6S)
+                       ])
            ]
     queenNoKing3014' = wrapNW . join $ return queenNoKing
-        <~ [ (takeIndices_ [0, 1, 3] setUpAuctionsH,
-              [ (RKC.b3014H5C, RKC.b3014H5C5D, RKC.bH5C5D6H)
-              -- Have separate commentary for this one
-              --, (RKC.b3014H5D, RKC.b3014H5D5S, RKC.bH5D5S5N)
-              ])
-           , (takeIndices_ [0, 1, 3] setUpAuctionsS,
-              [ (RKC.b3014S5C, RKC.b3014S5C5D, RKC.bS5C5D6S)
-              , (RKC.b3014S5D, RKC.b3014S5D5H, RKC.bS5D5H6S)
-              ])
+        <~ [ (setupsH, [ (RKC.b3014H5C, RKC.b3014H5C5D, RKC.bH5C5D6H)
+                       -- Have separate commentary for this one
+                       --, (RKC.b3014H5D, RKC.b3014H5D5S, RKC.bH5D5S5N)
+                       ])
+           , (setupsS, [ (RKC.b3014S5C, RKC.b3014S5C5D, RKC.bS5C5D6S)
+                       , (RKC.b3014S5D, RKC.b3014S5D5H, RKC.bS5D5H6S)
+                       ])
            ]
 
 
@@ -530,26 +533,30 @@ queenKing1430, queenKing3014 :: Situations
                 "Partner will place the final contract from here."
           in situation "QK" action answer explanation
       in return inner <<~ setups <~ followups
+    -- Performance improvement: auctions starting 1N-2D-2H-4H are very unlikely
+    -- to show up here. So, skip index 3.
+    setupsH = takeIndices_ [0, 1, 2] setUpAuctionsH
+    setupsS = takeIndices_ [0, 1, 2] setUpAuctionsS
     queenKing1430' = wrapNW . join $ return queenKing
-        <~ [ (setUpAuctionsH,
+        <~ [ (setupsH,
               do RKC.b1430H5C
                  E.makePass
                  RKC.b1430H5C5D
                  E.makePass,
               [RKC.bH5C5D5S, RKC.bH5C5D6C, RKC.bH5C5D6D])
-           , (setUpAuctionsH,
+           , (setupsH,
               do RKC.b1430H5D
                  E.makePass
                  RKC.b1430H5D5S
                  E.makePass,
               [RKC.bH5D5S6C, RKC.bH5D5S6D])
-           , (setUpAuctionsS,
+           , (setupsS,
               do RKC.b1430S5C
                  E.makePass
                  RKC.b1430S5C5D
                  E.makePass,
               [RKC.bS5C5D5H, RKC.bS5C5D6C, RKC.bS5C5D6D])
-           , (setUpAuctionsS,
+           , (setupsS,
               do RKC.b1430S5D
                  E.makePass
                  RKC.b1430S5D5H
@@ -557,25 +564,25 @@ queenKing1430, queenKing3014 :: Situations
               [RKC.bS5D5H6C, RKC.bS5D5H6D, RKC.bS5D5H6H])
            ]
     queenKing3014' = wrapNW . join $ return queenKing
-        <~ [ (setUpAuctionsH,
+        <~ [ (setupsH,
               do RKC.b3014H5C
                  E.makePass
                  RKC.b3014H5C5D
                  E.makePass,
               [RKC.bH5C5D5S, RKC.bH5C5D6C, RKC.bH5C5D6D])
-           , (setUpAuctionsH,
+           , (setupsH,
               do RKC.b3014H5D
                  E.makePass
                  RKC.b3014H5D5S
                  E.makePass,
               [RKC.bH5D5S6C, RKC.bH5D5S6D])
-           , (setUpAuctionsS,
+           , (setupsS,
               do RKC.b3014S5C
                  E.makePass
                  RKC.b3014S5C5D
                  E.makePass,
               [RKC.bS5C5D5H, RKC.bS5C5D6C, RKC.bS5C5D6D])
-           , (setUpAuctionsS,
+           , (setupsS,
               do RKC.b3014S5D
                  E.makePass
                  RKC.b3014S5D5H
