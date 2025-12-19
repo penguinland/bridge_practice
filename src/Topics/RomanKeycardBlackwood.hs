@@ -3,7 +3,7 @@ module Topics.RomanKeycardBlackwood(topic1430, topic3014) where
 import Control.Monad(join)
 import Data.List(sort)
 
-import Action(Action, withholdBid)
+import Action(Action)
 import qualified Bids.Jacoby2NT as J2N
 import qualified Bids.OneNotrump as NT
 import qualified Bids.RomanKeycardBlackwood as RKC
@@ -532,8 +532,8 @@ queenKing1430, queenKing3014 :: Situations
 slamSignoff1430, slamSignoff3014 :: Situations
 (slamSignoff1430, slamSignoff3014) = (signoff1430, signoff3014)
   where
-    queenKing (setups, payoffs) = let
-        inner setup (middle, signoff) = let
+    signoff (setups, payoffs) = let
+        inner setup (middle, signoffBid) = let
             action = do
                 setup `andNextBidderIs` T.South
                 RKC.b4N
@@ -546,28 +546,30 @@ slamSignoff1430, slamSignoff3014 :: Situations
                 "sign off! (This system is not very nuanced. It's possible, " .+
                 "especially at matchpoints, that signing off in " .+
                 T.Bid 6 T.Notrump .+ " is the right choice instead.)"
-          in situation "slamSO" action signoff explanation
+          in situation "slamSO" action signoffBid explanation
       in return inner <~ setups <~ payoffs
     -- Per earlier situations, only index 0 is very efficient to generate no
     -- matter what.
     setupsH = takeIndices_ [0] setUpAuctionsH
     setupsS = takeIndices_ [0] setUpAuctionsS
-    signoff1430 = wrapNW . join $ return queenKing
-        <~ [ (setupsH, [ ( do RKC.b1430H5C
+    signoff1430 = wrapNW . join $ return signoff
+        <~ [ (setupsH, [ ( RKC.b1430H5C
                          , RKC.b1430H5C6H
                          )
-                         ( do RKC.b1430H5D
+                       , ( RKC.b1430H5D
                          , RKC.b1430H5D6H
                          )
-                        ])
-           , (setupsS, [ ( do RKC.b1430S5C
+                       ] )
+           , (setupsS, [ ( RKC.b1430S5C
                          , RKC.b1430S5C6S
                          )
-                         ( do RKC.b1430S5D
+                       , ( RKC.b1430S5D
                          , RKC.b1430S5D6S
                          )
-                        ])
+                       ] )
            ]
+    signoff3014 = wrapNW . join $ return signoff
+        <~ []
 
 
 
@@ -599,6 +601,7 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
                              , queenNoKing5N1430
                              ]
                       , queenKing1430
+                      , slamSignoff1430
                       ]
 
 topic3014 :: Topic
@@ -616,4 +619,5 @@ topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
                              , queenNoKing5N3014
                              ]
                       , queenKing3014
+                      , slamSignoff3014
                       ]
