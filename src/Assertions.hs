@@ -23,7 +23,13 @@ $(let dups = duplicatesOf . map (refName . thd3) $ topicList
     ("topics have duplicate debug names: " ++ show dups))
 
 
--- Something about $(...) seems to mess up indentation parsing, I think? If you
--- try adding newlines where they logically belong, this becomes unparseable.
-$(let assertUniqueNames topic = (let dups = (duplicatesOf . survey sitRef . topicSituations $ topic) in staticAssert (null dups) ("duplicate situation names for topic " ++ (toMonospace . topicName $ topic) ++ ": " ++ show dups))
-  in mconcatMapM (assertUniqueNames . thd3) $ topicList)
+$(let
+    assertUniqueNames topic = let
+        dups = (duplicatesOf . survey sitRef . topicSituations $ topic)
+        errorMessage = "duplicate situation names for topic " ++
+                       (toMonospace . topicName $ topic) ++ ": " ++
+                       show dups
+      in
+        staticAssert (null dups) errorMessage
+  in
+    mconcatMapM (assertUniqueNames . thd3) $ topicList)
