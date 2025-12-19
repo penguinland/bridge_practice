@@ -1,6 +1,6 @@
 module Topics.RomanKeycardBlackwood(topic1430, topic3014) where
 
-import Control.Monad(join)
+import Control.Monad(join, when)
 import Data.List(sort)
 
 import Action(Action)
@@ -780,6 +780,34 @@ slamSignoff1430, slamSignoff3014 :: Situations
 
 
 
+kingAsk :: Situations
+kingAsk = let
+    sit (response, hasQueen) = let
+        action = do
+            -- Start 1S-2N-4H
+            setUpAuctionsS !! 1 `andNextBidderIs` T.South
+            RKC.b4N
+            E.makePass
+            E.suitLength T.Spades 5
+            E.suitLength T.Hearts 5
+            _ <- response
+            E.makePass
+            E.suitLength T.Spades 4
+            E.keycardCount T.Spades 3 0
+            when (not hasQueen) (E.hasCard T.Spades 'Q')
+            E.soundHolding T.Hearts
+        bid = E.makeAlertableCall (T.Bid 5 T.Notrump) "side-suit king ask"
+        explanation =
+            "We have all the keycards and the queen of trump. We're going " .+
+            "to take 5 spade tricks, 5 heart tricks, and two minor-suit " .+
+            "aces. If partner has a minor-suit king, " .+ T.Bid 7 T.Notrump .+
+            " is a laydown. If they don't, then " .+ T.Bid 6 T.Notrump .+
+            " is a laydown. See how partner responds."
+      in situation "Kask" action bid explanation
+  in
+    wrapNW $ return sit <~ [(RKC.bS5H, False), (RKC.bS5S, True)]
+
+
 -- TODO:
 -- 5N as king ask - only if we're thinking about grand slam
 -- respond to 5N
@@ -807,6 +835,7 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
                                      ]
                       , queenKing1430
                       , slamSignoff1430
+                      , kingAsk
                       ]
 
 topic3014 :: Topic
@@ -823,4 +852,5 @@ topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
                                      ]
                       , queenKing3014
                       , slamSignoff3014
+                      , kingAsk
                       ]
