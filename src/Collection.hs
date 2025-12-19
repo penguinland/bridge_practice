@@ -77,10 +77,11 @@ weightedList items = WeightedList items total
 
 -- This is used during compile-time assertions to ensure that every Situation
 -- within a Topic has a unique debug string.
-survey :: (r -> a) -> Collection r -> [a]
-survey f (CollectionRaw val) = [f val]
-survey f (CollectionList l) = concatMap (survey f) l
--- We assume that all values you could generate from a CollectionState have the
--- same value within. If this changes, revisit this.
-survey f (CollectionState s) = survey f . fst . flip runState (mkStdGen 0) $ s
+survey :: (a -> b) -> Collection a -> [b]
+survey f (CollectionRaw val)                = [f val]
+survey f (CollectionList l)                 = concatMap (survey f) l
+survey f (CollectionState s)                =
+    -- We assume that all values you could generate from a CollectionState are
+    -- the same. If this changes, revisit this.
+    survey f . fst $ runState s (mkStdGen 0)
 survey f (CollectionWL (WeightedList wl _)) = concatMap (survey f . snd) wl
