@@ -638,39 +638,39 @@ slamSignoff1430, slamSignoff3014 :: Situations
                        ])
            ]
     signoff3014 = wrapNW . join $ return signoff
-        <~ [ (setupsH, [ ( RKC.b1430H5C
-                         , RKC.b1430H5C6H
+        <~ [ (setupsH, [ ( RKC.b3014H5C
+                         , RKC.b3014H5C6H
                          )
-                       , ( RKC.b1430H5D
-                         , RKC.b1430H5D6H
+                       , ( RKC.b3014H5D
+                         , RKC.b3014H5D6H
                          )
-                       , ( do RKC.b1430H5C
+                       , ( do RKC.b3014H5C
                               E.makePass
-                              RKC.b1430H5C5D
+                              RKC.b3014H5C5D
                               E.makePass
                               RKC.bH5C5D5H
-                         , RKC.b1430H5C5D5H6H
+                         , RKC.b3014H5C5D5H6H
                          )
-                       , ( do RKC.b1430H5C
+                       , ( do RKC.b3014H5C
                               E.makePass
-                              RKC.b1430H5C5D
+                              RKC.b3014H5C5D
                               E.makePass
                               RKC.bH5C5D5S
-                         , RKC.b1430H5C5D5S6H
+                         , RKC.b3014H5C5D5S6H
                          )
-                       , ( do RKC.b1430H5C
+                       , ( do RKC.b3014H5C
                               E.makePass
-                              RKC.b1430H5C5D
+                              RKC.b3014H5C5D
                               E.makePass
                               RKC.bH5C5D6C
-                         , RKC.b1430H5C5D6C6H
+                         , RKC.b3014H5C5D6C6H
                          )
-                       , ( do RKC.b1430H5C
+                       , ( do RKC.b3014H5C
                               E.makePass
-                              RKC.b1430H5C5D
+                              RKC.b3014H5C5D
                               E.makePass
                               RKC.bH5C5D6D
-                         , RKC.b1430H5C5D6D6H
+                         , RKC.b3014H5C5D6D6H
                          )
                        , ( RKC.bH5H
                          , RKC.bH5H6H
@@ -679,39 +679,39 @@ slamSignoff1430, slamSignoff3014 :: Situations
                          , RKC.bH5S6H
                          )
                        ])
-           , (setupsS, [ ( RKC.b1430S5C
-                         , RKC.b1430S5C6S
+           , (setupsS, [ ( RKC.b3014S5C
+                         , RKC.b3014S5C6S
                          )
-                       , ( RKC.b1430S5D
-                         , RKC.b1430S5D6S
+                       , ( RKC.b3014S5D
+                         , RKC.b3014S5D6S
                          )
-                       , ( do RKC.b1430S5C
+                       , ( do RKC.b3014S5C
                               E.makePass
-                              RKC.b1430S5C5D
+                              RKC.b3014S5C5D
                               E.makePass
                               RKC.bS5C5D5H
-                         , RKC.b1430S5C5D5H6S
+                         , RKC.b3014S5C5D5H6S
                          )
-                       , ( do RKC.b1430S5C
+                       , ( do RKC.b3014S5C
                               E.makePass
-                              RKC.b1430S5C5D
+                              RKC.b3014S5C5D
                               E.makePass
                               RKC.bS5C5D5S
-                         , RKC.b1430S5C5D5S6S
+                         , RKC.b3014S5C5D5S6S
                          )
-                       , ( do RKC.b1430S5C
+                       , ( do RKC.b3014S5C
                               E.makePass
-                              RKC.b1430S5C5D
+                              RKC.b3014S5C5D
                               E.makePass
                               RKC.bS5C5D6C
-                         , RKC.b1430S5C5D6C6S
+                         , RKC.b3014S5C5D6C6S
                          )
-                       , ( do RKC.b1430S5C
+                       , ( do RKC.b3014S5C
                               E.makePass
-                              RKC.b1430S5C5D
+                              RKC.b3014S5C5D
                               E.makePass
                               RKC.bS5C5D6D
-                         , RKC.b1430S5C5D6D6S
+                         , RKC.b3014S5C5D6D6S
                          )
                        , ( RKC.bS5H
                          , RKC.bS5H6S
