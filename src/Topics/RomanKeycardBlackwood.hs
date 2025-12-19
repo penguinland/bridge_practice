@@ -1,4 +1,9 @@
-module Topics.RomanKeycardBlackwood(topic1430, topic3014) where
+module Topics.RomanKeycardBlackwood(
+    topic1430
+  , topic3014
+  , topic1430Common  -- Skips situations likely to time out, for making PDFs
+  , topic3014Common
+) where
 
 import Control.Monad(join, when)
 import Data.List(sort)
@@ -790,19 +795,29 @@ kingAsk = let
             E.makePass
             E.suitLength T.Spades 5
             E.suitLength T.Hearts 5
+            -- Performance improvement: opener has a minimum, but we still might
+            -- get to grand slam. To make it more likely, push them into the
+            -- minimum HCPs for the right keycard responses.
+            E.hasCard T.Spades 'K'
             _ <- response
             E.makePass
             E.suitLength T.Spades 4
+            E.suitLength T.Hearts 3
             E.keycardCount T.Spades 3 0
             when (not hasQueen) (E.hasCard T.Spades 'Q')
+            E.forEach T.minorSuits (`E.minSuitLength` 2)
             E.soundHolding T.Hearts
-        bid = E.makeAlertableCall (T.Bid 5 T.Notrump) "side-suit king ask"
+            -- If we had another side king, we could already bid 7N.
+            E.forbidAll [E.hasCard T.Clubs 'K', E.hasCard T.Diamonds 'K']
+        bid = E.makeAlertableCall (T.Bid 5 T.Notrump)
+                                  "(delayed alert) side-suit king ask"
         explanation =
             "We have all the keycards and the queen of trump. We're going " .+
             "to take 5 spade tricks, 5 heart tricks, and two minor-suit " .+
             "aces. If partner has a minor-suit king, " .+ T.Bid 7 T.Notrump .+
             " is a laydown. If they don't, then " .+ T.Bid 6 T.Notrump .+
-            " is a laydown. See how partner responds."
+            " is a laydown but any grand slam is likely doomed. Ask about " .+
+            "side-suit kings, and see how partner responds."
       in situation "Kask" action bid explanation
   in
     wrapNW $ return sit <~ [(RKC.bS5H, False), (RKC.bS5S, True)]
@@ -821,36 +836,45 @@ kingAsk = let
 -- Forbid the opponents from making a lead-directing double
 
 
-topic1430 :: Topic
-topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
+topic1430, topic1430Common :: Topic
+(topic1430, topic1430Common) =
+    ( makeTopic "Roman Keycard Blackwood 1430" "RKC1430" (wrap sits)
+    , makeTopic "Roman Keycard Blackwood 1430" "RKC1430" (wrap commonSits)
+    )
   where
-    situations = wrap [ initiate
-                      , firstResponse1430
-                      , signoffPartscore1430
-                      , wrap [oddVoid, evenVoid]
-                      , queenAsk1430
-                      , noQueen1430
-                      , wrapWeighted [ (3, queenNoKing1430)
-                                     , (1, queenNoKing5N1430)
-                                     ]
-                      , queenKing1430
-                      , slamSignoff1430
-                      , kingAsk
-                      ]
+    sits = [ initiate                               -- 0
+           , firstResponse1430                      -- 1
+           , signoffPartscore1430                   -- 2
+           , wrap [oddVoid, evenVoid]               -- 3
+           , queenAsk1430                           -- 4
+           , noQueen1430                            -- 5
+           , wrapWeighted [ (3, queenNoKing1430)    -- 6
+                          , (1, queenNoKing5N1430)
+                          ]
+           , queenKing1430                          -- 7
+           , slamSignoff1430                        -- 8
+           , kingAsk                                -- 9, rare
+           ]
+    commonSits = take 9 sits
 
-topic3014 :: Topic
-topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
+
+topic3014, topic3014Common :: Topic
+(topic3014, topic3014Common) =
+    ( makeTopic "Roman Keycard Blackwood 3014" "RKC3014" (wrap sits)
+    , makeTopic "Roman Keycard Blackwood 3014" "RKC3014" (wrap commonSits)
+    )
   where
-    situations = wrap [ initiate
-                      , firstResponse3014
-                      , signoffPartscore3014
-                      , wrap [oddVoid, evenVoid]
-                      , queenAsk3014
-                      , noQueen3014
-                      , wrapWeighted [ (3, queenNoKing3014)
-                                     , (1, queenNoKing5N3014)
-                                     ]
-                      , queenKing3014
-                      , slamSignoff3014
-                      , kingAsk
-                      ]
+    sits = [ initiate                               -- 0
+           , firstResponse3014                      -- 1
+           , signoffPartscore3014                   -- 2
+           , wrap [oddVoid, evenVoid]               -- 3
+           , queenAsk3014                           -- 4
+           , noQueen3014                            -- 5
+           , wrapWeighted [ (3, queenNoKing3014)    -- 6
+                          , (1, queenNoKing5N3014)
+                          ]
+           , queenKing3014                          -- 7
+           , slamSignoff3014                        -- 8
+           , kingAsk                                -- 9, rare
+           ]
+    commonSits = take 9 sits
