@@ -560,22 +560,30 @@ slamSignoff1430, slamSignoff3014 :: Situations
                          , RKC.b1430H5D6H
                          )
                        , ( do RKC.b1430H5C
+                              E.makePass
                               RKC.b1430H5C5D
+                              E.makePass
                               RKC.bH5C5D5H
                          , RKC.b1430H5C5D5H6H
                          )
                        , ( do RKC.b1430H5C
+                              E.makePass
                               RKC.b1430H5C5D
+                              E.makePass
                               RKC.bH5C5D5S
                          , RKC.b1430H5C5D5S6H
                          )
                        , ( do RKC.b1430H5C
+                              E.makePass
                               RKC.b1430H5C5D
+                              E.makePass
                               RKC.bH5C5D6C
                          , RKC.b1430H5C5D6C6H
                          )
                        , ( do RKC.b1430H5C
+                              E.makePass
                               RKC.b1430H5C5D
+                              E.makePass
                               RKC.bH5C5D6D
                          , RKC.b1430H5C5D6D6H
                          )
@@ -593,22 +601,30 @@ slamSignoff1430, slamSignoff3014 :: Situations
                          , RKC.b1430S5D6S
                          )
                        , ( do RKC.b1430S5C
+                              E.makePass
                               RKC.b1430S5C5D
+                              E.makePass
                               RKC.bS5C5D5H
                          , RKC.b1430S5C5D5H6S
                          )
                        , ( do RKC.b1430S5C
+                              E.makePass
                               RKC.b1430S5C5D
+                              E.makePass
                               RKC.bS5C5D5S
                          , RKC.b1430S5C5D5S6S
                          )
                        , ( do RKC.b1430S5C
+                              E.makePass
                               RKC.b1430S5C5D
+                              E.makePass
                               RKC.bS5C5D6C
                          , RKC.b1430S5C5D6C6S
                          )
                        , ( do RKC.b1430S5C
+                              E.makePass
                               RKC.b1430S5C5D
+                              E.makePass
                               RKC.bS5C5D6D
                          , RKC.b1430S5C5D6D6S
                          )
@@ -628,22 +644,30 @@ slamSignoff1430, slamSignoff3014 :: Situations
                          , RKC.b1430H5D6H
                          )
                        , ( do RKC.b1430H5C
+                              E.makePass
                               RKC.b1430H5C5D
+                              E.makePass
                               RKC.bH5C5D5H
                          , RKC.b1430H5C5D5H6H
                          )
                        , ( do RKC.b1430H5C
+                              E.makePass
                               RKC.b1430H5C5D
+                              E.makePass
                               RKC.bH5C5D5S
                          , RKC.b1430H5C5D5S6H
                          )
                        , ( do RKC.b1430H5C
+                              E.makePass
                               RKC.b1430H5C5D
+                              E.makePass
                               RKC.bH5C5D6C
                          , RKC.b1430H5C5D6C6H
                          )
                        , ( do RKC.b1430H5C
+                              E.makePass
                               RKC.b1430H5C5D
+                              E.makePass
                               RKC.bH5C5D6D
                          , RKC.b1430H5C5D6D6H
                          )
@@ -661,22 +685,30 @@ slamSignoff1430, slamSignoff3014 :: Situations
                          , RKC.b1430S5D6S
                          )
                        , ( do RKC.b1430S5C
+                              E.makePass
                               RKC.b1430S5C5D
+                              E.makePass
                               RKC.bS5C5D5H
                          , RKC.b1430S5C5D5H6S
                          )
                        , ( do RKC.b1430S5C
+                              E.makePass
                               RKC.b1430S5C5D
+                              E.makePass
                               RKC.bS5C5D5S
                          , RKC.b1430S5C5D5S6S
                          )
                        , ( do RKC.b1430S5C
+                              E.makePass
                               RKC.b1430S5C5D
+                              E.makePass
                               RKC.bS5C5D6C
                          , RKC.b1430S5C5D6C6S
                          )
                        , ( do RKC.b1430S5C
+                              E.makePass
                               RKC.b1430S5C5D
+                              E.makePass
                               RKC.bS5C5D6D
                          , RKC.b1430S5C5D6D6S
                          )
@@ -719,6 +751,105 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
                              , queenNoKing5N1430
                              ]
                       , queenKing1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
+                      , slamSignoff1430
                       , slamSignoff1430
                       ]
 
