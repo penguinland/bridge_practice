@@ -8,7 +8,7 @@ import EDSL(minSuitLength, hasTopN, forbid)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(wrap, wrapNW, wrapSE, Situations, Topic, makeTopic)
+import Topic(wrap, wrapWeighted, wrapNW, wrapSE, Situations, Topic, makeTopic)
 
 
 j2nt :: Situations
@@ -353,7 +353,7 @@ topic :: Topic
 topic = makeTopic ("Jacoby ".+ T.Bid 2 T.Notrump)  "J2NT" $
     wrap [ j2nt
          , singleton
-         , wrap [sideSuit, sideSuit, badSideSuit]
+         , wrapWeighted [(2, sideSuit), (1, badSideSuit)]
          , wrap [semibalancedMin, semibalancedMed, semibalancedMax]
          , semibalSignoff
          , wrap [semibalMinSlam, semibalMedSlam, semibalMaxSlam]

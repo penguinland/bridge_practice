@@ -6,8 +6,8 @@ import EDSL(suitLength, maxSuitLength, forEach)
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, stdWrap, wrapNW, wrapSE, wrapDlr, Situations,
-             makeTopic)
+import Topic(Topic, wrap, wrapWeighted, stdWrap, wrapNW, wrapSE, wrapDlr,
+             Situations, makeTopic)
 
 
 threeClubs :: Situations
@@ -574,8 +574,9 @@ spadesAfterNoMajorFit = let
 topic :: Topic
 topic = makeTopic ("Muppet Stayman over " .+ T.Bid 2 T.Notrump) "mup" situations
   where
-    situations = wrap [ wrap [threeClubs, threeClubs, threeClubs,
-                              threeClubsShortMajors]
+    situations = wrap [ wrapWeighted [(3, threeClubs)
+                                     , (1, threeClubsShortMajors)
+                                     ]
                       , wrap [fiveSpades, fourCardMajor, noMajor]
                       , wrap [texasTransfer, texasTransferCompleted]
                       , wrap [ fiveCardSpadeRaise
@@ -583,7 +584,10 @@ topic = makeTopic ("Muppet Stayman over " .+ T.Bid 2 T.Notrump) "mup" situations
                              , fiveSpadesSlam
                              ]
                       , wrap [smol, bothMajors]
-                      , wrap [smolFitH, smolFitS, smolNoFit, smolNoFit]
+                      , wrapWeighted [ (1, smolFitH)
+                                     , (1, smolFitS)
+                                     , (2, smolNoFit)
+                                     ]
                       , wrap [ fiveHearts
                              , fiveHeartsNoFit
                              , fiveHeartsFit

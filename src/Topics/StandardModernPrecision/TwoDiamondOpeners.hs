@@ -8,7 +8,7 @@ import EDSL(forbid, suitLength, makePass)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, stdWrap, wrapDlr, Situations, makeTopic,
+import Topic(Topic, wrap, wrapWeighted, stdWrap, wrapDlr, Situations, makeTopic,
              wrapNW, wrapSE, stdWrapNW, stdWrapSE)
 
 
@@ -154,7 +154,7 @@ passSignoffHearts = let
             "Partner has less-than-invitational values and is signing off. " .+
             "Given that we have 4 hearts, pass."
       in
-        situation "2H2S" action (makePass) explanation direction vul
+        situation "2HP" action (makePass) explanation direction vul
   in
     wrap $ return sit <~ nwOrSeBid B.bP2D2H B.b2D2H <~ T.allVulnerabilities
 
@@ -369,23 +369,18 @@ topic = makeTopic description "SMP2D" situations
     description = ("SMP " .+ T.Bid 2 T.Diamonds .+ " auctions")
     situations = wrap [ open
                       -- Responder signs off (equiprobable in all suits)
-                      , wrap [ wrap [ immediateSignoffSpades5
-                                    -- Equiprobable in all spade lengths
-                                    , immediateSignoffSpades34
-                                    , immediateSignoffSpades34
-                                    ]
+                      , wrap [ wrapWeighted [ (1, immediateSignoffSpades5)
+                                            , (2, immediateSignoffSpades34)
+                                            ]
                              , immediateSignoffClubs
                              , immediateSignoffHearts
                              ]
                       -- Opener passes responder's signoff (equiprobable in all
                       -- suits)
-                      , wrap [ passBlackSignoff
-                             , passBlackSignoff
-                             , passBlackSignoff
-                             , passBlackSignoff
-                             , passSignoffHearts
-                             , correctSignoffHearts
-                             ]
+                      , wrapWeighted [ (4, passBlackSignoff)
+                                     , (1, passSignoffHearts)
+                                     , (1, correctSignoffHearts)
+                                     ]
                       , mixedRaise
                       , immediateGameSignoff
                       , bid2N

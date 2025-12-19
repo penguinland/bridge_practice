@@ -8,7 +8,7 @@ import EDSL(pointRange, minSuitLength, maxSuitLength, makePass, forEach, forbid,
 import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, Situations, makeTopic)
+import Topic(Topic, wrap, wrapWeighted, Situations, makeTopic)
 
 
 -- TODO: maybe remove this
@@ -367,7 +367,7 @@ convDoubleRebid = let
             "RHO opened a strong " .+ T.Bid 1 T.Notrump .+ ", and we made " .+
             "a conventional double. Partner has shown preference for our " .+
             endExplanation
-        in situation "2Mm" action rebid explanation
+        in situation "Xrbd" action rebid explanation
   in
     wrap $ return sit <~ [ (W.b1NoX2C, W.b1NoX2CP,  "minor. Pass.")
                          , (W.b1NoX2C, W.b1NoX2C2D, "minor. Bid it.")
@@ -397,11 +397,9 @@ topic = makeTopic "Woolsey (Multi-Landy) over all notrump" "wool" situations
                       , threeMinor
                       , penaltyDouble
                       , convDouble
-                      , wrap [ convDoubleResponseMinor
-                             , convDoubleResponseMinor
-                             , convDoubleResponseMajor
-                             , convDoubleResponseMajor
-                             , penaltyDoubleResponse
-                             ]
+                      , wrapWeighted [ (2, convDoubleResponseMinor)
+                                     , (2, convDoubleResponseMajor)
+                                     , (1, penaltyDoubleResponse)
+                                     ]
                       , convDoubleRebid
                       ]

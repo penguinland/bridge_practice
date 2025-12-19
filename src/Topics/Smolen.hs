@@ -68,7 +68,7 @@ haveFitH = let
             "We opened a strong " .+ B.b1N .+ ", partner bid Stayman, and " .+
             "we denied a 4-card major. Partner then bid Smolen, showing " .+
             "4 spades and 5 hearts. We've got a major-suit fit: bid it."
-      in situation "fit" action B.b1N2C2D3S4H explanation
+      in situation "fitH" action B.b1N2C2D3S4H explanation
   in
     stdWrap sit
 
@@ -92,7 +92,7 @@ haveFitS = let
             "4 hearts and 5 spades. We've got a major-suit fit: bid it. " .+
             "Partner will probably just raise to game, but might start " .+
             "control bidding with slam interest."
-      in situation "fit" action B.b1N2C2D3H3S explanation
+      in situation "fitS" action B.b1N2C2D3H3S explanation
   in
     -- For the comment about slam interest to make sense, North must be an
     -- unpassed hand.

@@ -802,9 +802,9 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
                       , wrap [oddVoid, evenVoid]
                       , queenAsk1430
                       , noQueen1430
-                      , wrap $ weightedList [ (3, queenNoKing1430)
-                                            , (1, queenNoKing5N1430)
-                                            ]
+                      , wrapWeighted [ (3, queenNoKing1430)
+                                     , (1, queenNoKing5N1430)
+                                     ]
                       , queenKing1430
                       , slamSignoff1430
                       ]
