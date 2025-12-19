@@ -629,6 +629,34 @@ slamSignoff1430, slamSignoff3014 :: Situations
                               RKC.bS5C5D6D
                          , RKC.b1430S5C5D6D6S
                          )
+                       , ( do RKC.b1430S5D
+                              E.makePass
+                              RKC.b1430S5D5H
+                              E.makePass
+                              RKC.bS5D5H5S
+                         , RKC.b1430S5D5H5S6S
+                         )
+                       , ( do RKC.b1430S5D
+                              E.makePass
+                              RKC.b1430S5D5H
+                              E.makePass
+                              RKC.bS5D5H6C
+                         , RKC.b1430S5D5H6C6S
+                         )
+                       , ( do RKC.b1430S5D
+                              E.makePass
+                              RKC.b1430S5D5H
+                              E.makePass
+                              RKC.bS5D5H6D
+                         , RKC.b1430S5D5H6D6S
+                         )
+                       , ( do RKC.b1430S5D
+                              E.makePass
+                              RKC.b1430S5D5H
+                              E.makePass
+                              RKC.bS5D5H6H
+                         , RKC.b1430S5D5H6H6S
+                         )
                        , ( RKC.bS5H
                          , RKC.bS5H6S
                          )
@@ -712,6 +740,34 @@ slamSignoff1430, slamSignoff3014 :: Situations
                               E.makePass
                               RKC.bS5C5D6D
                          , RKC.b3014S5C5D6D6S
+                         )
+                       , ( do RKC.b3014S5D
+                              E.makePass
+                              RKC.b3014S5D5H
+                              E.makePass
+                              RKC.bS5D5H5S
+                         , RKC.b3014S5D5H5S6S
+                         )
+                       , ( do RKC.b3014S5D
+                              E.makePass
+                              RKC.b3014S5D5H
+                              E.makePass
+                              RKC.bS5D5H6C
+                         , RKC.b3014S5D5H6C6S
+                         )
+                       , ( do RKC.b3014S5D
+                              E.makePass
+                              RKC.b3014S5D5H
+                              E.makePass
+                              RKC.bS5D5H6D
+                         , RKC.b3014S5D5H6D6S
+                         )
+                       , ( do RKC.b3014S5D
+                              E.makePass
+                              RKC.b3014S5D5H
+                              E.makePass
+                              RKC.bS5D5H6H
+                         , RKC.b3014S5D5H6H6S
                          )
                        , ( RKC.bS5H
                          , RKC.bS5H6S
