@@ -20,21 +20,31 @@ module Bids.RomanKeycardBlackwood(
 
   -- Queen ask responses are the same for 1430 and 3014.
   , bH5C5D5H
-  , bH5C5D5H6H
+  , b1430H5C5D5H6H
+  , b3014H5C5D5H6H
   , bH5C5D5S
-  , bH5C5D5S6H
+  , b1430H5C5D5S6H
+  , b3014H5C5D5S6H
   --, bH5C5D5N  -- Too hard to define
   , bH5C5D6C
-  , bH5C5D6C6H
+  , b1430H5C5D6C6H
+  , b3014H5C5D6C6H
   , bH5C5D6D
-  , bH5C5D6D6H
+  , b1430H5C5D6D6H
+  , b3014H5C5D6D6H
   , bH5C5D6H
   , bH5D5S5N
-  , bH5D5S5N6H
+  -- Don't define slam signoffs for positive responses to a 5S queen ask: to
+  -- make the ask, we have all the keycards, and partner has the queen. Unclear
+  -- whether small or grand slam is right.
+  --, b1430H5D5S5N6H
+  --, b3014H5D5S5N6H
   , bH5D5S6C
-  , bH5D5S6C6H
+  --, b1430H5D5S6C6H
+  --, b3014H5D5S6C6H
   , bH5D5S6D
-  , bH5D5S6D6H
+  --, b1430H5D5S6D6H
+  --, b3014H5D5S6D6H
   , bH5D5S6H
 
   , bH5H
@@ -66,23 +76,30 @@ module Bids.RomanKeycardBlackwood(
 
   -- Queen ask responses
   , bS5C5D5H
-  , bS5C5D5H6S
+  , b1430S5C5D5H6S
+  , b3014S5C5D5H6S
   , bS5C5D5S
   --, bS5C5D5N  -- Too hard to define
   , bS5C5D6C
-  , bS5C5D6C6S
+  , b1430S5C5D6C6S
+  , b3014S5C5D6C6S
   , bS5C5D6D
-  , bS5C5D6D6S
+  , b1430S5C5D6D6S
+  , b3014S5C5D6D6S
   , bS5C5D6S
   , bS5D5H5S
-  , bS5D5H5S6S
+  , b1430S5D5H5S6S
+  , b3014S5D5H5S6S
   --, bS5D5H5N  -- Too hard to define
   , bS5D5H6C
-  , bS5D5H6C6S
+  , b1430S5D5H6C6S
+  , b3014S5D5H6C6S
   , bS5D5H6D
-  , bS5D5H6D6S
+  , b1430S5D5H6D6S
+  , b3014S5D5H6D6S
   , bS5D5H6H
-  , bS5D5H6H6S
+  , b1430S5D5H6H6S
+  , b3014S5D5H6H6S
   , bS5D5H6S
 
   , bS5H
@@ -239,7 +256,10 @@ b3014S5D = E.nameAction "RKC3014_S_5D" $ do
     E.makeAlertableCall (T.Bid 5 T.Diamonds) "(delayed alert) 1 or 4 keycards"
 
 
+-----------
 -- Signoffs
+-----------
+
 b1430H5C5H :: Action
 b1430H5C5H = E.nameAction "RKC1430_H_5C5H" $ do
     E.keycardCount T.Hearts 2 5
@@ -306,7 +326,10 @@ bS5SP = E.nameAction "RKC1430_S_5SP" $ do
     E.makeCall $ T.Pass
 
 
+-------------
 -- Queen asks
+-------------
+
 queenAsk_ :: T.Suit -> Action -> T.Call -> Action
 queenAsk_ trumpSuit signoff bid = do
     E.forbid signoff  -- We must be missing at most 1 keycard
@@ -354,7 +377,9 @@ b3014S5D5H = E.nameAction "RKC3014_S_5D5H" $ do
     queenAsk_ T.Spades b3014S5D5S (T.Bid 5 T.Hearts)
 
 
+-------------------------------
 -- Negative queen ask responses
+-------------------------------
 
 bH5C5D5H :: Action
 bH5C5D5H = E.nameAction "RKC_H_5C5D5H" $ do
@@ -377,7 +402,9 @@ bS5D5H5S = E.nameAction "RKC_S_5D5H5S" $ do
     E.makeAlertableCall (T.Bid 5 T.Spades) "(delayed alert) no queen of trump"
 
 
+--------------------------------------
 -- Positive responses to the queen ask
+--------------------------------------
 
 bH5C5D5S :: Action
 bH5C5D5S = E.nameAction "RKC_H_5C5D5S" $ do
@@ -517,3 +544,234 @@ bS5D5H6S = E.nameAction "RKC_S_5D5H6S" $ do
     E.makeAlertableCall (T.Bid 6 T.Spades)
                         ("(delayed alert) have " .+ T.Spades .+ "Q, " .+
                          "no side king")
+
+----------------------
+-- Signing off in slam
+----------------------
+
+b1430H5C6H :: Action
+b1430H5C6H = E.nameAction "RKC1430_H_5C6H" $ do
+    E.hasCard T.Hearts 'Q'
+    E.keycardCount T.Hearts 3 0
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+b1430H5D6H :: Action
+b1430H5D6H = E.nameAction "RKC1430_H_5D6H" $ do
+    E.hasCard T.Hearts 'Q'
+    E.keycardCount T.Hearts 1 4
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+b3014H5C6H :: Action
+b3014H5C6H = E.nameAction "RKC3014_H_5C6H" $ do
+    E.hasCard T.Hearts 'Q'
+    E.keycardCount T.Hearts 1 4
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+b3014H5D6H :: Action
+b3014H5D6H = E.nameAction "RKC3014_H_5D6H" $ do
+    E.hasCard T.Hearts 'Q'
+    E.keycardCount T.Hearts 3 0
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+b1430H5C5D5H6H :: Action
+b1430H5C5D5H6H = E.nameAction "RKC1430_H_5C5D5H6H" $ do
+    -- We've got all the keycards, but not the queen.
+    E.keycardCount T.Hearts 4 1
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+b3014H5C5D5H6H :: Action
+b3014H5C5D5H6H = E.nameAction "RKC3014_H_5C5D5H6H" $ do
+    -- We've got all the keycards, but not the queen.
+    E.keycardCount T.Hearts 2 5
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+b1430H5C5D5S6H :: Action
+b1430H5C5D5S6H = E.nameAction "RKC1430_H_5C5D5S6H" $ do
+    E.keycardCount T.Hearts 3 0
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+b3014H5C5D5S6H :: Action
+b3014H5C5D5S6H = E.nameAction "RKC3014_H_5C5D5S6H" $ do
+    E.keycardCount T.Hearts 1 4
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+b1430H5C5D6C6H :: Action
+b1430H5C5D6C6H = E.nameAction "RKC1430_H_5C5D6C6H" $ do
+    E.keycardCount T.Hearts 3 0
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+b3014H5C5D6C6H :: Action
+b3014H5C5D6C6H = E.nameAction "RKC3014_H_5C5D6C6H" $ do
+    E.keycardCount T.Hearts 1 4
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+b1430H5C5D6D6H :: Action
+b1430H5C5D6D6H = E.nameAction "RKC1430_H_5C5D6D6H" $ do
+    E.keycardCount T.Hearts 3 0
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+b3014H5C5D6D6H :: Action
+b3014H5C5D6D6H = E.nameAction "RKC3014_H_5C5D6D6H" $ do
+    E.keycardCount T.Hearts 1 4
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+bH5H6H :: Action
+bH5H6H = E.nameAction "RKC_H_H5H6" $ do
+    -- We're either missing a keycard but not the queen, or the queen but not a
+    -- keycard.
+    E.alternatives [ do E.keycardCount T.Hearts 2 5
+                        E.hasCard T.Hearts 'Q'
+                   , do E.keycardCount T.Hearts 3 0
+                        E.forbid (E.hasCard T.Hearts 'Q')
+                   ]
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+bH5S6H :: Action
+bH5S6H = E.nameAction "RKC_H_H5S6" $ do
+    E.keycardCount T.Hearts 2 5
+    E.makeCall $ T.Bid 6 T.Hearts
+
+
+b1430S5C6S :: Action
+b1430S5C6S = E.nameAction "RKC1430_S_5C6S" $ do
+    E.hasCard T.Spades 'Q'
+    E.keycardCount T.Spades 3 0
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b1430S5D6S :: Action
+b1430S5D6S = E.nameAction "RKC1430_S_5D6S" $ do
+    E.hasCard T.Spades 'Q'
+    E.keycardCount T.Spades 1 4
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b3014S5C6S :: Action
+b3014S5C6S = E.nameAction "RKC3014_S_5C6S" $ do
+    E.hasCard T.Spades 'Q'
+    E.keycardCount T.Spades 1 4
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b3014S5D6S :: Action
+b3014S5D6S = E.nameAction "RKC3014_S_5D6S" $ do
+    E.hasCard T.Spades 'Q'
+    E.keycardCount T.Spades 3 0
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b1430S5C5D5H6S :: Action
+b1430S5C5D5H6S = E.nameAction "RKC1430_S_5C5D5H6S" $ do
+    -- We've got all the keycards, but not the queen.
+    E.keycardCount T.Spades 1 4
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b3014S5C5D5H6S :: Action
+b3014S5C5D5H6S = E.nameAction "RKC3014_S_5C5D5H6S" $ do
+    -- We've got all the keycards, but not the queen.
+    E.keycardCount T.Spades 2 5
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b1430S5C5D6C6S :: Action
+b1430S5C5D6C6S = E.nameAction "RKC1430_S_5C5D6C6S" $ do
+    E.keycardCount T.Spades 3 0
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b3014S5C5D6C6S :: Action
+b3014S5C5D6C6S = E.nameAction "RKC3014_S_5C5D6C6S" $ do
+    E.keycardCount T.Spades 1 4
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b1430S5C5D6D6S :: Action
+b1430S5C5D6D6S = E.nameAction "RKC1430_S_5C5D6D6S" $ do
+    E.keycardCount T.Spades 3 0
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b3014S5C5D6D6S :: Action
+b3014S5C5D6D6S = E.nameAction "RKC3014_S_5C5D6D6S" $ do
+    E.keycardCount T.Spades 1 4
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b1430S5D5H5S6S :: Action
+b1430S5D5H5S6S = E.nameAction "RKC1430_S_5D5H5S6S" $ do
+    E.keycardCount T.Spades 2 5
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b3014S5D5H5S6S :: Action
+b3014S5D5H5S6S = E.nameAction "RKC3014_S_5D5H5S6S" $ do
+    E.keycardCount T.Spades 1 4
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b1430S5D5H6C6S :: Action
+b1430S5D5H6C6S = E.nameAction "RKC1430_S_5D5H6C6S" $ do
+    E.keycardCount T.Spades 1 4
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b3014S5D5H6C6S :: Action
+b3014S5D5H6C6S = E.nameAction "RKC3014_S_5D5H6C6S" $ do
+    E.keycardCount T.Spades 3 0
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b1430S5D5H6D6S :: Action
+b1430S5D5H6D6S = E.nameAction "RKC1430_S_5D5H6D6S" $ do
+    E.keycardCount T.Spades 1 4
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b3014S5D5H6D6S :: Action
+b3014S5D5H6D6S = E.nameAction "RKC3014_S_5D5H6D6S" $ do
+    E.keycardCount T.Spades 3 0
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b1430S5D5H6H6S :: Action
+b1430S5D5H6H6S = E.nameAction "RKC1430_S_5D5H6H6S" $ do
+    E.keycardCount T.Spades 1 4
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b3014S5D5H6H6S :: Action
+b3014S5D5H6H6S = E.nameAction "RKC3014_S_5D5H6H6S" $ do
+    E.keycardCount T.Spades 3 0
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+bS5H6S :: Action
+bS5H6S = E.nameAction "RKC_S_5H6S" $ do
+    -- We're either missing a keycard but not the queen, or the queen but not a
+    -- keycard.
+    E.alternatives [ do E.keycardCount T.Spades 2 5
+                        E.hasCard T.Spades 'Q'
+                   , do E.keycardCount T.Spades 3 0
+                        E.forbid (E.hasCard T.Spades 'Q')
+                   ]
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+bS5S6S :: Action
+bS5S6S = E.nameAction "RKC_S_5S6S" $ do
+    E.keycardCount T.Spades 2 5
+    E.makeCall $ T.Bid 6 T.Spades
