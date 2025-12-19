@@ -15,7 +15,8 @@ import Topic(Topic(..))
 
 
 $(let dups = duplicatesOf . map fst3 $ topicList
-  in staticAssert (null dups) ("topic list has duplicate IDs: " ++ show dups))
+      errorMessage = "topic list has duplicate IDs: " ++ show dups
+  in staticAssert (null dups) errorMessage)
 
 
 $(let dups = duplicatesOf . map (refName . thd3) $ topicList
@@ -32,4 +33,4 @@ $(let
       in
         staticAssert (null dups) errorMessage
   in
-    mconcatMapM (assertUniqueNames . thd3) $ topicList)
+    mconcatMapM (assertUniqueNames . thd3) topicList)
