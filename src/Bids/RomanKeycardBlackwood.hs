@@ -49,8 +49,10 @@ module Bids.RomanKeycardBlackwood(
 
   , bH5H
   , bH5HP
+  , bH5H5N
   , bH5H6H
   , bH5S
+  , bH5S5N
   , bH5S6H
   , bH5N
   , bH6C
@@ -106,9 +108,11 @@ module Bids.RomanKeycardBlackwood(
 
   , bS5H
   , bS5H5S
+  , bS5H5N
   , bS5H6S
   , bS5S
   , bS5SP
+  , bS5S5N
   , bS5S6S
   , bS5N
   , bS6C
@@ -789,3 +793,35 @@ bS5S6S :: Action
 bS5S6S = E.nameAction "RKC_S_5S6S" $ do
     E.keycardCount T.Spades 2 5
     E.makeCall $ T.Bid 6 T.Spades
+
+
+------------
+-- King asks
+------------
+
+bH5H5N :: Action
+bH5H5N = E.nameAction "RKC_H_5H5N" $ do
+    E.keycardCount T.Hearts 3 0
+    E.hasCard T.Hearts 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Notrump) "(delayed alert) side-suit king ask"
+
+
+bH5S5N :: Action
+bH5S5N = E.nameAction "RKC_H_5S5N" $ do
+    E.keycardCount T.Hearts 3 0
+    E.makeAlertableCall (T.Bid 5 T.Notrump) "(delayed alert) side-suit king ask"
+
+
+bS5H5N :: Action
+bS5H5N = E.nameAction "RKC_S_5H5N" $ do
+    E.keycardCount T.Spades 3 0
+    E.hasCard T.Spades 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Notrump) "(delayed alert) side-suit king ask"
+
+
+bS5S5N :: Action
+bS5S5N = E.nameAction "RKC_S_5S5N" $ do
+    E.keycardCount T.Spades 3 0
+    E.makeAlertableCall (T.Bid 5 T.Notrump) "(delayed alert) side-suit king ask"
+
+

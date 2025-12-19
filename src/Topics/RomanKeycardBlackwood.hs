@@ -5,7 +5,7 @@ module Topics.RomanKeycardBlackwood(
   , topic3014Common
 ) where
 
-import Control.Monad(join, when)
+import Control.Monad(join)
 import Data.List(sort)
 
 import Action(Action)
@@ -786,7 +786,7 @@ slamSignoff1430, slamSignoff3014 :: Situations
 
 kingAsk :: Situations
 kingAsk = let
-    sit (response, hasQueen) = let
+    sit (response, kingAskBid) = let
         action = do
             -- Start 1S-2N-4H
             setUpAuctionsS !! 1 `andNextBidderIs` T.South
@@ -802,14 +802,10 @@ kingAsk = let
             E.makePass
             E.suitLength T.Spades 4
             E.suitLength T.Hearts 3
-            E.keycardCount T.Spades 3 0
-            when (not hasQueen) (E.hasCard T.Spades 'Q')
             E.forEach T.minorSuits (`E.minSuitLength` 2)
             E.soundHolding T.Hearts
             -- If we had another side king, we could already bid 7N.
             E.forbidAll [E.hasCard T.Clubs 'K', E.hasCard T.Diamonds 'K']
-        bid = E.makeAlertableCall (T.Bid 5 T.Notrump)
-                                  "(delayed alert) side-suit king ask"
         explanation =
             "We have all the keycards and the queen of trump. We're going " .+
             "to take 5 spade tricks, 5 heart tricks, and two minor-suit " .+
@@ -817,9 +813,9 @@ kingAsk = let
             " is a laydown. If they don't, then " .+ T.Bid 6 T.Notrump .+
             " is a laydown but any grand slam is likely doomed. Ask about " .+
             "side-suit kings, and see how partner responds."
-      in situation "Kask" action bid explanation
+      in situation "Kask" action kingAskBid explanation
   in
-    wrapNW $ return sit <~ [(RKC.bS5H, False), (RKC.bS5S, True)]
+    wrapNW $ return sit <~ [(RKC.bS5H, RKC.bS5H5N), (RKC.bS5S, RKC.bS5S5N)]
 
 
 -- TODO:
@@ -851,7 +847,7 @@ topic1430, topic1430Common :: Topic
                           ]
            , queenKing1430                          -- 7
            , slamSignoff1430                        -- 8
-           , kingAsk                                -- 9, rare
+           , kingAsk                                -- 9, rare: often times out
            ]
     commonSits = take 9 sits
 
@@ -873,6 +869,6 @@ topic3014, topic3014Common :: Topic
                           ]
            , queenKing3014                          -- 7
            , slamSignoff3014                        -- 8
-           , kingAsk                                -- 9, rare
+           , kingAsk                                -- 9, rare: often times out
            ]
     commonSits = take 9 sits
