@@ -12,6 +12,9 @@ import Data.Containers.ListUtils(nubOrd)
 import qualified Language.Haskell.TH.Syntax as THS
 
 
+-- Although this is only used in Assertions.hs, we define it here because it
+-- must be in a file that gets compiled before the file with the compile-time
+-- assertions (or be defined locally within every $(...) expression).
 duplicatesOf :: Ord a => [a] -> [a]
 duplicatesOf = nubOrd . map fst . filter (uncurry (==)) . uncurry zip .
                (init &&& tail) . sort

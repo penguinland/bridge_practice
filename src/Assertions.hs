@@ -15,15 +15,19 @@ import Topic(Topic(..))
 
 
 $(let dups = duplicatesOf . map fst3 $ topicList
-  in staticAssert (null dups) ("topic list has duplicate IDs: " ++ show dups))
+      errorMessage = "topic list has duplicate IDs: " ++ show dups
+  in staticAssert (null dups) errorMessage)
 
 
 $(let dups = duplicatesOf . map (refName . thd3) $ topicList
-  in staticAssert (null dups)
-    ("topics have duplicate debug names: " ++ show dups))
+      errorMessage = "topics have duplicate debug names: " ++ show dups
+  in staticAssert (null dups) errorMessage)
 
 
--- Something about $(...) seems to mess up indentation parsing, I think? If you
--- try adding newlines where they logically belong, this becomes unparseable.
-$(let assertUniqueNames topic = (let dups = (duplicatesOf . survey sitRef . topicSituations $ topic) in staticAssert (null dups) ("duplicate situation names for topic " ++ (toMonospace . topicName $ topic) ++ ": " ++ show dups))
-  in mconcatMapM (assertUniqueNames . thd3) $ topicList)
+$(let assertUniqueNames topic = let
+          dups = duplicatesOf . survey sitRef . topicSituations $ topic
+          errorMessage = "duplicate situation names for topic " ++
+                         (toMonospace . topicName $ topic) ++ ": " ++ show dups
+        in
+          staticAssert (null dups) errorMessage
+  in mconcatMapM (assertUniqueNames . thd3) topicList)
