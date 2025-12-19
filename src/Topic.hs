@@ -6,6 +6,7 @@
 module Topic(
   Situations  -- Note that constructors aren't public: use wrap instead.
 , wrap
+, wrapWeighted
 , wrapDlr
 , wrapNW
 , wrapSE
@@ -19,7 +20,7 @@ module Topic(
 import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
-import Collection(Collection, collect, Collectable)
+import Collection(Collection, collect, Collectable, weightedList)
 import Output(Description, toDescription, Showable)
 import Situation(Situation, (<~))
 import Terminology(
@@ -34,6 +35,10 @@ type Situations = Collection Situation
 -- without needing to copy and paste type signatures dozens of times.
 wrap :: Collectable Situation c => c -> Situations
 wrap = collect
+
+
+wrapWeighted :: Collectable Situation c => [(Int, c)] -> Situations
+wrapWeighted = collect . weightedList
 
 
 -- The most common Situation parameters are letting anyone be vulnerable, and
@@ -77,19 +82,3 @@ data Topic = Topic { topicName :: Description
 -- the values it generates.
 makeTopic :: Showable a => a -> String -> Situations -> Topic
 makeTopic d n s = Topic (toDescription d) n s
-
-
--- This should get re-enabled when we're ready to do the assertion it's for, but
--- in the meantime I'm reusing the name elsewhere.
-{-
--- This is used during compile-time assertions to ensure that every Situation
--- within a Topic has a unique debug string.
-collect :: (Situation -> a) -> Topic -> [a]
-collect f = collect' . topicSituations
-  where
-    collect' (CollectionRaw s)  = [f s]
-    collect' (CollectionList l) = concatMap collect' l
-    -- We assume that all Situations you could generate from a CollectionState have the
-    -- same value within. If this changes, revisit this.
-    collect' (CollectionState s) = collect' . fst . flip runState (mkStdGen 0) $ s
--}
