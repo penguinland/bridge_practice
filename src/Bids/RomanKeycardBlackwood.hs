@@ -79,6 +79,8 @@ module Bids.RomanKeycardBlackwood(
   , b1430S5C5D5H6S
   , b3014S5C5D5H6S
   , bS5C5D5S
+  , b1430S5C5D5S6S
+  , b3014S5C5D5S6S
   --, bS5C5D5N  -- Too hard to define
   , bS5C5D6C
   , b1430S5C5D6C6S
@@ -675,13 +677,25 @@ b3014S5D6S = E.nameAction "RKC3014_S_5D6S" $ do
 
 b1430S5C5D5H6S :: Action
 b1430S5C5D5H6S = E.nameAction "RKC1430_S_5C5D5H6S" $ do
-    -- We've got all the keycards, but not the queen.
-    E.keycardCount T.Spades 1 4
+    E.keycardCount T.Spades 3 0
     E.makeCall $ T.Bid 6 T.Spades
 
 
 b3014S5C5D5H6S :: Action
 b3014S5C5D5H6S = E.nameAction "RKC3014_S_5C5D5H6S" $ do
+    E.keycardCount T.Spades 1 4
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b1430S5C5D5S6S :: Action
+b1430S5C5D5S6S = E.nameAction "RKC1430_S_5C5D5S6S" $ do
+    -- We've got all the keycards, but not the queen.
+    E.keycardCount T.Spades 1 4
+    E.makeCall $ T.Bid 6 T.Spades
+
+
+b3014S5C5D5S6S :: Action
+b3014S5C5D5S6S = E.nameAction "RKC3014_S_5C5D5S6S" $ do
     -- We've got all the keycards, but not the queen.
     E.keycardCount T.Spades 2 5
     E.makeCall $ T.Bid 6 T.Spades
