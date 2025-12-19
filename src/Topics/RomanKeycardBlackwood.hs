@@ -3,7 +3,7 @@ module Topics.RomanKeycardBlackwood(topic1430, topic3014) where
 import Control.Monad(join)
 import Data.List(sort)
 
-import Action(Action)
+import Action(Action, withholdBid)
 import qualified Bids.Jacoby2NT as J2N
 import qualified Bids.OneNotrump as NT
 import qualified Bids.RomanKeycardBlackwood as RKC
@@ -196,7 +196,7 @@ signoffPartscore1430, signoffPartscore3014 :: Situations
             explanation =
                 "We asked for keycards, but learned we're missing 2 of " .+
                 "them. Slam is likely to fail: sign off at the 5 level."
-          in situation "signoff" action signoffBid explanation
+          in situation "SO5" action signoffBid explanation
       in return inner <~ setups <~ followups
     signoff1430' = wrapNW . join $ return signoff
         -- Empirically, most of the setups are very unlikely to only have 3
@@ -526,6 +526,47 @@ queenKing1430, queenKing3014 :: Situations
                  RKC.b3014S5D5H
                  E.makePass,
               [RKC.bS5D5H6C, RKC.bS5D5H6D, RKC.bS5D5H6H])
+           ]
+
+
+slamSignoff1430, slamSignoff3014 :: Situations
+(slamSignoff1430, slamSignoff3014) = (signoff1430, signoff3014)
+  where
+    queenKing (setups, payoffs) = let
+        inner setup (middle, signoff) = let
+            action = do
+                setup `andNextBidderIs` T.South
+                RKC.b4N
+                E.makePass
+                _ <- middle
+                E.makePass
+            explanation =
+                "Of the 6 cards we care about, we're missing only 1. We're " .+
+                "likely to make small slam but not grand slam. Time to " .+
+                "sign off! (This system is not very nuanced. It's possible, " .+
+                "especially at matchpoints, that signing off in " .+
+                T.Bid 6 T.Notrump .+ " is the right choice instead.)"
+          in situation "slamSO" action signoff explanation
+      in return inner <~ setups <~ payoffs
+    -- Per earlier situations, only index 0 is very efficient to generate no
+    -- matter what.
+    setupsH = takeIndices_ [0] setUpAuctionsH
+    setupsS = takeIndices_ [0] setUpAuctionsS
+    signoff1430 = wrapNW . join $ return queenKing
+        <~ [ (setupsH, [ ( do RKC.b1430H5C
+                         , RKC.b1430H5C6H
+                         )
+                         ( do RKC.b1430H5D
+                         , RKC.b1430H5D6H
+                         )
+                        ])
+           , (setupsS, [ ( do RKC.b1430S5C
+                         , RKC.b1430S5C6S
+                         )
+                         ( do RKC.b1430S5D
+                         , RKC.b1430S5D6S
+                         )
+                        ])
            ]
 
 
