@@ -15,11 +15,12 @@ module Collection(
   , Collectable(..)
   , WeightedList
   , weightedList
+  , survey
 ) where
 
-import Control.Monad.Trans.State.Strict(State, state)
+import Control.Monad.Trans.State.Strict(State, state, runState)
 import Data.Tuple.Extra(second)
-import System.Random(StdGen, randomR)
+import System.Random(StdGen, randomR, mkStdGen)
 
 import Random(pickItem)
 
@@ -73,3 +74,14 @@ weightedList :: [(Int, a)] -> WeightedList a
 weightedList items = WeightedList items total
   where
     total = sum . map fst $ items
+
+
+-- This is used during compile-time assertions to ensure that every Situation
+-- within a Topic has a unique debug string.
+survey :: (r -> a) -> Collection r -> [a]
+survey f (CollectionRaw val) = [f val]
+survey f (CollectionList l) = concatMap (survey f) l
+-- We assume that all values you could generate from a CollectionState have the
+-- same value within. If this changes, revisit this.
+survey f (CollectionState s) = survey f . fst . flip runState (mkStdGen 0) $ s
+survey f (CollectionWL (WeightedList wl _)) = concatMap (survey f . snd) wl
