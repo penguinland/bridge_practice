@@ -582,7 +582,7 @@ b3014H5D6H = E.nameAction "RKC3014_H_5D6H" $ do
 b1430H5C5D5H6H :: Action
 b1430H5C5D5H6H = E.nameAction "RKC1430_H_5C5D5H6H" $ do
     -- We've got all the keycards, but not the queen.
-    E.keycardCount T.Hearts 4 1
+    E.keycardCount T.Hearts 1 4
     E.makeCall $ T.Bid 6 T.Hearts
 
 
@@ -630,7 +630,7 @@ b3014H5C5D6D6H = E.nameAction "RKC3014_H_5C5D6D6H" $ do
 
 
 bH5H6H :: Action
-bH5H6H = E.nameAction "RKC_H_H5H6" $ do
+bH5H6H = E.nameAction "RKC_H_H5H6H" $ do
     -- We're either missing a keycard but not the queen, or the queen but not a
     -- keycard.
     E.alternatives [ do E.keycardCount T.Hearts 2 5
@@ -642,7 +642,7 @@ bH5H6H = E.nameAction "RKC_H_H5H6" $ do
 
 
 bH5S6H :: Action
-bH5S6H = E.nameAction "RKC_H_H5S6" $ do
+bH5S6H = E.nameAction "RKC_H_H5S6H" $ do
     E.keycardCount T.Hearts 2 5
     E.makeCall $ T.Bid 6 T.Hearts
 
