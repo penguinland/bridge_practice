@@ -6,7 +6,7 @@ import EDSL(forbid)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapDlr, Situations, makeTopic)
+import Topic(Topic, wrap, wrapWeighted, wrapDlr, Situations, makeTopic)
 
 
 makeTox :: Situations
@@ -118,7 +118,7 @@ advanceNotrump = let
 topic :: Topic
 topic = makeTopic "takeout doubles of 1-level suit openings" "tox" situations
   where
-    situations = wrap [ wrap [makeTox, makeTox, makeTox, makeTox, makePowerX]
+    situations = wrap [ wrapWeighted [(4, makeTox), (1, makePowerX)]
                       , advanceSuit
                       , advanceNotrump
                       ]

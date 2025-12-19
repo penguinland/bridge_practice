@@ -13,7 +13,7 @@ import EDSL(makePass, makeCall, suitLength, minSuitLength, maxSuitLength,
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapNW, wrapSE, Situations, makeTopic)
+import Topic(Topic, wrap, wrapWeighted, wrapNW, wrapSE, Situations, makeTopic)
 
 
 makeTransferSignoff :: Situations
@@ -388,10 +388,9 @@ topic = makeTopic "Texas transfers" "TexTr" situations
                              , transferSlamInviteDeclined
                              , transferSlamInviteAccepted
                              ]
-                      , wrap [ transferOverInterference
-                             , transferOverInterference
-                             , completeTransferOverInterference
-                             , completeTransferOverInterference
-                             , completeTransferOverInterferenceCuebid
-                             ]
+                      , wrapWeighted [
+                            (2, transferOverInterference)
+                          , (2, completeTransferOverInterference)
+                          , (1, completeTransferOverInterferenceCuebid)
+                          ]
                       ]

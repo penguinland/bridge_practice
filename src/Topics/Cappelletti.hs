@@ -118,7 +118,7 @@ relayToFindMinor = let
             "suited hand with a major and a minor. We don't have support " .+
             "for their major, so should bid " .+ answer .+ " to prompt them " .+
             "to bid their minor, which should hopefully be a better contract."
-        in situation "Mm" action answer explanation
+        in situation "relay" action answer explanation
   in
     wrap $ return sit <~ [(B.b1No2H, B.b1No2H2N), (B.b1No2S, B.b1No2S2N)]
                       <~ [T.West, T.South, T.East]

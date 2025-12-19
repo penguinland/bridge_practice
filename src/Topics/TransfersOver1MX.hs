@@ -175,7 +175,7 @@ oneSpadeNatural = let
             "takeout double. We can bid a natural " .+ B.b1HoX1S .+ " to " .+
             "show our suit. Remember that the transfers only start at " .+
             T.Bid 1 T.Notrump .+ " as a transfer to clubs!"
-      in situation "complT" action B.b1HoX1S explanation
+      in situation "1Snat" action B.b1HoX1S explanation
   in
     stdWrap sit
 

@@ -424,7 +424,7 @@ cueBidWithStopper = let
             "bid the correct game, based on whether we've got a major-suit " .+
             "fit. The cuebid will be game-forcing, so we can investigate " .+
             "slam afterwards if we're particularly strong."
-      in situation "rel3N" action relay explanation
+      in situation "relCue" action relay explanation
   in
     wrap $ return sit <~ [ (Nat.b1No2D,  Leb.b1No2D2N, Leb.b1No2D2N3C3D)
                          , (Nat.b1No2H,  Leb.b1No2H2N, Leb.b1No2H2N3C3H)
@@ -467,7 +467,7 @@ cueBidWithoutStopper = let
             "we'll scramble into a minor-suit contract or perhaps a 7-card " .+
             "fit. This cue bid is game-forcing, and we can investigate " .+
             "slam afterwards if we're particularly strong."
-      in situation "3N" action bid explanation
+      in situation "cue" action bid explanation
   in
     wrap $ return sit <~ [ (Nat.b1No2D,  Leb.b1No2D3D)
                          , (Nat.b1No2H,  Leb.b1No2H3H)

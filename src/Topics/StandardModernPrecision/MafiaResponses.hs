@@ -7,7 +7,8 @@ import EDSL(suitLength, maxSuitLength)
 import Output((.+), Punct(..))
 import Situation(Situation, situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapNW, stdWrapNW, Situations, makeTopic)
+import Topic(Topic, wrap, wrapWeighted, wrapNW, stdWrapNW, Situations,
+             makeTopic)
 
 
 minSupport :: Situations
@@ -235,7 +236,7 @@ threeCardSupportHearts = let
            \ bid " .+ T.Bid 2 T.Diamonds .+ ". Do this even with a 5-card\
            \ heart suit!"
       in
-        situation "2D" action B.b1C1D1S2D explanation
+        situation "2DwH" action B.b1C1D1S2D explanation
   in
     stdWrapNW sit
 
@@ -270,14 +271,16 @@ topic = makeTopic "MaFiA responses" "MafResp" situations
     situations = wrap [ minSupport
                       , maxSupportSemibalanced
                       , maxSupportUnbalanced
-                      , wrap [brakesHearts, wrap [brakesSpades,
-                                                  brakesSpadesHearts]]
+                      , wrapWeighted [ (2, brakesHearts)
+                                     , (1, brakesSpades)
+                                     , (1, brakesSpadesHearts)
+                                     ]
                       , wrap [otherMajorHearts, otherMajorSpades]
                       -- 3-card support in spades when you also have hearts is
                       -- much rarer than any other 3-card support situation.
-                      , wrap [ threeCardSupport, threeCardSupport
-                             , threeCardSupport, threeCardSupport
-                             , threeCardSupportHearts ]
+                      , wrapWeighted [ (4, threeCardSupport)
+                                     , (1, threeCardSupportHearts)
+                                     ]
                       , maxNoMajors
                       -- TODO: jump responses, splinters, etc.
                       ]
