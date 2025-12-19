@@ -784,7 +784,6 @@ slamSignoff1430, slamSignoff3014 :: Situations
            ]
 
 
-
 kingAsk :: Situations
 kingAsk = let
     sit (response, hasQueen) = let
