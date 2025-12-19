@@ -25,7 +25,7 @@ $(let dups = duplicatesOf . map (refName . thd3) $ topicList
 
 $(let
     assertUniqueNames topic = let
-        dups = (duplicatesOf . survey sitRef . topicSituations $ topic)
+        dups = duplicatesOf . survey sitRef . topicSituations $ topic
         errorMessage = "duplicate situation names for topic " ++
                        (toMonospace . topicName $ topic) ++ ": " ++
                        show dups
