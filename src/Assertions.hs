@@ -19,8 +19,8 @@ $(let dups = duplicatesOf . map fst3 $ topicList
 
 
 $(let dups = duplicatesOf . map (refName . thd3) $ topicList
-  in staticAssert (null dups)
-    ("topics have duplicate debug names: " ++ show dups))
+      errorMessage = "topics have duplicate debug names: " ++ show dups
+  in staticAssert (null dups) errorMessage)
 
 
 $(let
