@@ -12,7 +12,7 @@ import qualified EDSL as E
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapNW, Situations, makeTopic)
+import Topic(Topic, wrap, wrapWeighted, wrapNW, Situations, makeTopic)
 
 
 takeIndices_ :: [Int] -> [a] -> [a]
@@ -802,11 +802,9 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
                       , wrap [oddVoid, evenVoid]
                       , queenAsk1430
                       , noQueen1430
-                      , wrap [ queenNoKing1430
-                             , queenNoKing1430
-                             , queenNoKing1430
-                             , queenNoKing5N1430
-                             ]
+                      , wrap $ weightedList [ (3, queenNoKing1430)
+                                            , (1, queenNoKing5N1430)
+                                            ]
                       , queenKing1430
                       , slamSignoff1430
                       ]
@@ -820,11 +818,9 @@ topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
                       , wrap [oddVoid, evenVoid]
                       , queenAsk3014
                       , noQueen3014
-                      , wrap [ queenNoKing3014
-                             , queenNoKing3014
-                             , queenNoKing3014
-                             , queenNoKing5N3014
-                             ]
+                      , wrapWeighted [ (3, queenNoKing3014)
+                                     , (1, queenNoKing5N3014)
+                                     ]
                       , queenKing3014
                       , slamSignoff3014
                       ]

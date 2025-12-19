@@ -70,6 +70,7 @@ instance Collectable r (Collection r) where
 -- The final Int is the total weight
 data WeightedList a = WeightedList [(Int, a)] Int
 
+
 weightedList :: [(Int, a)] -> WeightedList a
 weightedList items = WeightedList items total
   where
