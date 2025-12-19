@@ -585,7 +585,7 @@ slamSignoff1430, slamSignoff3014 :: Situations
                        , ( RKC.bH5S
                          , RKC.bH5S6H
                          )
-                       ] )
+                       ])
            , (setupsS, [ ( RKC.b1430S5C
                          , RKC.b1430S5C6S
                          )
@@ -618,10 +618,76 @@ slamSignoff1430, slamSignoff3014 :: Situations
                        , ( RKC.bS5S
                          , RKC.bS5S6S
                          )
-                       ] )
+                       ])
            ]
     signoff3014 = wrapNW . join $ return signoff
-        <~ []
+        <~ [ (setupsH, [ ( RKC.b1430H5C
+                         , RKC.b1430H5C6H
+                         )
+                       , ( RKC.b1430H5D
+                         , RKC.b1430H5D6H
+                         )
+                       , ( do RKC.b1430H5C
+                              RKC.b1430H5C5D
+                              RKC.bH5C5D5H
+                         , RKC.b1430H5C5D5H6H
+                         )
+                       , ( do RKC.b1430H5C
+                              RKC.b1430H5C5D
+                              RKC.bH5C5D5S
+                         , RKC.b1430H5C5D5S6H
+                         )
+                       , ( do RKC.b1430H5C
+                              RKC.b1430H5C5D
+                              RKC.bH5C5D6C
+                         , RKC.b1430H5C5D6C6H
+                         )
+                       , ( do RKC.b1430H5C
+                              RKC.b1430H5C5D
+                              RKC.bH5C5D6D
+                         , RKC.b1430H5C5D6D6H
+                         )
+                       , ( RKC.bH5H
+                         , RKC.bH5H6H
+                         )
+                       , ( RKC.bH5S
+                         , RKC.bH5S6H
+                         )
+                       ])
+           , (setupsS, [ ( RKC.b1430S5C
+                         , RKC.b1430S5C6S
+                         )
+                       , ( RKC.b1430S5D
+                         , RKC.b1430S5D6S
+                         )
+                       , ( do RKC.b1430S5C
+                              RKC.b1430S5C5D
+                              RKC.bS5C5D5H
+                         , RKC.b1430S5C5D5H6S
+                         )
+                       , ( do RKC.b1430S5C
+                              RKC.b1430S5C5D
+                              RKC.bS5C5D5S
+                         , RKC.b1430S5C5D5S6S
+                         )
+                       , ( do RKC.b1430S5C
+                              RKC.b1430S5C5D
+                              RKC.bS5C5D6C
+                         , RKC.b1430S5C5D6C6S
+                         )
+                       , ( do RKC.b1430S5C
+                              RKC.b1430S5C5D
+                              RKC.bS5C5D6D
+                         , RKC.b1430S5C5D6D6S
+                         )
+                       , ( RKC.bS5H
+                         , RKC.bS5H6S
+                         )
+                       , ( RKC.bS5S
+                         , RKC.bS5S6S
+                         )
+                       ])
+           ]
 
 
 
