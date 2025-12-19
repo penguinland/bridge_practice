@@ -541,9 +541,10 @@ slamSignoff1430, slamSignoff3014 :: Situations
                 _ <- middle
                 E.makePass
             explanation =
-                "Of the 6 cards we care about, we're missing only 1. We're " .+
-                "likely to make small slam but not grand slam. Time to " .+
-                "sign off! (This system is not very nuanced. It's possible, " .+
+                "Of the 6 cards we care about (the 5 keycards and the " .+
+                "queen of trump), we're missing exactly 1. We're likely " .+
+                "to make small slam but not grand slam. Time to sign off! " .+
+                "(This system is not very nuanced. It's possible, " .+
                 "especially at matchpoints, that signing off in " .+
                 T.Bid 6 T.Notrump .+ " is the right choice instead.)"
           in situation "slamSO" action signoffBid explanation
@@ -751,105 +752,6 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
                              , queenNoKing5N1430
                              ]
                       , queenKing1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
-                      , slamSignoff1430
                       , slamSignoff1430
                       ]
 
