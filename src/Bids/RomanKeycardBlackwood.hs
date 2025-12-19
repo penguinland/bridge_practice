@@ -4,31 +4,44 @@ module Bids.RomanKeycardBlackwood(
   , b1430H5C
   , b1430H5C5D
   , b1430H5C5H
+  , b1430H5C6H
   , b1430H5D
   , b1430H5D5H
   , b1430H5D5S
+  , b1430H5D6H
   , b3014H5C
   , b3014H5C5D
   , b3014H5C5H
+  , b3014H5C6H
   , b3014H5D
   , b3014H5D5H
   , b3014H5D5S
+  , b3014H5D6H
 
   -- Queen ask responses are the same for 1430 and 3014.
   , bH5C5D5H
+  , bH5C5D5H6H
   , bH5C5D5S
+  , bH5C5D5S6H
   --, bH5C5D5N  -- Too hard to define
   , bH5C5D6C
+  , bH5C5D6C6H
   , bH5C5D6D
+  , bH5C5D6D6H
   , bH5C5D6H
   , bH5D5S5N
+  , bH5D5S5N6H
   , bH5D5S6C
+  , bH5D5S6C6H
   , bH5D5S6D
+  , bH5D5S6D6H
   , bH5D5S6H
 
   , bH5H
   , bH5HP
+  , bH5H6H
   , bH5S
+  , bH5S6H
   , bH5N
   , bH6C
   , bH6D
@@ -37,34 +50,47 @@ module Bids.RomanKeycardBlackwood(
   , b1430S5C
   , b1430S5C5D
   , b1430S5C5S
+  , b1430S5C6S
   , b1430S5D
   , b1430S5D5H
   , b1430S5D5S
+  , b1430S5D6S
   , b3014S5C
   , b3014S5C5D
   , b3014S5C5S
+  , b3014S5C6S
   , b3014S5D
   , b3014S5D5H
   , b3014S5D5S
+  , b3014S5D6S
 
   -- Queen ask responses
   , bS5C5D5H
+  , bS5C5D5H6S
   , bS5C5D5S
   --, bS5C5D5N  -- Too hard to define
   , bS5C5D6C
+  , bS5C5D6C6S
   , bS5C5D6D
+  , bS5C5D6D6S
   , bS5C5D6S
   , bS5D5H5S
+  , bS5D5H5S6S
   --, bS5D5H5N  -- Too hard to define
   , bS5D5H6C
+  , bS5D5H6C6S
   , bS5D5H6D
+  , bS5D5H6D6S
   , bS5D5H6H
+  , bS5D5H6H6S
   , bS5D5H6S
 
   , bS5H
   , bS5H5S
+  , bS5H6S
   , bS5S
   , bS5SP
+  , bS5S6S
   , bS5N
   , bS6C
   , bS6D
