@@ -725,7 +725,6 @@ slamSignoff1430, slamSignoff3014 :: Situations
 
 
 -- TODO:
--- Signing off in slam
 -- 5N as king ask - only if we're thinking about grand slam
 -- respond to 5N
 -- Pretending to have the Q with a 10-card fit as the teller
@@ -735,6 +734,7 @@ slamSignoff1430, slamSignoff3014 :: Situations
 -- Unsure how to phrase: trouble when hearts are trump and you have 1 keycard
 --     without the queen (worried about partner responding 5S)
 -- Show 0 or 3 keycards when you have 0 and a void, rather than 5N?
+-- Forbid the opponents from making a lead-directing double
 
 
 topic1430 :: Topic
