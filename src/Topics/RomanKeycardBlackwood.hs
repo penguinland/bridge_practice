@@ -196,7 +196,7 @@ signoffPartscore1430, signoffPartscore3014 :: Situations
             explanation =
                 "We asked for keycards, but learned we're missing 2 of " .+
                 "them. Slam is likely to fail: sign off at the 5 level."
-          in situation "signoff" action signoffBid explanation
+          in situation "SO5" action signoffBid explanation
       in return inner <~ setups <~ followups
     signoff1430' = wrapNW . join $ return signoff
         -- Empirically, most of the setups are very unlikely to only have 3
@@ -529,9 +529,258 @@ queenKing1430, queenKing3014 :: Situations
            ]
 
 
+slamSignoff1430, slamSignoff3014 :: Situations
+(slamSignoff1430, slamSignoff3014) = (signoff1430, signoff3014)
+  where
+    signoff (setups, payoffs) = let
+        inner setup (middle, signoffBid) = let
+            action = do
+                setup `andNextBidderIs` T.South
+                RKC.b4N
+                E.makePass
+                _ <- middle
+                E.makePass
+            explanation =
+                "Of the 6 cards we care about (the 5 keycards and the " .+
+                "queen of trump), we're missing exactly 1. We're likely " .+
+                "to make small slam but not grand slam. Time to sign off! " .+
+                "(This system is not very nuanced. It's possible, " .+
+                "especially at matchpoints, that signing off in " .+
+                T.Bid 6 T.Notrump .+ " is the right choice instead.)"
+          in situation "slamSO" action signoffBid explanation
+      in return inner <~ setups <~ payoffs
+    -- Per earlier situations, only index 0 is very efficient to generate no
+    -- matter what.
+    setupsH = takeIndices_ [0] setUpAuctionsH
+    setupsS = takeIndices_ [0] setUpAuctionsS
+    signoff1430 = wrapNW . join $ return signoff
+        <~ [ (setupsH, [ ( RKC.b1430H5C
+                         , RKC.b1430H5C6H
+                         )
+                       , ( RKC.b1430H5D
+                         , RKC.b1430H5D6H
+                         )
+                       , ( do RKC.b1430H5C
+                              E.makePass
+                              RKC.b1430H5C5D
+                              E.makePass
+                              RKC.bH5C5D5H
+                         , RKC.b1430H5C5D5H6H
+                         )
+                       , ( do RKC.b1430H5C
+                              E.makePass
+                              RKC.b1430H5C5D
+                              E.makePass
+                              RKC.bH5C5D5S
+                         , RKC.b1430H5C5D5S6H
+                         )
+                       , ( do RKC.b1430H5C
+                              E.makePass
+                              RKC.b1430H5C5D
+                              E.makePass
+                              RKC.bH5C5D6C
+                         , RKC.b1430H5C5D6C6H
+                         )
+                       , ( do RKC.b1430H5C
+                              E.makePass
+                              RKC.b1430H5C5D
+                              E.makePass
+                              RKC.bH5C5D6D
+                         , RKC.b1430H5C5D6D6H
+                         )
+                       , ( RKC.bH5H
+                         , RKC.bH5H6H
+                         )
+                       , ( RKC.bH5S
+                         , RKC.bH5S6H
+                         )
+                       ])
+           , (setupsS, [ ( RKC.b1430S5C
+                         , RKC.b1430S5C6S
+                         )
+                       , ( RKC.b1430S5D
+                         , RKC.b1430S5D6S
+                         )
+                       , ( do RKC.b1430S5C
+                              E.makePass
+                              RKC.b1430S5C5D
+                              E.makePass
+                              RKC.bS5C5D5H
+                         , RKC.b1430S5C5D5H6S
+                         )
+                       , ( do RKC.b1430S5C
+                              E.makePass
+                              RKC.b1430S5C5D
+                              E.makePass
+                              RKC.bS5C5D5S
+                         , RKC.b1430S5C5D5S6S
+                         )
+                       , ( do RKC.b1430S5C
+                              E.makePass
+                              RKC.b1430S5C5D
+                              E.makePass
+                              RKC.bS5C5D6C
+                         , RKC.b1430S5C5D6C6S
+                         )
+                       , ( do RKC.b1430S5C
+                              E.makePass
+                              RKC.b1430S5C5D
+                              E.makePass
+                              RKC.bS5C5D6D
+                         , RKC.b1430S5C5D6D6S
+                         )
+                       , ( do RKC.b1430S5D
+                              E.makePass
+                              RKC.b1430S5D5H
+                              E.makePass
+                              RKC.bS5D5H5S
+                         , RKC.b1430S5D5H5S6S
+                         )
+                       , ( do RKC.b1430S5D
+                              E.makePass
+                              RKC.b1430S5D5H
+                              E.makePass
+                              RKC.bS5D5H6C
+                         , RKC.b1430S5D5H6C6S
+                         )
+                       , ( do RKC.b1430S5D
+                              E.makePass
+                              RKC.b1430S5D5H
+                              E.makePass
+                              RKC.bS5D5H6D
+                         , RKC.b1430S5D5H6D6S
+                         )
+                       , ( do RKC.b1430S5D
+                              E.makePass
+                              RKC.b1430S5D5H
+                              E.makePass
+                              RKC.bS5D5H6H
+                         , RKC.b1430S5D5H6H6S
+                         )
+                       , ( RKC.bS5H
+                         , RKC.bS5H6S
+                         )
+                       , ( RKC.bS5S
+                         , RKC.bS5S6S
+                         )
+                       ])
+           ]
+    signoff3014 = wrapNW . join $ return signoff
+        <~ [ (setupsH, [ ( RKC.b3014H5C
+                         , RKC.b3014H5C6H
+                         )
+                       , ( RKC.b3014H5D
+                         , RKC.b3014H5D6H
+                         )
+                       , ( do RKC.b3014H5C
+                              E.makePass
+                              RKC.b3014H5C5D
+                              E.makePass
+                              RKC.bH5C5D5H
+                         , RKC.b3014H5C5D5H6H
+                         )
+                       , ( do RKC.b3014H5C
+                              E.makePass
+                              RKC.b3014H5C5D
+                              E.makePass
+                              RKC.bH5C5D5S
+                         , RKC.b3014H5C5D5S6H
+                         )
+                       , ( do RKC.b3014H5C
+                              E.makePass
+                              RKC.b3014H5C5D
+                              E.makePass
+                              RKC.bH5C5D6C
+                         , RKC.b3014H5C5D6C6H
+                         )
+                       , ( do RKC.b3014H5C
+                              E.makePass
+                              RKC.b3014H5C5D
+                              E.makePass
+                              RKC.bH5C5D6D
+                         , RKC.b3014H5C5D6D6H
+                         )
+                       , ( RKC.bH5H
+                         , RKC.bH5H6H
+                         )
+                       , ( RKC.bH5S
+                         , RKC.bH5S6H
+                         )
+                       ])
+           , (setupsS, [ ( RKC.b3014S5C
+                         , RKC.b3014S5C6S
+                         )
+                       , ( RKC.b3014S5D
+                         , RKC.b3014S5D6S
+                         )
+                       , ( do RKC.b3014S5C
+                              E.makePass
+                              RKC.b3014S5C5D
+                              E.makePass
+                              RKC.bS5C5D5H
+                         , RKC.b3014S5C5D5H6S
+                         )
+                       , ( do RKC.b3014S5C
+                              E.makePass
+                              RKC.b3014S5C5D
+                              E.makePass
+                              RKC.bS5C5D5S
+                         , RKC.b3014S5C5D5S6S
+                         )
+                       , ( do RKC.b3014S5C
+                              E.makePass
+                              RKC.b3014S5C5D
+                              E.makePass
+                              RKC.bS5C5D6C
+                         , RKC.b3014S5C5D6C6S
+                         )
+                       , ( do RKC.b3014S5C
+                              E.makePass
+                              RKC.b3014S5C5D
+                              E.makePass
+                              RKC.bS5C5D6D
+                         , RKC.b3014S5C5D6D6S
+                         )
+                       , ( do RKC.b3014S5D
+                              E.makePass
+                              RKC.b3014S5D5H
+                              E.makePass
+                              RKC.bS5D5H5S
+                         , RKC.b3014S5D5H5S6S
+                         )
+                       , ( do RKC.b3014S5D
+                              E.makePass
+                              RKC.b3014S5D5H
+                              E.makePass
+                              RKC.bS5D5H6C
+                         , RKC.b3014S5D5H6C6S
+                         )
+                       , ( do RKC.b3014S5D
+                              E.makePass
+                              RKC.b3014S5D5H
+                              E.makePass
+                              RKC.bS5D5H6D
+                         , RKC.b3014S5D5H6D6S
+                         )
+                       , ( do RKC.b3014S5D
+                              E.makePass
+                              RKC.b3014S5D5H
+                              E.makePass
+                              RKC.bS5D5H6H
+                         , RKC.b3014S5D5H6H6S
+                         )
+                       , ( RKC.bS5H
+                         , RKC.bS5H6S
+                         )
+                       , ( RKC.bS5S
+                         , RKC.bS5S6S
+                         )
+                       ])
+           ]
+
+
 
 -- TODO:
--- Signing off in slam
 -- 5N as king ask - only if we're thinking about grand slam
 -- respond to 5N
 -- Pretending to have the Q with a 10-card fit as the teller
@@ -541,6 +790,7 @@ queenKing1430, queenKing3014 :: Situations
 -- Unsure how to phrase: trouble when hearts are trump and you have 1 keycard
 --     without the queen (worried about partner responding 5S)
 -- Show 0 or 3 keycards when you have 0 and a void, rather than 5N?
+-- Forbid the opponents from making a lead-directing double
 
 
 topic1430 :: Topic
@@ -558,6 +808,7 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
                              , queenNoKing5N1430
                              ]
                       , queenKing1430
+                      , slamSignoff1430
                       ]
 
 topic3014 :: Topic
@@ -575,4 +826,5 @@ topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
                              , queenNoKing5N3014
                              ]
                       , queenKing3014
+                      , slamSignoff3014
                       ]
