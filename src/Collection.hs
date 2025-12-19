@@ -13,10 +13,12 @@ module Collection(
     Collection
   , choose
   , Collectable(..)
+  , WeightedList
   , weightedList
 ) where
 
 import Control.Monad.Trans.State.Strict(State, state)
+import Data.Tuple.Extra(second)
 import System.Random(StdGen, randomR)
 
 import Random(pickItem)
@@ -25,7 +27,7 @@ import Random(pickItem)
 data Collection a = CollectionRaw a
                   | CollectionList [Collection a]
                   | CollectionState (State StdGen (Collection a))
-                  | CollectionWL (WeightedList a)
+                  | CollectionWL (WeightedList (Collection a))
 
 
 choose :: Collection a -> State StdGen a
@@ -35,13 +37,13 @@ choose (CollectionState s)                       = s >>= choose
 choose (CollectionWL (WeightedList items total)) = let
     getItemAtWeight = getItemAtWeight' 0
       where
-        getItemAtWeight' _ _ [] = error "got weight over max for WeightedList"
-        getItemAtWeight' subtotal x ((w, v):rest)
+        getItemAtWeight' _ [] _ = error "got weight over max for WeightedList"
+        getItemAtWeight' subtotal ((w, v):rest) x
             | x < subtotal + w = v
-            | otherwise        = getItemAtWeight' (x + w) x rest
+            | otherwise        = getItemAtWeight' (x + w) rest x
   in
     do randomWeight <- state $ randomR (0, total - 1)
-       return $ getItemAtWeight randomWeight items
+       choose $ getItemAtWeight items randomWeight
 
 
 class Collectable r c where  -- c is a collection of raw r values
@@ -49,10 +51,17 @@ class Collectable r c where  -- c is a collection of raw r values
 
 instance Collectable r r where
     collect = CollectionRaw
+
 instance (Collectable r c) => Collectable r [c] where
     collect = CollectionList . map collect
+
 instance (Collectable r c) => Collectable r (State StdGen c) where
     collect = CollectionState . fmap collect
+
+instance (Collectable r c) => Collectable r (WeightedList c) where
+    collect (WeightedList items total) =
+        CollectionWL (WeightedList (map (second collect) items) total)
+
 instance Collectable r (Collection r) where
     collect = id
 
