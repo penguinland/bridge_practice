@@ -36,15 +36,13 @@ choose (CollectionRaw a)                         = return a
 choose (CollectionList aa)                       = pickItem aa >>= choose
 choose (CollectionState s)                       = s >>= choose
 choose (CollectionWL (WeightedList items total)) = let
-    getItemAtWeight = getItemAtWeight' 0
-      where
-        getItemAtWeight' _ [] _ = error "got weight over max for WeightedList"
-        getItemAtWeight' subtotal ((w, v):rest) x
-            | x < subtotal + w = v
-            | otherwise        = getItemAtWeight' (x + w) rest x
+    getItemAtWeight _        []            _ = error "weight over maximum!?"
+    getItemAtWeight subtotal ((w, v):rest) target
+        | target < subtotal + w = v
+        | otherwise             = getItemAtWeight (subtotal + w) rest target
   in
     do randomWeight <- state $ randomR (0, total - 1)
-       choose $ getItemAtWeight items randomWeight
+       choose $ getItemAtWeight 0 items randomWeight
 
 
 class Collectable r c where  -- c is a collection of raw r values
