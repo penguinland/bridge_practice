@@ -24,13 +24,11 @@ $(let dups = duplicatesOf . map (refName . thd3) $ topicList
   in staticAssert (null dups) errorMessage)
 
 
-$(let
-    assertUniqueNames topic = let
-        dups = duplicatesOf . survey sitRef . topicSituations $ topic
-        errorMessage = "duplicate situation names for topic " ++
-                       (toMonospace . topicName $ topic) ++ ": " ++
-                       show dups
-      in
-        staticAssert (null dups) errorMessage
-  in
-    mconcatMapM (assertUniqueNames . thd3) topicList)
+$(let assertUniqueNames topic = let
+          dups = duplicatesOf . survey sitRef . topicSituations $ topic
+          errorMessage = "duplicate situation names for topic " ++
+                         (toMonospace . topicName $ topic) ++ ": " ++
+                         show dups
+        in
+          staticAssert (null dups) errorMessage
+  in mconcatMapM (assertUniqueNames . thd3) topicList)
