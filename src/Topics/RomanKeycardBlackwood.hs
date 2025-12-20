@@ -1,4 +1,9 @@
-module Topics.RomanKeycardBlackwood(topic1430, topic3014) where
+module Topics.RomanKeycardBlackwood(
+    topic1430
+  , topic3014
+  , topic1430Common  -- Skips situations likely to time out, for making PDFs
+  , topic3014Common
+) where
 
 import Control.Monad(join)
 import Data.List(sort)
@@ -779,10 +784,97 @@ slamSignoff1430, slamSignoff3014 :: Situations
            ]
 
 
+kingAsk :: Situations
+kingAsk = let
+    sit (response, kingAskBid) = let
+        action = do
+            -- Start 1S-2N-4H
+            setUpAuctionsS !! 1 `andNextBidderIs` T.South
+            RKC.b4N
+            E.makePass
+            E.suitLength T.Spades 5
+            E.suitLength T.Hearts 5
+            _ <- response
+            E.makePass
+            E.suitLength T.Spades 4
+            E.suitLength T.Hearts 3
+            E.forEach T.minorSuits (`E.minSuitLength` 2)
+            E.soundHolding T.Hearts
+            -- If we had another side king, we could already bid 7N.
+            E.forbidAll [E.hasCard T.Clubs 'K', E.hasCard T.Diamonds 'K']
+        explanation =
+            "We have all the keycards and the queen of trump. We're going " .+
+            "to take 5 spade tricks, 5 heart tricks, and two minor-suit " .+
+            "aces. If partner has a minor-suit king, " .+ T.Bid 7 T.Notrump .+
+            " is a laydown. If they don't, then " .+ T.Bid 6 T.Notrump .+
+            " is a laydown but any grand slam is likely doomed. Ask about " .+
+            "side-suit kings, and see how partner responds."
+      in situation "Kask" action kingAskBid explanation
+  in
+    wrapNW $ return sit <~ [(RKC.bS5H, RKC.bS5H5N), (RKC.bS5S, RKC.bS5S5N)]
+
+
+kingAskResponsePos :: Situations
+kingAskResponsePos = let
+    sit (response, kingAskBid) answer = let
+        action = do
+            -- Start 1S-2N-4H
+            setUpAuctionsS !! 1 `andNextBidderIs` T.North
+            RKC.b4N
+            E.makePass
+            E.suitLength T.Spades 5
+            E.suitLength T.Hearts 5
+            _ <- response
+            E.makePass
+            E.suitLength T.Spades 4
+            E.suitLength T.Hearts 3
+            E.forEach T.minorSuits (`E.minSuitLength` 2)
+            E.soundHolding T.Hearts
+            -- If we had another side king, we could already bid 7N.
+            E.forbidAll [E.hasCard T.Clubs 'K', E.hasCard T.Diamonds 'K']
+            _ <- kingAskBid
+            E.makePass
+        explanation =
+            "Partner has made a king ask, and seems to have interest " .+
+            "in grand slam. Bid our cheapest side-suit king."
+      in situation "KaskRP" action answer explanation
+  in
+    wrapNW $ return sit <~ [(RKC.bS5H, RKC.bS5H5N), (RKC.bS5S, RKC.bS5S5N)]
+                        <~ [RKC.bS5H5N6C, RKC.bS5H5N6D, RKC.bS5H5N6H]
+
+
+kingAskResponseNeg :: Situations
+kingAskResponseNeg = let
+    sit (response, kingAskBid) = let
+        action = do
+            -- Start 1S-2N-4H
+            setUpAuctionsS !! 1 `andNextBidderIs` T.North
+            RKC.b4N
+            E.makePass
+            E.suitLength T.Spades 5
+            E.suitLength T.Hearts 5
+            _ <- response
+            E.makePass
+            E.suitLength T.Spades 4
+            E.suitLength T.Hearts 3
+            E.forEach T.minorSuits (`E.minSuitLength` 2)
+            E.soundHolding T.Hearts
+            -- If we had another side king, we could already bid 7N.
+            E.forbidAll [E.hasCard T.Clubs 'K', E.hasCard T.Diamonds 'K']
+            _ <- kingAskBid
+            E.makePass
+        explanation =
+            "Partner has made a king ask, and seems to have interest " .+
+            "in grand slam. However, we don't have any side-suit kings " .+
+            "to help them find a thirteenth trick. Sign off in small slam. " .+
+            "(Partner might pull this to " .+ T.Bid 6 T.Notrump .+ ", " .+
+            "especially at matchpoints.)"
+      in situation "KaskRN" action RKC.bS5H5N6S explanation
+  in
+    wrapNW $ return sit <~ [(RKC.bS5H, RKC.bS5H5N), (RKC.bS5S, RKC.bS5S5N)]
+
 
 -- TODO:
--- 5N as king ask - only if we're thinking about grand slam
--- respond to 5N
 -- Pretending to have the Q with a 10-card fit as the teller
 -- Pretending to have the Q with a 10-card fit as the asker
 -- Going to grand slam?
@@ -793,34 +885,49 @@ slamSignoff1430, slamSignoff3014 :: Situations
 -- Forbid the opponents from making a lead-directing double
 
 
-topic1430 :: Topic
-topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" situations
+topic1430, topic1430Common :: Topic
+(topic1430, topic1430Common) =
+    ( makeTopic "Roman Keycard Blackwood 1430" "RKC1430" (wrap sits)
+    , makeTopic "Roman Keycard Blackwood 1430" "RKC1430" (wrap commonSits)
+    )
   where
-    situations = wrap [ initiate
-                      , firstResponse1430
-                      , signoffPartscore1430
-                      , wrap [oddVoid, evenVoid]
-                      , queenAsk1430
-                      , noQueen1430
-                      , wrapWeighted [ (3, queenNoKing1430)
-                                     , (1, queenNoKing5N1430)
-                                     ]
-                      , queenKing1430
-                      , slamSignoff1430
-                      ]
+    sits = [ initiate                               --  0
+           , firstResponse1430                      --  1
+           , signoffPartscore1430                   --  2
+           , wrap [oddVoid, evenVoid]               --  3
+           , queenAsk1430                           --  4
+           , noQueen1430                            --  5
+           , wrapWeighted [ (3, queenNoKing1430)    --  6
+                          , (1, queenNoKing5N1430)
+                          ]
+           , queenKing1430                          --  7
+           , slamSignoff1430                        --  8
+           , kingAsk                                --  9, rare: often times out
+           , kingAskResponsePos                     -- 10, rare: often times out
+           , kingAskResponseNeg                     -- 11, rare: often times out
+           ]
+    commonSits = take 9 sits
 
-topic3014 :: Topic
-topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" situations
+
+topic3014, topic3014Common :: Topic
+(topic3014, topic3014Common) =
+    ( makeTopic "Roman Keycard Blackwood 3014" "RKC3014" (wrap sits)
+    , makeTopic "Roman Keycard Blackwood 3014" "RKC3014" (wrap commonSits)
+    )
   where
-    situations = wrap [ initiate
-                      , firstResponse3014
-                      , signoffPartscore3014
-                      , wrap [oddVoid, evenVoid]
-                      , queenAsk3014
-                      , noQueen3014
-                      , wrapWeighted [ (3, queenNoKing3014)
-                                     , (1, queenNoKing5N3014)
-                                     ]
-                      , queenKing3014
-                      , slamSignoff3014
-                      ]
+    sits = [ initiate                               --  0
+           , firstResponse3014                      --  1
+           , signoffPartscore3014                   --  2
+           , wrap [oddVoid, evenVoid]               --  3
+           , queenAsk3014                           --  4
+           , noQueen3014                            --  5
+           , wrapWeighted [ (3, queenNoKing3014)    --  6
+                          , (1, queenNoKing5N3014)
+                          ]
+           , queenKing3014                          --  7
+           , slamSignoff3014                        --  8
+           , kingAsk                                --  9, rare: often times out
+           , kingAskResponsePos                     -- 10, rare: often times out
+           , kingAskResponseNeg                     -- 11, rare: often times out
+           ]
+    commonSits = take 9 sits

@@ -49,8 +49,16 @@ module Bids.RomanKeycardBlackwood(
 
   , bH5H
   , bH5HP
+  , bH5H5N
+  , bH5H5N6C
+  , bH5H5N6D
+  , bH5H5N6H
   , bH5H6H
   , bH5S
+  , bH5S5N
+  , bH5S5N6C
+  , bH5S5N6D
+  , bH5S5N6H
   , bH5S6H
   , bH5N
   , bH6C
@@ -106,9 +114,19 @@ module Bids.RomanKeycardBlackwood(
 
   , bS5H
   , bS5H5S
+  , bS5H5N
+  , bS5H5N6C
+  , bS5H5N6D
+  , bS5H5N6H
+  , bS5H5N6S
   , bS5H6S
   , bS5S
   , bS5SP
+  , bS5S5N
+  , bS5S5N6C
+  , bS5S5N6D
+  , bS5S5N6H
+  , bS5S5N6S
   , bS5S6S
   , bS5N
   , bS6C
@@ -789,3 +807,91 @@ bS5S6S :: Action
 bS5S6S = E.nameAction "RKC_S_5S6S" $ do
     E.keycardCount T.Spades 2 5
     E.makeCall $ T.Bid 6 T.Spades
+
+
+------------
+-- King asks
+------------
+
+bH5H5N :: Action
+bH5H5N = E.nameAction "RKC_H_5H5N" $ do
+    E.keycardCount T.Hearts 3 0
+    E.hasCard T.Hearts 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Notrump) "(delayed alert) side-suit king ask"
+
+
+bH5S5N :: Action
+bH5S5N = E.nameAction "RKC_H_5S5N" $ do
+    E.keycardCount T.Hearts 3 0
+    E.makeAlertableCall (T.Bid 5 T.Notrump) "(delayed alert) side-suit king ask"
+
+
+bS5H5N :: Action
+bS5H5N = E.nameAction "RKC_S_5H5N" $ do
+    E.keycardCount T.Spades 3 0
+    E.hasCard T.Spades 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Notrump) "(delayed alert) side-suit king ask"
+
+
+bS5S5N :: Action
+bS5S5N = E.nameAction "RKC_S_5S5N" $ do
+    E.keycardCount T.Spades 3 0
+    E.makeAlertableCall (T.Bid 5 T.Notrump) "(delayed alert) side-suit king ask"
+
+
+---------------------
+-- King ask responses
+---------------------
+
+-- These are all identical: the bids don't depend on the trump suit or how we
+-- got to a king ask.
+bH5H5N6C, bH5S5N6C, bS5H5N6C, bS5S5N6C :: Action
+bH5H5N6C = E.nameAction "RKC_5M5N6C" $ do
+    E.hasCard T.Clubs 'K'
+    E.makeAlertableCall (T.Bid 6 T.Clubs)
+                        ("(delayed alert) have " .+ T.Clubs .+ "K")
+bH5S5N6C = bH5H5N6C
+bS5H5N6C = bH5H5N6C
+bS5S5N6C = bH5H5N6C
+
+
+-- These are all identical: the bids don't depend on the trump suit or how we
+-- got to a king ask.
+bH5H5N6D, bH5S5N6D, bS5H5N6D, bS5S5N6D :: Action
+bH5H5N6D = E.nameAction "RKC_5M5N6D" $ do
+    E.forbid $ E.hasCard T.Clubs 'K'
+    E.hasCard T.Diamonds 'K'
+    E.makeAlertableCall (T.Bid 6 T.Diamonds)
+                        ("(delayed alert) have " .+ T.Diamonds .+ "K, " .+
+                         "no " .+ T.Clubs .+ "K")
+bH5S5N6D = bH5H5N6D
+bS5H5N6D = bH5H5N6D
+bS5S5N6D = bH5H5N6D
+
+
+bH5H5N6H, bH5S5N6H :: Action
+bH5H5N6H = E.nameAction "RKC_H_5M5N6H" $ do
+    E.forbid $ E.hasCard T.Clubs    'K'
+    E.forbid $ E.hasCard T.Diamonds 'K'
+    E.makeAlertableCall (T.Bid 6 T.Hearts) "(delayed alert) no minor-suit king"
+bH5S5N6H = bH5H5N6H
+
+
+bS5H5N6H, bS5S5N6H :: Action
+bS5H5N6H = E.nameAction "RKC_S_5M5N6H" $ do
+    E.forbid $ E.hasCard T.Clubs    'K'
+    E.forbid $ E.hasCard T.Diamonds 'K'
+    E.hasCard T.Hearts 'K'
+    E.makeAlertableCall (T.Bid 6 T.Hearts)
+                        ("(delayed alert) have " .+ T.Hearts .+ "K, " .+
+                         "no minor-suit king")
+bS5S5N6H = bH5H5N6H
+
+
+bS5H5N6S, bS5S5N6S :: Action
+bS5H5N6S = E.nameAction "RKC_S_5M5N6S" $ do
+    E.forbid $ E.hasCard T.Clubs    'K'
+    E.forbid $ E.hasCard T.Diamonds 'K'
+    E.forbid $ E.hasCard T.Hearts   'K'
+    E.makeAlertableCall (T.Bid 6 T.Spades) "(delayed alert) no side-suit king"
+bS5S5N6S = bS5H5N6S

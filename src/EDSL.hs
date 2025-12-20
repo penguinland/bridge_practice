@@ -174,7 +174,9 @@ hasStopper suit = alternatives [
 
 -- A sound pre-empt has 2 of the top 3 or 3 of the top 5 cards in the suit.
 soundHolding :: T.Suit -> Action
-soundHolding suit = alternatives [hasTopN suit 3 2, hasTopN suit 5 3]
+soundHolding suit = do
+    minSuitLength suit 3
+    alternatives [hasTopN suit 3 2, hasTopN suit 5 3]
 
 
 -- unexported helper
