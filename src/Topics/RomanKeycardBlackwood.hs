@@ -8,7 +8,7 @@ module Topics.RomanKeycardBlackwood(
 import Control.Monad(join)
 import Data.List(sort)
 
-import Action(Action, withholdBid, extractLastCall)
+import Action(Action, withholdBid)
 import qualified Bids.Jacoby2NT as J2N
 import qualified Bids.OneNotrump as NT
 import qualified Bids.RomanKeycardBlackwood as RKC
@@ -915,75 +915,75 @@ tellerClaimsQueen1430, tellerClaimsQueen3014 :: Situations
                      E.makePass
     followupQueenAskH5C = [ do E.forbid $ E.hasCard T.Hearts 'Q'
                                E.hasCard T.Spades 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bH5C5D5S
+                               E.stealCall RKC.bH5C5D5S
                           , do E.forbid $ E.hasCard T.Hearts 'Q'
                                E.forbid $ E.hasCard T.Spades 'K'
                                E.hasCard T.Clubs 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bH5C5D6C
+                               E.stealCall RKC.bH5C5D6C
                           , do E.forbid $ E.hasCard T.Hearts 'Q'
                                E.forbid $ E.hasCard T.Spades 'K'
                                E.forbid $ E.hasCard T.Clubs 'K'
                                E.hasCard T.Diamonds 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bH5C5D6D
+                               E.stealCall RKC.bH5C5D6D
                           , do E.forbid $ E.hasCard T.Hearts 'Q'
                                E.forbid $ E.hasCard T.Spades 'K'
                                E.forbid $ E.hasCard T.Clubs 'K'
                                E.forbid $ E.hasCard T.Diamonds 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bH5C5D6H
+                               E.stealCall RKC.bH5C5D6H
                           ]
     followupQueenAskH5D = [ do E.forbid $ E.hasCard T.Hearts 'Q'
                                E.hasCard T.Clubs 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bH5D5S6C
+                               E.stealCall RKC.bH5D5S6C
                           , do E.forbid $ E.hasCard T.Hearts 'Q'
                                E.forbid $ E.hasCard T.Clubs 'K'
                                E.hasCard T.Diamonds 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bH5D5S6D
+                               E.stealCall RKC.bH5D5S6D
                           , do E.forbid $ E.hasCard T.Hearts 'Q'
                                E.forbid $ E.hasCard T.Clubs 'K'
                                E.forbid $ E.hasCard T.Diamonds 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bH5D5S6H
+                               E.stealCall RKC.bH5D5S6H
                           ]
     followupQueenAskS5C = [ do E.forbid $ E.hasCard T.Spades 'Q'
                                E.hasCard T.Hearts 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bS5C5D5H
+                               E.stealCall RKC.bS5C5D5H
                           , do E.forbid $ E.hasCard T.Spades 'Q'
                                E.forbid $ E.hasCard T.Hearts 'K'
                                E.hasCard T.Clubs 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bS5C5D6C
+                               E.stealCall RKC.bS5C5D6C
                           , do E.forbid $ E.hasCard T.Spades 'Q'
                                E.forbid $ E.hasCard T.Hearts 'K'
                                E.forbid $ E.hasCard T.Clubs 'K'
                                E.hasCard T.Diamonds 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bS5C5D6D
+                               E.stealCall RKC.bS5C5D6D
                           , do E.forbid $ E.hasCard T.Spades 'Q'
                                E.forbid $ E.hasCard T.Hearts 'K'
                                E.forbid $ E.hasCard T.Clubs 'K'
                                E.forbid $ E.hasCard T.Diamonds 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bS5C5D6S
+                               E.stealCall RKC.bS5C5D6S
                           ]
     followupQueenAskS5D = [ do E.forbid $ E.hasCard T.Spades 'Q'
                                E.hasCard T.Clubs 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bS5D5H6C
+                               E.stealCall RKC.bS5D5H6C
                           , do E.forbid $ E.hasCard T.Spades 'Q'
                                E.forbid $ E.hasCard T.Clubs 'K'
                                E.hasCard T.Diamonds 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bS5D5H6D
+                               E.stealCall RKC.bS5D5H6D
                           , do E.forbid $ E.hasCard T.Spades 'Q'
                                E.forbid $ E.hasCard T.Clubs 'K'
                                E.forbid $ E.hasCard T.Diamonds 'K'
                                E.hasCard T.Hearts 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bS5D5H6H
+                               E.stealCall RKC.bS5D5H6H
                           , do E.forbid $ E.hasCard T.Spades 'Q'
                                E.forbid $ E.hasCard T.Clubs 'K'
                                E.forbid $ E.hasCard T.Diamonds 'K'
                                E.forbid $ E.hasCard T.Hearts 'K'
-                               E.makeCompleteCall $ extractLastCall RKC.bS5D5H6S
+                               E.stealCall RKC.bS5D5H6S
                           ]
     sit1430 = wrapNW . join $ return sit
         <~ [ ( setupHearts
              , [ ( return ()
                  , [ do withholdBid RKC.bH5H
-                        E.makeCompleteCall $ extractLastCall RKC.bH5S
+                        E.stealCall RKC.bH5S
                    ]
                  )
                , ( do RKC.b1430H5C
@@ -1005,7 +1005,7 @@ tellerClaimsQueen1430, tellerClaimsQueen3014 :: Situations
            , ( setupSpades
              , [ ( return ()
                  , [ do withholdBid RKC.bS5H
-                        E.makeCompleteCall $ extractLastCall RKC.bS5S
+                        E.stealCall RKC.bS5S
                    ]
                  )
                , ( do RKC.b1430S5C
@@ -1029,7 +1029,7 @@ tellerClaimsQueen1430, tellerClaimsQueen3014 :: Situations
         <~ [ ( setupHearts
              , [ ( return ()
                  , [ do withholdBid RKC.bH5H
-                        E.makeCompleteCall $ extractLastCall RKC.bH5S
+                        E.stealCall RKC.bH5S
                    ]
                  )
                , ( do RKC.b3014H5C
@@ -1051,7 +1051,7 @@ tellerClaimsQueen1430, tellerClaimsQueen3014 :: Situations
            , ( setupSpades
              , [ ( return ()
                  , [ do withholdBid RKC.bS5H
-                        E.makeCompleteCall $ extractLastCall RKC.bS5S
+                        E.stealCall RKC.bS5S
                    ]
                  )
                , ( do RKC.b3014S5C
