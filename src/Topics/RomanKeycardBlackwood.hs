@@ -794,10 +794,6 @@ kingAsk = let
             E.makePass
             E.suitLength T.Spades 5
             E.suitLength T.Hearts 5
-            -- Performance improvement: opener has a minimum, but we still might
-            -- get to grand slam. To make it more likely, push them into the
-            -- minimum HCPs for the right keycard responses.
-            E.hasCard T.Spades 'K'
             _ <- response
             E.makePass
             E.suitLength T.Spades 4
@@ -828,10 +824,6 @@ kingAskResponsePos = let
             E.makePass
             E.suitLength T.Spades 5
             E.suitLength T.Hearts 5
-            -- Performance improvement: opener has a minimum, but we still might
-            -- get to grand slam. To make it more likely, push them into the
-            -- minimum HCPs for the right keycard responses.
-            E.hasCard T.Spades 'K'
             _ <- response
             E.makePass
             E.suitLength T.Spades 4
@@ -861,10 +853,6 @@ kingAskResponseNeg = let
             E.makePass
             E.suitLength T.Spades 5
             E.suitLength T.Hearts 5
-            -- Performance improvement: opener has a minimum, but we still might
-            -- get to grand slam. To make it more likely, push them into the
-            -- minimum HCPs for the right keycard responses.
-            E.hasCard T.Spades 'K'
             _ <- response
             E.makePass
             E.suitLength T.Spades 4
