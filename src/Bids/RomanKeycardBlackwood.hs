@@ -843,32 +843,30 @@ bS5S5N = E.nameAction "RKC_S_5S5N" $ do
 -- King ask responses
 ---------------------
 
-b5M5N6C_ :: Action
-b5M5N6C_ = E.nameAction "RKC_5M5N6C" $ do
+-- These are all identical: the bids don't depend on the trump suit or how we
+-- got to a king ask.
+bH5H5N6C, bH5S5N6C, bS5H5N6C, bS5S5N6C :: Action
+bH5H5N6C = E.nameAction "RKC_5M5N6C" $ do
     E.hasCard T.Clubs 'K'
     E.makeAlertableCall (T.Bid 6 T.Clubs)
                         ("(delayed alert) have " .+ T.Clubs .+ "K")
-
-bH5H5N6C, bH5S5N6C, bS5H5N6C, bS5S5N6C :: Action
-bH5H5N6C = b5M5N6C_
-bH5S5N6C = b5M5N6C_
-bS5H5N6C = b5M5N6C_
-bS5S5N6C = b5M5N6C_
+bH5S5N6C = bH5H5N6C
+bS5H5N6C = bH5H5N6C
+bS5S5N6C = bH5H5N6C
 
 
-b5M5N6D_ :: Action
-b5M5N6D_ = E.nameAction "RKC_5M5N6D" $ do
+-- These are all identical: the bids don't depend on the trump suit or how we
+-- got to a king ask.
+bH5H5N6D, bH5S5N6D, bS5H5N6D, bS5S5N6D :: Action
+bH5H5N6D = E.nameAction "RKC_5M5N6D" $ do
     E.forbid $ E.hasCard T.Clubs 'K'
     E.hasCard T.Diamonds 'K'
     E.makeAlertableCall (T.Bid 6 T.Diamonds)
                         ("(delayed alert) have " .+ T.Diamonds .+ "K, " .+
                          "no " .+ T.Clubs .+ "K")
-
-bH5H5N6D, bH5S5N6D, bS5H5N6D, bS5S5N6D :: Action
-bH5H5N6D = b5M5N6D_
-bH5S5N6D = b5M5N6D_
-bS5H5N6D = b5M5N6D_
-bS5S5N6D = b5M5N6D_
+bH5S5N6D = bH5H5N6D
+bS5H5N6D = bH5H5N6D
+bS5S5N6D = bH5H5N6D
 
 
 bH5H5N6H, bH5S5N6H :: Action
