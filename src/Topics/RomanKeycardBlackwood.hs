@@ -877,8 +877,8 @@ kingAskResponseNeg = let
 tellerClaimsQueen1430, tellerClaimsQueen3014 :: Situations
 (tellerClaimsQueen1430, tellerClaimsQueen3014) = (sit1430, sit3014)
   where
-    sit (setup, payoffs) = let
-        inner (middle, answers) = let
+    sit (setups, payoffs) = let
+        inner setup (middle, answers) = let
             inner' answer = let
                 action = do setup `andNextBidderIs` T.South
                             middle
@@ -890,29 +890,54 @@ tellerClaimsQueen1430, tellerClaimsQueen3014 :: Situations
                     "when we don't."
               in situation "rQlie" action answer explanation
           in return inner' <~ answers
-      in join $ return inner <~ payoffs
-    setupHearts = do J2N.b1H
-                     noInterference T.Hearts
-                     E.suitLength T.Hearts 4  -- Speed up performance
-                     J2N.b1H2N
-                     noInterference T.Hearts
-                     E.suitLength T.Hearts 6
-                     J2N.b1H2N4H
-                     E.makePass
-                     E.alternatives [E.pointRange 17 40, E.maxLoserCount 5]
-                     RKC.b4N
-                     E.makePass
-    setupSpades = do J2N.b1S
-                     noInterference T.Spades
-                     E.suitLength T.Spades 4  -- Speed up performance
-                     J2N.b1S2N
-                     noInterference T.Spades
-                     E.suitLength T.Spades 6
-                     J2N.b1S2N4S
-                     E.makePass
-                     E.alternatives [E.pointRange 17 40, E.maxLoserCount 5]
-                     RKC.b4N
-                     E.makePass
+      in join $ return inner <~ setups <~ payoffs
+    setupHearts = [ do J2N.b1H
+                       noInterference T.Hearts
+                       E.suitLength T.Hearts 4  -- Speed up performance
+                       J2N.b1H2N
+                       noInterference T.Hearts
+                       E.suitLength T.Hearts 6
+                       J2N.b1H2N4H
+                       E.makePass
+                       E.alternatives [E.pointRange 17 40, E.maxLoserCount 5]
+                       RKC.b4N
+                       E.makePass
+                  , do NT.b1N
+                       NT.noInterference
+                       E.suitLength T.Hearts 6
+                       NT.b1N4D
+                       E.makePass
+                       E.suitLength T.Hearts 4
+                       NT.b1N4D4H
+                       E.makePass
+                       NT.slamInterest
+                       E.forbid $ E.hasControl T.Spades
+                       RKC.b4N
+                       E.makePass
+                  ]
+    setupSpades = [ do J2N.b1S
+                       noInterference T.Spades
+                       E.suitLength T.Spades 4  -- Speed up performance
+                       J2N.b1S2N
+                       noInterference T.Spades
+                       E.suitLength T.Spades 6
+                       J2N.b1S2N4S
+                       E.makePass
+                       E.alternatives [E.pointRange 17 40, E.maxLoserCount 5]
+                       RKC.b4N
+                       E.makePass
+                  , do NT.b1N
+                       NT.noInterference
+                       E.suitLength T.Spades 6
+                       NT.b1N4H
+                       E.makePass
+                       E.suitLength T.Spades 4
+                       NT.b1N4H4S
+                       E.makePass
+                       NT.slamInterest
+                       RKC.b4N
+                       E.makePass
+                  ]
     followupQueenAskH5C = [ do E.forbid $ E.hasCard T.Hearts 'Q'
                                E.hasCard T.Spades 'K'
                                E.stealCall RKC.bH5C5D5S
