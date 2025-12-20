@@ -1115,7 +1115,7 @@ topic1430, topic1430Common :: Topic
     , makeTopic "Roman Keycard Blackwood 1430" "RKC1430" (wrap commonSits)
     )
   where
-    sits = last [ initiate                               --  0
+    sits = [ initiate                               --  0
            , firstResponse1430                      --  1
            , signoffPartscore1430                   --  2
            , wrap [oddVoid, evenVoid]               --  3
@@ -1129,7 +1129,7 @@ topic1430, topic1430Common :: Topic
            , kingAskResponseNeg                     -- 11, rare: often times out
            , tellerClaimsQueen1430                  -- 12, rare: often times out
            ]
-    commonSits = sits --take 9 sits
+    commonSits = take 9 sits
 
 
 topic3014, topic3014Common :: Topic
