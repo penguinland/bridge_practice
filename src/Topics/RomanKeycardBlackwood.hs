@@ -8,13 +8,13 @@ module Topics.RomanKeycardBlackwood(
 import Control.Monad(join)
 import Data.List(sort)
 
-import Action(Action)
+import Action(Action, withholdBid)
 import qualified Bids.Jacoby2NT as J2N
 import qualified Bids.OneNotrump as NT
 import qualified Bids.RomanKeycardBlackwood as RKC
 import CommonBids(andNextBidderIs, noInterference)
 import qualified EDSL as E
-import Output((.+))
+import Output((.+), Punct(..))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, wrapWeighted, wrapNW, Situations, makeTopic)
@@ -874,9 +874,233 @@ kingAskResponseNeg = let
     wrapNW $ return sit <~ [(RKC.bS5H, RKC.bS5H5N), (RKC.bS5S, RKC.bS5S5N)]
 
 
+tellerClaimsQueen1430, tellerClaimsQueen3014 :: Situations
+(tellerClaimsQueen1430, tellerClaimsQueen3014) = (sit1430, sit3014)
+  where
+    sit (setups, payoffs) = let
+        inner setup (middle, answers) = let
+            inner' answer = let
+                action = do setup `andNextBidderIs` T.South
+                            middle
+                explanation =
+                    "With a 10-card trump fit, it's very likely that the " .+
+                    "queen of trump will drop singleton or doubleton (or " .+
+                    "be 3" .+ NDash .+ "0 onside). To help partner place " .+
+                    "the contract, we should pretend to have the queen even " .+
+                    "when we don't."
+              in situation "rQlie" action answer explanation
+          in return inner' <~ answers
+      in join $ return inner <~ setups <~ payoffs
+    setupHearts = [ do J2N.b1H
+                       noInterference T.Hearts
+                       E.suitLength T.Hearts 4  -- Speed up performance
+                       J2N.b1H2N
+                       noInterference T.Hearts
+                       E.suitLength T.Hearts 6
+                       J2N.b1H2N4H
+                       E.makePass
+                       E.alternatives [E.pointRange 17 40, E.maxLoserCount 5]
+                       RKC.b4N
+                       E.makePass
+                  , do NT.b1N
+                       NT.noInterference
+                       E.suitLength T.Hearts 6
+                       NT.b1N4D
+                       E.makePass
+                       E.suitLength T.Hearts 4
+                       NT.b1N4D4H
+                       E.makePass
+                       NT.slamInterest
+                       E.forbid $ E.hasControl T.Spades
+                       RKC.b4N
+                       E.makePass
+                  ]
+    setupSpades = [ do J2N.b1S
+                       noInterference T.Spades
+                       E.suitLength T.Spades 4  -- Speed up performance
+                       J2N.b1S2N
+                       noInterference T.Spades
+                       E.suitLength T.Spades 6
+                       J2N.b1S2N4S
+                       E.makePass
+                       E.alternatives [E.pointRange 17 40, E.maxLoserCount 5]
+                       RKC.b4N
+                       E.makePass
+                  , do NT.b1N
+                       NT.noInterference
+                       E.suitLength T.Spades 6
+                       NT.b1N4H
+                       E.makePass
+                       E.suitLength T.Spades 4
+                       NT.b1N4H4S
+                       E.makePass
+                       NT.slamInterest
+                       RKC.b4N
+                       E.makePass
+                  ]
+    followupQueenAskH5C = [ do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.hasCard T.Spades 'K'
+                               E.stealCall RKC.bH5C5D5S
+                          , do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.forbid $ E.hasCard T.Spades 'K'
+                               E.hasCard T.Clubs 'K'
+                               E.stealCall RKC.bH5C5D6C
+                          , do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.forbid $ E.hasCard T.Spades 'K'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.hasCard T.Diamonds 'K'
+                               E.stealCall RKC.bH5C5D6D
+                          , do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.forbid $ E.hasCard T.Spades 'K'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.forbid $ E.hasCard T.Diamonds 'K'
+                               E.stealCall RKC.bH5C5D6H
+                          ]
+    followupQueenAskH5D = [ do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.hasCard T.Clubs 'K'
+                               E.stealCall RKC.bH5D5S6C
+                          , do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.hasCard T.Diamonds 'K'
+                               E.stealCall RKC.bH5D5S6D
+                          , do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.forbid $ E.hasCard T.Diamonds 'K'
+                               E.stealCall RKC.bH5D5S6H
+                          ]
+    followupQueenAskS5C = [ do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.hasCard T.Hearts 'K'
+                               E.stealCall RKC.bS5C5D5H
+                          , do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.forbid $ E.hasCard T.Hearts 'K'
+                               E.hasCard T.Clubs 'K'
+                               E.stealCall RKC.bS5C5D6C
+                          , do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.forbid $ E.hasCard T.Hearts 'K'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.hasCard T.Diamonds 'K'
+                               E.stealCall RKC.bS5C5D6D
+                          , do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.forbid $ E.hasCard T.Hearts 'K'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.forbid $ E.hasCard T.Diamonds 'K'
+                               E.stealCall RKC.bS5C5D6S
+                          ]
+    followupQueenAskS5D = [ do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.hasCard T.Clubs 'K'
+                               E.stealCall RKC.bS5D5H6C
+                          , do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.hasCard T.Diamonds 'K'
+                               E.stealCall RKC.bS5D5H6D
+                          , do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.forbid $ E.hasCard T.Diamonds 'K'
+                               E.hasCard T.Hearts 'K'
+                               E.stealCall RKC.bS5D5H6H
+                          , do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.forbid $ E.hasCard T.Diamonds 'K'
+                               E.forbid $ E.hasCard T.Hearts 'K'
+                               E.stealCall RKC.bS5D5H6S
+                          ]
+    sit1430 = wrapNW . join $ return sit
+        <~ [ ( setupHearts
+             , [ ( return ()
+                 , [ do withholdBid RKC.bH5H
+                        E.stealCall RKC.bH5S
+                   ]
+                 )
+               , ( do RKC.b1430H5C
+                      E.hasCard T.Hearts 'Q'  -- The opponents have the queen
+                      E.makePass
+                      RKC.b1430H5C5D
+                      E.makePass
+                 , followupQueenAskH5C
+                 )
+               , ( do RKC.b1430H5D
+                      E.makePass
+                      RKC.b1430H5D5S
+                      E.hasCard T.Hearts 'Q'  -- The opponents have the queen
+                      E.makePass
+                 , followupQueenAskH5D
+                 )
+               ]
+             )
+           , ( setupSpades
+             , [ ( return ()
+                 , [ do withholdBid RKC.bS5H
+                        E.stealCall RKC.bS5S
+                   ]
+                 )
+               , ( do RKC.b1430S5C
+                      E.makePass
+                      RKC.b1430S5C5D
+                      E.hasCard T.Spades 'Q'  -- The opponents have the queen
+                      E.makePass
+                 , followupQueenAskS5C
+                 )
+               , ( do RKC.b1430S5D
+                      E.hasCard T.Spades 'Q'  -- The opponents have the queen
+                      E.makePass
+                      RKC.b1430S5D5H
+                      E.makePass
+                 , followupQueenAskS5D
+                 )
+               ]
+             )
+           ]
+    sit3014 = wrapNW . join $ return sit
+        <~ [ ( setupHearts
+             , [ ( return ()
+                 , [ do withholdBid RKC.bH5H
+                        E.stealCall RKC.bH5S
+                   ]
+                 )
+               , ( do RKC.b3014H5C
+                      E.makePass
+                      RKC.b3014H5C5D
+                      E.hasCard T.Hearts 'Q'  -- The opponents have the queen
+                      E.makePass
+                 , followupQueenAskH5C
+                 )
+               , ( do RKC.b3014H5D
+                      E.hasCard T.Hearts 'Q'  -- The opponents have the queen
+                      E.makePass
+                      RKC.b3014H5D5S
+                      E.makePass
+                 , followupQueenAskH5D
+                 )
+               ]
+             )
+           , ( setupSpades
+             , [ ( return ()
+                 , [ do withholdBid RKC.bS5H
+                        E.stealCall RKC.bS5S
+                   ]
+                 )
+               , ( do RKC.b3014S5C
+                      E.hasCard T.Spades 'Q'  -- The opponents have the queen
+                      E.makePass
+                      RKC.b3014S5C5D
+                      E.makePass
+                 , followupQueenAskS5C
+                 )
+               , ( do RKC.b3014S5D
+                      E.makePass
+                      RKC.b3014S5D5H
+                      E.hasCard T.Spades 'Q'  -- The opponents have the queen
+                      E.makePass
+                 , followupQueenAskS5D
+                 )
+               ]
+             )
+           ]
+
 -- TODO:
--- Pretending to have the Q with a 10-card fit as the teller
 -- Pretending to have the Q with a 10-card fit as the asker
+--   - hard to do because the next step is to ask for kings, which means we're
+--     aiming for grand slam. Maybe 1S-2N-4H-4N-5m-5N?
 -- Going to grand slam?
 -- Placing the contract after partner shows a void?
 -- Unsure how to phrase: trouble when hearts are trump and you have 1 keycard
@@ -897,14 +1121,13 @@ topic1430, topic1430Common :: Topic
            , wrap [oddVoid, evenVoid]               --  3
            , queenAsk1430                           --  4
            , noQueen1430                            --  5
-           , wrapWeighted [ (3, queenNoKing1430)    --  6
-                          , (1, queenNoKing5N1430)
-                          ]
+           , wrapWeighted [(3, queenNoKing1430), (1, queenNoKing5N1430)]
            , queenKing1430                          --  7
            , slamSignoff1430                        --  8
            , kingAsk                                --  9, rare: often times out
            , kingAskResponsePos                     -- 10, rare: often times out
            , kingAskResponseNeg                     -- 11, rare: often times out
+           , tellerClaimsQueen1430                  -- 12, rare: often times out
            ]
     commonSits = take 9 sits
 
@@ -921,13 +1144,12 @@ topic3014, topic3014Common :: Topic
            , wrap [oddVoid, evenVoid]               --  3
            , queenAsk3014                           --  4
            , noQueen3014                            --  5
-           , wrapWeighted [ (3, queenNoKing3014)    --  6
-                          , (1, queenNoKing5N3014)
-                          ]
+           , wrapWeighted [(3, queenNoKing3014), (1, queenNoKing5N3014)]
            , queenKing3014                          --  7
            , slamSignoff3014                        --  8
            , kingAsk                                --  9, rare: often times out
            , kingAskResponsePos                     -- 10, rare: often times out
            , kingAskResponseNeg                     -- 11, rare: often times out
+           , tellerClaimsQueen3014                  -- 12, rare: often times out
            ]
     commonSits = take 9 sits

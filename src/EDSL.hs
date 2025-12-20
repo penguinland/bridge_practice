@@ -9,6 +9,7 @@ module EDSL (
 , makeCall
 , makeAlertableCall
 , makePass
+, stealCall
 , pointRange
 , suitPointRange
 , balancedHand
@@ -38,7 +39,8 @@ import Control.Monad.Trans.State.Strict(execState, get, put, modify)
 import Data.Bifunctor(first)
 import Data.List.Utils(join)
 
-import Action(Action, newAuction, constrain, define, predealLength, predealCard)
+import Action(Action, newAuction, constrain, define, predealLength, predealCard,
+              extractLastCall)
 import DealerProg(invert, nameAll)
 import Output(Showable, toDescription)
 import Structures(addCall, currentBidder)
@@ -83,17 +85,22 @@ atLeastOneOf :: [a] -> (a -> Action) -> Action
 atLeastOneOf as f = alternatives . map f $ as
 
 
+makeCompleteCall_ :: T.CompleteCall -> Action
+makeCompleteCall_ = modify . first . addCall
+
 makeCall :: T.Call -> Action
-makeCall call = modify $ first (addCall $ T.CompleteCall call Nothing)
+makeCall call = makeCompleteCall_ $ T.CompleteCall call Nothing
 
 makeAlertableCall :: Showable a => T.Call -> a -> Action
-makeAlertableCall call alert = modify . first $ addCall completeCall
+makeAlertableCall call alert = makeCompleteCall_ completeCall
   where
     completeCall = T.CompleteCall call (Just . toDescription $ alert)
 
-
 makePass :: Action
 makePass = makeCall T.Pass
+
+stealCall :: Action -> Action
+stealCall = makeCompleteCall_ . extractLastCall
 
 
 balancedHand :: Action
