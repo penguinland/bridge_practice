@@ -1096,9 +1096,7 @@ topic1430, topic1430Common :: Topic
            , wrap [oddVoid, evenVoid]               --  3
            , queenAsk1430                           --  4
            , noQueen1430                            --  5
-           , wrapWeighted [ (3, queenNoKing1430)    --  6
-                          , (1, queenNoKing5N1430)
-                          ]
+           , wrapWeighted [(3, queenNoKing1430), (1, queenNoKing5N1430)]
            , queenKing1430                          --  7
            , slamSignoff1430                        --  8
            , kingAsk                                --  9, rare: often times out
@@ -1121,9 +1119,7 @@ topic3014, topic3014Common :: Topic
            , wrap [oddVoid, evenVoid]               --  3
            , queenAsk3014                           --  4
            , noQueen3014                            --  5
-           , wrapWeighted [ (3, queenNoKing3014)    --  6
-                          , (1, queenNoKing5N3014)
-                          ]
+           , wrapWeighted [(3, queenNoKing3014), (1, queenNoKing5N3014)]
            , queenKing3014                          --  7
            , slamSignoff3014                        --  8
            , kingAsk                                --  9, rare: often times out
