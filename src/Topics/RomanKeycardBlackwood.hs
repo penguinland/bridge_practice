@@ -848,7 +848,7 @@ kingAskResponsePos = let
       in situation "KaskRP" action answer explanation
   in
     wrapNW $ return sit <~ [(RKC.bS5H, RKC.bS5H5N), (RKC.bS5S, RKC.bS5S5N)]
-                        <~ [RKC.bS5H5N6C, RKC.bS5H5N6D]
+                        <~ [RKC.bS5H5N6C, RKC.bS5H5N6D, RKC.bS5H5N6H]
 
 
 kingAskResponseNeg :: Situations
