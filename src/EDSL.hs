@@ -85,13 +85,12 @@ atLeastOneOf as f = alternatives . map f $ as
 
 
 makeCall :: T.Call -> Action
-makeCall call = modify $ first (addCall $ T.CompleteCall call Nothing)
+makeCall call = makeCompleteCall $ T.CompleteCall call Nothing
 
 makeAlertableCall :: Showable a => T.Call -> a -> Action
-makeAlertableCall call alert = modify . first $ addCall completeCall
+makeAlertableCall call alert = makeCompleteCall completeCall
   where
     completeCall = T.CompleteCall call (Just . toDescription $ alert)
-
 
 -- This one should be rare, and only used with Action.extractLastCall
 makeCompleteCall :: T.CompleteCall -> Action
