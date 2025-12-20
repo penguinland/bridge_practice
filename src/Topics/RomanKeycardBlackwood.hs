@@ -1073,12 +1073,9 @@ tellerClaimsQueen1430, tellerClaimsQueen3014 :: Situations
            ]
 
 -- TODO:
--- Pretending to have the Q with a 10-card fit as the teller
---     1M-2N-4M-4N-5S
---     1M-2N-4M-4N-5m-5r-K
 -- Pretending to have the Q with a 10-card fit as the asker
 --   - hard to do because the next step is to ask for kings, which means we're
---     aiming for grand slam.
+--     aiming for grand slam. Maybe 1S-2N-4H-4N-5m-5N?
 -- Going to grand slam?
 -- Placing the contract after partner shows a void?
 -- Unsure how to phrase: trouble when hearts are trump and you have 1 keycard
