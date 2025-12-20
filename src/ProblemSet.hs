@@ -2,7 +2,6 @@ module ProblemSet(
   generate
 ) where
 
-import Control.Monad(when)
 import Control.Monad.Trans.Class(lift)
 import Control.Monad.Trans.State.Strict(get, mapStateT)
 import Data.Functor.Identity(runIdentity)
@@ -44,5 +43,5 @@ generate n topics = sequence . map getOneSituation $ [1..n]
         case maybeSit of
             Nothing -> getOneSituation i  -- Try again
             Just d  -> do
-                when (i `mod` 1 == 0) (lift $ putStr "." >> hFlush stdout)
+                lift $ putStr "." >> hFlush stdout
                 return d
