@@ -818,8 +818,75 @@ kingAsk = let
     wrapNW $ return sit <~ [(RKC.bS5H, RKC.bS5H5N), (RKC.bS5S, RKC.bS5S5N)]
 
 
+kingAskResponsePos :: Situations
+kingAskResponsePos = let
+    sit (response, kingAskBid) answer = let
+        action = do
+            -- Start 1S-2N-4H
+            setUpAuctionsS !! 1 `andNextBidderIs` T.North
+            RKC.b4N
+            E.makePass
+            E.suitLength T.Spades 5
+            E.suitLength T.Hearts 5
+            -- Performance improvement: opener has a minimum, but we still might
+            -- get to grand slam. To make it more likely, push them into the
+            -- minimum HCPs for the right keycard responses.
+            E.hasCard T.Spades 'K'
+            _ <- response
+            E.makePass
+            E.suitLength T.Spades 4
+            E.suitLength T.Hearts 3
+            E.forEach T.minorSuits (`E.minSuitLength` 2)
+            E.soundHolding T.Hearts
+            -- If we had another side king, we could already bid 7N.
+            E.forbidAll [E.hasCard T.Clubs 'K', E.hasCard T.Diamonds 'K']
+            _ <- kingAskBid
+            E.makePass
+        explanation =
+            "Partner has made a king ask, and seems to have interest " .+
+            "in grand slam. Bid our cheapest side-suit king."
+      in situation "KaskRP" action answer explanation
+  in
+    wrapNW $ return sit <~ [(RKC.bS5H, RKC.bS5H5N), (RKC.bS5S, RKC.bS5S5N)]
+                        <~ [RKC.bS5H5N6C, RKC.bS5H5N6D]
+
+
+kingAskResponseNeg :: Situations
+kingAskResponseNeg = let
+    sit (response, kingAskBid) = let
+        action = do
+            -- Start 1S-2N-4H
+            setUpAuctionsS !! 1 `andNextBidderIs` T.North
+            RKC.b4N
+            E.makePass
+            E.suitLength T.Spades 5
+            E.suitLength T.Hearts 5
+            -- Performance improvement: opener has a minimum, but we still might
+            -- get to grand slam. To make it more likely, push them into the
+            -- minimum HCPs for the right keycard responses.
+            E.hasCard T.Spades 'K'
+            _ <- response
+            E.makePass
+            E.suitLength T.Spades 4
+            E.suitLength T.Hearts 3
+            E.forEach T.minorSuits (`E.minSuitLength` 2)
+            E.soundHolding T.Hearts
+            -- If we had another side king, we could already bid 7N.
+            E.forbidAll [E.hasCard T.Clubs 'K', E.hasCard T.Diamonds 'K']
+            _ <- kingAskBid
+            E.makePass
+        explanation =
+            "Partner has made a king ask, and seems to have interest " .+
+            "in grand slam. However, we don't have any side-suit kings " .+
+            "to help them find a thirteenth trick. Sign off in small slam. " .+
+            "(Partner might pull this to " .+ T.Bid 6 T.Notrump .+ ", " .+
+            "especially at matchpoints.)"
+      in situation "KaskRN" action RKC.bS5H5N6S explanation
+  in
+    wrapNW $ return sit <~ [(RKC.bS5H, RKC.bS5H5N), (RKC.bS5S, RKC.bS5S5N)]
+
+
 -- TODO:
--- respond to 5N
 -- Pretending to have the Q with a 10-card fit as the teller
 -- Pretending to have the Q with a 10-card fit as the asker
 -- Going to grand slam?
@@ -836,18 +903,20 @@ topic1430, topic1430Common :: Topic
     , makeTopic "Roman Keycard Blackwood 1430" "RKC1430" (wrap commonSits)
     )
   where
-    sits = [ initiate                               -- 0
-           , firstResponse1430                      -- 1
-           , signoffPartscore1430                   -- 2
-           , wrap [oddVoid, evenVoid]               -- 3
-           , queenAsk1430                           -- 4
-           , noQueen1430                            -- 5
-           , wrapWeighted [ (3, queenNoKing1430)    -- 6
+    sits = [ initiate                               --  0
+           , firstResponse1430                      --  1
+           , signoffPartscore1430                   --  2
+           , wrap [oddVoid, evenVoid]               --  3
+           , queenAsk1430                           --  4
+           , noQueen1430                            --  5
+           , wrapWeighted [ (3, queenNoKing1430)    --  6
                           , (1, queenNoKing5N1430)
                           ]
-           , queenKing1430                          -- 7
-           , slamSignoff1430                        -- 8
-           , kingAsk                                -- 9, rare: often times out
+           , queenKing1430                          --  7
+           , slamSignoff1430                        --  8
+           , kingAsk                                --  9, rare: often times out
+           , kingAskResponsePos                     -- 10, rare: often times out
+           , kingAskResponseNeg                     -- 11, rare: often times out
            ]
     commonSits = take 9 sits
 
@@ -858,17 +927,19 @@ topic3014, topic3014Common :: Topic
     , makeTopic "Roman Keycard Blackwood 3014" "RKC3014" (wrap commonSits)
     )
   where
-    sits = [ initiate                               -- 0
-           , firstResponse3014                      -- 1
-           , signoffPartscore3014                   -- 2
-           , wrap [oddVoid, evenVoid]               -- 3
-           , queenAsk3014                           -- 4
-           , noQueen3014                            -- 5
-           , wrapWeighted [ (3, queenNoKing3014)    -- 6
+    sits = [ initiate                               --  0
+           , firstResponse3014                      --  1
+           , signoffPartscore3014                   --  2
+           , wrap [oddVoid, evenVoid]               --  3
+           , queenAsk3014                           --  4
+           , noQueen3014                            --  5
+           , wrapWeighted [ (3, queenNoKing3014)    --  6
                           , (1, queenNoKing5N3014)
                           ]
-           , queenKing3014                          -- 7
-           , slamSignoff3014                        -- 8
-           , kingAsk                                -- 9, rare: often times out
+           , queenKing3014                          --  7
+           , slamSignoff3014                        --  8
+           , kingAsk                                --  9, rare: often times out
+           , kingAskResponsePos                     -- 10, rare: often times out
+           , kingAskResponseNeg                     -- 11, rare: often times out
            ]
     commonSits = take 9 sits
