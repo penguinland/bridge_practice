@@ -8,6 +8,7 @@ module EDSL (
 , atLeastOneOf
 , makeCall
 , makeAlertableCall
+, makeCompleteCall
 , makePass
 , pointRange
 , suitPointRange
@@ -90,6 +91,11 @@ makeAlertableCall :: Showable a => T.Call -> a -> Action
 makeAlertableCall call alert = modify . first $ addCall completeCall
   where
     completeCall = T.CompleteCall call (Just . toDescription $ alert)
+
+
+-- This one should be rare, and only used with Action.extractLastCall
+makeCompleteCall :: T.CompleteCall -> Action
+makeCompleteCall = modify . first . addCall
 
 
 makePass :: Action

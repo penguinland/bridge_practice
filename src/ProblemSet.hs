@@ -44,5 +44,5 @@ generate n topics = sequence . map getOneSituation $ [1..n]
         case maybeSit of
             Nothing -> getOneSituation i  -- Try again
             Just d  -> do
-                when (i `mod` 10 == 0) (lift $ putStr "." >> hFlush stdout)
+                when (i `mod` 1 == 0) (lift $ putStr "." >> hFlush stdout)
                 return d

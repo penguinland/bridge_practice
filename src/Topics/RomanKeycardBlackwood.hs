@@ -913,106 +913,114 @@ tellerClaimsQueen1430, tellerClaimsQueen3014 :: Situations
                      E.alternatives [E.pointRange 17 40, E.maxLoserCount 5]
                      RKC.b4N
                      E.makePass
+    followupQueenAskH5C = [ do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.hasCard T.Spades 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bH5C5D5S
+                          , do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.forbid $ E.hasCard T.Spades 'K'
+                               E.hasCard T.Clubs 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bH5C5D6C
+                          , do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.forbid $ E.hasCard T.Spades 'K'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.hasCard T.Diamonds 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bH5C5D6D
+                          , do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.forbid $ E.hasCard T.Spades 'K'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.forbid $ E.hasCard T.Diamonds 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bH5C5D6H
+                          ]
+    followupQueenAskH5D = [ do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.hasCard T.Clubs 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bH5D5S6C
+                          , do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.hasCard T.Diamonds 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bH5D5S6D
+                          , do E.forbid $ E.hasCard T.Hearts 'Q'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.forbid $ E.hasCard T.Diamonds 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bH5D5S6H
+                          ]
+    followupQueenAskS5C = [ do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.hasCard T.Hearts 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bS5C5D5H
+                          , do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.forbid $ E.hasCard T.Hearts 'K'
+                               E.hasCard T.Clubs 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bS5C5D6C
+                          , do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.forbid $ E.hasCard T.Hearts 'K'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.hasCard T.Diamonds 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bS5C5D6D
+                          , do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.forbid $ E.hasCard T.Hearts 'K'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.forbid $ E.hasCard T.Diamonds 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bS5C5D6S
+                          ]
+    followupQueenAskS5D = [ do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.hasCard T.Clubs 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bS5D5H6C
+                          , do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.hasCard T.Diamonds 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bS5D5H6D
+                          , do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.forbid $ E.hasCard T.Diamonds 'K'
+                               E.hasCard T.Hearts 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bS5D5H6H
+                          , do E.forbid $ E.hasCard T.Spades 'Q'
+                               E.forbid $ E.hasCard T.Clubs 'K'
+                               E.forbid $ E.hasCard T.Diamonds 'K'
+                               E.forbid $ E.hasCard T.Hearts 'K'
+                               E.makeCompleteCall $ extractLastCall RKC.bS5D5H6S
+                          ]
     sit1430 = wrapNW . join $ return sit
         <~ [ ( setupHearts
              , [ ( return ()
                  , [ do withholdBid RKC.bH5H
-                        E.makeCall $ extractLastCall RKC.bH5S
+                        E.makeCompleteCall $ extractLastCall RKC.bH5S
                    ]
                  )
                , ( do RKC.b1430H5C
+                      E.hasCard T.Hearts 'Q'  -- The opponents have the queen
                       E.makePass
                       RKC.b1430H5C5D
                       E.makePass
-                 , [ do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.hasCard T.Spades 'K'
-                        E.makeCall $ extractLastCall RKC.bH5C5D5S
-                   , do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.forbid $ E.hasCard T.Spades 'K'
-                        E.hasCard T.Clubs 'K'
-                        E.makeCall $ extractLastCall RKC.bH5C5D6C
-                   , do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.forbid $ E.hasCard T.Spades 'K'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bH5C5D6D
-                   , do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.forbid $ E.hasCard T.Spades 'K'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.forbid $ E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bH5C5D6H
-                   ]
+                 , followupQueenAskH5C
                  )
                , ( do RKC.b1430H5D
                       E.makePass
                       RKC.b1430H5D5S
+                      E.hasCard T.Hearts 'Q'  -- The opponents have the queen
                       E.makePass
-                 , [ do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.hasCard T.Clubs 'K'
-                        E.makeCall $ extractLastCall RKC.bH5D5S6C
-                   , do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bH5D5S6D
-                   , do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.forbid $ E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bH5D5S6H
-                   ]
+                 , followupQueenAskH5D
                  )
                ]
              )
            , ( setupSpades
              , [ ( return ()
                  , [ do withholdBid RKC.bS5H
-                        E.makeCall $ extractLastCall RKC.bS5S
+                        E.makeCompleteCall $ extractLastCall RKC.bS5S
                    ]
                  )
                , ( do RKC.b1430S5C
                       E.makePass
                       RKC.b1430S5C5D
+                      E.hasCard T.Spades 'Q'  -- The opponents have the queen
                       E.makePass
-                 , [ do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.hasCard T.Hearts 'K'
-                        E.makeCall $ extractLastCall RKC.bS5C5D5H
-                   , do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.forbid $ E.hasCard T.Hearts 'K'
-                        E.hasCard T.Clubs 'K'
-                        E.makeCall $ extractLastCall RKC.bS5C5D6C
-                   , do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.forbid $ E.hasCard T.Hearts 'K'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bS5C5D6D
-                   , do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.forbid $ E.hasCard T.Hearts 'K'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.forbid $ E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bS5C5D6S
-                   ]
+                 , followupQueenAskS5C
                  )
                , ( do RKC.b1430S5D
+                      E.hasCard T.Spades 'Q'  -- The opponents have the queen
                       E.makePass
                       RKC.b1430S5D5H
                       E.makePass
-                 , [ do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.hasCard T.Clubs 'K'
-                        E.makeCall $ extractLastCall RKC.bS5D5H6C
-                   , do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bS5D5H6D
-                   , do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.forbid $ E.hasCard T.Diamonds 'K'
-                        E.hasCard T.Hearts 'K'
-                        E.makeCall $ extractLastCall RKC.bS5D5H6H
-                   , do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.forbid $ E.hasCard T.Diamonds 'K'
-                        E.forbid $ E.hasCard T.Hearts 'K'
-                        E.makeCall $ extractLastCall RKC.bS5D5H6S
-                   ]
+                 , followupQueenAskS5D
                  )
                ]
              )
@@ -1021,102 +1029,44 @@ tellerClaimsQueen1430, tellerClaimsQueen3014 :: Situations
         <~ [ ( setupHearts
              , [ ( return ()
                  , [ do withholdBid RKC.bH5H
-                        E.makeCall $ extractLastCall RKC.bH5S
+                        E.makeCompleteCall $ extractLastCall RKC.bH5S
                    ]
                  )
                , ( do RKC.b3014H5C
                       E.makePass
                       RKC.b3014H5C5D
+                      E.hasCard T.Hearts 'Q'  -- The opponents have the queen
                       E.makePass
-                 , [ do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.hasCard T.Spades 'K'
-                        E.makeCall $ extractLastCall RKC.bH5C5D5S
-                   , do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.forbid $ E.hasCard T.Spades 'K'
-                        E.hasCard T.Clubs 'K'
-                        E.makeCall $ extractLastCall RKC.bH5C5D6C
-                   , do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.forbid $ E.hasCard T.Spades 'K'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bH5C5D6D
-                   , do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.forbid $ E.hasCard T.Spades 'K'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.forbid $ E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bH5C5D6H
-                   ]
+                 , followupQueenAskH5C
                  )
                , ( do RKC.b3014H5D
+                      E.hasCard T.Hearts 'Q'  -- The opponents have the queen
                       E.makePass
                       RKC.b3014H5D5S
                       E.makePass
-                 , [ do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.hasCard T.Clubs 'K'
-                        E.makeCall $ extractLastCall RKC.bH5D5S6C
-                   , do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bH5D5S6D
-                   , do E.forbid $ E.hasCard T.Hearts 'Q'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.forbid $ E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bH5D5S6H
-                   ]
+                 , followupQueenAskH5D
                  )
                ]
              )
            , ( setupSpades
              , [ ( return ()
                  , [ do withholdBid RKC.bS5H
-                        E.makeCall $ extractLastCall RKC.bS5S
+                        E.makeCompleteCall $ extractLastCall RKC.bS5S
                    ]
                  )
                , ( do RKC.b3014S5C
+                      E.hasCard T.Spades 'Q'  -- The opponents have the queen
                       E.makePass
                       RKC.b3014S5C5D
                       E.makePass
-                 , [ do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.hasCard T.Hearts 'K'
-                        E.makeCall $ extractLastCall RKC.bS5C5D5H
-                   , do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.forbid $ E.hasCard T.Hearts 'K'
-                        E.hasCard T.Clubs 'K'
-                        E.makeCall $ extractLastCall RKC.bS5C5D6C
-                   , do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.forbid $ E.hasCard T.Hearts 'K'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bS5C5D6D
-                   , do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.forbid $ E.hasCard T.Hearts 'K'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.forbid $ E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bS5C5D6S
-                   ]
+                 , followupQueenAskS5C
                  )
                , ( do RKC.b3014S5D
                       E.makePass
                       RKC.b3014S5D5H
+                      E.hasCard T.Spades 'Q'  -- The opponents have the queen
                       E.makePass
-                 , [ do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.hasCard T.Clubs 'K'
-                        E.makeCall $ extractLastCall RKC.bS5D5H6C
-                   , do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.hasCard T.Diamonds 'K'
-                        E.makeCall $ extractLastCall RKC.bS5D5H6D
-                   , do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.forbid $ E.hasCard T.Diamonds 'K'
-                        E.hasCard T.Hearts 'K'
-                        E.makeCall $ extractLastCall RKC.bS5D5H6H
-                   , do E.forbid $ E.hasCard T.Spades 'Q'
-                        E.forbid $ E.hasCard T.Clubs 'K'
-                        E.forbid $ E.hasCard T.Diamonds 'K'
-                        E.forbid $ E.hasCard T.Hearts 'K'
-                        E.makeCall $ extractLastCall RKC.bS5D5H6S
-                   ]
+                 , followupQueenAskS5D
                  )
                ]
              )
@@ -1157,9 +1107,9 @@ topic1430, topic1430Common :: Topic
            , kingAsk                                --  9, rare: often times out
            , kingAskResponsePos                     -- 10, rare: often times out
            , kingAskResponseNeg                     -- 11, rare: often times out
-           , tellerClaimsQueen1430                  -- 12
+           , tellerClaimsQueen1430                  -- 12, rare: often times out
            ]
-    commonSits = take 9 sits
+    commonSits = sits --take 9 sits
 
 
 topic3014, topic3014Common :: Topic
@@ -1182,6 +1132,6 @@ topic3014, topic3014Common :: Topic
            , kingAsk                                --  9, rare: often times out
            , kingAskResponsePos                     -- 10, rare: often times out
            , kingAskResponseNeg                     -- 11, rare: often times out
-           , tellerClaimsQueen3014                  -- 12
+           , tellerClaimsQueen3014                  -- 12, rare: often times out
            ]
     commonSits = take 9 sits
