@@ -12,7 +12,7 @@ import Network.Wai(Request, requestHeaders)
 import Network.Wai.Middleware.RequestLogger(logStdoutDev)
 import Network.Wai.Middleware.Static(staticPolicy, addBase)
 import System.Random(StdGen, getStdGen)
-import Web.Spock(SpockM, file, text, get, root, spock, runSpock, json,
+import Web.Spock(SpockM, file, text, get, post, root, spock, runSpock, json,
                  getState, middleware, param, request)
 import Web.Spock.Config(PoolOrConn(PCNoDatabase), defaultSpockCfg)
 
@@ -56,6 +56,7 @@ app = do
         req <- request
         file "text/html" $ if isMobile req then "static/mobile.html"
                                            else "static/index.html"
+    post "bugreport" $ text . pack $ "bug report received!\n"
     get "topics" $ json topicNames
     get "situation" $ do
         liftIO $ getCurrentTime >>= print
