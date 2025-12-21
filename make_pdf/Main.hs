@@ -73,10 +73,9 @@ main = let
               , PuppetStayman.topic
               , MuppetStayman.topic
               , TransfersOver1MX.topic
-              , RKC.topic1430
-              , RKC.topic3014
+              , RKC.topic1430Common
               ]
-    topics = [ RKC.topic1430
+    topics = [ RKC.topic1430Common
              ]
   in do
     runStateT (outputLatex 100 topics "test") (mkStdGen 0) >>= return . fst
