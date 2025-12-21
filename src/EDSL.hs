@@ -99,6 +99,10 @@ makeAlertableCall call alert = makeCompleteCall_ completeCall
 makePass :: Action
 makePass = makeCall T.Pass
 
+-- This keeps the last call of the given action, but throws away all the
+-- definitions and constraints added from it. Should be used very rarely: it was
+-- created to practice pretending to have the queen of trump when you've got a
+-- 10-card fit and partner asks for keycards.
 stealCall :: Action -> Action
 stealCall = makeCompleteCall_ . extractLastCall
 
