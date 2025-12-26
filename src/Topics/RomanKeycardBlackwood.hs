@@ -1,7 +1,6 @@
 module Topics.RomanKeycardBlackwood(
     topic1430
   , topic3014
-  , topic3014Common
 ) where
 
 import Control.Monad(join)
@@ -1128,11 +1127,9 @@ topic1430 =
            ]
 
 
-topic3014, topic3014Common :: Topic
-(topic3014, topic3014Common) =
-    ( makeTopic "Roman Keycard Blackwood 3014" "RKC3014" (wrap sits)
-    , makeTopic "Roman Keycard Blackwood 3014" "RKC3014" (wrap commonSits)
-    )
+topic3014 :: Topic
+topic3014 =
+    makeTopic "Roman Keycard Blackwood 3014" "RKC3014" (wrap sits)
   where
     sits = [ initiate                               --  0
            , firstResponse3014                      --  1
@@ -1148,4 +1145,3 @@ topic3014, topic3014Common :: Topic
            , kingAskResponseNeg                     -- 11, rare: often times out
            , tellerClaimsQueen3014                  -- 12, rare: often times out
            ]
-    commonSits = take 9 sits
