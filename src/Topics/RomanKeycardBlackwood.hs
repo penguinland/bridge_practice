@@ -1,7 +1,6 @@
 module Topics.RomanKeycardBlackwood(
     topic1430
   , topic3014
-  , topic1430Common  -- Skips situations likely to time out, for making PDFs
   , topic3014Common
 ) where
 
@@ -1109,11 +1108,9 @@ tellerClaimsQueen1430, tellerClaimsQueen3014 :: Situations
 -- Forbid the opponents from making a lead-directing double
 
 
-topic1430, topic1430Common :: Topic
-(topic1430, topic1430Common) =
-    ( makeTopic "Roman Keycard Blackwood 1430" "RKC1430" (wrap sits)
-    , makeTopic "Roman Keycard Blackwood 1430" "RKC1430" (wrap commonSits)
-    )
+topic1430 :: Topic
+topic1430 =
+    makeTopic "Roman Keycard Blackwood 1430" "RKC1430" (wrap sits)
   where
     sits = [ initiate                               --  0
            , firstResponse1430                      --  1
@@ -1129,7 +1126,6 @@ topic1430, topic1430Common :: Topic
            , kingAskResponseNeg                     -- 11, rare: often times out
            , tellerClaimsQueen1430                  -- 12, rare: often times out
            ]
-    commonSits = take 9 sits
 
 
 topic3014, topic3014Common :: Topic
