@@ -1111,19 +1111,19 @@ topic1430 :: Topic
 topic1430 =
     makeTopic "Roman Keycard Blackwood 1430" "RKC1430" (wrap sits)
   where
-    sits = [ initiate                               --  0
-           , firstResponse1430                      --  1
-           , signoffPartscore1430                   --  2
-           , wrap [oddVoid, evenVoid]               --  3
-           , queenAsk1430                           --  4
-           , noQueen1430                            --  5
+    sits = [ initiate
+           , firstResponse1430
+           , signoffPartscore1430
+           , wrap [oddVoid, evenVoid]
+           , queenAsk1430
+           , noQueen1430
            , wrapWeighted [(3, queenNoKing1430), (1, queenNoKing5N1430)]
-           , queenKing1430                          --  7
-           , slamSignoff1430                        --  8
-           , kingAsk                                --  9, rare: often times out
-           , kingAskResponsePos                     -- 10, rare: often times out
-           , kingAskResponseNeg                     -- 11, rare: often times out
-           , tellerClaimsQueen1430                  -- 12, rare: often times out
+           , queenKing1430
+           , slamSignoff1430
+           , kingAsk
+           , kingAskResponsePos
+           , kingAskResponseNeg
+           , tellerClaimsQueen1430
            ]
 
 
@@ -1131,17 +1131,17 @@ topic3014 :: Topic
 topic3014 =
     makeTopic "Roman Keycard Blackwood 3014" "RKC3014" (wrap sits)
   where
-    sits = [ initiate                               --  0
-           , firstResponse3014                      --  1
-           , signoffPartscore3014                   --  2
-           , wrap [oddVoid, evenVoid]               --  3
-           , queenAsk3014                           --  4
-           , noQueen3014                            --  5
+    sits = [ initiate
+           , firstResponse3014
+           , signoffPartscore3014
+           , wrap [oddVoid, evenVoid]
+           , queenAsk3014
+           , noQueen3014
            , wrapWeighted [(3, queenNoKing3014), (1, queenNoKing5N3014)]
-           , queenKing3014                          --  7
-           , slamSignoff3014                        --  8
-           , kingAsk                                --  9, rare: often times out
-           , kingAskResponsePos                     -- 10, rare: often times out
-           , kingAskResponseNeg                     -- 11, rare: often times out
-           , tellerClaimsQueen3014                  -- 12, rare: often times out
+           , queenKing3014
+           , slamSignoff3014
+           , kingAsk
+           , kingAskResponsePos
+           , kingAskResponseNeg
+           , tellerClaimsQueen3014
            ]
