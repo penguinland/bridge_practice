@@ -1108,8 +1108,7 @@ tellerClaimsQueen1430, tellerClaimsQueen3014 :: Situations
 
 
 topic1430 :: Topic
-topic1430 =
-    makeTopic "Roman Keycard Blackwood 1430" "RKC1430" sits
+topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" sits
   where
     sits = wrap [ initiate
                 , firstResponse1430
@@ -1128,8 +1127,7 @@ topic1430 =
 
 
 topic3014 :: Topic
-topic3014 =
-    makeTopic "Roman Keycard Blackwood 3014" "RKC3014" sits
+topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" sits
   where
     sits = wrap [ initiate
                 , firstResponse3014
