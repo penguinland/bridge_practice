@@ -73,6 +73,7 @@ main = let
               , PuppetStayman.topic
               , MuppetStayman.topic
               , TransfersOver1MX.topic
+              , RKC.topic1430
               ]
     topics = [ RKC.topic1430
              ]
