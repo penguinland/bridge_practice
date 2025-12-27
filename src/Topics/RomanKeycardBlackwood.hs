@@ -1120,8 +1120,7 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" sits
                 , queenKing1430
                 , slamSignoff1430
                 , kingAsk
-                , kingAskResponsePos
-                , kingAskResponseNeg
+                , wrap [kingAskResponsePos, kingAskResponseNeg]
                 , tellerClaimsQueen1430
                 ]
 
@@ -1139,7 +1138,6 @@ topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" sits
                 , queenKing3014
                 , slamSignoff3014
                 , kingAsk
-                , kingAskResponsePos
-                , kingAskResponseNeg
+                , wrap [kingAskResponsePos, kingAskResponseNeg]
                 , tellerClaimsQueen3014
                 ]
