@@ -114,7 +114,7 @@ eval debugRef dir vul deal seed = let
     result :: IO (Maybe String)
     result = do
         (exitCode, stdout, stderr) <- readProcessWithExitCode
-            "dealer.mine" ["-s", show seed] prog
+            "dealer" ["-s", show seed] prog
         if exitCode == ExitSuccess
         then return $ Just stdout
         else error $ stderr ++ "\n" ++ prog
