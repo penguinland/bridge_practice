@@ -1,6 +1,5 @@
 module Bids.StandardModernPrecision.TwoDiamonds(
-  name44Rkc
-, noDirectOvercall
+  noDirectOvercall
 , b2D  -- Re-exported from BasicBids
 , b2D2H
 , bP2D2H
@@ -36,13 +35,8 @@ import EDSL(suitLength, minSuitLength, maxSuitLength, makeCall, pointRange,
             makeAlertableCall, atLeastAsLong, longerThan, forbid, forbidAll,
             balancedHand, soundHolding, makePass, alternatives, forEach,
             minLoserCount, maxLoserCount, nameAction)
-import Output(Punct(..), (.+), Description)
+import Output(Punct(..), (.+))
 import qualified Terminology as T
-
-
--- This name is too long to write over and over.
-name44Rkc :: Description
-name44Rkc = T.Bid 4 T.Clubs .+ "/" .+ T.Bid 4 T.Diamonds .+ "/RKC"
 
 
 noDirectOvercall :: Action
