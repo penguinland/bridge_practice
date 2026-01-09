@@ -4,23 +4,37 @@ module Bids.StandardModernPrecision.Mulberry(
     b2D2N3C3D3H4D
   , b2D2N3C3D3S4D
   , b2D2N3C3D3N4D
+  , b2D2N3D4D
   , b2D2N3H4D
   , b2D2N3S4D
-  , b2D2N3N4D
 
   , b2D2N3C3D3H4D4H
   , b2D2N3C3D3S4D4H
   , b2D2N3C3D3N4D4H
+  , b2D2N3D4D4H
   , b2D2N3H4D4H
   , b2D2N3S4D4H
-  , b2D2N3N4D4H
 
   , b2D2N3C3D3H4D4HP
   , b2D2N3C3D3S4D4HP
   , b2D2N3C3D3N4D4HP
+  , b2D2N3D4D4HP       -- might have bid 3H instead of 4D
   , b2D2N3H4D4HP
   , b2D2N3S4D4HP
-  , b2D2N3N4D4HP
+
+  , b2D2N3C3D3H4D4H4S  -- might have bid 3S instead of 4D
+  , b2D2N3C3D3S4D4H4S
+  , b2D2N3C3D3N4D4H4S
+  , b2D2N3D4D4H4S      -- might have bid 3S instead of 4D
+  , b2D2N3H4D4H4S      -- might have bid 3S instead of 4D
+  , b2D2N3S4D4H4S
+
+  , b2D2N3C3D3H4D4H5C
+  , b2D2N3C3D3S4D4H5C
+  , b2D2N3C3D3N4D4H5C
+  , b2D2N3D4D4H5C
+  , b2D2N3H4D4H5C
+  , b2D2N3S4D4H5C
 
 ) where
 
@@ -40,6 +54,8 @@ slamInterestOver2DMax_ :: Action
 slamInterestOver2DMax_ = E.nameAction "slam_interest" $ do
     E.alternatives [E.pointRange 17 40, E.maxLoserCount 5]
 
+
+-- 4D
 
 b2D2N3C3D3H4D :: Action
 b2D2N3C3D3H4D = E.nameAction "b2D2N3C3D3H4D" $ do
@@ -81,65 +97,181 @@ b2D2N3S4D = E.nameAction "b2D2N3S4D"$ do
         ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
 
 
-b2D2N3N4D :: Action
-b2D2N3N4D = E.nameAction "b2D2N3N4D"$ do
+b2D2N3D4D :: Action
+b2D2N3D4D = E.nameAction "b2D2N3D4D"$ do
     E.forbid slamInterestOver2DMax_
     E.makeAlertableCall
         (T.Bid 4 T.Diamonds)
         ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
 
 
+-- 4D-4H
+
 b4D4H_ :: Action
-b4D4H_ = do
+b4D4H_ =
     E.makeAlertableCall (T.Bid 4 T.Hearts) "(delayed alert) pass or correct"
 
 b2D2N3C3D3H4D4H, b2D2N3C3D3S4D4H, b2D2N3C3D3N4D4H :: Action
-b2D2N3H4D4H, b2D2N3S4D4H, b2D2N3N4D4H :: Action
+b2D2N3H4D4H, b2D2N3S4D4H, b2D2N3D4D4H :: Action
 b2D2N3C3D3H4D4H = b4D4H_
 b2D2N3C3D3S4D4H = b4D4H_
 b2D2N3C3D3N4D4H = b4D4H_
 b2D2N3H4D4H = b4D4H_
 b2D2N3S4D4H = b4D4H_
-b2D2N3N4D4H = b4D4H_
+b2D2N3D4D4H = b4D4H_
 
+
+-- 4D-4H-P
 
 b2D2N3C3D3H4D4HP :: Action
 b2D2N3C3D3H4D4HP = E.nameAction "b2D2N3C3D3H4D4HP"$ do
-    minSuitLength T.Hearts 5
-    maxSuitLength T.Spades 3
-    maxSuitLength T.Clubs 2
+    E.minSuitLength T.Hearts 5
+    E.maxSuitLength T.Spades 3
+    E.maxSuitLength T.Clubs 2
+    E.makeCall T.Pass
 
 
 b2D2N3C3D3S4D4HP :: Action
 b2D2N3C3D3S4D4HP = E.nameAction "b2D2N3C3D3S4D4HP"$ do
-    minSuitLength T.Hearts 4
-    maxSuitLength T.Spades 4
-    maxSuitLength T.Clubs 2
+    E.minSuitLength T.Hearts 4
+    E.maxSuitLength T.Spades 4
+    E.maxSuitLength T.Clubs 2
+    E.makeCall T.Pass
 
 
 b2D2N3C3D3N4D4HP :: Action
 b2D2N3C3D3N4D4HP = E.nameAction "b2D2N3C3D3N4D4HP"$ do
-    minSuitLength T.Hearts 4
-    maxSuitLength T.Spades 3
-    maxSuitLength T.Clubs 2  -- Might bid this with 3 clubs, too
+    E.minSuitLength T.Hearts 4
+    E.maxSuitLength T.Spades 3
+    E.maxSuitLength T.Clubs 2  -- Might bid this with 3 clubs, too
+    E.makeCall T.Pass
 
 
 b2D2N3H4D4HP :: Action
 b2D2N3H4D4HP = E.nameAction "b2D2N3H4D4HP"$ do
-    minSuitLength T.Hearts 5
-    maxSuitLength T.Spades 3
-    maxSuitLength T.Clubs 2
+    E.minSuitLength T.Hearts 5
+    E.maxSuitLength T.Spades 3
+    E.maxSuitLength T.Clubs 2
+    E.makeCall T.Pass
 
 
 b2D2N3S4D4HP :: Action
 b2D2N3S4D4HP = E.nameAction "b2D2N3S4D4HP"$ do
-    minSuitLength T.Hearts 4
-    maxSuitLength T.Spades 4
-    maxSuitLength T.Clubs 2
+    E.minSuitLength T.Hearts 4
+    E.maxSuitLength T.Spades 4
+    E.maxSuitLength T.Clubs 2
+    E.makeCall T.Pass
 
 
-b2D2N3N4D4HP :: Action
-b2D2N3N4D4HP = E.nameAction "b2D2N3N4D4HP"$ do
-    minSuitLength T.Hearts 4
-    maxSuitLength T.Spades 3
-    maxSuitLength T.Clubs 2  -- Might bid this with 3 clubs, too
+b2D2N3D4D4HP :: Action
+b2D2N3D4D4HP = E.nameAction "b2D2N3D4D4HP"$ do
+    E.minSuitLength T.Hearts 4
+    E.maxSuitLength T.Spades 3
+    E.maxSuitLength T.Clubs 2  -- Might bid this with 3 clubs, too
+    E.makeCall T.Pass
+
+
+-- 4D-4H-4S
+
+b2D2N3C3D3H4D4H4S :: Action
+b2D2N3C3D3H4D4H4S = E.nameAction "b2D2N3C3D3H4D4H4S"$ do
+    E.minSuitLength T.Spades 4
+    E.maxSuitLength T.Hearts 4
+    E.maxSuitLength T.Clubs 3
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+b2D2N3C3D3S4D4H4S :: Action
+b2D2N3C3D3S4D4H4S = E.nameAction "b2D2N3C3D3S4D4H4S"$ do
+    E.minSuitLength T.Spades 5
+    E.maxSuitLength T.Hearts 3
+    E.maxSuitLength T.Clubs 3
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+b2D2N3C3D3N4D4H4S :: Action
+b2D2N3C3D3N4D4H4S = E.nameAction "b2D2N3C3D3N4D4H4S"$ do
+    E.minSuitLength T.Spades 4
+    E.maxSuitLength T.Hearts 3
+    E.maxSuitLength T.Clubs 3
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+b2D2N3H4D4H4S :: Action
+b2D2N3H4D4H4S = E.nameAction "b2D2N3H4D4H4S"$ do
+    E.minSuitLength T.Spades 4
+    E.maxSuitLength T.Hearts 4
+    E.maxSuitLength T.Clubs 3
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+b2D2N3S4D4H4S :: Action
+b2D2N3S4D4H4S = E.nameAction "b2D2N3S4D4H4S"$ do
+    E.minSuitLength T.Spades 5
+    E.maxSuitLength T.Hearts 3
+    E.maxSuitLength T.Clubs 3
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+b2D2N3D4D4H4S :: Action
+b2D2N3D4D4H4S = E.nameAction "b2D2N3D4D4H4S"$ do
+    E.minSuitLength T.Spades 4
+    E.maxSuitLength T.Hearts 3
+    E.maxSuitLength T.Clubs 3
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+-- 4D-4H-5C
+
+b2D2N3C3D3H4D4H5C :: Action
+b2D2N3C3D3H4D4H5C = E.nameAction "b2D2N3C3D3H4D4H5C"$ do
+    E.maxSuitLength T.Clubs 3
+    E.minSuitLength T.Spades 3
+    E.maxSuitLength T.Hearts 4
+    E.forbid $ E.hasStopper T.Diamonds
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+b2D2N3C3D3S4D4H5C :: Action
+b2D2N3C3D3S4D4H5C = E.nameAction "b2D2N3C3D3S4D4H5C"$ do
+    E.maxSuitLength T.Clubs 3
+    E.minSuitLength T.Spades 4
+    E.maxSuitLength T.Hearts 3
+    E.forbid $ E.hasStopper T.Diamonds
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+b2D2N3C3D3N4D4H5C :: Action
+b2D2N3C3D3N4D4H5C = E.nameAction "b2D2N3C3D3N4D4H5C"$ do
+    E.maxSuitLength T.Clubs 4
+    E.minSuitLength T.Spades 3
+    E.maxSuitLength T.Hearts 3
+    E.forbid $ E.hasStopper T.Diamonds
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+b2D2N3D4D4H5C :: Action
+b2D2N3D4D4H5C = E.nameAction "b2D2N3D4D4H5C"$ do
+    E.maxSuitLength T.Clubs 4
+    E.minSuitLength T.Spades 3
+    E.maxSuitLength T.Hearts 3
+    E.forbid $ E.hasStopper T.Diamonds
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+b2D2N3H4D4H5C :: Action
+b2D2N3H4D4H5C = E.nameAction "b2D2N3H4D4H5C"$ do
+    E.maxSuitLength T.Clubs 3
+    E.minSuitLength T.Spades 3
+    E.maxSuitLength T.Hearts 4
+    E.forbid $ E.hasStopper T.Diamonds
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+b2D2N3S4D4H5C :: Action
+b2D2N3S4D4H5C = E.nameAction "b2D2N3S4D4H5C"$ do
+    E.maxSuitLength T.Clubs 3
+    E.minSuitLength T.Spades 4
+    E.maxSuitLength T.Hearts 3
+    E.forbid $ E.hasStopper T.Diamonds
+    E.makeCall $ T.Bid 5 T.Clubs
