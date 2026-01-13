@@ -379,7 +379,7 @@ convDoubleRebid = let
 
 
 topic :: Topic
-topic = makeTopic "Multi-Landy (Woolsey) over all notrump" "mlan" situations
+topic = makeTopic "multi-Landy (Woolsey) over all notrump" "mlan" situations
   where
     situations = wrap [ twoClubs
                       , twoClubsResponse
