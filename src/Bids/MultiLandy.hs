@@ -1,4 +1,4 @@
-module Bids.Woolsey(
+module Bids.MultiLandy(
     b1NweaoX  -- Double is penalty against weak notrump
   , b1NstroX  -- Double is conventional against strong notrump
   , b1NoX2C
@@ -44,7 +44,7 @@ b1NweaoX = Cappelletti.b1NoX
 
 
 b1NstroX :: Action
-b1NstroX = nameAction "wool_b1NstroX" $ do
+b1NstroX = nameAction "mlan_b1NstroX" $ do
     alternatives [ twoSuited T.Clubs    T.Hearts >> maxSuitLength T.Hearts 4
                  , twoSuited T.Diamonds T.Hearts >> maxSuitLength T.Hearts 4
                  , twoSuited T.Clubs    T.Spades >> maxSuitLength T.Spades 4
@@ -69,7 +69,7 @@ prepareAdvancer_ = do
     forEach T.allSuits (`maxSuitLength` 6)
 
 b1NoX2C :: Action
-b1NoX2C = nameAction "wool_b1NoX2C" $ do
+b1NoX2C = nameAction "mlan_b1NoX2C" $ do
     prepareAdvancer_
     -- Prefer the fit with the most cards.
     constrain "tolerate_minor" ["shorter_minor_", " + 1 >= shorter_major_", ""]
@@ -84,62 +84,62 @@ b1NoX2C = nameAction "wool_b1NoX2C" $ do
     makeAlertableCall (T.Bid 2 T.Clubs) "prefer the minor: pass or correct"
 
 b1NoX2D :: Action
-b1NoX2D = nameAction "wool_b1NoX2D" $ do
+b1NoX2D = nameAction "mlan_b1NoX2D" $ do
     prepareAdvancer_  -- Remember to still forbid long suits!
     forbid b1NoX2C
     makeAlertableCall (T.Bid 2 T.Diamonds) "bid your major"
 
 
 b1NoX2CP :: Action
-b1NoX2CP = nameAction "wool_b1NoX2CP" $ do
+b1NoX2CP = nameAction "mlan_b1NoX2CP" $ do
     T.Clubs `longerThan` T.Diamonds
     makeCall T.Pass
 
 
 b1NoX2C2D :: Action
-b1NoX2C2D = nameAction "wool_b1NoX2C2D" $ do
+b1NoX2C2D = nameAction "mlan_b1NoX2C2D" $ do
     T.Diamonds `longerThan` T.Clubs
     makeCall $ T.Bid 2 T.Diamonds
 
 
 b1NoX2D2H :: Action
-b1NoX2D2H = nameAction "wool_b1NoX2D2H" $ do
+b1NoX2D2H = nameAction "mlan_b1NoX2D2H" $ do
     T.Hearts `longerThan` T.Spades
     makeCall $ T.Bid 2 T.Hearts
 
 
 b1NoX2D2S :: Action
-b1NoX2D2S = nameAction "wool_b1NoX2D2S" $ do
+b1NoX2D2S = nameAction "mlan_b1NoX2D2S" $ do
     T.Spades `longerThan` T.Hearts
     makeCall $ T.Bid 2 T.Spades
 
 
 b1No2C :: Action
-b1No2C = nameAction "wool_b1No2C" $ do
+b1No2C = nameAction "mlan_b1No2C" $ do
     twoSuited T.Hearts T.Spades
     makeAlertableCall (T.Bid 2 T.Clubs) "both majors"
 
 
 b1No2C2H :: Action
-b1No2C2H = nameAction "wool_b1No2C2H" $ do
+b1No2C2H = nameAction "mlan_b1No2C2H" $ do
     T.Hearts `strongerThan` T.Spades
     makeCall $ T.Bid 2 T.Hearts
 
 
 b1No2C2S :: Action
-b1No2C2S = nameAction "wool_b1No2C2S" $ do
+b1No2C2S = nameAction "mlan_b1No2C2S" $ do
     T.Spades `strongerThan` T.Hearts
     makeCall $ T.Bid 2 T.Spades
 
 
 b1No2D :: Action
-b1No2D = nameAction "wool_b1No2D" $ do
+b1No2D = nameAction "mlan_b1No2D" $ do
     alternatives [b1No2D2HP, b1No2D2H2S]
     makeAlertableCall (T.Bid 2 T.Diamonds) "one long major"
 
 
 b1No2D2H :: Action
-b1No2D2H = nameAction "wool_b1No2D2H" $ do
+b1No2D2H = nameAction "mlan_b1No2D2H" $ do
     -- If you've got your own long suit, you might bid it. To prevent users from
     -- being tempted to do that, make sure there aren't long suits.
     forEach T.allSuits (`maxSuitLength` 5)
@@ -147,13 +147,13 @@ b1No2D2H = nameAction "wool_b1No2D2H" $ do
 
 
 b1No2D2HP :: Action
-b1No2D2HP = nameAction "wool_b1No2D2HP" $ do
+b1No2D2HP = nameAction "mlan_b1No2D2HP" $ do
     singleSuited T.Hearts
     makeCall T.Pass
 
 
 b1No2D2H2S :: Action
-b1No2D2H2S = nameAction "wool_b1No2D2H2S" $ do
+b1No2D2H2S = nameAction "mlan_b1No2D2H2S" $ do
     singleSuited T.Spades
     makeCall $ T.Bid 2 T.Spades
 
@@ -165,12 +165,12 @@ majorAndMinor_ major =
                  ]
 
 b1No2H :: Action
-b1No2H = nameAction "wool_b1No2H" $ do
+b1No2H = nameAction "mlan_b1No2H" $ do
     majorAndMinor_ T.Hearts
     makeAlertableCall (T.Bid 2 T.Hearts) "5+ hearts and 4+ in a minor"
 
 b1No2S :: Action
-b1No2S = nameAction "wool_b1No2S" $ do
+b1No2S = nameAction "mlan_b1No2S" $ do
     majorAndMinor_ T.Spades
     makeAlertableCall (T.Bid 2 T.Spades) "5+ spades and 4+ in a minor"
 
@@ -194,19 +194,19 @@ preferMinor_ major = do
     makeAlertableCall (T.Bid 2 T.Notrump) "bid your minor"
 
 b1No2H2N :: Action
-b1No2H2N = nameAction "wool_b1No2H2N" (preferMinor_ T.Hearts)
+b1No2H2N = nameAction "mlan_b1No2H2N" (preferMinor_ T.Hearts)
 
 b1No2S2N :: Action
-b1No2S2N = nameAction "wool_b1No2S2N" (preferMinor_ T.Spades)
+b1No2S2N = nameAction "mlan_b1No2S2N" (preferMinor_ T.Spades)
 
 
 b1No2H2N3C :: Action
-b1No2H2N3C = nameAction "wool_b1No2M2N3C" $ do
+b1No2H2N3C = nameAction "mlan_b1No2M2N3C" $ do
     T.Clubs `longerThan` T.Diamonds
     makeCall (T.Bid 3 T.Clubs)
 
 b1No2H2N3D :: Action
-b1No2H2N3D = nameAction "wool_b1No2M2N3D" $ do
+b1No2H2N3D = nameAction "mlan_b1No2M2N3D" $ do
     T.Diamonds `longerThan` T.Clubs
     makeCall (T.Bid 3 T.Diamonds)
 
@@ -219,7 +219,7 @@ b1No2S2N3D = b1No2H2N3D
 
 
 b1No2N :: Action
-b1No2N = nameAction "wool_b1No2N" $ do
+b1No2N = nameAction "mlan_b1No2N" $ do
     twoSuited T.Clubs T.Diamonds
     -- 5-4 shape isn't enough to push to the 3 level: you should be 5-5.
     forEach T.minorSuits (`minSuitLength` 5)
@@ -227,13 +227,13 @@ b1No2N = nameAction "wool_b1No2N" $ do
 
 
 b1No2N3C :: Action
-b1No2N3C = nameAction "wool_b1No2N3C" $ do
+b1No2N3C = nameAction "mlan_b1No2N3C" $ do
     T.Clubs `strongerThan` T.Diamonds
     makeCall $ T.Bid 3 T.Clubs
 
 
 b1No2N3D :: Action
-b1No2N3D = nameAction "wool_b1No2N3D" $ do
+b1No2N3D = nameAction "mlan_b1No2N3D" $ do
     T.Diamonds `strongerThan` T.Clubs
     makeCall $ T.Bid 3 T.Diamonds
 
@@ -249,7 +249,7 @@ singleMinor_ suit = do
     makeCall $ T.Bid 3 suit
 
 b1No3C :: Action
-b1No3C = nameAction "wool_b1No3C" $ singleMinor_ T.Clubs
+b1No3C = nameAction "mlan_b1No3C" $ singleMinor_ T.Clubs
 
 b1No3D :: Action
-b1No3D = nameAction "wool_b1No3D" $ singleMinor_ T.Diamonds
+b1No3D = nameAction "mlan_b1No3D" $ singleMinor_ T.Diamonds

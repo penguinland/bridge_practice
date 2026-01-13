@@ -19,7 +19,7 @@ import qualified Topics.ThreeLevelResponsesTo1N as B1N3X
 import qualified Topics.Meckwell as Meckwell
 import qualified Topics.DONT as DONT
 import qualified Topics.Cappelletti as Cappelletti
-import qualified Topics.Woolsey as Woolsey
+import qualified Topics.MultiLandy as MultiLandy
 import qualified Topics.Lebensohl as Lebensohl
 import qualified Topics.Jacoby2NT as Jacoby2NT
 import qualified Topics.RomanKeycardBlackwood as RKC
@@ -44,23 +44,23 @@ import qualified Topics.StandardModernPrecision.TripleFourOne as TripleFourOne
 -- indices aren't unique, we're gonna have really subtle bugs that will be hard
 -- to figure out, but we check for this in Assertions.hs.
 topicList :: [(Int, Bool, Topic)]
-topicList = [ (10, True,  StandardOpeners.topic)
+topicList = [ (10, False, StandardOpeners.topic)
             , (29, True,  TwoOverOne.topic)
+            , (12, True,  ForcingOneNotrump.topic)
             , (11, True,  MajorSuitRaises.topic)
             , (26, True,  Overcalls.topic)
             , (24, True,  TakeoutDoubles.topic)
-            , (12, True,  ForcingOneNotrump.topic)
-            , (13, True,  JacobyTransfers.topic)
             , (14, True,  Stayman.topic)
-            , (15, False, TexasTransfers.topic)
-            , (23, False, Smolen.topic)
+            , (13, True,  JacobyTransfers.topic)
+            , (15, True,  TexasTransfers.topic)
+            , (23, True,  Smolen.topic)
             , (28, False, B1N3X.topic)
             , (22, False, PuppetStayman.topic)
             , (27, False, MuppetStayman.topic)
             , (16, False, Meckwell.topic)
             , (19, False, DONT.topic)
             , (18, False, Cappelletti.topic)
-            , (21, False, Woolsey.topic)
+            , (21, False, MultiLandy.topic)
             , (20, False, Lebensohl.topic)
             , (17, True,  Jacoby2NT.topic)
             , (30, True,  RKC.topic1430)
