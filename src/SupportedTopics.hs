@@ -19,7 +19,7 @@ import qualified Topics.ThreeLevelResponsesTo1N as B1N3X
 import qualified Topics.Meckwell as Meckwell
 import qualified Topics.DONT as DONT
 import qualified Topics.Cappelletti as Cappelletti
-import qualified Topics.Woolsey as Woolsey
+import qualified Topics.MultiLandy as MultiLandy
 import qualified Topics.Lebensohl as Lebensohl
 import qualified Topics.Jacoby2NT as Jacoby2NT
 import qualified Topics.RomanKeycardBlackwood as RKC
@@ -60,7 +60,7 @@ topicList = [ (10, False, StandardOpeners.topic)
             , (16, False, Meckwell.topic)
             , (19, False, DONT.topic)
             , (18, False, Cappelletti.topic)
-            , (21, False, Woolsey.topic)
+            , (21, False, MultiLandy.topic)
             , (20, False, Lebensohl.topic)
             , (17, True,  Jacoby2NT.topic)
             , (30, True,  RKC.topic1430)
