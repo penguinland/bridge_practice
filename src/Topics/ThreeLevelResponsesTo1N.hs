@@ -64,7 +64,7 @@ signoff = let
 
 
 topic :: Topic
-topic = makeTopic ("Common 3-level responses to " .+ B.b1N) "1N3X" situations
+topic = makeTopic ("common 3-level responses to " .+ B.b1N) "1N3X" situations
   where
     situations = wrap [ splinter
                       , bothMinors
