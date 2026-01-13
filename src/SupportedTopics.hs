@@ -44,16 +44,16 @@ import qualified Topics.StandardModernPrecision.TripleFourOne as TripleFourOne
 -- indices aren't unique, we're gonna have really subtle bugs that will be hard
 -- to figure out, but we check for this in Assertions.hs.
 topicList :: [(Int, Bool, Topic)]
-topicList = [ (10, True,  StandardOpeners.topic)
+topicList = [ (10, False, StandardOpeners.topic)
             , (29, True,  TwoOverOne.topic)
+            , (12, True,  ForcingOneNotrump.topic)
             , (11, True,  MajorSuitRaises.topic)
             , (26, True,  Overcalls.topic)
             , (24, True,  TakeoutDoubles.topic)
-            , (12, True,  ForcingOneNotrump.topic)
-            , (13, True,  JacobyTransfers.topic)
             , (14, True,  Stayman.topic)
-            , (15, False, TexasTransfers.topic)
-            , (23, False, Smolen.topic)
+            , (13, True,  JacobyTransfers.topic)
+            , (15, True,  TexasTransfers.topic)
+            , (23, True,  Smolen.topic)
             , (28, False, B1N3X.topic)
             , (22, False, PuppetStayman.topic)
             , (27, False, MuppetStayman.topic)
