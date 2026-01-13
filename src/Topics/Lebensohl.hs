@@ -8,7 +8,7 @@ import qualified Bids.DONT as DONT
 import qualified Bids.Lebensohl as Leb
 import qualified Bids.Meckwell as MW
 import qualified Bids.NaturalOneNotrumpDefense as Nat
-import qualified Bids.Woolsey as Wool
+import qualified Bids.MultiLandy as ML
 import CommonBids(setOpener)
 import EDSL(makePass)
 import Output(Description, (.+))
@@ -43,9 +43,9 @@ ignoreOpps = let
                          , (Capp.b1NoX,    Leb.b1NoX2C,  False)
                          , (Capp.b1NoX,    Leb.b1NoX2D,  False)
                          , (Capp.b1NoX,    Leb.b1NoX2H,  False)
-                         , (Wool.b1NstroX, Leb.b1NoX2C,  False)
-                         , (Wool.b1NstroX, Leb.b1NoX2D,  False)
-                         , (Wool.b1NstroX, Leb.b1NoX2H,  False)
+                         , (ML.b1NstroX,   Leb.b1NoX2C,  False)
+                         , (ML.b1NstroX,   Leb.b1NoX2D,  False)
+                         , (ML.b1NstroX,   Leb.b1NoX2H,  False)
                          , (DONT.b1No2C,   Leb.b1No2CX,  True)
                          , (DONT.b1No2C,   Leb.b1No2C2D, True)
                          , (DONT.b1No2C,   Leb.b1No2C2H, True)
@@ -89,9 +89,9 @@ signoff2 = let
                          --, (Capp.b1No2D, Leb.b1No2D2H)
                          --, (Capp.b1No2D, Leb.b1No2D2S)
                          , (Capp.b1No2H, Leb.b1No2H2S)
-                         , (Wool.b1No2D, Leb.b1No2D2H)
-                         , (Wool.b1No2D, Leb.b1No2D2S)
-                         , (Wool.b1No2H, Leb.b1No2H2S)
+                         , (ML.b1No2D,   Leb.b1No2D2H)
+                         , (ML.b1No2D,   Leb.b1No2D2S)
+                         , (ML.b1No2H,   Leb.b1No2H2S)
                          , (Nat.b1No2D,  Leb.b1No2D2H)
                          , (Nat.b1No2D,  Leb.b1No2D2S)
                          , (Nat.b1No2H,  Leb.b1No2H2S)
@@ -135,10 +135,10 @@ gameForce = let
            , (Capp.b1No2S, [Leb.b1No2S3C, Leb.b1No2S3D, Leb.b1No2S3H])
            -- When the Woolsey overcaller shows 1 long major, we can assume it's
            -- not our major and bid ours instead.
-           , (Wool.b1No2D, [Leb.b1No2D3C, Leb.b1No2H3D,
+           , (ML.b1No2D,   [Leb.b1No2D3C, Leb.b1No2H3D,
                             Leb.b1No2D3H, Leb.b1No2D3S])
-           , (Wool.b1No2H, [Leb.b1No2H3C, Leb.b1No2H3D, Leb.b1No2H3S])
-           , (Wool.b1No2S, [Leb.b1No2S3C, Leb.b1No2S3D, Leb.b1No2S3H])
+           , (ML.b1No2H,   [Leb.b1No2H3C, Leb.b1No2H3D, Leb.b1No2H3S])
+           , (ML.b1No2S,   [Leb.b1No2S3C, Leb.b1No2S3D, Leb.b1No2S3H])
            ]
         -- East should be an unpassed hand to interfere.
         <~ [T.North, T.South, T.West]
@@ -197,11 +197,11 @@ signoff3 = let
                  [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
            , (Capp.b1No2S, Leb.b1No2S2N,
                  [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
-           , (Wool.b1No2D, Leb.b1No2H2N,  -- Maybe should be b1No2S2N?
+           , (ML.b1No2D,   Leb.b1No2H2N,  -- Maybe should be b1No2S2N?
                  [Leb.b1No2D2N3CP, Leb.b1No2H2N3C3D])
-           , (Wool.b1No2H, Leb.b1No2H2N,
+           , (ML.b1No2H,   Leb.b1No2H2N,
                  [Leb.b1No2H2N3CP, Leb.b1No2H2N3C3D])
-           , (Wool.b1No2S, Leb.b1No2S2N,
+           , (ML.b1No2S,   Leb.b1No2S2N,
                  [Leb.b1No2S2N3CP, Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
            ]
         -- East should be an unpassed hand to interfere.
@@ -238,9 +238,9 @@ completeRelay = let
            , (Capp.b1No2D, Leb.b1NoBM2N)
            , (Capp.b1No2H, Leb.b1No2H2N)
            , (Capp.b1No2S, Leb.b1No2S2N)
-           , (Wool.b1No2D, Leb.b1No2H2N)  -- Not sure if b1No2H2N or b1No2S2N
-           , (Wool.b1No2H, Leb.b1No2H2N)
-           , (Wool.b1No2S, Leb.b1No2S2N)
+           , (ML.b1No2D,   Leb.b1No2H2N)  -- Not sure if b1No2H2N or b1No2S2N
+           , (ML.b1No2H,   Leb.b1No2H2N)
+           , (ML.b1No2S,   Leb.b1No2S2N)
            ]
         -- West should be an unpassed hand to interfere.
         <~ [T.North, T.South, T.East]
@@ -284,9 +284,9 @@ passSignoff = let
            , (Capp.b1No2D, Leb.b1NoBM2N, [Leb.b1No2H2N3C3D])
            , (Capp.b1No2H, Leb.b1No2H2N, [Leb.b1No2H2N3C3D])
            , (Capp.b1No2S, Leb.b1No2S2N, [Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
-           , (Wool.b1No2D, Leb.b1No2H2N, [Leb.b1No2H2N3C3D])
-           , (Wool.b1No2H, Leb.b1No2H2N, [Leb.b1No2H2N3C3D])
-           , (Wool.b1No2S, Leb.b1No2S2N, [Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
+           , (ML.b1No2D,   Leb.b1No2H2N, [Leb.b1No2H2N3C3D])
+           , (ML.b1No2H,   Leb.b1No2H2N, [Leb.b1No2H2N3C3D])
+           , (ML.b1No2S,   Leb.b1No2S2N, [Leb.b1No2S2N3C3D, Leb.b1No2S2N3C3H])
            ]
         -- West should be an unpassed hand to interfere.
         <~ [T.North, T.South, T.East]
@@ -321,8 +321,8 @@ invite = let
            -- Again, don't bid a major when RHO has them both.
            , (Capp.b1No2H, Leb.b1No2H2N, [Leb.b1No2H2N3C3S])
            -- Over Woolsey 2D, assume the opps have a different major from you
-           , (Wool.b1No2D, Leb.b1No2D2N, [Leb.b1No2D2N3C3H, Leb.b1No2D2N3C3S])
-           , (Wool.b1No2H, Leb.b1No2H2N, [Leb.b1No2H2N3C3S])
+           , (ML.b1No2D,   Leb.b1No2D2N, [Leb.b1No2D2N3C3H, Leb.b1No2D2N3C3S])
+           , (ML.b1No2H,   Leb.b1No2H2N, [Leb.b1No2H2N3C3S])
            ]
         -- East should be an unpassed hand to interfere.
         <~ [T.North, T.South, T.West]
@@ -358,9 +358,9 @@ bid3NWithStopper = let
                          , (Capp.b1No2D, Leb.b1NoBM2N, Leb.b1NoBM2N3C3N)
                          , (Capp.b1No2H, Leb.b1No2H2N, Leb.b1No2H2N3C3N)
                          , (Capp.b1No2S, Leb.b1No2S2N, Leb.b1No2S2N3C3N)
-                         , (Wool.b1No2D, Leb.b1NoBM2N, Leb.b1NoBM2N3C3N)
-                         , (Wool.b1No2H, Leb.b1No2H2N, Leb.b1No2H2N3C3N)
-                         , (Wool.b1No2S, Leb.b1No2S2N, Leb.b1No2S2N3C3N)
+                         , (ML.b1No2D,   Leb.b1NoBM2N, Leb.b1NoBM2N3C3N)
+                         , (ML.b1No2H,   Leb.b1No2H2N, Leb.b1No2H2N3C3N)
+                         , (ML.b1No2S,   Leb.b1No2S2N, Leb.b1No2S2N3C3N)
                          ]
                       -- East should be an unpassed hand to interfere.
                       <~ [T.North, T.South, T.West]
@@ -397,9 +397,9 @@ bid3NWithoutStopper = let
                          , (Capp.b1No2D, Leb.b1NoBM3N)
                          , (Capp.b1No2H, Leb.b1No2H3N)
                          , (Capp.b1No2S, Leb.b1No2S3N)
-                         , (Wool.b1No2D, Leb.b1NoBM3N)
-                         , (Wool.b1No2H, Leb.b1No2H3N)
-                         , (Wool.b1No2S, Leb.b1No2S3N)
+                         , (ML.b1No2D,   Leb.b1NoBM3N)
+                         , (ML.b1No2H,   Leb.b1No2H3N)
+                         , (ML.b1No2S,   Leb.b1No2S3N)
                          ]
                       -- East should be an unpassed hand to interfere.
                       <~ [T.North, T.South, T.West]
@@ -439,8 +439,8 @@ cueBidWithStopper = let
                          , (Capp.b1No2H, Leb.b1No2H2N, Leb.b1No2H2N3C3H)
                          , (Capp.b1No2S, Leb.b1No2S2N, Leb.b1No2S2N3C3S)
                          -- Over a Woolsey 2D, 3D is natural, not a cue bid!
-                         , (Wool.b1No2H, Leb.b1No2H2N, Leb.b1No2H2N3C3H)
-                         , (Wool.b1No2S, Leb.b1No2S2N, Leb.b1No2S2N3C3S)
+                         , (ML.b1No2H,   Leb.b1No2H2N, Leb.b1No2H2N3C3H)
+                         , (ML.b1No2S,   Leb.b1No2S2N, Leb.b1No2S2N3C3S)
                          ]
                       -- East should be an unpassed hand to interfere.
                       <~ [T.North, T.South, T.West]
@@ -482,8 +482,8 @@ cueBidWithoutStopper = let
                          , (Capp.b1No2H, Leb.b1No2H3H)
                          , (Capp.b1No2S, Leb.b1No2S3S)
                          -- Over Woolsey 2D, 3D is natural, not Stayman!
-                         , (Wool.b1No2H, Leb.b1No2H3H)
-                         , (Wool.b1No2S, Leb.b1No2S3S)
+                         , (ML.b1No2H,   Leb.b1No2H3H)
+                         , (ML.b1No2S,   Leb.b1No2S3S)
                          ]
                       -- East should be an unpassed hand to interfere.
                       <~ [T.North, T.South, T.West]

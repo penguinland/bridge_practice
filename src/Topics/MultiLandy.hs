@@ -378,9 +378,6 @@ convDoubleRebid = let
                       <~ T.allVulnerabilities
 
 
--- Add Situations to lebensohl/Stayman for bidding naturally over a Woolsey 2C.
-
-
 topic :: Topic
 topic = makeTopic "Multi-Landy (Woolsey) over all notrump" "mlan" situations
   where
