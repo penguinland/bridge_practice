@@ -36,16 +36,13 @@ You will need the following external tools installed:
     other two packages being installed).
   - On a Mac, do this with `brew install haskell-stack`
 - Dealer, a domain-specific language to generate bridge hands
-  - On Ubuntu, run `sudo apt-get install dealer` (WARNING: the Debian release of
-    `dealer` has a very inefficient way of setting suit lengths exactly. If you
-    want a more performant version which doesn't time out on the rarer
-    situations, install the version from source code below).
-  - Admittedly, this is increasingly hard to find in a ready-to-install way. A
-    copy of the source code (modified to be more performant!) is at
-    https://github.com/penguinland/dealer, and once you've made a git clone of
-    that, running `make` should compile it (you'll need `make`, GCC, flex, and
-    yacc installed). Then, copy the binary (`dealer`) to somewhere in your shell
-    path.
+  - Get a copy from https://github.com/penguinland/dealer/releases/latest and
+    put the `dealer` binary in your `$PATH` somewhere. (Note: on Ubuntu you can
+    run `sudo apt-get install dealer`, but this provides an older version which
+    might be much less performant in situations with very specific auctions,
+    like RKCB.) (The source code is also available at
+    https://github.com/penguinland/dealer if you want to compile it yourself:
+    you'll need GCC, make, yacc, and flex.)
 - XeLaTeX (only used when generating PDFs, not the webserver)
   - On Ubuntu, run `sudo apt-get install texlive-xetex texlive-fonts-extra`
   - On a Mac, run `brew cask install mactex`
