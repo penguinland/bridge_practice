@@ -41,8 +41,8 @@ You will need the following external tools installed:
     run `sudo apt-get install dealer`, but this provides an older version which
     might be much less performant in situations with very specific auctions,
     like RKCB.) (The source code is also available at
-    https://github.com/penguinland/dealer if you want to compile it yourself.
-    You'll need GCC, make, yacc, and lex.)
+    https://github.com/penguinland/dealer if you want to compile it yourself:
+    you'll need GCC, make, yacc, and flex.)
 - XeLaTeX (only used when generating PDFs, not the webserver)
   - On Ubuntu, run `sudo apt-get install texlive-xetex texlive-fonts-extra`
   - On a Mac, run `brew cask install mactex`
