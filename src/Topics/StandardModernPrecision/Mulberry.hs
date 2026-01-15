@@ -1,5 +1,12 @@
+---- We use FlexibleInstances to define TreeLike over a compound type like
+---- [(Action, Action)]
+--{-# LANGUAGE FlexibleInstances #-}
+
 module Topics.StandardModernPrecision.Mulberry(topic) where
 
+--import Data.Tuple.Extra(first)
+
+--import Action(Action)
 --import Bids.StandardModernPrecision.BasicBids(setOpener)
 import qualified Bids.StandardModernPrecision.TwoDiamonds as TD
 import qualified Bids.StandardModernPrecision.Mulberry as Mul
@@ -11,24 +18,77 @@ import qualified Terminology as T
 import Topic(Topic, wrap, wrapDlr, Situations, makeTopic)
 
 
+{-
+-- NO: this doesn't work. There's probably something like a Free Monad to get
+-- it right, but I haven't figured it out yet. In the meantime, this won't
+-- compile unless every tree has the same depth.
+
+-- The result of the bidTree is a pair of (setup, payoff) Actions.
+class TreeLike t where
+    bidTree :: t -> [(Action, Action)]
+
+instance TreeLike [(Action, Action)] where
+    bidTree = id
+
+instance (TreeLike t) => TreeLike [(Action, t)] where
+    bidTree = concatMap process
+      where
+        process (a, ts) = map (first (a >>)) (bidTree ts)
+-}
+
+
+
+
 initiateSignoff :: Situations
 initiateSignoff = let
-    sit (auctionMiddle, answer) = let
-        action = do TD.b2D
-                    cannotPreempt >> makePass
-                    TD.b2D2N
-                    cannotPreempt >> makePass
-                    auctionMiddle
+    sit (setup, answer) = let
+        action = setup `andNextBidderIs` T.South
         explanation =
             "Partner has limited their hand: even if we're a maximum, we " .+
             "have no interest in slam. Bid " .+ answer .+ " to indicate " .+
             "this. Partner will relay " .+ T.Bid 4 T.Hearts .+ ", which " .+
             "you can pass or correct to the final trump suit."
       in
-        situation "initSO" (action `andNextBidderIs` T.South) answer explanation
+        situation "initSO" action answer explanation
   in
     wrapDlr $ return sit
-        <~ [ ( do TD.b2D2N3C
+{-
+        <~ bidTree [ ( do TD.b2D >> cannotPreempt >> makePass
+                          TD.b2D2N >> cannotPreempt >> makePass
+                     , [ ( TD.b2D2N3C >> makePass
+                         , [
+                           ]
+                         )
+                       , ( TD.b2D2N3D >> makePass
+                           -- You could set trump to a major at the 3 level, so
+                           -- just focus on signing off in clubs.
+                         , do alternatives [Mul.b2D2N3D4D4H5C]
+                              Mul.b2D2N3D4D
+                         )
+                       , ( TD.b2D2N3H >> makePass
+                         -- You could set trump with 3S, so make sure trump is
+                         -- hearts or clubs.
+                         , do alternatives [ Mul.b2D2N3H4D4HP
+                                           , Mul.b2D2N3H4D4H5C
+                                           ]
+                              Mul.b2D2N3H4D
+                         )
+                       , ( TD.b2D2N3S >> makePass
+                         , do alternatives [ Mul.b2D2N3S4D4HP
+                                           , Mul.b2D2N3S4D4H4S
+                                           , Mul.b2D2N3S4D4H5C
+                                           ]
+                              Mul.b2D2N3S4D
+                         )
+                       ]
+                     )
+                   ]
+-}
+        <~ [ ( do TD.b2D
+                  cannotPreempt >> makePass
+                  TD.b2D2N
+                  cannotPreempt >> makePass
+                  TD.b2D2N3C
                   makePass
                   TD.b2D2N3C3D
                   makePass
@@ -41,7 +101,11 @@ initiateSignoff = let
                                ]
                   Mul.b2D2N3C3D3H4D
              )
-           , ( do TD.b2D2N3C
+           , ( do TD.b2D
+                  cannotPreempt >> makePass
+                  TD.b2D2N
+                  cannotPreempt >> makePass
+                  TD.b2D2N3C
                   makePass
                   TD.b2D2N3C3D
                   makePass
@@ -53,7 +117,11 @@ initiateSignoff = let
                                ]
                   Mul.b2D2N3C3D3S4D
              )
-           , ( do TD.b2D2N3C
+           , ( do TD.b2D
+                  cannotPreempt >> makePass
+                  TD.b2D2N
+                  cannotPreempt >> makePass
+                  TD.b2D2N3C
                   makePass
                   TD.b2D2N3C3D
                   makePass
@@ -65,14 +133,22 @@ initiateSignoff = let
                                ]
                   Mul.b2D2N3C3D3N4D
              )
-           , ( do TD.b2D2N3D
+           , ( do TD.b2D
+                  cannotPreempt >> makePass
+                  TD.b2D2N
+                  cannotPreempt >> makePass
+                  TD.b2D2N3D
                   makePass
                -- You could set trump to a major at the 3 level, so just focus
                -- on signing off in clubs.
              , do alternatives [Mul.b2D2N3D4D4H5C]
                   Mul.b2D2N3D4D
              )
-           , ( do TD.b2D2N3H
+           , ( do TD.b2D
+                  cannotPreempt >> makePass
+                  TD.b2D2N
+                  cannotPreempt >> makePass
+                  TD.b2D2N3H
                   makePass
              -- You could set trump with 3S, so make sure trump is hearts or
              -- clubs.
@@ -81,7 +157,11 @@ initiateSignoff = let
                                ]
                   Mul.b2D2N3H4D
              )
-           , ( do TD.b2D2N3S
+           , ( do TD.b2D
+                  cannotPreempt >> makePass
+                  TD.b2D2N
+                  cannotPreempt >> makePass
+                  TD.b2D2N3S
                   makePass
              , do alternatives [ Mul.b2D2N3S4D4HP
                                , Mul.b2D2N3S4D4H4S
