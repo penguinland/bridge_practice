@@ -1,12 +1,12 @@
----- We use FlexibleInstances to define TreeLike over a compound type like
----- [(Action, Action)]
---{-# LANGUAGE FlexibleInstances #-}
+-- We use FlexibleInstances to define TreeLike over a compound type like
+-- [(Action, Action)]
+{-# LANGUAGE FlexibleInstances #-}
 
 module Topics.StandardModernPrecision.Mulberry(topic) where
 
---import Data.Tuple.Extra(first)
+import Data.Tuple.Extra(first)
 
---import Action(Action)
+import Action(Action)
 --import Bids.StandardModernPrecision.BasicBids(setOpener)
 import qualified Bids.StandardModernPrecision.TwoDiamonds as TD
 import qualified Bids.StandardModernPrecision.Mulberry as Mul
@@ -16,6 +16,7 @@ import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, wrapDlr, Situations, makeTopic)
+
 
 
 {-
@@ -34,44 +35,40 @@ instance (TreeLike t) => TreeLike [(Action, t)] where
     bidTree = concatMap process
       where
         process (a, ts) = map (first (a >>)) (bidTree ts)
-
---bidTree :: [(Action, [(Action, Action)])] -> [(Action, Action)]
---bidTree = concatMap process
---  where
---    process (a, ts) = map (first (a >>)) ts
-
-attempt = bidTree [ ( do TD.b2D >> cannotPreempt >> makePass
-                         TD.b2D2N >> cannotPreempt >> makePass
-                    , bidTree [ --( TD.b2D2N3C >> makePass
-                                --, bidTree [
-                                --  ]
-                                --),
-                               ( TD.b2D2N3D >> makePass
-                                  -- You could set trump to a major at the 3
-                                  -- level, so just focus on signing off in
-                                  -- clubs.
-                                , do alternatives [Mul.b2D2N3D4D4H5C]
-                                     Mul.b2D2N3D4D
-                                )
-                              , ( TD.b2D2N3H >> makePass
-                                -- You could set trump with 3S, so make sure
-                                -- trump is hearts or clubs.
-                                , do alternatives [ Mul.b2D2N3H4D4HP
-                                                  , Mul.b2D2N3H4D4H5C
-                                                  ]
-                                     Mul.b2D2N3H4D
-                                )
-                              , ( TD.b2D2N3S >> makePass
-                                , do alternatives [ Mul.b2D2N3S4D4HP
-                                                  , Mul.b2D2N3S4D4H4S
-                                                  , Mul.b2D2N3S4D4H5C
-                                                  ]
-                                     Mul.b2D2N3S4D
-                                )
-                              ]
-                    )
-                  ]
 -}
+
+bidTree :: Action -> [(Action, Action)] -> [(Action, Action)]
+bidTree a ts = map (first (a >>)) ts
+
+_attempt :: [(Action, Action)]
+_attempt = bidTree (do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                   )
+                   (concat [ bidTree (TD.b2D2N3C >> makePass)
+                                    []
+                          , [( TD.b2D2N3D >> makePass
+                               -- You could set trump to a major at the 3
+                               -- level, so just focus on signing off in
+                               -- clubs.
+                             , do alternatives [Mul.b2D2N3D4D4H5C]
+                                  Mul.b2D2N3D4D
+                             )]
+                          , [( TD.b2D2N3H >> makePass
+                             -- You could set trump with 3S, so make sure
+                             -- trump is hearts or clubs.
+                             , do alternatives [ Mul.b2D2N3H4D4HP
+                                               , Mul.b2D2N3H4D4H5C
+                                               ]
+                                  Mul.b2D2N3H4D
+                             )]
+                          , [( TD.b2D2N3S >> makePass
+                             , do alternatives [ Mul.b2D2N3S4D4HP
+                                               , Mul.b2D2N3S4D4H4S
+                                               , Mul.b2D2N3S4D4H5C
+                                               ]
+                                  Mul.b2D2N3S4D
+                             )]
+                          ])
 
 
 
