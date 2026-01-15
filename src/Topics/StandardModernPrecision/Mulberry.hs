@@ -34,8 +34,44 @@ instance (TreeLike t) => TreeLike [(Action, t)] where
     bidTree = concatMap process
       where
         process (a, ts) = map (first (a >>)) (bidTree ts)
--}
 
+--bidTree :: [(Action, [(Action, Action)])] -> [(Action, Action)]
+--bidTree = concatMap process
+--  where
+--    process (a, ts) = map (first (a >>)) ts
+
+attempt = bidTree [ ( do TD.b2D >> cannotPreempt >> makePass
+                         TD.b2D2N >> cannotPreempt >> makePass
+                    , bidTree [ --( TD.b2D2N3C >> makePass
+                                --, bidTree [
+                                --  ]
+                                --),
+                               ( TD.b2D2N3D >> makePass
+                                  -- You could set trump to a major at the 3
+                                  -- level, so just focus on signing off in
+                                  -- clubs.
+                                , do alternatives [Mul.b2D2N3D4D4H5C]
+                                     Mul.b2D2N3D4D
+                                )
+                              , ( TD.b2D2N3H >> makePass
+                                -- You could set trump with 3S, so make sure
+                                -- trump is hearts or clubs.
+                                , do alternatives [ Mul.b2D2N3H4D4HP
+                                                  , Mul.b2D2N3H4D4H5C
+                                                  ]
+                                     Mul.b2D2N3H4D
+                                )
+                              , ( TD.b2D2N3S >> makePass
+                                , do alternatives [ Mul.b2D2N3S4D4HP
+                                                  , Mul.b2D2N3S4D4H4S
+                                                  , Mul.b2D2N3S4D4H5C
+                                                  ]
+                                     Mul.b2D2N3S4D
+                                )
+                              ]
+                    )
+                  ]
+-}
 
 
 
@@ -52,38 +88,6 @@ initiateSignoff = let
         situation "initSO" action answer explanation
   in
     wrapDlr $ return sit
-{-
-        <~ bidTree [ ( do TD.b2D >> cannotPreempt >> makePass
-                          TD.b2D2N >> cannotPreempt >> makePass
-                     , [ ( TD.b2D2N3C >> makePass
-                         , [
-                           ]
-                         )
-                       , ( TD.b2D2N3D >> makePass
-                           -- You could set trump to a major at the 3 level, so
-                           -- just focus on signing off in clubs.
-                         , do alternatives [Mul.b2D2N3D4D4H5C]
-                              Mul.b2D2N3D4D
-                         )
-                       , ( TD.b2D2N3H >> makePass
-                         -- You could set trump with 3S, so make sure trump is
-                         -- hearts or clubs.
-                         , do alternatives [ Mul.b2D2N3H4D4HP
-                                           , Mul.b2D2N3H4D4H5C
-                                           ]
-                              Mul.b2D2N3H4D
-                         )
-                       , ( TD.b2D2N3S >> makePass
-                         , do alternatives [ Mul.b2D2N3S4D4HP
-                                           , Mul.b2D2N3S4D4H4S
-                                           , Mul.b2D2N3S4D4H5C
-                                           ]
-                              Mul.b2D2N3S4D
-                         )
-                       ]
-                     )
-                   ]
--}
         <~ [ ( do TD.b2D
                   cannotPreempt >> makePass
                   TD.b2D2N
