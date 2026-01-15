@@ -76,6 +76,8 @@ initiateSignoff = let
              )
            , ( do TD.b2D2N3H
                   makePass
+             -- You could set trump with 3S, so make sure trump is hearts or
+             -- clubs.
              , do alternatives [ Mul.b2D2N3H4D4HP
                                , Mul.b2D2N3H4D4H5C
                                ]
