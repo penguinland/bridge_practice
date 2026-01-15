@@ -225,17 +225,17 @@ b2D2N3D4D4H4S = E.nameAction "b2D2N3D4D4H4S"$ do
 
 b2D2N3C3D3H4D4H5C :: Action
 b2D2N3C3D3H4D4H5C = E.nameAction "b2D2N3C3D3H4D4H5C"$ do
-    E.maxSuitLength T.Clubs 3
-    E.minSuitLength T.Spades 3
+    E.minSuitLength T.Clubs 3
     E.maxSuitLength T.Hearts 4
+    E.maxSuitLength T.Spades 3
     E.forbid $ E.hasStopper T.Diamonds
     E.makeCall $ T.Bid 5 T.Clubs
 
 
 b2D2N3C3D3S4D4H5C :: Action
 b2D2N3C3D3S4D4H5C = E.nameAction "b2D2N3C3D3S4D4H5C"$ do
-    E.maxSuitLength T.Clubs 3
-    E.minSuitLength T.Spades 4
+    E.minSuitLength T.Clubs 3
+    E.maxSuitLength T.Spades 4
     E.maxSuitLength T.Hearts 3
     E.forbid $ E.hasStopper T.Diamonds
     E.makeCall $ T.Bid 5 T.Clubs
@@ -243,8 +243,8 @@ b2D2N3C3D3S4D4H5C = E.nameAction "b2D2N3C3D3S4D4H5C"$ do
 
 b2D2N3C3D3N4D4H5C :: Action
 b2D2N3C3D3N4D4H5C = E.nameAction "b2D2N3C3D3N4D4H5C"$ do
-    E.maxSuitLength T.Clubs 4
-    E.minSuitLength T.Spades 3
+    E.minSuitLength T.Clubs 4
+    E.maxSuitLength T.Spades 3
     E.maxSuitLength T.Hearts 3
     E.forbid $ E.hasStopper T.Diamonds
     E.makeCall $ T.Bid 5 T.Clubs
@@ -252,8 +252,8 @@ b2D2N3C3D3N4D4H5C = E.nameAction "b2D2N3C3D3N4D4H5C"$ do
 
 b2D2N3D4D4H5C :: Action
 b2D2N3D4D4H5C = E.nameAction "b2D2N3D4D4H5C"$ do
-    E.maxSuitLength T.Clubs 4
-    E.minSuitLength T.Spades 3
+    E.minSuitLength T.Clubs 4
+    E.maxSuitLength T.Spades 3
     E.maxSuitLength T.Hearts 3
     E.forbid $ E.hasStopper T.Diamonds
     E.makeCall $ T.Bid 5 T.Clubs
@@ -261,8 +261,8 @@ b2D2N3D4D4H5C = E.nameAction "b2D2N3D4D4H5C"$ do
 
 b2D2N3H4D4H5C :: Action
 b2D2N3H4D4H5C = E.nameAction "b2D2N3H4D4H5C"$ do
-    E.maxSuitLength T.Clubs 3
-    E.minSuitLength T.Spades 3
+    E.minSuitLength T.Clubs 3
+    E.maxSuitLength T.Spades 3
     E.maxSuitLength T.Hearts 4
     E.forbid $ E.hasStopper T.Diamonds
     E.makeCall $ T.Bid 5 T.Clubs
@@ -270,8 +270,8 @@ b2D2N3H4D4H5C = E.nameAction "b2D2N3H4D4H5C"$ do
 
 b2D2N3S4D4H5C :: Action
 b2D2N3S4D4H5C = E.nameAction "b2D2N3S4D4H5C"$ do
-    E.maxSuitLength T.Clubs 3
-    E.minSuitLength T.Spades 4
+    E.minSuitLength T.Clubs 3
+    E.maxSuitLength T.Spades 4
     E.maxSuitLength T.Hearts 3
     E.forbid $ E.hasStopper T.Diamonds
     E.makeCall $ T.Bid 5 T.Clubs
