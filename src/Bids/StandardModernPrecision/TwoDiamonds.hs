@@ -97,7 +97,10 @@ bP2D2H = nameAction "smp_bP2D2H" $ do
 
 b2D2H2S :: Action
 b2D2H2S = nameAction "smp_b2D2H2S" $ do
-    suitLength T.Hearts 3
+    suitLength T.Clubs    5
+    suitLength T.Diamonds 1
+    suitLength T.Hearts   3
+    suitLength T.Spades   4
     makeAlertableCall (T.Bid 2 T.Spades) "exactly 4315 shape"
 
 
@@ -203,14 +206,20 @@ b2D2N3D = nameAction "smp_b2D2N3D" $ do
 b2D2N3H :: Action
 b2D2N3H = nameAction "smp_b2D2N3H" $ do
     forbid b2D2N3C  -- We'd accept an invite to game
-    suitLength T.Hearts 3
+    suitLength T.Clubs    5
+    suitLength T.Diamonds 1
+    suitLength T.Hearts   3
+    suitLength T.Spades   4
     makeAlertableCall (T.Bid 3 T.Hearts) "maximum strength, 4315 shape exactly"
 
 
 b2D2N3S :: Action
 b2D2N3S = nameAction "smp_b2D2N3S" $ do
     forbid b2D2N3C  -- We'd accept an invite to game
-    suitLength T.Spades 3
+    suitLength T.Clubs    5
+    suitLength T.Diamonds 1
+    suitLength T.Hearts   4
+    suitLength T.Spades   3
     makeAlertableCall (T.Bid 3 T.Spades) "maximum strength, 3415 shape exactly"
 
 
@@ -226,13 +235,19 @@ b2D2N3C3D = nameAction "smp_b2D2N3C3D" $ do
 
 b2D2N3C3D3H :: Action
 b2D2N3C3D3H = nameAction "smp_b2D2N3C3D3H" $ do
-    suitLength T.Hearts 3
+    suitLength T.Clubs    5
+    suitLength T.Diamonds 1
+    suitLength T.Hearts   3
+    suitLength T.Spades   4
     makeAlertableCall (T.Bid 3 T.Hearts) "shorter hearts: 4315 shape exactly"
 
 
 b2D2N3C3D3S :: Action
 b2D2N3C3D3S = nameAction "smp_b2D2N3C3D3S" $ do
-    suitLength T.Spades 3
+    suitLength T.Clubs    5
+    suitLength T.Diamonds 1
+    suitLength T.Hearts   4
+    suitLength T.Spades   3
     makeAlertableCall (T.Bid 3 T.Spades) "shorter spades: 3415 shape exactly"
 
 

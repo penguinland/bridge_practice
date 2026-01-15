@@ -18,6 +18,7 @@ import qualified Topics.StandardModernPrecision.Mafia as Mafia
 import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as Smp2DOpen
 import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 import qualified Topics.StandardModernPrecision.TripleFourOne as TripleFourOne
+import qualified Topics.StandardModernPrecision.Mulberry as Mulberry
 import qualified Topics.MajorSuitRaises as MajorSuitRaises
 import qualified Topics.Meckwell as Meckwell
 import qualified Topics.DONT as DONT
@@ -63,6 +64,7 @@ main = let
               , MafiaResponses.topic
               , Smp1DResponses.topic
               , Smp2DOpen.topic
+              , Mulberry.topic
               , Meckwell.topic
               , DONT.topic
               , Cappelletti.topic
@@ -75,7 +77,7 @@ main = let
               , TransfersOver1MX.topic
               , RKC.topic1430
               ]
-    topics = [ RKC.topic1430
+    topics = [ Mulberry.topic
              ]
   in do
     runStateT (outputLatex 100 topics "test") (mkStdGen 0) >>= return . fst
