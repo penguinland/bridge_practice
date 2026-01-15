@@ -86,6 +86,78 @@ initiateSignoff = let
                            ])
 
 
+relaySignoff :: Situations
+relaySignoff = let
+    sit (setup, answer) = let
+        action = setup `andNextBidderIs` T.South
+        explanation =
+            "Partner's " .+ T.Bid 4 T.Diamonds .+ " asks us to relay to " .+
+            "the next cheapest bid, as a way to start signing off in game. " .+
+            "Complete the relay, and partner will pass or correct to the " .+
+            "final contract."
+      in
+        situation "relSO" action answer explanation
+  in
+    wrapDlr $ return sit
+        <~ bidTree (do TD.b2D   >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                   )
+                   (concat [ bidTree (TD.b2D2N3C >> makePass)
+                                     [ ( do TD.b2D2N3C3D   >> makePass
+                                            TD.b2D2N3C3D3H >> makePass
+                                            alternatives [ Mul.b2D2N3C3D3H4D4HP
+                                                         , Mul.b2D2N3C3D3H4D4H5C
+                                                         ]
+                                            Mul.b2D2N3C3D3H4D >> makePass
+                                       , Mul.b2D2N3C3D3H4D4H
+                                       )
+                                     , ( do TD.b2D2N3C3D   >> makePass
+                                            TD.b2D2N3C3D3S >> makePass
+                                            alternatives [ Mul.b2D2N3C3D3S4D4HP
+                                                         , Mul.b2D2N3C3D3S4D4H4S
+                                                         , Mul.b2D2N3C3D3S4D4H5C
+                                                         ]
+                                            Mul.b2D2N3C3D3S4D >> makePass
+                                       , Mul.b2D2N3C3D3S4D4H
+                                       )
+                                     , ( do TD.b2D2N3C3D   >> makePass
+                                            TD.b2D2N3C3D3N >> makePass
+                                            alternatives [ Mul.b2D2N3C3D3N4D4HP
+                                                         , Mul.b2D2N3C3D3N4D4H4S
+                                                         , Mul.b2D2N3C3D3N4D4H5C
+                                                         ]
+                                            Mul.b2D2N3C3D3N4D >> makePass
+                                       , Mul.b2D2N3C3D3N4D4H
+                                       )
+                                     ]
+                           , [( do TD.b2D2N3D >> makePass
+                                -- You could set trump to a major at the 3
+                                -- level, so just focus on signing off in
+                                -- clubs.
+                                   alternatives [Mul.b2D2N3D4D4H5C]
+                                   Mul.b2D2N3D4D >> makePass
+                              , Mul.b2D2N3D4D
+                              )]
+                           , [( do TD.b2D2N3H >> makePass
+                              -- You could set trump with 3S, so make sure
+                              -- trump is hearts or clubs.
+                                   alternatives [ Mul.b2D2N3H4D4HP
+                                                , Mul.b2D2N3H4D4H5C
+                                                ]
+                                   Mul.b2D2N3H4D >> makePass
+                              , Mul.b2D2N3H4D
+                              )]
+                           , [( do TD.b2D2N3S >> makePass
+                                   alternatives [ Mul.b2D2N3S4D4HP
+                                                , Mul.b2D2N3S4D4H4S
+                                                , Mul.b2D2N3S4D4H5C
+                                                ]
+                                   Mul.b2D2N3S4D >> makePass
+                              , Mul.b2D2N3S4D
+                              )]
+                           ])
+
+
 -- TODO:
 --   - Relay 4H over 4D
 --   - Pass or correct over 4D-4H
@@ -101,5 +173,7 @@ initiateSignoff = let
 topic :: Topic
 topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
   where
-    situations = wrap [ initiateSignoff
+    situations = wrap [ relaySignoff ]
+    _situations = wrap [ initiateSignoff
+                      , relaySignoff
                       ]
