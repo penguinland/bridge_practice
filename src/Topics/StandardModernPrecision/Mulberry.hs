@@ -4,8 +4,8 @@ import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(setOpener)
 import qualified Bids.StandardModernPrecision.TwoDiamonds as TD
 import qualified Bids.StandardModernPrecision.Mulberry as Mul
-import CommonBids(takeoutDouble)
-import EDSL(forbid, suitLength, makePass)
+import CommonBids(cannotPreempt, andNextBidderIs)
+import EDSL(alternatives, makePass)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -13,25 +13,83 @@ import Topic(Topic, wrap, wrapWeighted, stdWrap, wrapDlr, Situations, makeTopic,
              wrapNW, wrapSE, stdWrapNW, stdWrapSE)
 
 
-invSignoff :: Situations
-invSignoff = let
-    sit bid = let
-        action = do
-            setOpener T.North
-            B.b2D
-            B.noDirectOvercall
-            B.b2D2N
-            B.noDirectOvercall
-            B.b2D2N3C
-            B.noDirectOvercall
+initiateSignoff :: Situations
+initiateSignoff = let
+    sit (auctionMiddle, answer) = let
+        action = do TD.b2D
+                    cannotPreempt >> makePass
+                    TD.b2D2N
+                    cannotPreempt >> makePass
+                    auctionMiddle `andNextBidderIs` T.South
         explanation =
-            "We were invitational, but partner has shown a minimum, " .+
-            "indicating that they would not accept an invite to game. " .+
-            "Sign off in partscore."
+            "Partner has limited their hand: even if we're a maximum, we " .+
+            "have no interest in slam. Bid " .+ answer .+ " to indicate " .+
+            "this. Partner will relay " .+ T.Bid 4 T.Hearts .+ ", which " .+
+            "you can pass or correct to the final trump suit."
       in
-        situation "invso" action bid explanation
+        situation "initSO" action answer explanation
   in
-    wrapNW $ return sit <~ [B.b2D2N3CP, B.b2D2N3C3H, B.b2D2N3C3S]
+    wrap $ return sit
+        <~ [ ( do TD.b2D2N3C
+                  makePass
+                  TD.b2D2N3C3D
+                  makePass
+                  TD.b2D2N3C3D3H
+                  makePass
+               -- If trump will be spades, maybe you'd just bid 3S. So, make
+               -- sure trump is something else.
+             , do alternatives [ Mul.b2D2N3C3D3H4D4HP
+                               , Mul.b2D2N3C3D3H4D4H5C
+                               ]
+                  Mul.b2D2N3C3D3H4D
+             )
+           , ( do TD.b2D2N3C
+                  makePass
+                  TD.b2D2N3C3D
+                  makePass
+                  TD.b2D2N3C3D3S
+                  makePass
+             , do alternatives [ Mul.b2D2N3C3D3S4D4HP
+                               , Mul.b2D2N3C3D3S4D4H4S
+                               , Mul.b2D2N3C3D3S4D4H5C
+                               ]
+                  Mul.b2D2N3C3D3S4D
+             )
+           , ( do TD.b2D2N3C
+                  makePass
+                  TD.b2D2N3C3D
+                  makePass
+                  TD.b2D2N3C3D3N
+                  makePass
+             , do alternatives [ Mul.b2D2N3C3D3N4D4HP
+                               , Mul.b2D2N3C3D3N4D4H4S
+                               , Mul.b2D2N3C3D3N4D4H5C
+                               ]
+                  Mul.b2D2N3C3D3N4D
+             )
+           , ( do TD.b2D2N3D
+                  makePass
+               -- You could set trump to a major at the 3 level, so just focus
+               -- on signing off in clubs.
+             , do alternatives [Mul.b2D2N3D4D4H5C]
+                  Mul.b2D2N3D4D
+             )
+           , ( do TD.b2D2N3H
+                  makePass
+             , do alternatives [ Mul.b2D2N3H4D4HP
+                               , Mul.b2D2N3H4D4H5C
+                               ]
+                  Mul.b2D2N3H4D
+             )
+           , ( do TD.b2D2N3S
+                  makePass
+             , do alternatives [ Mul.b2D2N3S4D4HP
+                               , Mul.b2D2N3S4D4H4S
+                               , Mul.b2D2N3S4D4H5C
+                               ]
+                  Mul.b2D2N3S4D
+             )
+           ]
 
 
 -- TODO:
@@ -51,6 +109,5 @@ topic :: Topic
 topic = makeTopic description "mulberry over SMP 3-suiters" situations
   where
     description = ("SMP " .+ T.Bid 2 T.Diamonds .+ " auctions")
-    situations = wrap [ invSignoff
-                      , invSignoff
+    situations = wrap [ initiateSignoff
                       ]
