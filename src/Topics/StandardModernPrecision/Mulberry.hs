@@ -1,7 +1,6 @@
 module Topics.StandardModernPrecision.Mulberry(topic) where
 
-import Action(Action)
-import Bids.StandardModernPrecision.BasicBids(setOpener)
+--import Bids.StandardModernPrecision.BasicBids(setOpener)
 import qualified Bids.StandardModernPrecision.TwoDiamonds as TD
 import qualified Bids.StandardModernPrecision.Mulberry as Mul
 import CommonBids(cannotPreempt, andNextBidderIs)
@@ -9,8 +8,7 @@ import EDSL(alternatives, makePass)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
-import Topic(Topic, wrap, wrapWeighted, stdWrap, wrapDlr, Situations, makeTopic,
-             wrapNW, wrapSE, stdWrapNW, stdWrapSE)
+import Topic(Topic, wrap, wrapDlr, Situations, makeTopic)
 
 
 initiateSignoff :: Situations
@@ -20,16 +18,16 @@ initiateSignoff = let
                     cannotPreempt >> makePass
                     TD.b2D2N
                     cannotPreempt >> makePass
-                    auctionMiddle `andNextBidderIs` T.South
+                    auctionMiddle
         explanation =
             "Partner has limited their hand: even if we're a maximum, we " .+
             "have no interest in slam. Bid " .+ answer .+ " to indicate " .+
             "this. Partner will relay " .+ T.Bid 4 T.Hearts .+ ", which " .+
             "you can pass or correct to the final trump suit."
       in
-        situation "initSO" action answer explanation
+        situation "initSO" (action `andNextBidderIs` T.South) answer explanation
   in
-    wrap $ return sit
+    wrapDlr $ return sit
         <~ [ ( do TD.b2D2N3C
                   makePass
                   TD.b2D2N3C3D
@@ -108,8 +106,7 @@ initiateSignoff = let
 
 
 topic :: Topic
-topic = makeTopic description "mulberry over SMP 3-suiters" situations
+topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
   where
-    description = ("SMP " .+ T.Bid 2 T.Diamonds .+ " auctions")
     situations = wrap [ initiateSignoff
                       ]
