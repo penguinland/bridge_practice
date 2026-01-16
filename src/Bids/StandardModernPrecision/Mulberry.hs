@@ -47,7 +47,6 @@ module Bids.StandardModernPrecision.Mulberry(
   , b2D2N3S4H
   , b2D2N3S4S
   , b2D2N3S4N
-
 ) where
 
 
