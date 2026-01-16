@@ -42,8 +42,13 @@ import qualified Terminology as T
 
 b4D_ :: Action
 b4D_ = do
-    -- No slam interest
+    -- No slam interest, further clarified by HCPs below
     E.minLoserCount 6
+    -- A reason not to prefer notrump
+    -- TODO: make this reason more nuanced. If you have a balanced hand with a
+    -- sound diamond holding and 5 hearts and partner has shown 4 hearts, you'd
+    -- want to play in 4H and not 3N.
+    E.forbid (E.soundHolding T.Diamonds)
     E.makeAlertableCall
         (T.Bid 4 T.Diamonds)
         ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
