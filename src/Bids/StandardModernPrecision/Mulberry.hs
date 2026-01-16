@@ -234,21 +234,24 @@ b2D2N3C3D3H4H :: Action
 b2D2N3C3D3H4H = E.nameAction "b2D2N3C3D3H4H" $ do
     withholdBid b2D2N3C3D3H4D4H5C
     slamInterestOver2DMin_
-    E.makeAlertableCall (T.Bid 4 T.Hearts) "keycard ask in clubs"
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in clubs"
 
 
 b2D2N3C3D3H4S :: Action
 b2D2N3C3D3H4S = E.nameAction "b2D2N3C3D3H4S" $ do
     withholdBid b2D2N3C3D3H4D4HP
     slamInterestOver2DMin_
-    E.makeAlertableCall (T.Bid 4 T.Spades) "keycard ask in hearts"
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in hearts"
 
 
 b2D2N3C3D3H4N :: Action
 b2D2N3C3D3H4N = E.nameAction "b2D2N3C3D3H4N" $ do
     withholdBid b2D2N3C3D3H4D4H4S
     slamInterestOver2DMin_
-    E.makeAlertableCall (T.Bid 4 T.Notrump) "keycard ask in spades"
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in spades"
 
 
 
@@ -256,102 +259,117 @@ b2D2N3C3D3S4H :: Action
 b2D2N3C3D3S4H = E.nameAction "b2D2N3C3D3S4H" $ do
     withholdBid b2D2N3C3D3S4D4H5C
     slamInterestOver2DMin_
-    E.makeAlertableCall (T.Bid 4 T.Hearts) "keycard ask in clubs"
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in clubs"
 
 
 b2D2N3C3D3S4S :: Action
 b2D2N3C3D3S4S = E.nameAction "b2D2N3C3D3S4S" $ do
     withholdBid b2D2N3C3D3S4D4HP
     slamInterestOver2DMin_
-    E.makeAlertableCall (T.Bid 4 T.Spades) "keycard ask in hearts"
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in hearts"
 
 
 b2D2N3C3D3S4N :: Action
 b2D2N3C3D3S4N = E.nameAction "b2D2N3C3D3S4N" $ do
     withholdBid b2D2N3C3D3S4D4H4S
     slamInterestOver2DMin_
-    E.makeAlertableCall (T.Bid 4 T.Notrump) "keycard ask in spades"
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in spades"
 
 
 b2D2N3C3D3N4H :: Action
 b2D2N3C3D3N4H = E.nameAction "b2D2N3C3D3N4H" $ do
     withholdBid b2D2N3C3D3N4D4H5C
     slamInterestOver2DMin_
-    E.makeAlertableCall (T.Bid 4 T.Hearts) "keycard ask in clubs"
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in clubs"
 
 
 b2D2N3C3D3N4S :: Action
 b2D2N3C3D3N4S = E.nameAction "b2D2N3C3D3N4S" $ do
     withholdBid b2D2N3C3D3N4D4HP
     slamInterestOver2DMin_
-    E.makeAlertableCall (T.Bid 4 T.Spades) "keycard ask in hearts"
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in hearts"
 
 
 b2D2N3C3D3N4N :: Action
 b2D2N3C3D3N4N = E.nameAction "b2D2N3C3D3N4N" $ do
     withholdBid b2D2N3C3D3N4D4H4S
     slamInterestOver2DMin_
-    E.makeAlertableCall (T.Bid 4 T.Notrump) "keycard ask in spades"
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in spades"
 
 
 b2D2N3D4H :: Action
 b2D2N3D4H = E.nameAction "b2D2N3D4H" $ do
     withholdBid b2D2N3D4D4H5C
     slamInterestOver2DMax_
-    E.makeAlertableCall (T.Bid 4 T.Hearts) "keycard ask in clubs"
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in clubs"
 
 
 b2D2N3D4S :: Action
 b2D2N3D4S = E.nameAction "b2D2N3D4S" $ do
     withholdBid b2D2N3D4D4HP
     slamInterestOver2DMax_
-    E.makeAlertableCall (T.Bid 4 T.Spades) "keycard ask in hearts"
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in hearts"
 
 
 b2D2N3D4N :: Action
 b2D2N3D4N = E.nameAction "b2D2N3D4N" $ do
     withholdBid b2D2N3D4D4H4S
     slamInterestOver2DMax_
-    E.makeAlertableCall (T.Bid 4 T.Notrump) "keycard ask in spades"
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in spades"
 
 
 b2D2N3H4H :: Action
 b2D2N3H4H = E.nameAction "b2D2N3H4H" $ do
     withholdBid b2D2N3H4D4H5C
     slamInterestOver2DMax_
-    E.makeAlertableCall (T.Bid 4 T.Hearts) "keycard ask in clubs"
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in clubs"
 
 
 b2D2N3H4S :: Action
 b2D2N3H4S = E.nameAction "b2D2N3H4S" $ do
     withholdBid b2D2N3H4D4HP
     slamInterestOver2DMax_
-    E.makeAlertableCall (T.Bid 4 T.Spades) "keycard ask in hearts"
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in hearts"
 
 
 b2D2N3H4N :: Action
 b2D2N3H4N = E.nameAction "b2D2N3H4N" $ do
     withholdBid b2D2N3H4D4H4S
     slamInterestOver2DMax_
-    E.makeAlertableCall (T.Bid 4 T.Notrump) "keycard ask in spades"
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in spades"
 
 
 b2D2N3S4H :: Action
 b2D2N3S4H = E.nameAction "b2D2N3S4H" $ do
     withholdBid b2D2N3S4D4H5C
     slamInterestOver2DMax_
-    E.makeAlertableCall (T.Bid 4 T.Hearts) "keycard ask in clubs"
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in clubs"
 
 
 b2D2N3S4S :: Action
 b2D2N3S4S = E.nameAction "b2D2N3S4S" $ do
     withholdBid b2D2N3S4D4HP
     slamInterestOver2DMax_
-    E.makeAlertableCall (T.Bid 4 T.Spades) "keycard ask in hearts"
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in hearts"
 
 
 b2D2N3S4N :: Action
 b2D2N3S4N = E.nameAction "b2D2N3S4N" $ do
     withholdBid b2D2N3S4D4H4S
     slamInterestOver2DMax_
-    E.makeAlertableCall (T.Bid 4 T.Notrump) "keycard ask in spades"
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in spades"
