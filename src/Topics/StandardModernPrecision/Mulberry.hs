@@ -274,8 +274,11 @@ keycardAsk = let
                                        )
                                      ]
                            , [ ( do TD.b2D2N3D >> makePass
-                               -- To play in a major, bid it at the 3 level.
-                               , [Mul.b2D2N3D4H]
+                               , [ Mul.b2D2N3D4H
+                                 -- To play in a major, bid it at the 3 level.
+                                 --, Mul.b2D2N3D4S
+                                 --, Mul.b2D2N3D4N
+                                 ]
                                )
                              , ( do TD.b2D2N3H >> makePass
                                , [ Mul.b2D2N3H4H
