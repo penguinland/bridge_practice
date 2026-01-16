@@ -90,7 +90,7 @@ b2D2N3D4D4H = b4D4H_
 -- 4D-4H-P
 
 b2D2N3C3D3H4D4HP :: Action
-b2D2N3C3D3H4D4HP = E.nameAction "b2D2N3C3D3H4D4HP"$ do
+b2D2N3C3D3H4D4HP = E.nameAction "b2D2N3C3D3H4D4HP" $ do
     E.minSuitLength T.Hearts 5
     E.maxSuitLength T.Spades 3
     E.maxSuitLength T.Clubs 2
@@ -101,7 +101,7 @@ b2D2N3H4D4HP = b2D2N3C3D3H4D4HP
 
 
 b2D2N3C3D3S4D4HP :: Action
-b2D2N3C3D3S4D4HP = E.nameAction "b2D2N3C3D3S4D4HP"$ do
+b2D2N3C3D3S4D4HP = E.nameAction "b2D2N3C3D3S4D4HP" $ do
     E.minSuitLength T.Hearts 4
     E.maxSuitLength T.Spades 4
     E.maxSuitLength T.Clubs 2
@@ -112,7 +112,7 @@ b2D2N3S4D4HP = b2D2N3C3D3S4D4HP
 
 
 b2D2N3C3D3N4D4HP :: Action
-b2D2N3C3D3N4D4HP = E.nameAction "b2D2N3C3D3N4D4HP"$ do
+b2D2N3C3D3N4D4HP = E.nameAction "b2D2N3C3D3N4D4HP" $ do
     E.minSuitLength T.Hearts 4
     E.maxSuitLength T.Spades 3
     E.maxSuitLength T.Clubs 2  -- Might bid this with 3 clubs, too
@@ -125,7 +125,7 @@ b2D2N3D4D4HP = b2D2N3C3D3N4D4HP
 -- 4D-4H-4S
 
 b2D2N3C3D3H4D4H4S :: Action
-b2D2N3C3D3H4D4H4S = E.nameAction "b2D2N3C3D3H4D4H4S"$ do
+b2D2N3C3D3H4D4H4S = E.nameAction "b2D2N3C3D3H4D4H4S" $ do
     E.minSuitLength T.Spades 4
     E.maxSuitLength T.Hearts 4
     E.maxSuitLength T.Clubs 3
@@ -136,7 +136,7 @@ b2D2N3H4D4H4S = b2D2N3C3D3H4D4H4S
 
 
 b2D2N3C3D3S4D4H4S :: Action
-b2D2N3C3D3S4D4H4S = E.nameAction "b2D2N3C3D3S4D4H4S"$ do
+b2D2N3C3D3S4D4H4S = E.nameAction "b2D2N3C3D3S4D4H4S" $ do
     E.minSuitLength T.Spades 5
     E.maxSuitLength T.Hearts 3
     E.maxSuitLength T.Clubs 3
@@ -147,7 +147,7 @@ b2D2N3S4D4H4S = b2D2N3C3D3S4D4H4S
 
 
 b2D2N3C3D3N4D4H4S :: Action
-b2D2N3C3D3N4D4H4S = E.nameAction "b2D2N3C3D3N4D4H4S"$ do
+b2D2N3C3D3N4D4H4S = E.nameAction "b2D2N3C3D3N4D4H4S" $ do
     E.minSuitLength T.Spades 4
     E.maxSuitLength T.Hearts 3
     E.maxSuitLength T.Clubs 3
@@ -160,7 +160,7 @@ b2D2N3D4D4H4S = b2D2N3C3D3N4D4H4S
 -- 4D-4H-5C
 
 b2D2N3C3D3H4D4H5C :: Action
-b2D2N3C3D3H4D4H5C = E.nameAction "b2D2N3C3D3H4D4H5C"$ do
+b2D2N3C3D3H4D4H5C = E.nameAction "b2D2N3C3D3H4D4H5C" $ do
     E.minSuitLength T.Clubs 3
     E.maxSuitLength T.Hearts 4
     E.maxSuitLength T.Spades 3
@@ -172,7 +172,7 @@ b2D2N3H4D4H5C = b2D2N3C3D3H4D4H5C
 
 
 b2D2N3C3D3S4D4H5C :: Action
-b2D2N3C3D3S4D4H5C = E.nameAction "b2D2N3C3D3S4D4H5C"$ do
+b2D2N3C3D3S4D4H5C = E.nameAction "b2D2N3C3D3S4D4H5C" $ do
     E.minSuitLength T.Clubs 3
     E.maxSuitLength T.Spades 4
     E.maxSuitLength T.Hearts 3
@@ -184,7 +184,7 @@ b2D2N3S4D4H5C = b2D2N3C3D3S4D4H5C
 
 
 b2D2N3C3D3N4D4H5C :: Action
-b2D2N3C3D3N4D4H5C = E.nameAction "b2D2N3C3D3N4D4H5C"$ do
+b2D2N3C3D3N4D4H5C = E.nameAction "b2D2N3C3D3N4D4H5C" $ do
     E.minSuitLength T.Clubs 4
     E.maxSuitLength T.Spades 3
     E.maxSuitLength T.Hearts 3
