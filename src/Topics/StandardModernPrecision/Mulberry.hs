@@ -62,29 +62,31 @@ initiateSignoff = let
                                             Mul.b2D2N3C3D3N4D
                                        )
                                      ]
-                           , [( TD.b2D2N3D >> makePass
-                                -- You could set trump to a major at the 3
-                                -- level, so just focus on signing off in
-                                -- clubs.
-                              , do alternatives [Mul.b2D2N3D4D4H5C]
-                                   Mul.b2D2N3D4D
-                              )]
-                           , [( TD.b2D2N3H >> makePass
-                              -- You could set trump with 3S, so make sure
-                              -- trump is hearts or clubs.
-                              , do alternatives [ Mul.b2D2N3H4D4HP
-                                                , Mul.b2D2N3H4D4H5C
-                                                ]
-                                   Mul.b2D2N3H4D
-                              )]
-                           , [( TD.b2D2N3S >> makePass
-                              , do alternatives [ Mul.b2D2N3S4D4HP
-                                                , Mul.b2D2N3S4D4H4S
-                                                , Mul.b2D2N3S4D4H5C
-                                                ]
-                                   Mul.b2D2N3S4D
-                              )]
-                           ])
+                           , [ ( TD.b2D2N3D >> makePass
+                                 -- You could set trump to a major at the 3
+                                 -- level, so just focus on signing off in
+                                 -- clubs.
+                               , do alternatives [Mul.b2D2N3D4D4H5C]
+                                    Mul.b2D2N3D4D
+                               )
+                             , ( TD.b2D2N3H >> makePass
+                               -- You could set trump with 3S, so make sure
+                               -- trump is hearts or clubs.
+                               , do alternatives [ Mul.b2D2N3H4D4HP
+                                                 , Mul.b2D2N3H4D4H5C
+                                                 ]
+                                    Mul.b2D2N3H4D
+                               )
+                             , ( TD.b2D2N3S >> makePass
+                               , do alternatives [ Mul.b2D2N3S4D4HP
+                                                 , Mul.b2D2N3S4D4H4S
+                                                 , Mul.b2D2N3S4D4H5C
+                                                 ]
+                                    Mul.b2D2N3S4D
+                               )
+                             ]
+                           ]
+                   )
 
 
 relaySignoff :: Situations
@@ -131,32 +133,34 @@ relaySignoff = let
                                        , Mul.b2D2N3C3D3N4D4H
                                        )
                                      ]
-                           , [( do TD.b2D2N3D >> makePass
-                                   -- You could set trump to a major at the 3
-                                   -- level, so just focus on signing off in
-                                   -- clubs.
-                                   alternatives [Mul.b2D2N3D4D4H5C]
-                                   Mul.b2D2N3D4D >> makePass
-                              , Mul.b2D2N3D4D
-                              )]
-                           , [( do TD.b2D2N3H >> makePass
-                                    -- You could set trump with 3S, so make sure
-                                    -- trump is hearts or clubs.
-                                   alternatives [ Mul.b2D2N3H4D4HP
-                                                , Mul.b2D2N3H4D4H5C
-                                                ]
-                                   Mul.b2D2N3H4D >> makePass
-                              , Mul.b2D2N3H4D
-                              )]
-                           , [( do TD.b2D2N3S >> makePass
-                                   alternatives [ Mul.b2D2N3S4D4HP
-                                                , Mul.b2D2N3S4D4H4S
-                                                , Mul.b2D2N3S4D4H5C
-                                                ]
-                                   Mul.b2D2N3S4D >> makePass
-                              , Mul.b2D2N3S4D
-                              )]
-                           ])
+                           , [ ( do TD.b2D2N3D >> makePass
+                                    -- You could set trump to a major at the 3
+                                    -- level, so just focus on signing off in
+                                    -- clubs.
+                                    alternatives [Mul.b2D2N3D4D4H5C]
+                                    Mul.b2D2N3D4D >> makePass
+                               , Mul.b2D2N3D4D
+                               )
+                             , ( do TD.b2D2N3H >> makePass
+                                     -- You could set trump with 3S, so make
+                                     -- sure trump is hearts or clubs.
+                                    alternatives [ Mul.b2D2N3H4D4HP
+                                                 , Mul.b2D2N3H4D4H5C
+                                                 ]
+                                    Mul.b2D2N3H4D >> makePass
+                               , Mul.b2D2N3H4D
+                               )
+                             , ( do TD.b2D2N3S >> makePass
+                                    alternatives [ Mul.b2D2N3S4D4HP
+                                                 , Mul.b2D2N3S4D4H4S
+                                                 , Mul.b2D2N3S4D4H5C
+                                                 ]
+                                    Mul.b2D2N3S4D >> makePass
+                               , Mul.b2D2N3S4D
+                               )
+                             ]
+                           ]
+                   )
 
 
 completeSignoff :: Situations
@@ -203,27 +207,29 @@ completeSignoff = let
                                          ]
                                        )
                                      ]
-                           , [( do TD.b2D2N3D    >> makePass
-                                   Mul.b2D2N3D4D >> makePass
-                                   Mul.b2D2N3D4D >> makePass
-                              , [Mul.b2D2N3D4D4H5C]
-                              )]
-                           , [( do TD.b2D2N3H    >> makePass
-                                   Mul.b2D2N3H4D >> makePass
-                                   Mul.b2D2N3H4D >> makePass
-                              , [ Mul.b2D2N3H4D4HP
-                                , Mul.b2D2N3H4D4H5C
-                                ]
-                              )]
-                           , [( do TD.b2D2N3S    >> makePass
-                                   Mul.b2D2N3S4D >> makePass
-                                   Mul.b2D2N3S4D >> makePass
-                              , [ Mul.b2D2N3S4D4HP
-                                , Mul.b2D2N3S4D4H4S
-                                , Mul.b2D2N3S4D4H5C
-                                ]
-                              )]
-                           ])
+                           , [ ( do TD.b2D2N3D    >> makePass
+                                    Mul.b2D2N3D4D >> makePass
+                                    Mul.b2D2N3D4D >> makePass
+                               , [Mul.b2D2N3D4D4H5C]
+                               )
+                             , ( do TD.b2D2N3H    >> makePass
+                                    Mul.b2D2N3H4D >> makePass
+                                    Mul.b2D2N3H4D >> makePass
+                               , [ Mul.b2D2N3H4D4HP
+                                 , Mul.b2D2N3H4D4H5C
+                                 ]
+                               )
+                             , ( do TD.b2D2N3S    >> makePass
+                                    Mul.b2D2N3S4D >> makePass
+                                    Mul.b2D2N3S4D >> makePass
+                               , [ Mul.b2D2N3S4D4HP
+                                 , Mul.b2D2N3S4D4H4S
+                                 , Mul.b2D2N3S4D4H5C
+                                 ]
+                               )
+                             ]
+                           ]
+                   )
 
 
 -- TODO:
