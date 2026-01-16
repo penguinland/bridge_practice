@@ -1,36 +1,29 @@
 module Bids.StandardModernPrecision.Mulberry(
-    -- If there's a way to do this without doing it separately for every earlier
-    -- auction, I can't see it.
     b2D2N3C3D3H4D
   , b2D2N3C3D3H4D4H
   , b2D2N3C3D3H4D4HP
   , b2D2N3C3D3H4D4H4S  -- might have bid 3S instead of 4D
   , b2D2N3C3D3H4D4H5C
-
   , b2D2N3C3D3S4D
   , b2D2N3C3D3S4D4H
   , b2D2N3C3D3S4D4HP
   , b2D2N3C3D3S4D4H4S
   , b2D2N3C3D3S4D4H5C
-
   , b2D2N3C3D3N4D
   , b2D2N3C3D3N4D4H
   , b2D2N3C3D3N4D4HP
   , b2D2N3C3D3N4D4H4S
   , b2D2N3C3D3N4D4H5C
-
   , b2D2N3D4D
   , b2D2N3D4D4H
   , b2D2N3D4D4HP       -- might have bid 3H instead of 4D
   , b2D2N3D4D4H4S      -- might have bid 3S instead of 4D
   , b2D2N3D4D4H5C
-
   , b2D2N3H4D
   , b2D2N3H4D4H
   , b2D2N3H4D4HP
   , b2D2N3H4D4H4S      -- might have bid 3S instead of 4D
   , b2D2N3H4D4H5C
-
   , b2D2N3S4D
   , b2D2N3S4D4H
   , b2D2N3S4D4HP
