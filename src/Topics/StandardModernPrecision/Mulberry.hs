@@ -320,8 +320,7 @@ keycardAsk = let
 topic :: Topic
 topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
   where
-    situations = wrap [ keycardAsk ]
-    _situations = wrap [ initiateSignoff
+    situations = wrap [ initiateSignoff
                       , relaySignoff
                       , completeSignoff
                       , keycardAsk
