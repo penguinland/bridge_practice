@@ -57,52 +57,28 @@ slamInterestOver2DMax_ = E.nameAction "slam_interest" $ do
 
 -- 4D
 
-b2D2N3C3D3H4D :: Action
-b2D2N3C3D3H4D = E.nameAction "b2D2N3C3D3H4D" $ do
+b4DMin_ :: Action
+b4DMin_ = E.nameAction "b2D2N3C3D3X4D" $ do
     E.forbid slamInterestOver2DMin_
     E.makeAlertableCall
         (T.Bid 4 T.Diamonds)
         ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
 
-
-b2D2N3C3D3S4D :: Action
-b2D2N3C3D3S4D = E.nameAction "b2D2N3C3D3S4D"$ do
-    E.forbid slamInterestOver2DMin_
-    E.makeAlertableCall
-        (T.Bid 4 T.Diamonds)
-        ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
-
-
-b2D2N3C3D3N4D :: Action
-b2D2N3C3D3N4D = E.nameAction "b2D2N3C3D3N4D"$ do
-    E.forbid slamInterestOver2DMin_
-    E.makeAlertableCall
-        (T.Bid 4 T.Diamonds)
-        ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
-
-
-b2D2N3H4D :: Action
-b2D2N3H4D = E.nameAction "b2D2N3H4D"$ do
+b4DMax_ :: Action
+b4DMax_ = E.nameAction "b2D2N3X4D" $ do
     E.forbid slamInterestOver2DMax_
     E.makeAlertableCall
         (T.Bid 4 T.Diamonds)
         ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
 
-
-b2D2N3S4D :: Action
-b2D2N3S4D = E.nameAction "b2D2N3S4D"$ do
-    E.forbid slamInterestOver2DMax_
-    E.makeAlertableCall
-        (T.Bid 4 T.Diamonds)
-        ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
-
-
-b2D2N3D4D :: Action
-b2D2N3D4D = E.nameAction "b2D2N3D4D"$ do
-    E.forbid slamInterestOver2DMax_
-    E.makeAlertableCall
-        (T.Bid 4 T.Diamonds)
-        ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
+b2D2N3C3D3H4D, b2D2N3C3D3S4D, b2D2N3C3D3N4D :: Action
+b2D2N3H4D, b2D2N3S4D, b2D2N3D4D :: Action
+b2D2N3C3D3H4D = b4DMin_
+b2D2N3C3D3S4D = b4DMin_
+b2D2N3C3D3N4D = b4DMin_
+b2D2N3H4D = b4DMax_
+b2D2N3S4D = b4DMax_
+b2D2N3D4D = b4DMax_
 
 
 -- 4D-4H
