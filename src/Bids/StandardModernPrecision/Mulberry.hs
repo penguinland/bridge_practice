@@ -57,10 +57,12 @@ import Output((.+))
 import qualified Terminology as T
 
 
+slamInterestOver2DMin_ :: Action
 slamInterestOver2DMin_ = do
     E.maxLoserCount 5
     E.pointRange 20 40
 
+slamInterestOver2DMax_ :: Action
 slamInterestOver2DMax_ = do
     E.maxLoserCount 5
     E.pointRange 17 40
