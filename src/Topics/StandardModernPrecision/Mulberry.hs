@@ -8,7 +8,7 @@ import Action(Action)
 import qualified Bids.StandardModernPrecision.TwoDiamonds as TD
 import qualified Bids.StandardModernPrecision.Mulberry as Mul
 import CommonBids(cannotPreempt, andNextBidderIs)
-import EDSL(alternatives, makePass)
+import EDSL(alternatives, makePass, suitLength)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -232,8 +232,82 @@ completeSignoff = let
                    )
 
 
+keycardAsk :: Situations
+keycardAsk = let
+    sit (setup, answers) = let
+        action = setup `andNextBidderIs` T.South
+        explanation =
+            "We have slam interest but no room to set trump at the 3 level " .+
+            "to start a round of control bidding. Instead, ask for " .+
+            "keycards. This sets trump, so partner knows how to answer " .+
+            "properly."
+        sit' answer = situation "kask" action answer explanation
+      in
+        return sit' <~ answers
+  in
+    wrapDlr . join $ return sit
+        <~ bidTree (do TD.b2D   >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                   )
+                   (concat [ bidTree (TD.b2D2N3C >> makePass)
+                                     [ ( do TD.b2D2N3C3D   >> makePass
+                                            TD.b2D2N3C3D3H >> makePass
+                                       , [ Mul.b2D2N3C3D3H4H
+                                         , Mul.b2D2N3C3D3H4S
+                                         -- You could bid 3S instead
+                                         --, Mul.b2D2N3C3D3H4N
+                                         ]
+                                       )
+                                     , ( do TD.b2D2N3C3D   >> makePass
+                                            TD.b2D2N3C3D3S >> makePass
+                                       , [ Mul.b2D2N3C3D3S4H
+                                         , Mul.b2D2N3C3D3S4S
+                                         , Mul.b2D2N3C3D3S4N
+                                         ]
+                                       )
+                                     , ( do TD.b2D2N3C3D   >> makePass
+                                            -- Performance optimization: predeal
+                                            -- opener's entire hand shape.
+                                            suitLength T.Clubs 4
+                                            suitLength T.Diamonds 1
+                                            TD.b2D2N3C3D3N >> makePass
+                                       , [ Mul.b2D2N3C3D3N4H
+                                         , Mul.b2D2N3C3D3N4S
+                                         , Mul.b2D2N3C3D3N4N
+                                         ]
+                                       )
+                                     ]
+                           , [ ( do -- Performance optimization: predeal
+                                    -- opener's entire hand shape.
+                                    suitLength T.Clubs 5
+                                    suitLength T.Diamonds 0
+                                    TD.b2D2N3D >> makePass
+                               , [ Mul.b2D2N3D4H
+                                 -- To play in a major, bid it at the 3 level.
+                                 --, Mul.b2D2N3D4S
+                                 --, Mul.b2D2N3D4N
+                                 ]
+                               )
+                             , ( do TD.b2D2N3H >> makePass
+                               , [ Mul.b2D2N3H4H
+                                 , Mul.b2D2N3H4S
+                                 -- You could bid 3S instead
+                                 --, Mul.b2D2N3H4N
+                                 ]
+                               )
+                             , ( do TD.b2D2N3S >> makePass
+                               , [ Mul.b2D2N3S4H
+                                 , Mul.b2D2N3S4S
+                                 , Mul.b2D2N3S4N
+                                 ]
+                               )
+                             ]
+                           ]
+                   )
+
+
 -- TODO:
---   - Make a keycard ask
+--   - Make a keycard response
 --   - Add auctions starting with 1C
 --   - Over auctions starting 1C, bid 4C
 --   - Over auctions starting 1C and a 4C bid, relay 4D
@@ -248,4 +322,5 @@ topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
     situations = wrap [ initiateSignoff
                       , relaySignoff
                       , completeSignoff
+                      , keycardAsk
                       ]
