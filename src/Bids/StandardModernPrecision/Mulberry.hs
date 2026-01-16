@@ -45,28 +45,22 @@ import Output((.+))
 import qualified Terminology as T
 
 
-slamInterestOver2DMin_ :: Action
-slamInterestOver2DMin_ = E.nameAction "slam_interest" $ do
-    E.alternatives [E.pointRange 20 40, E.maxLoserCount 5]
-
-
-slamInterestOver2DMax_ :: Action
-slamInterestOver2DMax_ = E.nameAction "slam_interest" $ do
-    E.alternatives [E.pointRange 17 40, E.maxLoserCount 5]
-
-
 -- 4D
 
 b4DMin_ :: Action
 b4DMin_ = E.nameAction "b2D2N3C3D3X4D" $ do
-    E.forbid slamInterestOver2DMin_
+    -- No slam interest
+    E.pointRange 0 19
+    E.minLoserCount 6
     E.makeAlertableCall
         (T.Bid 4 T.Diamonds)
         ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
 
 b4DMax_ :: Action
 b4DMax_ = E.nameAction "b2D2N3X4D" $ do
-    E.forbid slamInterestOver2DMax_
+    -- No slam interest
+    E.pointRange 0 17
+    E.minLoserCount 6
     E.makeAlertableCall
         (T.Bid 4 T.Diamonds)
         ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
