@@ -3,7 +3,6 @@ module Topics.StandardModernPrecision.TripleFourOne(topic) where
 import Control.Monad(join)
 
 import Bids.StandardModernPrecision.BasicBids(setOpener, oppsPass)
-import Bids.StandardModernPrecision.TwoDiamonds(name44Rkc)
 import qualified Bids.StandardModernPrecision.OneClub as B
 import Output((.+))
 import Situation(situation, (<~))
@@ -17,7 +16,7 @@ showAny4441 = let
         explanation =
             "Bidding " .+ T.Bid 2 T.Spades .+ " shows our 4441 shape. " .+
             "Partner will relay to " .+ T.Bid 2 T.Notrump .+ ", prompting " .+
-            "us to bid our singleton, after which " .+ name44Rkc .+ " is on."
+            "us to bid our singleton, after which Mulberry is on."
         inner dealer = let
             action' = do
                 setOpener opener
@@ -48,7 +47,7 @@ relay = let
         explanation =
             "Partner's " .+ T.Bid 2 T.Spades .+ " showed some 4441 shape. " .+
             "Relay to " .+ T.Bid 2 T.Notrump .+ ", asking partner to bid " .+
-            "their singleton, after which " .+ name44Rkc .+ " is on."
+            "their singleton, after which Mulberry is on."
         inner dealer = let
             action' = do
                 setOpener opener
@@ -85,8 +84,7 @@ bidSingleton = let
         explanation =
             "Our " .+ T.Bid 2 T.Spades .+ " showed some 4441 shape, and " .+
             "partner has relayed " .+ T.Bid 2 T.Notrump .+ " to ask what " .+
-            "our singleton is. Bid it at the 3 level. " .+ name44Rkc .+
-            " is now on."
+            "our singleton is. Bid it at the 3 level. Mulberry is now on."
         inner answer dealer = let
             action' = do
                 setOpener opener
@@ -134,7 +132,7 @@ singletonInPartnerSuit = let
             "Partner has bid their primary suit, but we have a 4441 " .+
             "shape with a singleton in it. Make the cheapest possible " .+
             "jump-shift to show this. Partner now knows our exact shape, " .+
-            "and can use " .+ name44Rkc .+ " to place the contract."
+            "and can use Mulberry to place the contract."
         inner (partnerBid, ourBid) dealer = let
             action' = do
                 setOpener opener

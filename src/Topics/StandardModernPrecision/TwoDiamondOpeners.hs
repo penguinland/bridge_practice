@@ -276,7 +276,7 @@ maximumResponse = let
             "length. Partner's next bid will either be setting trump at " .+
             "the 3 level (showing slam interest and triggering a round of " .+
             "control bidding), signing off in " .+ T.Bid 3 T.Notrump .+
-            ", or " .+ B.name44Rkc .+ "."
+            ", or Mulberry."
       in
         situation "max" action bid explanation
   in
@@ -299,7 +299,7 @@ gfAnyway = let
             "Bid " .+ T.Bid 3 T.Diamonds .+ " to re-ask partner about " .+
             "their major suits. When they reply, we'll know their exact " .+
             "shape and their strength to within 1 HCP. We'll then know " .+
-            "what the final contract should be, and can use " .+ B.name44Rkc .+
+            "what the final contract should be, and can use Mulberry " .+
             " to place it."
       in
         situation "reask" action B.b2D2N3C3D explanation
@@ -325,7 +325,7 @@ gfAnywayResponses = let
             "Use Smolen-like bids to show partner our major-suit shape: " .+
             "bid a 3-card major, or " .+ T.Bid 3 T.Notrump .+ " to show " .+
             "both majors. Partner now knows our strength and shape, and " .+
-            "can use " .+ B.name44Rkc .+ " to place the final contract " .+
+            "can use Mulberry to place the final contract " .+
             "(or sign off in " .+ T.Bid 3 T.Notrump .+ ")."
       in
         situation "reans" action bid explanation
