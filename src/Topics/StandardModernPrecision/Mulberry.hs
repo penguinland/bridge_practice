@@ -207,21 +207,21 @@ completeSignoff = let
                                          ]
                                        )
                                      ]
-                           , [ ( do TD.b2D2N3D    >> makePass
-                                    Mul.b2D2N3D4D >> makePass
-                                    Mul.b2D2N3D4D >> makePass
+                           , [ ( do TD.b2D2N3D      >> makePass
+                                    Mul.b2D2N3D4D   >> makePass
+                                    Mul.b2D2N3D4D4H >> makePass
                                , [Mul.b2D2N3D4D4H5C]
                                )
-                             , ( do TD.b2D2N3H    >> makePass
-                                    Mul.b2D2N3H4D >> makePass
-                                    Mul.b2D2N3H4D >> makePass
+                             , ( do TD.b2D2N3H      >> makePass
+                                    Mul.b2D2N3H4D   >> makePass
+                                    Mul.b2D2N3H4D4H >> makePass
                                , [ Mul.b2D2N3H4D4HP
                                  , Mul.b2D2N3H4D4H5C
                                  ]
                                )
-                             , ( do TD.b2D2N3S    >> makePass
-                                    Mul.b2D2N3S4D >> makePass
-                                    Mul.b2D2N3S4D >> makePass
+                             , ( do TD.b2D2N3S      >> makePass
+                                    Mul.b2D2N3S4D   >> makePass
+                                    Mul.b2D2N3S4D4H >> makePass
                                , [ Mul.b2D2N3S4D4HP
                                  , Mul.b2D2N3S4D4H4S
                                  , Mul.b2D2N3S4D4H5C
