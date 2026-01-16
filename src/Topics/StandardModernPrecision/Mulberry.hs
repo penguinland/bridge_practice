@@ -139,7 +139,7 @@ relaySignoff = let
                                     -- clubs.
                                     alternatives [Mul.b2D2N3D4D4H5C]
                                     Mul.b2D2N3D4D >> makePass
-                               , Mul.b2D2N3D4D
+                               , Mul.b2D2N3D4D4H
                                )
                              , ( do TD.b2D2N3H >> makePass
                                      -- You could set trump with 3S, so make
@@ -148,7 +148,7 @@ relaySignoff = let
                                                  , Mul.b2D2N3H4D4H5C
                                                  ]
                                     Mul.b2D2N3H4D >> makePass
-                               , Mul.b2D2N3H4D
+                               , Mul.b2D2N3H4D4H
                                )
                              , ( do TD.b2D2N3S >> makePass
                                     alternatives [ Mul.b2D2N3S4D4HP
@@ -156,7 +156,7 @@ relaySignoff = let
                                                  , Mul.b2D2N3S4D4H5C
                                                  ]
                                     Mul.b2D2N3S4D >> makePass
-                               , Mul.b2D2N3S4D
+                               , Mul.b2D2N3S4D4H
                                )
                              ]
                            ]
