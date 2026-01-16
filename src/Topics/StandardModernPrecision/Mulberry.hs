@@ -307,7 +307,6 @@ keycardAsk = let
 
 
 -- TODO:
---   - Make a keycard ask
 --   - Make a keycard response
 --   - Add auctions starting with 1C
 --   - Over auctions starting 1C, bid 4C
