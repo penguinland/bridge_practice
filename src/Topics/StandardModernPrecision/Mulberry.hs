@@ -8,7 +8,7 @@ import Action(Action)
 import qualified Bids.StandardModernPrecision.TwoDiamonds as TD
 import qualified Bids.StandardModernPrecision.Mulberry as Mul
 import CommonBids(cannotPreempt, andNextBidderIs)
-import EDSL(alternatives, makePass)
+import EDSL(alternatives, makePass, suitLength)
 import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
@@ -266,6 +266,10 @@ keycardAsk = let
                                          ]
                                        )
                                      , ( do TD.b2D2N3C3D   >> makePass
+                                            -- Performance optimization: predeal
+                                            -- opener's entire hand shape.
+                                            suitLength T.Clubs 4
+                                            suitLength T.Diamonds 1
                                             TD.b2D2N3C3D3N >> makePass
                                        , [ Mul.b2D2N3C3D3N4H
                                          , Mul.b2D2N3C3D3N4S
@@ -273,7 +277,11 @@ keycardAsk = let
                                          ]
                                        )
                                      ]
-                           , [ ( do TD.b2D2N3D >> makePass
+                           , [ ( do -- Performance optimization: predeal
+                                    -- opener's entire hand shape.
+                                    suitLength T.Clubs 5
+                                    suitLength T.Diamonds 0
+                                    TD.b2D2N3D >> makePass
                                , [ Mul.b2D2N3D4H
                                  -- To play in a major, bid it at the 3 level.
                                  --, Mul.b2D2N3D4S
