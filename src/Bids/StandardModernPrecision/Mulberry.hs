@@ -40,8 +40,8 @@ import qualified Terminology as T
 
 -- 4D
 
-b4D_ :: Action
-b4D_ = do
+b2D4D_ :: Action
+b2D4D_ = do
     -- No slam interest, further clarified by HCPs below
     E.minLoserCount 6
     -- A reason not to prefer notrump
@@ -54,26 +54,26 @@ b4D_ = do
         ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
 
 
-b4DMin_ :: Action
-b4DMin_ = E.nameAction "b2D2N3C3D3X4D" $ do
+b2D4DMin_ :: Action
+b2D4DMin_ = E.nameAction "b2D2N3C3D3X4D" $ do
     E.pointRange 0 19
-    b4D_
+    b2D4D_
 
 b2D2N3C3D3H4D, b2D2N3C3D3S4D, b2D2N3C3D3N4D :: Action
-b2D2N3C3D3H4D = b4DMin_
-b2D2N3C3D3S4D = b4DMin_
-b2D2N3C3D3N4D = b4DMin_
+b2D2N3C3D3H4D = b2D4DMin_
+b2D2N3C3D3S4D = b2D4DMin_
+b2D2N3C3D3N4D = b2D4DMin_
 
 
-b4DMax_ :: Action
-b4DMax_ = E.nameAction "b2D2N3X4D" $ do
+b2D4DMax_ :: Action
+b2D4DMax_ = E.nameAction "b2D2N3X4D" $ do
     E.pointRange 0 17
-    b4D_
+    b2D4D_
 
 b2D2N3H4D, b2D2N3S4D, b2D2N3D4D :: Action
-b2D2N3H4D = b4DMax_
-b2D2N3S4D = b4DMax_
-b2D2N3D4D = b4DMax_
+b2D2N3H4D = b2D4DMax_
+b2D2N3S4D = b2D4DMax_
+b2D2N3D4D = b2D4DMax_
 
 
 -- 4D-4H
