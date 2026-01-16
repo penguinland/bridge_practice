@@ -241,7 +241,7 @@ keycardAsk = let
             "to start a round of control bidding. Instead, ask for " .+
             "keycards. This sets trump, so partner knows how to answer " .+
             "properly."
-        sit' answer = situation "kask" action answer explanation
+        sit' answer = situation "kcask" action answer explanation
       in
         return sit' <~ answers
   in
@@ -306,6 +306,152 @@ keycardAsk = let
                    )
 
 
+keycardResponse :: Situations
+keycardResponse = let
+    sit (setups, answers) = let
+        sit' (setup, couldHaveVoid) answer = let
+            action = setup `andNextBidderIs` T.South
+            explanation =
+                "Partner has made a keycard ask. Give the right response. " .+
+                if couldHaveVoid
+                then "Even if we have a diamond void, just show a normal " .+
+                     "keycard response. Partner already knows our shape and " .+
+                     "doesn't care as much about extra shape info."
+                else ("" .+ "")  -- Convert from String to Description
+          in
+            situation "kcresp" action answer explanation
+      in
+        return sit' <~ setups <~ answers
+  in
+    -- Performance optimization: always specify the exact shape of the 2D
+    -- opener, or else dealer struggles to find a deal.
+    wrapDlr . join $ return sit
+        <~ [ ( [ ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3C >> makePass
+                      TD.b2D2N3C3D >> makePass
+                      TD.b2D2N3C3D3H >> makePass
+                      Mul.b2D2N3C3D3H4H >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3C >> makePass
+                      TD.b2D2N3C3D >> makePass
+                      TD.b2D2N3C3D3S >> makePass
+                      Mul.b2D2N3C3D3S4H >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3C >> makePass
+                      TD.b2D2N3C3D >> makePass
+                      suitLength T.Clubs 4 >> suitLength T.Diamonds 1
+                      TD.b2D2N3C3D3N >> makePass
+                      Mul.b2D2N3C3D3N4H >> makePass
+                 , True)  -- Might be 4405
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      suitLength T.Clubs 5 >> suitLength T.Diamonds 0
+                      TD.b2D2N3D >> makePass
+                      Mul.b2D2N3D4H >> makePass
+                 , True)  -- Might be 4405
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3H >> makePass
+                      Mul.b2D2N3H4H >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3S >> makePass
+                      Mul.b2D2N3S4H >> makePass
+                 , False)
+               ]
+             , [ Mul.b2DKCC4S, Mul.b2DKCC4N, Mul.b2DKCC5C, Mul.b2DKCC5D]
+             )
+           , ( [ ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3C >> makePass
+                      TD.b2D2N3C3D >> makePass
+                      TD.b2D2N3C3D3H >> makePass
+                      Mul.b2D2N3C3D3H4S >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3C >> makePass
+                      TD.b2D2N3C3D >> makePass
+                      TD.b2D2N3C3D3S >> makePass
+                      Mul.b2D2N3C3D3S4S >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3C >> makePass
+                      TD.b2D2N3C3D >> makePass
+                      suitLength T.Clubs 5 >> suitLength T.Diamonds 0
+                      TD.b2D2N3C3D3N >> makePass
+                      Mul.b2D2N3C3D3N4S >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      suitLength T.Clubs 4 >> suitLength T.Diamonds 1
+                      TD.b2D2N3D >> makePass
+                      Mul.b2D2N3D4S >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3H >> makePass
+                      Mul.b2D2N3H4S >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3S >> makePass
+                      Mul.b2D2N3S4S >> makePass
+                 , False)
+               ]
+             , [ Mul.b2DKCH4N, Mul.b2DKCH5C, Mul.b2DKCH5D, Mul.b2DKCH5H]
+             )
+           , ( [ ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3C >> makePass
+                      TD.b2D2N3C3D >> makePass
+                      TD.b2D2N3C3D3H >> makePass
+                      Mul.b2D2N3C3D3H4N >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3C >> makePass
+                      TD.b2D2N3C3D >> makePass
+                      TD.b2D2N3C3D3S >> makePass
+                      Mul.b2D2N3C3D3S4N >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3C >> makePass
+                      TD.b2D2N3C3D >> makePass
+                      suitLength T.Clubs 4 >> suitLength T.Diamonds 1
+                      TD.b2D2N3C3D3N >> makePass
+                      Mul.b2D2N3C3D3N4N >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      suitLength T.Clubs 5 >> suitLength T.Diamonds 0
+                      TD.b2D2N3D >> makePass
+                      Mul.b2D2N3D4N >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3H >> makePass
+                      Mul.b2D2N3H4N >> makePass
+                 , False)
+               , ( do TD.b2D >> cannotPreempt >> makePass
+                      TD.b2D2N >> cannotPreempt >> makePass
+                      TD.b2D2N3S >> makePass
+                      Mul.b2D2N3S4N >> makePass
+                 , False)
+               ]
+             , [ Mul.b2DKCS5C, Mul.b2DKCS5D, Mul.b2DKCS5H, Mul.b2DKCS5S]
+             )
+           ]
+
+
 -- TODO:
 --   - Make a keycard response
 --   - Add auctions starting with 1C
@@ -319,8 +465,10 @@ keycardAsk = let
 topic :: Topic
 topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
   where
-    situations = wrap [ initiateSignoff
+    situations = wrap [ keycardResponse]
+    _situations = wrap [ initiateSignoff
                       , relaySignoff
                       , completeSignoff
                       , keycardAsk
+                      , keycardResponse
                       ]
