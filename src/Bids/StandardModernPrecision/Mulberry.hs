@@ -49,6 +49,12 @@ b4DMin_ = E.nameAction "b2D2N3C3D3X4D" $ do
         (T.Bid 4 T.Diamonds)
         ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
 
+b2D2N3C3D3H4D, b2D2N3C3D3S4D, b2D2N3C3D3N4D :: Action
+b2D2N3C3D3H4D = b4DMin_
+b2D2N3C3D3S4D = b4DMin_
+b2D2N3C3D3N4D = b4DMin_
+
+
 b4DMax_ :: Action
 b4DMax_ = E.nameAction "b2D2N3X4D" $ do
     -- No slam interest
@@ -58,11 +64,7 @@ b4DMax_ = E.nameAction "b2D2N3X4D" $ do
         (T.Bid 4 T.Diamonds)
         ("(delayed alert) no slam interest, prompts " .+ T.Bid 4 T.Hearts)
 
-b2D2N3C3D3H4D, b2D2N3C3D3S4D, b2D2N3C3D3N4D :: Action
 b2D2N3H4D, b2D2N3S4D, b2D2N3D4D :: Action
-b2D2N3C3D3H4D = b4DMin_
-b2D2N3C3D3S4D = b4DMin_
-b2D2N3C3D3N4D = b4DMin_
 b2D2N3H4D = b4DMax_
 b2D2N3S4D = b4DMax_
 b2D2N3D4D = b4DMax_
