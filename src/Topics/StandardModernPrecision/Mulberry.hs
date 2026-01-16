@@ -232,6 +232,69 @@ completeSignoff = let
                    )
 
 
+keycardAsk :: Situations
+keycardAsk = let
+    sit (setup, answers) = let
+        action = setup `andNextBidderIs` T.South
+        explanation =
+            "We have slam interest but no room to set trump at the 3 level " .+
+            "to start a round of control bidding. Instead, ask for " .+
+            "keycards. This sets trump, so partner knows how to answer " .+
+            "properly."
+        sit' answer = situation "kask" action answer explanation
+      in
+        return sit' <~ answers
+  in
+    wrapDlr . join $ return sit
+        <~ bidTree (do TD.b2D   >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                   )
+                   (concat [ bidTree (TD.b2D2N3C >> makePass)
+                                     [ ( do TD.b2D2N3C3D   >> makePass
+                                            TD.b2D2N3C3D3H >> makePass
+                                       , [ Mul.b2D2N3C3D3H4H
+                                         , Mul.b2D2N3C3D3H4S
+                                         -- You could bid 3S instead
+                                         --, Mul.b2D2N3C3D3H4N
+                                         ]
+                                       )
+                                     , ( do TD.b2D2N3C3D   >> makePass
+                                            TD.b2D2N3C3D3S >> makePass
+                                       , [ Mul.b2D2N3C3D3S4H
+                                         , Mul.b2D2N3C3D3S4S
+                                         , Mul.b2D2N3C3D3S4N
+                                         ]
+                                       )
+                                     , ( do TD.b2D2N3C3D   >> makePass
+                                            TD.b2D2N3C3D3N >> makePass
+                                       , [ Mul.b2D2N3C3D3N4H
+                                         , Mul.b2D2N3C3D3N4S
+                                         , Mul.b2D2N3C3D3N4N
+                                         ]
+                                       )
+                                     ]
+                           , [ ( do TD.b2D2N3D >> makePass
+                               -- To play in a major, bid it at the 3 level.
+                               , [Mul.b2D2N3D4H]
+                               )
+                             , ( do TD.b2D2N3H >> makePass
+                               , [ Mul.b2D2N3H4H
+                                 , Mul.b2D2N3H4S
+                                 -- You could bid 3S instead
+                                 --, Mul.b2D2N3H4N
+                                 ]
+                               )
+                             , ( do TD.b2D2N3S >> makePass
+                               , [ Mul.b2D2N3S4H
+                                 , Mul.b2D2N3S4S
+                                 , Mul.b2D2N3S4N
+                                 ]
+                               )
+                             ]
+                           ]
+                   )
+
+
 -- TODO:
 --   - Make a keycard ask
 --   - Add auctions starting with 1C
@@ -245,7 +308,9 @@ completeSignoff = let
 topic :: Topic
 topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
   where
-    situations = wrap [ initiateSignoff
+    situations = wrap [ keycardAsk ]
+    _situations = wrap [ initiateSignoff
                       , relaySignoff
                       , completeSignoff
+                      , keycardAsk
                       ]
