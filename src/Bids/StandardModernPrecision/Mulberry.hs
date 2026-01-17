@@ -48,7 +48,7 @@ module Bids.StandardModernPrecision.Mulberry(
   , b2D2N3S4S
   , b2D2N3S4N
   -- Keycard responses: don't bother customizing on the start of the auction
-  , bKCC4H4S  -- Naming scheme: "smp_bKC" <trump suit> <asking bid> <response>
+  , bKCC4H4S  -- Naming scheme: "bKC" <trump suit> <asking bid> <response>
   , bKCC4H4N
   , bKCC4H5C
   , bKCC4H5D
