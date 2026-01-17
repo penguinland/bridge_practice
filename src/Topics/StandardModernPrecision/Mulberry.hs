@@ -379,9 +379,7 @@ keycardResponse = let
                       Mul.b2D2N3S4H >> makePass
                  , False)
                ]
-             -- Performance improvement: we'll only have 3 or 0 keycards one in
-             -- every 30 million deals. So, skip it.
-             , [ Mul.bKCC4H4S, {-Mul.bKCC4H4N,-} Mul.bKCC4H5C, Mul.bKCC4H5D]
+             , [ Mul.bKCC4H4S, Mul.bKCC4H4N, Mul.bKCC4H5C, Mul.bKCC4H5D]
              )
            , ( [ ( do TD.b2D >> cannotPreempt >> makePass
                       TD.b2D2N >> cannotPreempt >> makePass
