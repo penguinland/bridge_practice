@@ -478,8 +478,7 @@ keycardResponse = let
 topic :: Topic
 topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
   where
-    situations = wrap [ keycardResponse]
-    _situations = wrap [ initiateSignoff
+    situations = wrap [ initiateSignoff
                       , relaySignoff
                       , completeSignoff
                       , keycardAsk
