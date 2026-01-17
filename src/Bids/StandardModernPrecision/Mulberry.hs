@@ -52,10 +52,22 @@ module Bids.StandardModernPrecision.Mulberry(
   , bKCC4H4N
   , bKCC4H5C
   , bKCC4H5D
+  , bKCD4H4S
+  , bKCD4H4N
+  , bKCD4H5C
+  , bKCD4H5D
+  , bKCD4S4N
+  , bKCD4S5C
+  , bKCD4S5D
+  , bKCD4S5H
   , bKCH4S4N
   , bKCH4S5C
   , bKCH4S5D
   , bKCH4S5H
+  , bKCH4N5C
+  , bKCH4N5D
+  , bKCH4N5H
+  , bKCH4N5S
   , bKCS4N5C
   , bKCS4N5D
   , bKCS4N5H
@@ -387,6 +399,8 @@ b2D2N3S4N = E.nameAction "smp_b2D2N3S4N" $ do
                         "(delayed alert) keycard ask in spades"
 
 
+-- keycard responses
+
 bKCC4H4S :: Action
 bKCC4H4S = E.nameAction "smp_bKCC4H4S" $ do
     E.keycardCount T.Clubs 1 4
@@ -417,6 +431,65 @@ bKCC4H5D = E.nameAction "smp_bKCC4H5D" $ do
                         "(delayed alert) 2 or 5 keycards with queen"
 
 
+bKCD4H4S :: Action
+bKCD4H4S = E.nameAction "smp_bKCD4H4S" $ do
+    E.keycardCount T.Diamonds 1 4
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) 1 or 4 keycards"
+
+
+bKCD4H4N :: Action
+bKCD4H4N = E.nameAction "smp_bKCD4H4N" $ do
+    E.keycardCount T.Diamonds 3 0
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) 3 or 0 keycards"
+
+
+bKCD4H5C :: Action
+bKCD4H5C = E.nameAction "smp_bKCD4H5C" $ do
+    E.keycardCount T.Diamonds 2 5
+    E.forbid $ E.hasCard T.Diamonds 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Clubs)
+                        "(delayed alert) 2 or 5 keycards w/o queen"
+
+
+bKCD4H5D :: Action
+bKCD4H5D = E.nameAction "smp_bKCD4H5D" $ do
+    E.keycardCount T.Diamonds 2 5
+    E.hasCard T.Diamonds 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Diamonds)
+                        "(delayed alert) 2 or 5 keycards with queen"
+
+
+bKCD4S4N :: Action
+bKCD4S4N = E.nameAction "smp_bKCD4S4N" $ do
+    E.keycardCount T.Diamonds 1 4
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) 1 or 4 keycards"
+
+
+bKCD4S5C :: Action
+bKCD4S5C = E.nameAction "smp_bKCD4S5C" $ do
+    E.keycardCount T.Diamonds 3 0
+    E.makeAlertableCall (T.Bid 5 T.Clubs)
+                        "(delayed alert) 3 or 0 keycards"
+
+
+bKCD4S5D :: Action
+bKCD4S5D = E.nameAction "smp_bKCD4S5D" $ do
+    E.keycardCount T.Diamonds 2 5
+    E.forbid $ E.hasCard T.Diamonds 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Diamonds)
+                        "(delayed alert) 2 or 5 keycards w/o queen"
+
+
+bKCD4S5H :: Action
+bKCD4S5H = E.nameAction "smp_bKCD4S5H" $ do
+    E.keycardCount T.Diamonds 2 5
+    E.hasCard T.Diamonds 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Hearts)
+                        "(delayed alert) 2 or 5 keycards with queen"
+
 bKCH4S4N :: Action
 bKCH4S4N = E.nameAction "smp_bKCH4S4N" $ do
     E.keycardCount T.Hearts 1 4
@@ -444,6 +517,36 @@ bKCH4S5H = E.nameAction "smp_bKCH4S5H" $ do
     E.keycardCount T.Hearts 2 5
     E.hasCard T.Hearts 'Q'
     E.makeAlertableCall (T.Bid 5 T.Hearts)
+                        "(delayed alert) 2 or 5 keycards with queen"
+
+
+bKCH4N5C :: Action
+bKCH4N5C = E.nameAction "smp_bKCH4N5C" $ do
+    E.keycardCount T.Hearts 1 4
+    E.makeAlertableCall (T.Bid 5 T.Clubs)
+                        "(delayed alert) 1 or 4 keycards"
+
+
+bKCH4N5D :: Action
+bKCH4N5D = E.nameAction "smp_bKCH4N5D" $ do
+    E.keycardCount T.Hearts 3 0
+    E.makeAlertableCall (T.Bid 5 T.Diamonds)
+                        "(delayed alert) 3 or 0 keycards"
+
+
+bKCH4N5H :: Action
+bKCH4N5H = E.nameAction "smp_bKCH4N5H" $ do
+    E.keycardCount T.Hearts 2 5
+    E.forbid $ E.hasCard T.Hearts 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Hearts)
+                        "(delayed alert) 2 or 5 keycards w/o queen"
+
+
+bKCH4N5S :: Action
+bKCH4N5S = E.nameAction "smp_bKCH4N5S" $ do
+    E.keycardCount T.Hearts 2 5
+    E.hasCard T.Hearts 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Spades)
                         "(delayed alert) 2 or 5 keycards with queen"
 
 
