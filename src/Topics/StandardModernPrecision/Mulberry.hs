@@ -366,7 +366,7 @@ keycardResponse = let
                       Mul.b2D2N3S4H >> makePass
                  , False)
                ]
-             , [ Mul.b2DKCC4S, Mul.b2DKCC4N, Mul.b2DKCC5C, Mul.b2DKCC5D]
+             , [ Mul.bKCC4H4S, Mul.bKCC4H4N, Mul.bKCC4H5C, Mul.bKCC4H5D]
              )
            , ( [ ( do TD.b2D >> cannotPreempt >> makePass
                       TD.b2D2N >> cannotPreempt >> makePass
@@ -407,7 +407,7 @@ keycardResponse = let
                       Mul.b2D2N3S4S >> makePass
                  , False)
                ]
-             , [ Mul.b2DKCH4N, Mul.b2DKCH5C, Mul.b2DKCH5D, Mul.b2DKCH5H]
+             , [ Mul.bKCH4S4N, Mul.bKCH4S5C, Mul.bKCH4S5D, Mul.bKCH4S5H]
              )
            , ( [ ( do TD.b2D >> cannotPreempt >> makePass
                       TD.b2D2N >> cannotPreempt >> makePass
@@ -448,7 +448,7 @@ keycardResponse = let
                       Mul.b2D2N3S4N >> makePass
                  , False)
                ]
-             , [ Mul.b2DKCS5C, Mul.b2DKCS5D, Mul.b2DKCS5H, Mul.b2DKCS5S]
+             , [ Mul.bKCS4N5C, Mul.bKCS4N5D, Mul.bKCS4N5H, Mul.bKCS4N5S]
              )
            ]
 
