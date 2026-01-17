@@ -351,10 +351,13 @@ keycardResponse = let
                       TD.b2D2N >> cannotPreempt >> makePass
                       TD.b2D2N3C >> makePass
                       TD.b2D2N3C3D >> makePass
-                      suitLength T.Clubs 5 >> suitLength T.Diamonds 0
+                      -- Performance improvement: 4414 shape is about 4 times
+                      -- more common than 4405, which sometimes times out. So,
+                      -- only do 4414 shape.
+                      suitLength T.Clubs 4 >> suitLength T.Diamonds 1
                       TD.b2D2N3C3D3N >> makePass
                       Mul.b2D2N3C3D3N4H >> makePass
-                 , True)
+                 , False)
                , ( do TD.b2D >> cannotPreempt >> makePass
                       TD.b2D2N >> cannotPreempt >> makePass
                       suitLength T.Clubs 4 >> suitLength T.Diamonds 1
@@ -372,7 +375,9 @@ keycardResponse = let
                       Mul.b2D2N3S4H >> makePass
                  , False)
                ]
-             , [ Mul.bKCC4H4S, Mul.bKCC4H4N, Mul.bKCC4H5C, Mul.bKCC4H5D]
+             -- Performance improvement: we'll only have 3 or 0 keycards one in
+             -- every 30 million deals. So, skip it.
+             , [ Mul.bKCC4H4S, {-Mul.bKCC4H4N,-} Mul.bKCC4H5C, Mul.bKCC4H5D]
              )
            , ( [ ( do TD.b2D >> cannotPreempt >> makePass
                       TD.b2D2N >> cannotPreempt >> makePass
