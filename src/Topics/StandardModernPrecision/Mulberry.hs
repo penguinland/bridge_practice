@@ -246,64 +246,70 @@ keycardAsk = let
         return sit' <~ answers
   in
     wrapDlr . join $ return sit
-        <~ bidTree (do TD.b2D   >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                   )
-                   (concat [ bidTree (TD.b2D2N3C >> makePass)
-                                     [ ( do TD.b2D2N3C3D   >> makePass
-                                            TD.b2D2N3C3D3H >> makePass
-                                       , [ Mul.b2D2N3C3D3H4H
-                                         , Mul.b2D2N3C3D3H4S
-                                         -- You could bid 3S instead
-                                         --, Mul.b2D2N3C3D3H4N
-                                         ]
-                                       )
-                                     , ( do TD.b2D2N3C3D   >> makePass
-                                            TD.b2D2N3C3D3S >> makePass
-                                       , [ Mul.b2D2N3C3D3S4H
-                                         , Mul.b2D2N3C3D3S4S
-                                         , Mul.b2D2N3C3D3S4N
-                                         ]
-                                       )
-                                     , ( do TD.b2D2N3C3D   >> makePass
-                                            -- Performance optimization: predeal
-                                            -- opener's entire hand shape.
-                                            suitLength T.Clubs 4
-                                            suitLength T.Diamonds 1
-                                            TD.b2D2N3C3D3N >> makePass
-                                       , [ Mul.b2D2N3C3D3N4H
-                                         , Mul.b2D2N3C3D3N4S
-                                         , Mul.b2D2N3C3D3N4N
-                                         ]
-                                       )
-                                     ]
-                           , [ ( do -- Performance optimization: predeal
-                                    -- opener's entire hand shape.
-                                    suitLength T.Clubs 5
-                                    suitLength T.Diamonds 0
-                                    TD.b2D2N3D >> makePass
-                               , [ Mul.b2D2N3D4H
-                                 -- To play in a major, bid it at the 3 level.
-                                 --, Mul.b2D2N3D4S
-                                 --, Mul.b2D2N3D4N
-                                 ]
-                               )
-                             , ( do TD.b2D2N3H >> makePass
-                               , [ Mul.b2D2N3H4H
-                                 , Mul.b2D2N3H4S
-                                 -- You could bid 3S instead
-                                 --, Mul.b2D2N3H4N
-                                 ]
-                               )
-                             , ( do TD.b2D2N3S >> makePass
-                               , [ Mul.b2D2N3S4H
-                                 , Mul.b2D2N3S4S
-                                 , Mul.b2D2N3S4N
-                                 ]
-                               )
-                             ]
-                           ]
-                   )
+        <~ [ ( do TD.b2D   >> cannotPreempt >> makePass
+                  TD.b2D2N >> cannotPreempt >> makePass
+                  TD.b2D2N3C                >> makePass
+                  TD.b2D2N3C3D              >> makePass
+                  TD.b2D2N3C3D3H            >> makePass
+             , [ Mul.b2D2N3C3D3H4H
+               , Mul.b2D2N3C3D3H4S
+               -- You could bid 3S instead
+               --, Mul.b2D2N3C3D3H4N
+               ]
+             )
+           , ( do TD.b2D   >> cannotPreempt >> makePass
+                  TD.b2D2N >> cannotPreempt >> makePass
+                  TD.b2D2N3C                >> makePass
+                  TD.b2D2N3C3D              >> makePass
+                  TD.b2D2N3C3D3S            >> makePass
+             , [ Mul.b2D2N3C3D3S4H
+               , Mul.b2D2N3C3D3S4S
+               , Mul.b2D2N3C3D3S4N
+               ]
+             )
+           , ( do TD.b2D   >> cannotPreempt >> makePass
+                  TD.b2D2N >> cannotPreempt >> makePass
+                  TD.b2D2N3C                >> makePass
+                  TD.b2D2N3C3D              >> makePass
+                  -- Performance optimization: predeal opener's entire shape.
+                  suitLength T.Clubs 4
+                  suitLength T.Diamonds 1
+                  TD.b2D2N3C3D3N            >> makePass
+             , [ Mul.b2D2N3C3D3N4H
+               , Mul.b2D2N3C3D3N4S
+               , Mul.b2D2N3C3D3N4N
+               ]
+             )
+           , ( do TD.b2D   >> cannotPreempt >> makePass
+                  TD.b2D2N >> cannotPreempt >> makePass
+                  -- Performance optimization: predeal opener's entire shape.
+                  suitLength T.Clubs 5
+                  suitLength T.Diamonds 0
+                  TD.b2D2N3D >> makePass
+             , [ Mul.b2D2N3D4H
+               -- To play in a major, bid it at the 3 level.
+               --, Mul.b2D2N3D4S
+               --, Mul.b2D2N3D4N
+               ]
+             )
+           , ( do TD.b2D   >> cannotPreempt >> makePass
+                  TD.b2D2N >> cannotPreempt >> makePass
+                  TD.b2D2N3H >> makePass
+             , [ Mul.b2D2N3H4H
+               , Mul.b2D2N3H4S
+               -- You could bid 3S instead
+               --, Mul.b2D2N3H4N
+               ]
+             )
+           , ( do TD.b2D   >> cannotPreempt >> makePass
+                  TD.b2D2N >> cannotPreempt >> makePass
+                  TD.b2D2N3S >> makePass
+             , [ Mul.b2D2N3S4H
+               , Mul.b2D2N3S4S
+               , Mul.b2D2N3S4N
+               ]
+             )
+           ]
 
 
 keycardResponse :: Situations
