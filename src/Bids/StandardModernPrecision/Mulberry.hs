@@ -2,7 +2,7 @@ module Bids.StandardModernPrecision.Mulberry(
     b2D2N3C3D3H4D
   , b2D2N3C3D3H4D4H
   , b2D2N3C3D3H4D4HP
-  , b2D2N3C3D3H4D4H4S  -- might have bid 3S instead of 4D
+  , b2D2N3C3D3H4D4H4S  -- Avoid: might have bid 3S instead of 4D
   , b2D2N3C3D3H4D4H5C
   , b2D2N3C3D3H4H
   , b2D2N3C3D3H4S
@@ -25,20 +25,20 @@ module Bids.StandardModernPrecision.Mulberry(
   , b2D2N3C3D3N4N
   , b2D2N3D4D
   , b2D2N3D4D4H
-  , b2D2N3D4D4HP       -- might have bid 3H instead of 4D
-  , b2D2N3D4D4H4S      -- might have bid 3S instead of 4D
+  , b2D2N3D4D4HP       -- Avoid: might have bid 3H instead of 4D
+  , b2D2N3D4D4H4S      -- Avoid: might have bid 3S instead of 4D
   , b2D2N3D4D4H5C
   , b2D2N3D4H
-  , b2D2N3D4S          -- might have bid 3H instead of 4S
-  , b2D2N3D4N          -- might have bid 3S instead of 4N
+  , b2D2N3D4S          -- Avoid: might have bid 3H instead of 4S
+  , b2D2N3D4N          -- Avoid: might have bid 3S instead of 4N
   , b2D2N3H4D
   , b2D2N3H4D4H
   , b2D2N3H4D4HP
-  , b2D2N3H4D4H4S      -- might have bid 3S instead of 4D
+  , b2D2N3H4D4H4S      -- Avoid: might have bid 3S instead of 4D
   , b2D2N3H4D4H5C
   , b2D2N3H4H
   , b2D2N3H4S
-  , b2D2N3H4N          -- might have bid 3S instead of 4N
+  , b2D2N3H4N          -- Avoid: might have bid 3S instead of 4N
   , b2D2N3S4D
   , b2D2N3S4D4H
   , b2D2N3S4D4HP
@@ -47,6 +47,19 @@ module Bids.StandardModernPrecision.Mulberry(
   , b2D2N3S4H
   , b2D2N3S4S
   , b2D2N3S4N
+  -- Keycard responses: don't bother customizing on the start of the auction
+  , bKCC4H4S  -- Naming scheme: "bKC" <trump suit> <asking bid> <response>
+  , bKCC4H4N
+  , bKCC4H5C
+  , bKCC4H5D
+  , bKCH4S4N
+  , bKCH4S5C
+  , bKCH4S5D
+  , bKCH4S5H
+  , bKCS4N5C
+  , bKCS4N5D
+  , bKCS4N5H
+  , bKCS4N5S
 ) where
 
 
@@ -372,3 +385,93 @@ b2D2N3S4N = E.nameAction "b2D2N3S4N" $ do
     slamInterestOver2DMax_
     E.makeAlertableCall (T.Bid 4 T.Notrump)
                         "(delayed alert) keycard ask in spades"
+
+
+bKCC4H4S :: Action
+bKCC4H4S = E.nameAction "bKCC4H4S" $ do
+    E.keycardCount T.Clubs 1 4
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) 1 or 4 keycards"
+
+
+bKCC4H4N :: Action
+bKCC4H4N = E.nameAction "bKCC4H4N" $ do
+    E.keycardCount T.Clubs 3 0
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) 3 or 0 keycards"
+
+
+bKCC4H5C :: Action
+bKCC4H5C = E.nameAction "bKCC4H5C" $ do
+    E.keycardCount T.Clubs 2 5
+    E.forbid $ E.hasCard T.Clubs 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Clubs)
+                        "(delayed alert) 2 or 5 keycards w/o queen"
+
+
+bKCC4H5D :: Action
+bKCC4H5D = E.nameAction "bKCC4H5D" $ do
+    E.keycardCount T.Clubs 2 5
+    E.hasCard T.Clubs 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Diamonds)
+                        "(delayed alert) 2 or 5 keycards with queen"
+
+
+bKCH4S4N :: Action
+bKCH4S4N = E.nameAction "bKCH4S4N" $ do
+    E.keycardCount T.Hearts 1 4
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) 1 or 4 keycards"
+
+
+bKCH4S5C :: Action
+bKCH4S5C = E.nameAction "bKCH4S5C" $ do
+    E.keycardCount T.Hearts 3 0
+    E.makeAlertableCall (T.Bid 5 T.Clubs)
+                        "(delayed alert) 3 or 0 keycards"
+
+
+bKCH4S5D :: Action
+bKCH4S5D = E.nameAction "bKCH4S5D" $ do
+    E.keycardCount T.Hearts 2 5
+    E.forbid $ E.hasCard T.Hearts 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Diamonds)
+                        "(delayed alert) 2 or 5 keycards w/o queen"
+
+
+bKCH4S5H :: Action
+bKCH4S5H = E.nameAction "bKCH4S5H" $ do
+    E.keycardCount T.Hearts 2 5
+    E.hasCard T.Hearts 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Hearts)
+                        "(delayed alert) 2 or 5 keycards with queen"
+
+
+bKCS4N5C :: Action
+bKCS4N5C = E.nameAction "bKCS4N5C" $ do
+    E.keycardCount T.Spades 1 4
+    E.makeAlertableCall (T.Bid 5 T.Clubs)
+                        "(delayed alert) 1 or 4 keycards"
+
+
+bKCS4N5D :: Action
+bKCS4N5D = E.nameAction "bKCS4N5D" $ do
+    E.keycardCount T.Spades 3 0
+    E.makeAlertableCall (T.Bid 5 T.Diamonds)
+                        "(delayed alert) 3 or 0 keycards"
+
+
+bKCS4N5H :: Action
+bKCS4N5H = E.nameAction "bKCS4N5H" $ do
+    E.keycardCount T.Spades 2 5
+    E.forbid $ E.hasCard T.Spades 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Hearts)
+                        "(delayed alert) 2 or 5 keycards w/o queen"
+
+
+bKCS4N5S :: Action
+bKCS4N5S = E.nameAction "bKCS4N5S" $ do
+    E.keycardCount T.Spades 2 5
+    E.hasCard T.Spades 'Q'
+    E.makeAlertableCall (T.Bid 5 T.Spades)
+                        "(delayed alert) 2 or 5 keycards with queen"
