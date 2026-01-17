@@ -309,22 +309,23 @@ keycardAsk = let
 keycardResponse :: Situations
 keycardResponse = let
     sit (setups, answers) = let
-        sit' (setup, couldHaveVoid) answer = let
+        sit' (setup, hasVoid) answer = let
             action = setup `andNextBidderIs` T.South
             explanation =
-                "Partner has made a keycard ask. Give the right response. " .+
-                if couldHaveVoid
-                then "Even if we have a diamond void, just show a normal " .+
-                     "keycard response. Partner already knows our shape and " .+
-                     "doesn't care as much about extra shape info."
-                else ("" .+ "")  -- Convert from String to Description
+                "Partner has made a keycard ask. Give the right response." .+
+                if hasVoid
+                then " Even if we have a diamond void, just show a normal " .+
+                     "keycard response. Partner already knows about our " .+
+                     "major-suit shape and diamond shortness, so doesn't " .+
+                     "care as much about extra shape info."
+                else mempty
           in
             situation "kcresp" action answer explanation
       in
         return sit' <~ setups <~ answers
   in
     -- Performance optimization: always specify the exact shape of the 2D
-    -- opener, or else dealer struggles to find a deal.
+    -- opener, or else the dealer engine struggles to find a deal.
     wrapDlr . join $ return sit
         <~ [ ( [ ( do TD.b2D >> cannotPreempt >> makePass
                       TD.b2D2N >> cannotPreempt >> makePass
@@ -344,16 +345,16 @@ keycardResponse = let
                       TD.b2D2N >> cannotPreempt >> makePass
                       TD.b2D2N3C >> makePass
                       TD.b2D2N3C3D >> makePass
-                      suitLength T.Clubs 4 >> suitLength T.Diamonds 1
+                      suitLength T.Clubs 5 >> suitLength T.Diamonds 0
                       TD.b2D2N3C3D3N >> makePass
                       Mul.b2D2N3C3D3N4H >> makePass
-                 , True)  -- Might be 4405
+                 , True)
                , ( do TD.b2D >> cannotPreempt >> makePass
                       TD.b2D2N >> cannotPreempt >> makePass
-                      suitLength T.Clubs 5 >> suitLength T.Diamonds 0
+                      suitLength T.Clubs 4 >> suitLength T.Diamonds 1
                       TD.b2D2N3D >> makePass
                       Mul.b2D2N3D4H >> makePass
-                 , True)  -- Might be 4405
+                 , False)
                , ( do TD.b2D >> cannotPreempt >> makePass
                       TD.b2D2N >> cannotPreempt >> makePass
                       TD.b2D2N3H >> makePass
@@ -388,7 +389,7 @@ keycardResponse = let
                       suitLength T.Clubs 5 >> suitLength T.Diamonds 0
                       TD.b2D2N3C3D3N >> makePass
                       Mul.b2D2N3C3D3N4S >> makePass
-                 , False)
+                 , True)
                , ( do TD.b2D >> cannotPreempt >> makePass
                       TD.b2D2N >> cannotPreempt >> makePass
                       suitLength T.Clubs 4 >> suitLength T.Diamonds 1
@@ -435,7 +436,7 @@ keycardResponse = let
                       suitLength T.Clubs 5 >> suitLength T.Diamonds 0
                       TD.b2D2N3D >> makePass
                       Mul.b2D2N3D4N >> makePass
-                 , False)
+                 , True)
                , ( do TD.b2D >> cannotPreempt >> makePass
                       TD.b2D2N >> cannotPreempt >> makePass
                       TD.b2D2N3H >> makePass
@@ -453,7 +454,6 @@ keycardResponse = let
 
 
 -- TODO:
---   - Make a keycard response
 --   - Add auctions starting with 1C
 --   - Over auctions starting 1C, bid 4C
 --   - Over auctions starting 1C and a 4C bid, relay 4D
