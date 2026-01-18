@@ -381,22 +381,22 @@ keycardResponse = let
     wrapDlr . join $ return sit <<~ (collect . weightedList)
         -- Skip auctions where you could set trump at the 3 level (e.g.,
         -- starting 1C-2S and the trump suit is higher than the singleton).
-        [ (3, ( [ ( do OC.b1C >> noInterference T.Clubs
-                       OC.b1C2S >> noInterference T.Clubs
-                       OC.b1C2S2N >> makePass
-                       OC.b1C2S2N3D >> makePass
+        [ (3, ( [ ( do OC.b1C          >> noInterference T.Clubs
+                       OC.b1C2S        >> noInterference T.Clubs
+                       OC.b1C2S2N      >> makePass
+                       OC.b1C2S2N3D    >> makePass
                        Mul.b1C2S2N3D4H >> makePass
                   , False)
-                , ( do OC.b1C >> noInterference T.Clubs
-                       OC.b1C2S >> noInterference T.Clubs
-                       OC.b1C2S2N >> makePass
-                       OC.b1C2S2N3H >> makePass
+                , ( do OC.b1C          >> noInterference T.Clubs
+                       OC.b1C2S        >> noInterference T.Clubs
+                       OC.b1C2S2N      >> makePass
+                       OC.b1C2S2N3H    >> makePass
                        Mul.b1C2S2N3H4H >> makePass
                   , False)
-                , ( do OC.b1C >> noInterference T.Clubs
-                       OC.b1C2S >> noInterference T.Clubs
-                       OC.b1C2S2N >> makePass
-                       OC.b1C2S2N3S >> makePass
+                , ( do OC.b1C          >> noInterference T.Clubs
+                       OC.b1C2S        >> noInterference T.Clubs
+                       OC.b1C2S2N      >> makePass
+                       OC.b1C2S2N3S    >> makePass
                        Mul.b1C2S2N3S4H >> makePass
                   , False)
                 ]
@@ -404,16 +404,16 @@ keycardResponse = let
               , "lowest", T.Clubs
               )
           )
-        , (2, ( [ ( do OC.b1C >> noInterference T.Clubs
-                       OC.b1C2S >> noInterference T.Clubs
-                       OC.b1C2S2N >> makePass
-                       OC.b1C2S2N3H >> makePass
+        , (2, ( [ ( do OC.b1C          >> noInterference T.Clubs
+                       OC.b1C2S        >> noInterference T.Clubs
+                       OC.b1C2S2N      >> makePass
+                       OC.b1C2S2N3H    >> makePass
                        Mul.b1C2S2N3H4S >> makePass
                   , False)
-                , ( do OC.b1C >> noInterference T.Clubs
-                       OC.b1C2S >> noInterference T.Clubs
-                       OC.b1C2S2N >> makePass
-                       OC.b1C2S2N3S >> makePass
+                , ( do OC.b1C          >> noInterference T.Clubs
+                       OC.b1C2S        >> noInterference T.Clubs
+                       OC.b1C2S2N      >> makePass
+                       OC.b1C2S2N3S    >> makePass
                        Mul.b1C2S2N3S4S >> makePass
                   , False)
                 ]
@@ -421,10 +421,10 @@ keycardResponse = let
               , "middle", T.Diamonds
               )
           )
-        , (1, ( [ ( do OC.b1C >> noInterference T.Clubs
-                       OC.b1C2S >> noInterference T.Clubs
-                       OC.b1C2S2N >> makePass
-                       OC.b1C2S2N3S >> makePass
+        , (1, ( [ ( do OC.b1C          >> noInterference T.Clubs
+                       OC.b1C2S        >> noInterference T.Clubs
+                       OC.b1C2S2N      >> makePass
+                       OC.b1C2S2N3S    >> makePass
                        Mul.b1C2S2N3S4N >> makePass
                   , False)
                 ]
@@ -434,18 +434,18 @@ keycardResponse = let
           )
         -- Performance optimization: always specify the exact shape of the 2D
         -- opener, or else the dealer engine struggles to find a deal.
-        , (5, ( [ ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3C >> makePass
-                       TD.b2D2N3C3D >> makePass
-                       TD.b2D2N3C3D3H >> makePass
+        , (5, ( [ ( do TD.b2D            >> cannotPreempt >> makePass
+                       TD.b2D2N          >> cannotPreempt >> makePass
+                       TD.b2D2N3C        >> makePass
+                       TD.b2D2N3C3D      >> makePass
+                       TD.b2D2N3C3D3H    >> makePass
                        Mul.b2D2N3C3D3H4H >> makePass
                   , False)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3C >> makePass
-                       TD.b2D2N3C3D >> makePass
-                       TD.b2D2N3C3D3S >> makePass
+                , ( do TD.b2D            >> cannotPreempt >> makePass
+                       TD.b2D2N          >> cannotPreempt >> makePass
+                       TD.b2D2N3C        >> makePass
+                       TD.b2D2N3C3D      >> makePass
+                       TD.b2D2N3C3D3S    >> makePass
                        Mul.b2D2N3C3D3S4H >> makePass
                   , False)
                 -- Performance optimization: This one periodically times out.
@@ -463,20 +463,21 @@ keycardResponse = let
                 --       TD.b2D2N3C3D3N >> makePass
                 --       Mul.b2D2N3C3D3N4H >> makePass
                 --  , False)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       suitLength T.Clubs 4 >> suitLength T.Diamonds 1
-                       TD.b2D2N3D >> makePass
+                , ( do TD.b2D        >> cannotPreempt >> makePass
+                       TD.b2D2N      >> cannotPreempt >> makePass
+                       suitLength T.Clubs 4
+                       suitLength T.Diamonds 1
+                       TD.b2D2N3D    >> makePass
                        Mul.b2D2N3D4H >> makePass
                   , False)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3H >> makePass
+                , ( do TD.b2D        >> cannotPreempt >> makePass
+                       TD.b2D2N      >> cannotPreempt >> makePass
+                       TD.b2D2N3H    >> makePass
                        Mul.b2D2N3H4H >> makePass
                   , False)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3S >> makePass
+                , ( do TD.b2D        >> cannotPreempt >> makePass
+                       TD.b2D2N      >> cannotPreempt >> makePass
+                       TD.b2D2N3S    >> makePass
                        Mul.b2D2N3S4H >> makePass
                   , False)
                 ]
@@ -484,42 +485,44 @@ keycardResponse = let
               , "lowest", T.Clubs
               )
           )
-        , (6, ( [ ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3C >> makePass
-                       TD.b2D2N3C3D >> makePass
-                       TD.b2D2N3C3D3H >> makePass
+        , (6, ( [ ( do TD.b2D            >> cannotPreempt >> makePass
+                       TD.b2D2N          >> cannotPreempt >> makePass
+                       TD.b2D2N3C        >> makePass
+                       TD.b2D2N3C3D      >> makePass
+                       TD.b2D2N3C3D3H    >> makePass
                        Mul.b2D2N3C3D3H4S >> makePass
                   , False)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3C >> makePass
-                       TD.b2D2N3C3D >> makePass
-                       TD.b2D2N3C3D3S >> makePass
+                , ( do TD.b2D            >> cannotPreempt >> makePass
+                       TD.b2D2N          >> cannotPreempt >> makePass
+                       TD.b2D2N3C        >> makePass
+                       TD.b2D2N3C3D      >> makePass
+                       TD.b2D2N3C3D3S    >> makePass
                        Mul.b2D2N3C3D3S4S >> makePass
                   , False)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3C >> makePass
-                       TD.b2D2N3C3D >> makePass
-                       suitLength T.Clubs 5 >> suitLength T.Diamonds 0
-                       TD.b2D2N3C3D3N >> makePass
+                , ( do TD.b2D            >> cannotPreempt >> makePass
+                       TD.b2D2N          >> cannotPreempt >> makePass
+                       TD.b2D2N3C        >> makePass
+                       TD.b2D2N3C3D      >> makePass
+                       suitLength T.Clubs 5
+                       suitLength T.Diamonds 0
+                       TD.b2D2N3C3D3N    >> makePass
                        Mul.b2D2N3C3D3N4S >> makePass
                   , True)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       suitLength T.Clubs 4 >> suitLength T.Diamonds 1
-                       TD.b2D2N3D >> makePass
+                , ( do TD.b2D        >> cannotPreempt >> makePass
+                       TD.b2D2N      >> cannotPreempt >> makePass
+                       suitLength T.Clubs 4
+                       suitLength T.Diamonds 1
+                       TD.b2D2N3D    >> makePass
                        Mul.b2D2N3D4S >> makePass
                   , False)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3H >> makePass
+                , ( do TD.b2D        >> cannotPreempt >> makePass
+                       TD.b2D2N      >> cannotPreempt >> makePass
+                       TD.b2D2N3H    >> makePass
                        Mul.b2D2N3H4S >> makePass
                   , False)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3S >> makePass
+                , ( do TD.b2D        >> cannotPreempt >> makePass
+                       TD.b2D2N      >> cannotPreempt >> makePass
+                       TD.b2D2N3S    >> makePass
                        Mul.b2D2N3S4S >> makePass
                   , False)
                 ]
@@ -527,42 +530,44 @@ keycardResponse = let
               , "middle", T.Hearts
               )
           )
-        , (6, ( [ ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3C >> makePass
-                       TD.b2D2N3C3D >> makePass
-                       TD.b2D2N3C3D3H >> makePass
+        , (6, ( [ ( do TD.b2D            >> cannotPreempt >> makePass
+                       TD.b2D2N          >> cannotPreempt >> makePass
+                       TD.b2D2N3C        >> makePass
+                       TD.b2D2N3C3D      >> makePass
+                       TD.b2D2N3C3D3H    >> makePass
                        Mul.b2D2N3C3D3H4N >> makePass
                   , False)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3C >> makePass
-                       TD.b2D2N3C3D >> makePass
-                       TD.b2D2N3C3D3S >> makePass
+                , ( do TD.b2D            >> cannotPreempt >> makePass
+                       TD.b2D2N          >> cannotPreempt >> makePass
+                       TD.b2D2N3C        >> makePass
+                       TD.b2D2N3C3D      >> makePass
+                       TD.b2D2N3C3D3S    >> makePass
                        Mul.b2D2N3C3D3S4N >> makePass
                   , False)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3C >> makePass
-                       TD.b2D2N3C3D >> makePass
-                       suitLength T.Clubs 4 >> suitLength T.Diamonds 1
-                       TD.b2D2N3C3D3N >> makePass
+                , ( do TD.b2D            >> cannotPreempt >> makePass
+                       TD.b2D2N          >> cannotPreempt >> makePass
+                       TD.b2D2N3C        >> makePass
+                       TD.b2D2N3C3D      >> makePass
+                       suitLength T.Clubs 4
+                       suitLength T.Diamonds 1
+                       TD.b2D2N3C3D3N    >> makePass
                        Mul.b2D2N3C3D3N4N >> makePass
                   , False)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       suitLength T.Clubs 5 >> suitLength T.Diamonds 0
-                       TD.b2D2N3D >> makePass
+                , ( do TD.b2D        >> cannotPreempt >> makePass
+                       TD.b2D2N      >> cannotPreempt >> makePass
+                       suitLength T.Clubs 5
+                       suitLength T.Diamonds 0
+                       TD.b2D2N3D    >> makePass
                        Mul.b2D2N3D4N >> makePass
                   , True)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3H >> makePass
+                , ( do TD.b2D        >> cannotPreempt >> makePass
+                       TD.b2D2N      >> cannotPreempt >> makePass
+                       TD.b2D2N3H    >> makePass
                        Mul.b2D2N3H4N >> makePass
                   , False)
-                , ( do TD.b2D >> cannotPreempt >> makePass
-                       TD.b2D2N >> cannotPreempt >> makePass
-                       TD.b2D2N3S >> makePass
+                , ( do TD.b2D        >> cannotPreempt >> makePass
+                       TD.b2D2N      >> cannotPreempt >> makePass
+                       TD.b2D2N3S    >> makePass
                        Mul.b2D2N3S4N >> makePass
                   , False)
                 ]
