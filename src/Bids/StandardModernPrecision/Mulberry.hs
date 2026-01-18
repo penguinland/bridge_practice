@@ -1,36 +1,38 @@
 module Bids.StandardModernPrecision.Mulberry(
-    b1C2S2N3A4C      -- 3A stands in for any bid at the 3 level.
-  {-
   -- Auctions involving 1C openers
-  , b1C1H2S2N3A4C    -- 3A stands in for any bid at the 3 level.
-  , b1C2S2N3C4C4D4H
-  , b1C2S2N3C4C4D4S
-  , b1C2S2N3C4C4D5D
-  , b1C2S2N3C4H  -- Avoid: might have bid 3D instead of 4H
-  , b1C2S2N3C4S  -- Avoid: might have bid 3H instead of 4S
-  , b1C2S2N3C4N  -- Avoid: might have bid 3S instead of 4N
+    b1C1H2S2N3A4C    -- 3A stands in for any bid at the 3 level.
+  , b1C2S2N3A4C      -- 3A stands in for any bid at the 3 level.
+  , b1C2S2N3C4C4D4H  -- Avoid: might bid 3H then nonserious 3N
+  , b1C2S2N3C4C4D4S  -- Avoid: might bid 3S then nonserious 3N
+  , b1C2S2N3C4C4D5D  -- Avoid: might bid 3D then nonserious 3N
   , b1C2S2N3D4C4D4H
   , b1C2S2N3D4C4D4S
   , b1C2S2N3D4C4D5C
-  , b1C2S2N3D4H
-  , b1C2S2N3D4S  -- Avoid: might have bid 3H instead of 4S
-  , b1C2S2N3D4N  -- Avoid: might have bid 3S instead of 4N
   , b1C2S2N3H4C4D4S
   , b1C2S2N3H4C4D5C
   , b1C2S2N3H4C4D5D
+  , b1C2S2N3S4C4D4H
+  , b1C2S2N3S4C4D5C
+  , b1C2S2N3S4C4D5D
+  {-
+  , b1C2S2N3C4H  -- Avoid: might have bid 3D instead of 4H
+  , b1C2S2N3C4S  -- Avoid: might have bid 3H instead of 4S
+  , b1C2S2N3C4N  -- Avoid: might have bid 3S instead of 4N
+  , b1C2S2N3D4H
+  , b1C2S2N3D4S  -- Avoid: might have bid 3H instead of 4S
+  , b1C2S2N3D4N  -- Avoid: might have bid 3S instead of 4N
   , b1C2S2N3H4H
   , b1C2S2N3H4S
   , b1C2S2N3H4N  -- Avoid: might have bid 3S instead of 4N
-  , b1C2S2N3S4C4D4H
-  , b1C2S2N3S4C4D4S
-  , b1C2S2N3S4C4D5C
   , b1C2S2N3S4H
   , b1C2S2N3S4S
   , b1C2S2N3S4N
+-}
+  -- TODO: include more 1C-1H-2S auctions
   -- TODO: include 1C auctions where responder is a passed hand
   -- TODO: include 1C auctions where opener makes the cheapest jump-shift
   -- TODO: include 1C auctions where responder makes the cheapest jump-shift
--}
+
   -- Relay bids
   , b4C4D
   , b4D4H
@@ -119,13 +121,13 @@ slamInterestOver1C_ = do
     E.pointRange 15 40
 
 
-{-
 slamInterestOver1C2S_ :: Action
 slamInterestOver1C2S_ = do
     E.maxLoserCount 5
     E.pointRange 19 40
 
 
+{-
 slamInterestOverP1C2S_ :: Action
 slamInterestOverP1C2S_ = do
     E.maxLoserCount 4
@@ -156,9 +158,109 @@ b1C2S2N3A4C = E.nameAction "mul_b1C2S2N3A4C" $ do
          T.Bid 4 T.Diamonds)
 
 
+b1C1H2S2N3A4C :: Action
+b1C1H2S2N3A4C = E.nameAction "mul_b1C1H2S2N3A4C" $ do
+    E.makeAlertableCall
+        (T.Bid 4 T.Clubs)
+        ("(delayed alert) prompts relay to " .+ T.Bid 4 T.Diamonds)
+
+
 b4C4D :: Action
 b4C4D = E.makeAlertableCall (T.Bid 4 T.Diamonds)
                             "(delayed alert) what suit is trump?"
+
+
+setTrump_ :: T.Suit -> T.Suit -> Action
+setTrump_ singleton trump = do
+    E.minSuitLength trump 4
+    -- Technically this next line should be E.strongerThan, but E.longerThan
+    -- avoids any ambiguity.
+    E.forEach (filter (/= trump) T.allSuits) (trump `E.longerThan`)
+    E.forbid $ E.soundHolding singleton
+
+
+b1C2S2N3C4C4D4H :: Action
+b1C2S2N3C4C4D4H = E.nameAction "b1C2S2N3C4C4D4H" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Clubs T.Hearts
+    E.makeCall $ T.Bid 4 T.Hearts
+
+
+b1C2S2N3C4C4D4S :: Action
+b1C2S2N3C4C4D4S = E.nameAction "b1C2S2N3C4C4D4S" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Clubs T.Spades
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+b1C2S2N3C4C4D5D :: Action
+b1C2S2N3C4C4D5D = E.nameAction "b1C2S2N3C4C4D5D" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Clubs T.Diamonds
+    E.makeCall $ T.Bid 4 T.Diamonds
+
+
+b1C2S2N3D4C4D4H :: Action
+b1C2S2N3D4C4D4H = E.nameAction "b1C2S2N3D4C4D4H" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Diamonds T.Hearts
+    E.makeCall $ T.Bid 4 T.Hearts
+
+
+b1C2S2N3D4C4D4S :: Action
+b1C2S2N3D4C4D4S = E.nameAction "b1C2S2N3D4C4D4S" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Diamonds T.Spades
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+b1C2S2N3D4C4D5C :: Action
+b1C2S2N3D4C4D5C = E.nameAction "b1C2S2N3D4C4D5C" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Diamonds T.Clubs
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+b1C2S2N3H4C4D4S :: Action
+b1C2S2N3H4C4D4S = E.nameAction "b1C2S2N3H4C4D4S" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Hearts T.Spades
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+b1C2S2N3H4C4D5C :: Action
+b1C2S2N3H4C4D5C = E.nameAction "b1C2S2N3H4C4D5C" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Hearts T.Clubs
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+b1C2S2N3H4C4D5D :: Action
+b1C2S2N3H4C4D5D = E.nameAction "b1C2S2N3H4C4D5D" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Hearts T.Diamonds
+    E.makeCall $ T.Bid 5 T.Diamonds
+
+
+b1C2S2N3S4C4D4H :: Action
+b1C2S2N3S4C4D4H = E.nameAction "b1C2S2N3S4C4D4H" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Spades T.Hearts
+    E.makeCall $ T.Bid 4 T.Hearts
+
+
+b1C2S2N3S4C4D5C :: Action
+b1C2S2N3S4C4D5C = E.nameAction "b1C2S2N3S4C4D5C" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Spades T.Clubs
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+b1C2S2N3S4C4D5D :: Action
+b1C2S2N3S4C4D5D = E.nameAction "b1C2S2N3S4C4D5D" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Spades T.Diamonds
+    E.makeCall $ T.Bid 5 T.Diamonds
 
 
 -- 4D bids
