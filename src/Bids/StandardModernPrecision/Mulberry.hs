@@ -14,7 +14,6 @@ module Bids.StandardModernPrecision.Mulberry(
   , b1C2S2N3S4C4D4H
   , b1C2S2N3S4C4D5C
   , b1C2S2N3S4C4D5D
-  {-
   , b1C2S2N3C4H  -- Avoid: might have bid 3D instead of 4H
   , b1C2S2N3C4S  -- Avoid: might have bid 3H instead of 4S
   , b1C2S2N3C4N  -- Avoid: might have bid 3S instead of 4N
@@ -27,7 +26,6 @@ module Bids.StandardModernPrecision.Mulberry(
   , b1C2S2N3S4H
   , b1C2S2N3S4S
   , b1C2S2N3S4N
--}
   -- TODO: include more 1C-1H-2S auctions
   -- TODO: include 1C auctions where responder is a passed hand
   -- TODO: include 1C auctions where opener makes the cheapest jump-shift
@@ -412,7 +410,105 @@ b2D2N3D4D4H5C = b2D2N3C3D3N4D4H5C
 
 
 -- Keycard asks
--- These are all the same shape as the signoff bids, just different strength
+
+b1C2S2N3C4H :: Action
+b1C2S2N3C4H = E.nameAction "b1C2S2N3C4H" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Clubs T.Diamonds
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in diamonds"
+
+
+b1C2S2N3C4S :: Action
+b1C2S2N3C4S = E.nameAction "b1C2S2N3C4S" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Clubs T.Hearts
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in hearts"
+
+
+b1C2S2N3C4N :: Action
+b1C2S2N3C4N = E.nameAction "b1C2S2N3C4N" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Clubs T.Spades
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in spades"
+
+
+b1C2S2N3D4H :: Action
+b1C2S2N3D4H = E.nameAction "b1C2S2N3D4H" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Diamonds T.Clubs
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in clubs"
+
+
+b1C2S2N3D4S :: Action
+b1C2S2N3D4S = E.nameAction "b1C2S2N3D4S" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Diamonds T.Hearts
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in hearts"
+
+
+b1C2S2N3D4N :: Action
+b1C2S2N3D4N = E.nameAction "b1C2S2N3D4N" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Diamonds T.Spades
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in spades"
+
+
+b1C2S2N3H4H :: Action
+b1C2S2N3H4H = E.nameAction "b1C2S2N3H4H" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Hearts T.Clubs
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in clubs"
+
+
+b1C2S2N3H4S :: Action
+b1C2S2N3H4S = E.nameAction "b1C2S2N3H4S" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Hearts T.Diamonds
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in diamonds"
+
+
+b1C2S2N3H4N :: Action
+b1C2S2N3H4N = E.nameAction "b1C2S2N3H4N" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Hearts T.Spades
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in spades"
+
+
+b1C2S2N3S4H :: Action
+b1C2S2N3S4H = E.nameAction "b1C2S2N3S4H" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Spades T.Clubs
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in clubs"
+
+
+b1C2S2N3S4S :: Action
+b1C2S2N3S4S = E.nameAction "b1C2S2N3S4S" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Spades T.Diamonds
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in diamonds"
+
+
+b1C2S2N3S4N :: Action
+b1C2S2N3S4N = E.nameAction "b1C2S2N3S4N" $ do
+    slamInterestOver1C2S_
+    setTrump_ T.Spades T.Hearts
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in hearts"
+
+
+-- Keycard asks over 2D auctions are all the same shape as the signoff bids,
+-- just different strength
 
 b2D2N3C3D3H4H :: Action
 b2D2N3C3D3H4H = E.nameAction "mul_b2D2N3C3D3H4H" $ do
