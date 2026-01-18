@@ -379,9 +379,12 @@ keycardResponse = let
         return sit' <~ setups <~ answers
   in
     wrapDlr . join $ return sit <<~ (collect . weightedList)
-        -- Skip auctions where you could set trump at the 3 level (e.g.,
+        -- NOTE: Skip auctions where you could set trump at the 3 level (e.g.,
         -- starting 1C-2S and the trump suit is higher than the singleton).
-        [ (3, ( [ ( do OC.b1C          >> noInterference T.Clubs
+        -- NOTE: We have 6 auctions starting with 1C and 18(ish) auctions
+        -- starting with 2D, so to balance them out we'll weight the 1C auctions
+        -- 3 times higher than expected.
+        [ (9, ( [ ( do OC.b1C          >> noInterference T.Clubs
                        OC.b1C2S        >> noInterference T.Clubs
                        OC.b1C2S2N      >> makePass
                        OC.b1C2S2N3D    >> makePass
@@ -404,7 +407,7 @@ keycardResponse = let
               , "lowest", T.Clubs
               )
           )
-        , (2, ( [ ( do OC.b1C          >> noInterference T.Clubs
+        , (6, ( [ ( do OC.b1C          >> noInterference T.Clubs
                        OC.b1C2S        >> noInterference T.Clubs
                        OC.b1C2S2N      >> makePass
                        OC.b1C2S2N3H    >> makePass
@@ -421,7 +424,7 @@ keycardResponse = let
               , "middle", T.Diamonds
               )
           )
-        , (1, ( [ ( do OC.b1C          >> noInterference T.Clubs
+        , (3, ( [ ( do OC.b1C          >> noInterference T.Clubs
                        OC.b1C2S        >> noInterference T.Clubs
                        OC.b1C2S2N      >> makePass
                        OC.b1C2S2N3S    >> makePass
