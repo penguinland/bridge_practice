@@ -248,19 +248,19 @@ keycardAsk = let
         <~ [ -- With definite slam interest over a singleton club, you should
              -- probably set trump at the 3 level and control bid. Skip this
              -- first auction.
-             --( do OC.b1C   >> noInterference T.Clubs >> makePass
-             --     OC.b1C2S >> noInterference T.Clubs >> makePass
-             --     OC.b1C2S2N                         >> makePass
-             --     OC.b1C2S2N3C                       >> makePass
+             --( do OC.b1C       >> noInterference T.Clubs
+             --     OC.b1C2S     >> noInterference T.Clubs
+             --     OC.b1C2S2N   >> makePass
+             --     OC.b1C2S2N3C >> makePass
              --, [ Mul.b1C2S2N3C4H
              --  , Mul.b1C2S2N3C4S
              --  , Mul.b1C2S2N3C4N
              --  ]
              --)
-             ( do OC.b1C   >> noInterference T.Clubs >> makePass
-                  OC.b1C2S >> noInterference T.Clubs >> makePass
-                  OC.b1C2S2N                         >> makePass
-                  OC.b1C2S2N3D                       >> makePass
+             ( do OC.b1C       >> noInterference T.Clubs
+                  OC.b1C2S     >> noInterference T.Clubs
+                  OC.b1C2S2N   >> makePass
+                  OC.b1C2S2N3D >> makePass
              -- With definite slam interest in a major, you might set trump at
              -- the 3 level instead.
              , [ Mul.b1C2S2N3D4H
@@ -268,20 +268,20 @@ keycardAsk = let
                --, Mul.b1C2S2N3D4N
                ]
              )
-           , ( do OC.b1C   >> noInterference T.Clubs >> makePass
-                  OC.b1C2S >> noInterference T.Clubs >> makePass
-                  OC.b1C2S2N                         >> makePass
-                  OC.b1C2S2N3H                       >> makePass
+           , ( do OC.b1C       >> noInterference T.Clubs
+                  OC.b1C2S     >> noInterference T.Clubs
+                  OC.b1C2S2N   >> makePass
+                  OC.b1C2S2N3H >> makePass
              , [ Mul.b1C2S2N3H4H
                , Mul.b1C2S2N3H4S
                -- With slam interest in spades, probably bid 3S instead.
                --, Mul.b1C2S2N3H4N
                ]
              )
-           , ( do OC.b1C   >> noInterference T.Clubs >> makePass
-                  OC.b1C2S >> noInterference T.Clubs >> makePass
-                  OC.b1C2S2N                         >> makePass
-                  OC.b1C2S2N3S                       >> makePass
+           , ( do OC.b1C       >> noInterference T.Clubs
+                  OC.b1C2S     >> noInterference T.Clubs
+                  OC.b1C2S2N   >> makePass
+                  OC.b1C2S2N3S >> makePass
              , [ Mul.b1C2S2N3S4H
                , Mul.b1C2S2N3S4S
                , Mul.b1C2S2N3S4N
