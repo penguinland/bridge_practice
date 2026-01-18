@@ -5,9 +5,10 @@ import Data.Tuple.Extra(first)
 
 import Action(Action)
 --import Bids.StandardModernPrecision.BasicBids(setOpener)
+import qualified Bids.StandardModernPrecision.OneClub as OC
 import qualified Bids.StandardModernPrecision.TwoDiamonds as TD
 import qualified Bids.StandardModernPrecision.Mulberry as Mul
-import CommonBids(cannotPreempt, andNextBidderIs)
+import CommonBids(cannotPreempt, andNextBidderIs, noInterference)
 import EDSL(alternatives, makePass, suitLength)
 import Output((.+))
 import Situation(situation, (<~))
@@ -242,7 +243,51 @@ keycardAsk = let
         return sit' <~ answers
   in
     wrapDlr . join $ return sit
-        <~ [ ( do TD.b2D   >> cannotPreempt >> makePass
+        -- For auctions starting 1C-2S, we need the opponents not to interfere.
+        -- Saying they can't bid over a 1C opener is pretty close.
+        <~ [ -- With definite slam interest over a singleton club, you should
+             -- probably set trump at the 3 level and control bid. Skip this
+             -- first auction.
+             --( do OC.b1C   >> noInterference T.Clubs >> makePass
+             --     OC.b1C2S >> noInterference T.Clubs >> makePass
+             --     OC.b1C2S2N                         >> makePass
+             --     OC.b1C2S2N3C                       >> makePass
+             --, [ Mul.b1C2S2N3C4H
+             --  , Mul.b1C2S2N3C4S
+             --  , Mul.b1C2S2N3C4N
+             --  ]
+             --)
+             ( do OC.b1C   >> noInterference T.Clubs >> makePass
+                  OC.b1C2S >> noInterference T.Clubs >> makePass
+                  OC.b1C2S2N                         >> makePass
+                  OC.b1C2S2N3D                       >> makePass
+             -- With definite slam interest in a major, you might set trump at
+             -- the 3 level instead.
+             , [ Mul.b1C2S2N3D4H
+               --, Mul.b1C2S2N3D4S
+               --, Mul.b1C2S2N3D4N
+               ]
+             )
+           , ( do OC.b1C   >> noInterference T.Clubs >> makePass
+                  OC.b1C2S >> noInterference T.Clubs >> makePass
+                  OC.b1C2S2N                         >> makePass
+                  OC.b1C2S2N3H                       >> makePass
+             , [ Mul.b1C2S2N3H4H
+               , Mul.b1C2S2N3H4S
+               -- With slam interest in spades, probably bid 3S instead.
+               --, Mul.b1C2S2N3H4N
+               ]
+             )
+           , ( do OC.b1C   >> noInterference T.Clubs >> makePass
+                  OC.b1C2S >> noInterference T.Clubs >> makePass
+                  OC.b1C2S2N                         >> makePass
+                  OC.b1C2S2N3S                       >> makePass
+             , [ Mul.b1C2S2N3S4H
+               , Mul.b1C2S2N3S4S
+               , Mul.b1C2S2N3S4N
+               ]
+             )
+           , ( do TD.b2D   >> cannotPreempt >> makePass
                   TD.b2D2N >> cannotPreempt >> makePass
                   TD.b2D2N3C                >> makePass
                   TD.b2D2N3C3D              >> makePass
@@ -474,7 +519,8 @@ keycardResponse = let
 topic :: Topic
 topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
   where
-    situations = wrap [ initiateSignoff
+    situations = wrap [ keycardAsk]
+    _situations = wrap [ initiateSignoff
                       , relaySignoff
                       , completeSignoff
                       , keycardAsk
