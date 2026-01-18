@@ -1,7 +1,7 @@
 module Bids.StandardModernPrecision.Mulberry(
   -- Auctions involving 1C openers
-    b1C1H2S2N3A4C    -- 3A stands in for any bid at the 3 level.
-  , b1C2S2N3A4C      -- 3A stands in for any bid at the 3 level.
+    b1C1H2S2N3A4C  -- 3A stands in for any bid at the 3 level.
+  , b1C2S2N3A4C    -- 3A stands in for any bid at the 3 level.
   , b1C2S2N3C4C4D4H  -- Avoid: might bid 3H then nonserious 3N
   , b1C2S2N3C4C4D4S  -- Avoid: might bid 3S then nonserious 3N
   , b1C2S2N3C4C4D5D  -- Avoid: might bid 3D then nonserious 3N
