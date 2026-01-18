@@ -5,10 +5,10 @@ module Bids.StandardModernPrecision.Mulberry(
   , b1C2S2N3C4C4D4H  -- Avoid: might bid 3H then nonserious 3N
   , b1C2S2N3C4C4D4S  -- Avoid: might bid 3S then nonserious 3N
   , b1C2S2N3C4C4D5D  -- Avoid: might bid 3D then nonserious 3N
-  , b1C2S2N3D4C4D4H
-  , b1C2S2N3D4C4D4S
+  , b1C2S2N3D4C4D4H  -- Avoid: might bid 3H then nonserious 3N
+  , b1C2S2N3D4C4D4S  -- Avoid: might bid 3S then nonserious 3N
   , b1C2S2N3D4C4D5C
-  , b1C2S2N3H4C4D4S
+  , b1C2S2N3H4C4D4S  -- Avoid: might bid 3S then nonserious 3N
   , b1C2S2N3H4C4D5C
   , b1C2S2N3H4C4D5D
   , b1C2S2N3S4C4D4H
