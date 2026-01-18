@@ -1,7 +1,9 @@
 module Topics.StandardModernPrecision.Mulberry(topic) where
 
 import Control.Monad(join)
+import Control.Monad.Trans.State.Strict(State)
 import Data.Tuple.Extra(first)
+import System.Random(StdGen)
 
 import Action(Action)
 --import Bids.StandardModernPrecision.BasicBids(setOpener)
@@ -12,7 +14,7 @@ import Collection(collect, weightedList)
 import CommonBids(cannotPreempt, andNextBidderIs, noInterference)
 import EDSL(alternatives, makePass, suitLength)
 import Output((.+))
-import Situation(situation, (<~), (<<~))
+import Situation(Situation, situation, (<~), (<<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, wrapDlr, Situations, makeTopic)
 
@@ -356,11 +358,15 @@ keycardAsk = let
 
 keycardResponse :: Situations
 keycardResponse = let
-    sit (setups, answers) = let
+    -- Help the compiler infer ambiguous types for `place` and `suit`
+    sit :: ([(Action, Bool)], [Action], String, T.Suit) ->
+           State StdGen (T.Direction -> T.Vulnerability -> Situation)
+    sit (setups, answers, place, suit) = let
         sit' (setup, hasVoid) answer = let
             action = setup `andNextBidderIs` T.South
             explanation =
-                "Partner has made a keycard ask. Give the right response." .+
+                "Partner has made a keycard ask in our " .+ place .+
+                " suit, " .+ show suit .+ ". Give the right response." .+
                 if hasVoid
                 then " Even if we have a diamond void, just show a normal " .+
                      "keycard response. Partner already knows about our " .+
@@ -373,6 +379,8 @@ keycardResponse = let
         return sit' <~ setups <~ answers
   in
     wrapDlr . join $ return sit <<~ (collect . weightedList)
+        -- Skip auctions where you could set trump at the 3 level (e.g.,
+        -- starting 1C-2S and the trump suit is higher than the singleton).
         [ (3, ( [ ( do OC.b1C >> noInterference T.Clubs
                        OC.b1C2S >> noInterference T.Clubs
                        OC.b1C2S2N >> makePass
@@ -393,6 +401,35 @@ keycardResponse = let
                   , False)
                 ]
               , [ Mul.bKCC4H4S, Mul.bKCC4H4N, Mul.bKCC4H5C, Mul.bKCC4H5D]
+              , "lowest", T.Clubs
+              )
+          )
+        , (2, ( [ ( do OC.b1C >> noInterference T.Clubs
+                       OC.b1C2S >> noInterference T.Clubs
+                       OC.b1C2S2N >> makePass
+                       OC.b1C2S2N3H >> makePass
+                       Mul.b1C2S2N3D4S >> makePass
+                  , False)
+                , ( do OC.b1C >> noInterference T.Clubs
+                       OC.b1C2S >> noInterference T.Clubs
+                       OC.b1C2S2N >> makePass
+                       OC.b1C2S2N3S >> makePass
+                       Mul.b1C2S2N3S4S >> makePass
+                  , False)
+                ]
+              , [ Mul.bKCD4S4N, Mul.bKCD4S5C, Mul.bKCD4S5D, Mul.bKCD4S5H]
+              , "middle", T.Diamonds
+              )
+          )
+        , (1, ( [ ( do OC.b1C >> noInterference T.Clubs
+                       OC.b1C2S >> noInterference T.Clubs
+                       OC.b1C2S2N >> makePass
+                       OC.b1C2S2N3S >> makePass
+                       Mul.b1C2S2N3D4N >> makePass
+                  , False)
+                ]
+              , [ Mul.bKCH4N5C, Mul.bKCH4N5D, Mul.bKCH4N5H, Mul.bKCH4N5S]
+              , "highest", T.Hearts
               )
           )
         -- Performance optimization: always specify the exact shape of the 2D
@@ -444,6 +481,7 @@ keycardResponse = let
                   , False)
                 ]
               , [ Mul.bKCC4H4S, Mul.bKCC4H4N, Mul.bKCC4H5C, Mul.bKCC4H5D]
+              , "lowest", T.Clubs
               )
           )
         , (6, ( [ ( do TD.b2D >> cannotPreempt >> makePass
@@ -486,6 +524,7 @@ keycardResponse = let
                   , False)
                 ]
               , [ Mul.bKCH4S4N, Mul.bKCH4S5C, Mul.bKCH4S5D, Mul.bKCH4S5H]
+              , "middle", T.Hearts
               )
           )
         , (6, ( [ ( do TD.b2D >> cannotPreempt >> makePass
@@ -528,13 +567,13 @@ keycardResponse = let
                   , False)
                 ]
               , [ Mul.bKCS4N5C, Mul.bKCS4N5D, Mul.bKCS4N5H, Mul.bKCS4N5S]
+              , "highest", T.Spades
             )
           )
         ]
 
 
 -- TODO:
---   - Add auctions starting with 1C
 --   - Over auctions starting 1C, bid 4C
 --   - Over auctions starting 1C and a 4C bid, relay 4D
 --   - Over auctions starting 1C and a 4C-4D relay, bid trump
@@ -545,7 +584,7 @@ keycardResponse = let
 topic :: Topic
 topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
   where
-    situations = wrap [ keycardAsk]
+    situations = wrap [ keycardResponse]
     _situations = wrap [ initiateSignoff
                       , relaySignoff
                       , completeSignoff
