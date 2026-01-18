@@ -374,7 +374,28 @@ keycardResponse = let
     -- Performance optimization: always specify the exact shape of the 2D
     -- opener, or else the dealer engine struggles to find a deal.
     wrapDlr . join $ return sit
-        <~ [ ( [ ( do TD.b2D >> cannotPreempt >> makePass
+        <~ [ ( [ ( do OC.b1C >> noInterference T.Clubs
+                      OC.b1C2S >> noInterference T.Clubs
+                      OC.b1C2S2N >> makePass
+                      OC.b1C2S2N3D >> makePass
+                      Mul.b1C2S2N3D4H >> makePass
+                 , False)
+               , ( do OC.b1C >> noInterference T.Clubs
+                      OC.b1C2S >> noInterference T.Clubs
+                      OC.b1C2S2N >> makePass
+                      OC.b1C2S2N3H >> makePass
+                      Mul.b1C2S2N3H4H >> makePass
+                 , False)
+               , ( do OC.b1C >> noInterference T.Clubs
+                      OC.b1C2S >> noInterference T.Clubs
+                      OC.b1C2S2N >> makePass
+                      OC.b1C2S2N3S >> makePass
+                      Mul.b1C2S2N3S4H >> makePass
+                 , False)
+               ]
+             , [ Mul.bKCC4H4S, Mul.bKCC4H4N, Mul.bKCC4H5C, Mul.bKCC4H5D]
+             )
+           , ( [ ( do TD.b2D >> cannotPreempt >> makePass
                       TD.b2D2N >> cannotPreempt >> makePass
                       TD.b2D2N3C >> makePass
                       TD.b2D2N3C3D >> makePass
