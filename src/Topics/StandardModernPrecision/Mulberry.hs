@@ -107,6 +107,7 @@ relaySignoff = let
                 TD.b2D2N3C >> makePass
                 TD.b2D2N3C3D   >> makePass
                 TD.b2D2N3C3D3H >> makePass
+                -- If spades were trump, we might bid 3S instead. Avoid that.
                 alternatives [ Mul.b2D2N3C3D3H4D4HP
                              , Mul.b2D2N3C3D3H4D4H5C
                              ]

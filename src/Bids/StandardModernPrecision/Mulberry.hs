@@ -173,7 +173,8 @@ setTrump_ singleton trump = do
     E.minSuitLength trump 4
     -- Technically this next line should be E.strongerThan, but E.longerThan
     -- avoids any ambiguity.
-    E.forEach (filter (/= trump) T.allSuits) (trump `E.longerThan`)
+    E.forEach (filter (\s -> s /= trump && s /= singleton) T.allSuits)
+              (trump `E.longerThan`)
     E.forbid $ E.soundHolding singleton
 
 
