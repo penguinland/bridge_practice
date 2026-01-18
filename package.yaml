@@ -48,7 +48,7 @@ executables:
     - concurrency
     - ghc
     - mtl
-    - Spock
+    - scotty
     - text
     - time
     - wai
