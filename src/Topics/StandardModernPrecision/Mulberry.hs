@@ -8,10 +8,11 @@ import Action(Action)
 import qualified Bids.StandardModernPrecision.OneClub as OC
 import qualified Bids.StandardModernPrecision.TwoDiamonds as TD
 import qualified Bids.StandardModernPrecision.Mulberry as Mul
+import Collection(collect, weightedList)
 import CommonBids(cannotPreempt, andNextBidderIs, noInterference)
 import EDSL(alternatives, makePass, suitLength)
 import Output((.+))
-import Situation(situation, (<~))
+import Situation(situation, (<~), (<<~))
 import qualified Terminology as T
 import Topic(Topic, wrap, wrapDlr, Situations, makeTopic)
 
@@ -371,161 +372,165 @@ keycardResponse = let
       in
         return sit' <~ setups <~ answers
   in
-    -- Performance optimization: always specify the exact shape of the 2D
-    -- opener, or else the dealer engine struggles to find a deal.
-    wrapDlr . join $ return sit
-        <~ [ ( [ ( do OC.b1C >> noInterference T.Clubs
-                      OC.b1C2S >> noInterference T.Clubs
-                      OC.b1C2S2N >> makePass
-                      OC.b1C2S2N3D >> makePass
-                      Mul.b1C2S2N3D4H >> makePass
-                 , False)
-               , ( do OC.b1C >> noInterference T.Clubs
-                      OC.b1C2S >> noInterference T.Clubs
-                      OC.b1C2S2N >> makePass
-                      OC.b1C2S2N3H >> makePass
-                      Mul.b1C2S2N3H4H >> makePass
-                 , False)
-               , ( do OC.b1C >> noInterference T.Clubs
-                      OC.b1C2S >> noInterference T.Clubs
-                      OC.b1C2S2N >> makePass
-                      OC.b1C2S2N3S >> makePass
-                      Mul.b1C2S2N3S4H >> makePass
-                 , False)
-               ]
-             , [ Mul.bKCC4H4S, Mul.bKCC4H4N, Mul.bKCC4H5C, Mul.bKCC4H5D]
-             )
-           , ( [ ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3C >> makePass
-                      TD.b2D2N3C3D >> makePass
-                      TD.b2D2N3C3D3H >> makePass
-                      Mul.b2D2N3C3D3H4H >> makePass
-                 , False)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3C >> makePass
-                      TD.b2D2N3C3D >> makePass
-                      TD.b2D2N3C3D3S >> makePass
-                      Mul.b2D2N3C3D3S4H >> makePass
-                 , False)
-               -- Performance optimization: This one periodically times out.
-               -- Just give up on it. If it comes up at the table, you've had
-               -- enough practice with the others that you'll know what to do
-               -- here, too.
-               --, ( do TD.b2D >> cannotPreempt >> makePass
-               --       TD.b2D2N >> cannotPreempt >> makePass
-               --       TD.b2D2N3C >> makePass
-               --       TD.b2D2N3C3D >> makePass
-               --       -- Performance improvement: 4414 shape is about 4 times
-               --       -- more common than 4405, which sometimes times out. So,
-               --       -- only do 4414 shape.
-               --       suitLength T.Clubs 4 >> suitLength T.Diamonds 1
-               --       TD.b2D2N3C3D3N >> makePass
-               --       Mul.b2D2N3C3D3N4H >> makePass
-               --  , False)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      suitLength T.Clubs 4 >> suitLength T.Diamonds 1
-                      TD.b2D2N3D >> makePass
-                      Mul.b2D2N3D4H >> makePass
-                 , False)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3H >> makePass
-                      Mul.b2D2N3H4H >> makePass
-                 , False)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3S >> makePass
-                      Mul.b2D2N3S4H >> makePass
-                 , False)
-               ]
-             , [ Mul.bKCC4H4S, Mul.bKCC4H4N, Mul.bKCC4H5C, Mul.bKCC4H5D]
-             )
-           , ( [ ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3C >> makePass
-                      TD.b2D2N3C3D >> makePass
-                      TD.b2D2N3C3D3H >> makePass
-                      Mul.b2D2N3C3D3H4S >> makePass
-                 , False)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3C >> makePass
-                      TD.b2D2N3C3D >> makePass
-                      TD.b2D2N3C3D3S >> makePass
-                      Mul.b2D2N3C3D3S4S >> makePass
-                 , False)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3C >> makePass
-                      TD.b2D2N3C3D >> makePass
-                      suitLength T.Clubs 5 >> suitLength T.Diamonds 0
-                      TD.b2D2N3C3D3N >> makePass
-                      Mul.b2D2N3C3D3N4S >> makePass
-                 , True)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      suitLength T.Clubs 4 >> suitLength T.Diamonds 1
-                      TD.b2D2N3D >> makePass
-                      Mul.b2D2N3D4S >> makePass
-                 , False)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3H >> makePass
-                      Mul.b2D2N3H4S >> makePass
-                 , False)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3S >> makePass
-                      Mul.b2D2N3S4S >> makePass
-                 , False)
-               ]
-             , [ Mul.bKCH4S4N, Mul.bKCH4S5C, Mul.bKCH4S5D, Mul.bKCH4S5H]
-             )
-           , ( [ ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3C >> makePass
-                      TD.b2D2N3C3D >> makePass
-                      TD.b2D2N3C3D3H >> makePass
-                      Mul.b2D2N3C3D3H4N >> makePass
-                 , False)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3C >> makePass
-                      TD.b2D2N3C3D >> makePass
-                      TD.b2D2N3C3D3S >> makePass
-                      Mul.b2D2N3C3D3S4N >> makePass
-                 , False)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3C >> makePass
-                      TD.b2D2N3C3D >> makePass
-                      suitLength T.Clubs 4 >> suitLength T.Diamonds 1
-                      TD.b2D2N3C3D3N >> makePass
-                      Mul.b2D2N3C3D3N4N >> makePass
-                 , False)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      suitLength T.Clubs 5 >> suitLength T.Diamonds 0
-                      TD.b2D2N3D >> makePass
-                      Mul.b2D2N3D4N >> makePass
-                 , True)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3H >> makePass
-                      Mul.b2D2N3H4N >> makePass
-                 , False)
-               , ( do TD.b2D >> cannotPreempt >> makePass
-                      TD.b2D2N >> cannotPreempt >> makePass
-                      TD.b2D2N3S >> makePass
-                      Mul.b2D2N3S4N >> makePass
-                 , False)
-               ]
-             , [ Mul.bKCS4N5C, Mul.bKCS4N5D, Mul.bKCS4N5H, Mul.bKCS4N5S]
-             )
-           ]
+    wrapDlr . join $ return sit <<~ (collect . weightedList)
+        [ (3, ( [ ( do OC.b1C >> noInterference T.Clubs
+                       OC.b1C2S >> noInterference T.Clubs
+                       OC.b1C2S2N >> makePass
+                       OC.b1C2S2N3D >> makePass
+                       Mul.b1C2S2N3D4H >> makePass
+                  , False)
+                , ( do OC.b1C >> noInterference T.Clubs
+                       OC.b1C2S >> noInterference T.Clubs
+                       OC.b1C2S2N >> makePass
+                       OC.b1C2S2N3H >> makePass
+                       Mul.b1C2S2N3H4H >> makePass
+                  , False)
+                , ( do OC.b1C >> noInterference T.Clubs
+                       OC.b1C2S >> noInterference T.Clubs
+                       OC.b1C2S2N >> makePass
+                       OC.b1C2S2N3S >> makePass
+                       Mul.b1C2S2N3S4H >> makePass
+                  , False)
+                ]
+              , [ Mul.bKCC4H4S, Mul.bKCC4H4N, Mul.bKCC4H5C, Mul.bKCC4H5D]
+              )
+          )
+        -- Performance optimization: always specify the exact shape of the 2D
+        -- opener, or else the dealer engine struggles to find a deal.
+        , (5, ( [ ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3C >> makePass
+                       TD.b2D2N3C3D >> makePass
+                       TD.b2D2N3C3D3H >> makePass
+                       Mul.b2D2N3C3D3H4H >> makePass
+                  , False)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3C >> makePass
+                       TD.b2D2N3C3D >> makePass
+                       TD.b2D2N3C3D3S >> makePass
+                       Mul.b2D2N3C3D3S4H >> makePass
+                  , False)
+                -- Performance optimization: This one periodically times out.
+                -- Just give up on it. If it comes up at the table, you've had
+                -- enough practice with the others that you'll know what to do
+                -- here, too.
+                --, ( do TD.b2D >> cannotPreempt >> makePass
+                --       TD.b2D2N >> cannotPreempt >> makePass
+                --       TD.b2D2N3C >> makePass
+                --       TD.b2D2N3C3D >> makePass
+                --       -- Performance improvement: 4414 shape is about 4 times
+                --       -- more common than 4405, which sometimes times out. So,
+                --       -- only do 4414 shape.
+                --       suitLength T.Clubs 4 >> suitLength T.Diamonds 1
+                --       TD.b2D2N3C3D3N >> makePass
+                --       Mul.b2D2N3C3D3N4H >> makePass
+                --  , False)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       suitLength T.Clubs 4 >> suitLength T.Diamonds 1
+                       TD.b2D2N3D >> makePass
+                       Mul.b2D2N3D4H >> makePass
+                  , False)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3H >> makePass
+                       Mul.b2D2N3H4H >> makePass
+                  , False)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3S >> makePass
+                       Mul.b2D2N3S4H >> makePass
+                  , False)
+                ]
+              , [ Mul.bKCC4H4S, Mul.bKCC4H4N, Mul.bKCC4H5C, Mul.bKCC4H5D]
+              )
+          )
+        , (6, ( [ ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3C >> makePass
+                       TD.b2D2N3C3D >> makePass
+                       TD.b2D2N3C3D3H >> makePass
+                       Mul.b2D2N3C3D3H4S >> makePass
+                  , False)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3C >> makePass
+                       TD.b2D2N3C3D >> makePass
+                       TD.b2D2N3C3D3S >> makePass
+                       Mul.b2D2N3C3D3S4S >> makePass
+                  , False)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3C >> makePass
+                       TD.b2D2N3C3D >> makePass
+                       suitLength T.Clubs 5 >> suitLength T.Diamonds 0
+                       TD.b2D2N3C3D3N >> makePass
+                       Mul.b2D2N3C3D3N4S >> makePass
+                  , True)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       suitLength T.Clubs 4 >> suitLength T.Diamonds 1
+                       TD.b2D2N3D >> makePass
+                       Mul.b2D2N3D4S >> makePass
+                  , False)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3H >> makePass
+                       Mul.b2D2N3H4S >> makePass
+                  , False)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3S >> makePass
+                       Mul.b2D2N3S4S >> makePass
+                  , False)
+                ]
+              , [ Mul.bKCH4S4N, Mul.bKCH4S5C, Mul.bKCH4S5D, Mul.bKCH4S5H]
+              )
+          )
+        , (6, ( [ ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3C >> makePass
+                       TD.b2D2N3C3D >> makePass
+                       TD.b2D2N3C3D3H >> makePass
+                       Mul.b2D2N3C3D3H4N >> makePass
+                  , False)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3C >> makePass
+                       TD.b2D2N3C3D >> makePass
+                       TD.b2D2N3C3D3S >> makePass
+                       Mul.b2D2N3C3D3S4N >> makePass
+                  , False)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3C >> makePass
+                       TD.b2D2N3C3D >> makePass
+                       suitLength T.Clubs 4 >> suitLength T.Diamonds 1
+                       TD.b2D2N3C3D3N >> makePass
+                       Mul.b2D2N3C3D3N4N >> makePass
+                  , False)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       suitLength T.Clubs 5 >> suitLength T.Diamonds 0
+                       TD.b2D2N3D >> makePass
+                       Mul.b2D2N3D4N >> makePass
+                  , True)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3H >> makePass
+                       Mul.b2D2N3H4N >> makePass
+                  , False)
+                , ( do TD.b2D >> cannotPreempt >> makePass
+                       TD.b2D2N >> cannotPreempt >> makePass
+                       TD.b2D2N3S >> makePass
+                       Mul.b2D2N3S4N >> makePass
+                  , False)
+                ]
+              , [ Mul.bKCS4N5C, Mul.bKCS4N5D, Mul.bKCS4N5H, Mul.bKCS4N5S]
+            )
+          )
+        ]
 
 
 -- TODO:
