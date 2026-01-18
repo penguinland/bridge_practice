@@ -181,84 +181,84 @@ setTrump_ singleton trump = do
 
 b1C2S2N3C4C4D4H :: Action
 b1C2S2N3C4C4D4H = E.nameAction "b1C2S2N3C4C4D4H" $ do
-    slamInterestOver1C2S_
+    E.forbid slamInterestOver1C2S_
     setTrump_ T.Clubs T.Hearts
     E.makeCall $ T.Bid 4 T.Hearts
 
 
 b1C2S2N3C4C4D4S :: Action
 b1C2S2N3C4C4D4S = E.nameAction "b1C2S2N3C4C4D4S" $ do
-    slamInterestOver1C2S_
+    E.forbid slamInterestOver1C2S_
     setTrump_ T.Clubs T.Spades
     E.makeCall $ T.Bid 4 T.Spades
 
 
 b1C2S2N3C4C4D5D :: Action
 b1C2S2N3C4C4D5D = E.nameAction "b1C2S2N3C4C4D5D" $ do
-    slamInterestOver1C2S_
+    E.forbid slamInterestOver1C2S_
     setTrump_ T.Clubs T.Diamonds
     E.makeCall $ T.Bid 4 T.Diamonds
 
 
 b1C2S2N3D4C4D4H :: Action
 b1C2S2N3D4C4D4H = E.nameAction "b1C2S2N3D4C4D4H" $ do
-    slamInterestOver1C2S_
+    E.forbid slamInterestOver1C2S_
     setTrump_ T.Diamonds T.Hearts
     E.makeCall $ T.Bid 4 T.Hearts
 
 
 b1C2S2N3D4C4D4S :: Action
 b1C2S2N3D4C4D4S = E.nameAction "b1C2S2N3D4C4D4S" $ do
-    slamInterestOver1C2S_
+    E.forbid slamInterestOver1C2S_
     setTrump_ T.Diamonds T.Spades
     E.makeCall $ T.Bid 4 T.Spades
 
 
 b1C2S2N3D4C4D5C :: Action
 b1C2S2N3D4C4D5C = E.nameAction "b1C2S2N3D4C4D5C" $ do
-    slamInterestOver1C2S_
+    E.forbid slamInterestOver1C2S_
     setTrump_ T.Diamonds T.Clubs
     E.makeCall $ T.Bid 5 T.Clubs
 
 
 b1C2S2N3H4C4D4S :: Action
 b1C2S2N3H4C4D4S = E.nameAction "b1C2S2N3H4C4D4S" $ do
-    slamInterestOver1C2S_
+    E.forbid slamInterestOver1C2S_
     setTrump_ T.Hearts T.Spades
     E.makeCall $ T.Bid 4 T.Spades
 
 
 b1C2S2N3H4C4D5C :: Action
 b1C2S2N3H4C4D5C = E.nameAction "b1C2S2N3H4C4D5C" $ do
-    slamInterestOver1C2S_
+    E.forbid slamInterestOver1C2S_
     setTrump_ T.Hearts T.Clubs
     E.makeCall $ T.Bid 5 T.Clubs
 
 
 b1C2S2N3H4C4D5D :: Action
 b1C2S2N3H4C4D5D = E.nameAction "b1C2S2N3H4C4D5D" $ do
-    slamInterestOver1C2S_
+    E.forbid slamInterestOver1C2S_
     setTrump_ T.Hearts T.Diamonds
     E.makeCall $ T.Bid 5 T.Diamonds
 
 
 b1C2S2N3S4C4D4H :: Action
 b1C2S2N3S4C4D4H = E.nameAction "b1C2S2N3S4C4D4H" $ do
-    slamInterestOver1C2S_
+    E.forbid slamInterestOver1C2S_
     setTrump_ T.Spades T.Hearts
     E.makeCall $ T.Bid 4 T.Hearts
 
 
 b1C2S2N3S4C4D5C :: Action
 b1C2S2N3S4C4D5C = E.nameAction "b1C2S2N3S4C4D5C" $ do
-    slamInterestOver1C2S_
+    E.forbid slamInterestOver1C2S_
     setTrump_ T.Spades T.Clubs
     E.makeCall $ T.Bid 5 T.Clubs
 
 
 b1C2S2N3S4C4D5D :: Action
 b1C2S2N3S4C4D5D = E.nameAction "b1C2S2N3S4C4D5D" $ do
-    slamInterestOver1C2S_
+    E.forbid slamInterestOver1C2S_
     setTrump_ T.Spades T.Diamonds
     E.makeCall $ T.Bid 5 T.Diamonds
 
