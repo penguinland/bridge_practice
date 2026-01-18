@@ -408,7 +408,7 @@ keycardResponse = let
                        OC.b1C2S >> noInterference T.Clubs
                        OC.b1C2S2N >> makePass
                        OC.b1C2S2N3H >> makePass
-                       Mul.b1C2S2N3D4S >> makePass
+                       Mul.b1C2S2N3H4S >> makePass
                   , False)
                 , ( do OC.b1C >> noInterference T.Clubs
                        OC.b1C2S >> noInterference T.Clubs
@@ -425,7 +425,7 @@ keycardResponse = let
                        OC.b1C2S >> noInterference T.Clubs
                        OC.b1C2S2N >> makePass
                        OC.b1C2S2N3S >> makePass
-                       Mul.b1C2S2N3D4N >> makePass
+                       Mul.b1C2S2N3S4N >> makePass
                   , False)
                 ]
               , [ Mul.bKCH4N5C, Mul.bKCH4N5D, Mul.bKCH4N5H, Mul.bKCH4N5S]
