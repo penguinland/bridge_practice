@@ -1,7 +1,8 @@
 module Bids.StandardModernPrecision.Mulberry(
+    b1C2S2N3A4C      -- 3A stands in for any bid at the 3 level.
+  {-
   -- Auctions involving 1C openers
   , b1C1H2S2N3A4C    -- 3A stands in for any bid at the 3 level.
-  , b1C2S2N3A4C      -- 3A stands in for any bid at the 3 level.
   , b1C2S2N3C4C4D4H
   , b1C2S2N3C4C4D4S
   , b1C2S2N3C4C4D5D
@@ -29,7 +30,7 @@ module Bids.StandardModernPrecision.Mulberry(
   -- TODO: include 1C auctions where responder is a passed hand
   -- TODO: include 1C auctions where opener makes the cheapest jump-shift
   -- TODO: include 1C auctions where responder makes the cheapest jump-shift
-
+-}
   -- Relay bids
   , b4C4D
   , b4D4H
@@ -118,6 +119,7 @@ slamInterestOver1C_ = do
     E.pointRange 15 40
 
 
+{-
 slamInterestOver1C2S_ :: Action
 slamInterestOver1C2S_ = do
     E.maxLoserCount 5
@@ -128,6 +130,7 @@ slamInterestOverP1C2S_ :: Action
 slamInterestOverP1C2S_ = do
     E.maxLoserCount 4
     E.pointRange 21 40
+-}
 
 
 slamInterestOver2DMin_ :: Action
