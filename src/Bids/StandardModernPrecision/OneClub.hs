@@ -568,25 +568,37 @@ b1C1H2S2N = nameAction "smp_b1C1H2S2N" $ do
 
 b1C1H2S2N3C :: Action
 b1C1H2S2N3C = nameAction "smp_b1C1H2S2N3C" $ do
-    suitLength T.Clubs 1
+    suitLength T.Clubs    1
+    suitLength T.Diamonds 4
+    suitLength T.Hearts   4
+    suitLength T.Spades   4
     makeAlertableCall (T.Bid 3 T.Clubs) "singleton club"
 
 
 b1C1H2S2N3D :: Action
 b1C1H2S2N3D = nameAction "smp_b1C1H2S2N3D" $ do
+    suitLength T.Clubs    4
     suitLength T.Diamonds 1
+    suitLength T.Hearts   4
+    suitLength T.Spades   4
     makeAlertableCall (T.Bid 3 T.Diamonds) "singleton diamond"
 
 
 b1C1H2S2N3H :: Action
 b1C1H2S2N3H = nameAction "smp_b1C1H2S2N3H" $ do
-    suitLength T.Hearts 1
+    suitLength T.Clubs    4
+    suitLength T.Diamonds 4
+    suitLength T.Hearts   1
+    suitLength T.Spades   4
     makeAlertableCall (T.Bid 3 T.Hearts) "singleton heart"
 
 
 b1C1H2S2N3S :: Action
 b1C1H2S2N3S = nameAction "smp_b1C1H2S2N3S" $ do
-    suitLength T.Spades 1
+    suitLength T.Clubs    4
+    suitLength T.Diamonds 4
+    suitLength T.Hearts   4
+    suitLength T.Spades   1
     makeAlertableCall (T.Bid 3 T.Spades) "singleton spade"
 
 
@@ -610,29 +622,37 @@ b1C2S2N3S = nameAction "smp_b1C2S2N3S" $ b1C1H2S2N3S
 
 b1C1H1S3C :: Action
 b1C1H1S3C = nameAction "smp_b1C1H1S3C" $ do
-    tripleFourOneShape
-    suitLength T.Spades 1
+    suitLength T.Clubs    4
+    suitLength T.Diamonds 4
+    suitLength T.Hearts   4
+    suitLength T.Spades   1
     makeAlertableCall (T.Bid 3 T.Clubs) "1444 shape with a singleton spade"
 
 
 b1C1H2C3D :: Action
 b1C1H2C3D = nameAction "smp_b1C1H2C3D" $ do
-    tripleFourOneShape
-    suitLength T.Clubs 1
+    suitLength T.Clubs    1
+    suitLength T.Diamonds 4
+    suitLength T.Hearts   4
+    suitLength T.Spades   4
     makeAlertableCall (T.Bid 3 T.Diamonds) "4441 shape with a singleton club"
 
 
 b1C1H2D3H :: Action
 b1C1H2D3H = nameAction "smp_b1C1H2D3H" $ do
-    tripleFourOneShape
+    suitLength T.Clubs    4
     suitLength T.Diamonds 1
+    suitLength T.Hearts   4
+    suitLength T.Spades   4
     makeAlertableCall (T.Bid 3 T.Hearts) "4414 shape with a singleton diamond"
 
 
 b1C1H2H3S :: Action
 b1C1H2H3S = nameAction "smp_b1C1H2H3S" $ do
-    tripleFourOneShape
-    suitLength T.Hearts 1
+    suitLength T.Clubs    4
+    suitLength T.Diamonds 4
+    suitLength T.Hearts   1
+    suitLength T.Spades   4
     makeAlertableCall (T.Bid 3 T.Spades) "4144 shape with a singleton heart"
 
 
@@ -650,12 +670,16 @@ b1C2H3S = nameAction "smp_b1C2H3S" $ b1C1H2H3S
 
 b1C1Nalt3C :: Action
 b1C1Nalt3C = nameAction "smp_b1C1Nalt3C" $ do
-    tripleFourOneShape
-    suitLength T.Hearts 1
+    suitLength T.Clubs    4
+    suitLength T.Diamonds 4
+    suitLength T.Hearts   1
+    suitLength T.Spades   4
     makeAlertableCall (T.Bid 3 T.Clubs) "4144 shape with a singleton heart"
 
 bP1C1H2S :: Action
 bP1C1H2S = nameAction "smp_bP1C1H2S" $ do
-    tripleFourOneShape
-    suitLength T.Hearts 1
+    suitLength T.Clubs    4
+    suitLength T.Diamonds 4
+    suitLength T.Hearts   1
+    suitLength T.Spades   4
     makeAlertableCall (T.Bid 2 T.Spades) "4144 shape with a singleton heart"
