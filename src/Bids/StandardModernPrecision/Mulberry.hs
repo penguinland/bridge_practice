@@ -115,34 +115,29 @@ import qualified Terminology as T
 
 slamInterestOver1C_ :: Action
 slamInterestOver1C_ = do
-    E.maxLoserCount 6
-    E.pointRange 15 40
+    E.alternatives [E.maxLoserCount 6, E.pointRange 15 40]
 
 
 slamInterestOver1C2S_ :: Action
 slamInterestOver1C2S_ = do
-    E.maxLoserCount 5
-    E.pointRange 19 40
+    E.alternatives [E.maxLoserCount 5, E.pointRange 19 40]
 
 
 {-
 slamInterestOverP1C2S_ :: Action
 slamInterestOverP1C2S_ = do
-    E.maxLoserCount 4
-    E.pointRange 21 40
+    E.alternatives [E.maxLoserCount 4, E.pointRange 21 40]
 -}
 
 
 slamInterestOver2DMin_ :: Action
 slamInterestOver2DMin_ = do
-    E.maxLoserCount 5
-    E.pointRange 20 40
+    E.alternatives [E.maxLoserCount 5, E.pointRange 20 40]
 
 
 slamInterestOver2DMax_ :: Action
 slamInterestOver2DMax_ = do
-    E.maxLoserCount 5
-    E.pointRange 17 40
+    E.alternatives [E.maxLoserCount 5, E.pointRange 17 40]
 
 
 -- 4C bids
