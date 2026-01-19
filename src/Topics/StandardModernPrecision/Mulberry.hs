@@ -586,9 +586,8 @@ inviteInit, inviteRelay, inviteSuit :: Situations
   where
     inviteInit' = let
         sit (setup, preRelay, trumpBids) = let
-            action = setup `andNextBidderIs` T.South
-            answer = do alternatives trumpBids
-                        preRelay
+            action = do setup `andNextBidderIs` T.South
+                        alternatives trumpBids
             explanation =
                 "Partner has shown a 4441 shape. We don't have any slam " .+
                 "interest on our own, but partner is unlimited and " .+
@@ -598,7 +597,7 @@ inviteInit, inviteRelay, inviteSuit :: Situations
                 "trump. Partner can then decide whether to pass or " .+
                 "investigate slam."
           in
-            situation "invinit" action answer explanation
+            situation "invinit" action preRelay explanation
       in
         wrapDlr $ return sit <~ auctions
 
