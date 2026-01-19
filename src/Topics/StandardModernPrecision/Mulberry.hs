@@ -642,7 +642,7 @@ inviteInit, inviteRelay, inviteSuit :: Situations
       in
         wrapDlr . join $ return sit <~ auctions
 
-    auctions = [ -- Focus on setting trump to something you coudln't bid at the
+    auctions = [ -- Focus on setting trump to something you couldn't bid at the
                  -- 3 level.
                  --( do OC.b1C       >> noInterference T.Clubs
                  --     OC.b1C2S     >> noInterference T.Clubs
