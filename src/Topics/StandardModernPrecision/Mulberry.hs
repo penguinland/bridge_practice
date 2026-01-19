@@ -703,11 +703,8 @@ inviteInit, inviteRelay :: Situations
 
 
 -- TODO:
---   - Over auctions starting 1C, bid 4C
---   - Over auctions starting 1C and a 4C bid, relay 4D
 --   - Over auctions starting 1C and a 4C-4D relay, bid trump
---   - Over auctions starting 1C and a 4C-4D-trump, pass
---   - Over auctions starting 1C and a 4C-4D-trump, investigate slam
+--   - Include auctions that start P-1C-2S and thus could bid 4D-4H to sign off
 
 
 topic :: Topic
