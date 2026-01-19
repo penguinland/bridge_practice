@@ -2,6 +2,8 @@ module Bids.StandardModernPrecision.Mulberry(
   -- Auctions involving 1C openers
     b1C1H2S2N3A4C  -- 3A stands in for any bid at the 3 level.
   , b1C2S2N3A4C    -- 3A stands in for any bid at the 3 level.
+  , bP1C2S2N3A4C   -- 3A stands in for any bid at the 3 level.
+
   , b1C2S2N3C4C4D4H  -- Avoid: might bid 3H then nonserious 3N
   , b1C2S2N3C4C4D4S  -- Avoid: might bid 3S then nonserious 3N
   , b1C2S2N3C4C4D5D  -- Avoid: might bid 3D then nonserious 3N
@@ -26,6 +28,31 @@ module Bids.StandardModernPrecision.Mulberry(
   , b1C2S2N3S4H
   , b1C2S2N3S4S
   , b1C2S2N3S4N
+
+  , bP1C2S2N3C4C4D4H  -- Avoid: might bid 3H then nonserious 3N
+  , bP1C2S2N3C4C4D4S  -- Avoid: might bid 3S then nonserious 3N
+  , bP1C2S2N3C4C4D5D  -- Avoid: might bid 3D then nonserious 3N
+  , bP1C2S2N3D4C4D4H  -- Avoid: might bid 3H then nonserious 3N
+  , bP1C2S2N3D4C4D4S  -- Avoid: might bid 3S then nonserious 3N
+  , bP1C2S2N3D4C4D5C
+  , bP1C2S2N3H4C4D4S  -- Avoid: might bid 3S then nonserious 3N
+  , bP1C2S2N3H4C4D5C
+  , bP1C2S2N3H4C4D5D
+  , bP1C2S2N3S4C4D4H
+  , bP1C2S2N3S4C4D5C
+  , bP1C2S2N3S4C4D5D
+  , bP1C2S2N3C4H  -- Avoid: might have bid 3D instead of 4H
+  , bP1C2S2N3C4S  -- Avoid: might have bid 3H instead of 4S
+  , bP1C2S2N3C4N  -- Avoid: might have bid 3S instead of 4N
+  , bP1C2S2N3D4H
+  , bP1C2S2N3D4S  -- Avoid: might have bid 3H instead of 4S
+  , bP1C2S2N3D4N  -- Avoid: might have bid 3S instead of 4N
+  , bP1C2S2N3H4H
+  , bP1C2S2N3H4S
+  , bP1C2S2N3H4N  -- Avoid: might have bid 3S instead of 4N
+  , bP1C2S2N3S4H
+  , bP1C2S2N3S4S
+  , bP1C2S2N3S4N
   -- TODO: include more 1C-1H-2S auctions
   -- TODO: include 1C auctions where responder is a passed hand
   -- TODO: include 1C auctions where opener makes the cheapest jump-shift
@@ -121,10 +148,8 @@ slamInterestOver1C2S_ :: Action
 slamInterestOver1C2S_ = E.maxLoserCount 5
 
 
-{-
 slamInterestOverP1C2S_ :: Action
 slamInterestOverP1C2S_ = E.maxLoserCount 4
--}
 
 
 slamInterestOver2DMin_ :: Action
@@ -137,6 +162,13 @@ slamInterestOver2DMax_ = E.maxLoserCount 5
 
 -- 4C bids
 
+b1C1H2S2N3A4C :: Action
+b1C1H2S2N3A4C = E.nameAction "mul_b1C1H2S2N3A4C" $ do
+    E.makeAlertableCall
+        (T.Bid 4 T.Clubs)
+        ("(delayed alert) prompts relay to " .+ T.Bid 4 T.Diamonds)
+
+
 b1C2S2N3A4C :: Action
 b1C2S2N3A4C = E.nameAction "mul_b1C2S2N3A4C" $ do
     E.forbid slamInterestOver1C_
@@ -146,11 +178,13 @@ b1C2S2N3A4C = E.nameAction "mul_b1C2S2N3A4C" $ do
          T.Bid 4 T.Diamonds)
 
 
-b1C1H2S2N3A4C :: Action
-b1C1H2S2N3A4C = E.nameAction "mul_b1C1H2S2N3A4C" $ do
+bP1C2S2N3A4C :: Action
+bP1C2S2N3A4C = E.nameAction "mul_bP1C2S2N3A4C" $ do
+    E.forbid slamInterestOverP1C2S_
     E.makeAlertableCall
         (T.Bid 4 T.Clubs)
-        ("(delayed alert) prompts relay to " .+ T.Bid 4 T.Diamonds)
+        ("(delayed alert) no serious slam interest, prompts relay to " .+
+         T.Bid 4 T.Diamonds)
 
 
 b4C4D :: Action
@@ -248,6 +282,91 @@ b1C2S2N3S4C4D5C = E.nameAction "smp_b1C2S2N3S4C4D5C" $ do
 b1C2S2N3S4C4D5D :: Action
 b1C2S2N3S4C4D5D = E.nameAction "smp_b1C2S2N3S4C4D5D" $ do
     E.forbid slamInterestOver1C2S_
+    setTrump_ T.Spades T.Diamonds
+    E.makeCall $ T.Bid 5 T.Diamonds
+
+
+
+bP1C2S2N3C4C4D4H :: Action
+bP1C2S2N3C4C4D4H = E.nameAction "smp_bP1C2S2N3C4C4D4H" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Clubs T.Hearts
+    E.makeCall $ T.Bid 4 T.Hearts
+
+
+bP1C2S2N3C4C4D4S :: Action
+bP1C2S2N3C4C4D4S = E.nameAction "smp_bP1C2S2N3C4C4D4S" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Clubs T.Spades
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+bP1C2S2N3C4C4D5D :: Action
+bP1C2S2N3C4C4D5D = E.nameAction "smp_bP1C2S2N3C4C4D5D" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Clubs T.Diamonds
+    E.makeCall $ T.Bid 4 T.Diamonds
+
+
+bP1C2S2N3D4C4D4H :: Action
+bP1C2S2N3D4C4D4H = E.nameAction "smp_bP1C2S2N3D4C4D4H" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Diamonds T.Hearts
+    E.makeCall $ T.Bid 4 T.Hearts
+
+
+bP1C2S2N3D4C4D4S :: Action
+bP1C2S2N3D4C4D4S = E.nameAction "smp_bP1C2S2N3D4C4D4S" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Diamonds T.Spades
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+bP1C2S2N3D4C4D5C :: Action
+bP1C2S2N3D4C4D5C = E.nameAction "smp_bP1C2S2N3D4C4D5C" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Diamonds T.Clubs
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+bP1C2S2N3H4C4D4S :: Action
+bP1C2S2N3H4C4D4S = E.nameAction "smp_bP1C2S2N3H4C4D4S" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Hearts T.Spades
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+bP1C2S2N3H4C4D5C :: Action
+bP1C2S2N3H4C4D5C = E.nameAction "smp_bP1C2S2N3H4C4D5C" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Hearts T.Clubs
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+bP1C2S2N3H4C4D5D :: Action
+bP1C2S2N3H4C4D5D = E.nameAction "smp_bP1C2S2N3H4C4D5D" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Hearts T.Diamonds
+    E.makeCall $ T.Bid 5 T.Diamonds
+
+
+bP1C2S2N3S4C4D4H :: Action
+bP1C2S2N3S4C4D4H = E.nameAction "smp_bP1C2S2N3S4C4D4H" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Spades T.Hearts
+    E.makeCall $ T.Bid 4 T.Hearts
+
+
+bP1C2S2N3S4C4D5C :: Action
+bP1C2S2N3S4C4D5C = E.nameAction "smp_bP1C2S2N3S4C4D5C" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Spades T.Clubs
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+bP1C2S2N3S4C4D5D :: Action
+bP1C2S2N3S4C4D5D = E.nameAction "smp_bP1C2S2N3S4C4D5D" $ do
+    E.forbid slamInterestOverP1C2S_
     setTrump_ T.Spades T.Diamonds
     E.makeCall $ T.Bid 5 T.Diamonds
 
@@ -493,6 +612,102 @@ b1C2S2N3S4S = E.nameAction "smp_b1C2S2N3S4S" $ do
 b1C2S2N3S4N :: Action
 b1C2S2N3S4N = E.nameAction "smp_b1C2S2N3S4N" $ do
     slamInterestOver1C2S_
+    setTrump_ T.Spades T.Hearts
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in hearts"
+
+
+bP1C2S2N3C4H :: Action
+bP1C2S2N3C4H = E.nameAction "smp_bP1C2S2N3C4H" $ do
+    slamInterestOverP1C2S_
+    setTrump_ T.Clubs T.Diamonds
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in diamonds"
+
+
+bP1C2S2N3C4S :: Action
+bP1C2S2N3C4S = E.nameAction "smp_bP1C2S2N3C4S" $ do
+    slamInterestOverP1C2S_
+    setTrump_ T.Clubs T.Hearts
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in hearts"
+
+
+bP1C2S2N3C4N :: Action
+bP1C2S2N3C4N = E.nameAction "smp_bP1C2S2N3C4N" $ do
+    slamInterestOverP1C2S_
+    setTrump_ T.Clubs T.Spades
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in spades"
+
+
+bP1C2S2N3D4H :: Action
+bP1C2S2N3D4H = E.nameAction "smp_bP1C2S2N3D4H" $ do
+    slamInterestOverP1C2S_
+    setTrump_ T.Diamonds T.Clubs
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in clubs"
+
+
+bP1C2S2N3D4S :: Action
+bP1C2S2N3D4S = E.nameAction "smp_bP1C2S2N3D4S" $ do
+    slamInterestOverP1C2S_
+    setTrump_ T.Diamonds T.Hearts
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in hearts"
+
+
+bP1C2S2N3D4N :: Action
+bP1C2S2N3D4N = E.nameAction "smp_bP1C2S2N3D4N" $ do
+    slamInterestOverP1C2S_
+    setTrump_ T.Diamonds T.Spades
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in spades"
+
+
+bP1C2S2N3H4H :: Action
+bP1C2S2N3H4H = E.nameAction "smp_bP1C2S2N3H4H" $ do
+    slamInterestOverP1C2S_
+    setTrump_ T.Hearts T.Clubs
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in clubs"
+
+
+bP1C2S2N3H4S :: Action
+bP1C2S2N3H4S = E.nameAction "smp_bP1C2S2N3H4S" $ do
+    slamInterestOverP1C2S_
+    setTrump_ T.Hearts T.Diamonds
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in diamonds"
+
+
+bP1C2S2N3H4N :: Action
+bP1C2S2N3H4N = E.nameAction "smp_bP1C2S2N3H4N" $ do
+    slamInterestOverP1C2S_
+    setTrump_ T.Hearts T.Spades
+    E.makeAlertableCall (T.Bid 4 T.Notrump)
+                        "(delayed alert) keycard ask in spades"
+
+
+bP1C2S2N3S4H :: Action
+bP1C2S2N3S4H = E.nameAction "smp_bP1C2S2N3S4H" $ do
+    slamInterestOverP1C2S_
+    setTrump_ T.Spades T.Clubs
+    E.makeAlertableCall (T.Bid 4 T.Hearts)
+                        "(delayed alert) keycard ask in clubs"
+
+
+bP1C2S2N3S4S :: Action
+bP1C2S2N3S4S = E.nameAction "smp_bP1C2S2N3S4S" $ do
+    slamInterestOverP1C2S_
+    setTrump_ T.Spades T.Diamonds
+    E.makeAlertableCall (T.Bid 4 T.Spades)
+                        "(delayed alert) keycard ask in diamonds"
+
+
+bP1C2S2N3S4N :: Action
+bP1C2S2N3S4N = E.nameAction "smp_bP1C2S2N3S4N" $ do
+    slamInterestOverP1C2S_
     setTrump_ T.Spades T.Hearts
     E.makeAlertableCall (T.Bid 4 T.Notrump)
                         "(delayed alert) keycard ask in hearts"
