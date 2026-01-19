@@ -713,8 +713,7 @@ inviteInit, inviteRelay :: Situations
 topic :: Topic
 topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
   where
-    situations = wrap [ inviteInit, inviteRelay]
-    _situations = wrap [ initiateSignoff
+    situations = wrap [ initiateSignoff
                       , relaySignoff
                       , completeSignoff
                       , keycardAsk
