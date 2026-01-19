@@ -733,6 +733,9 @@ inviteInit, inviteRelay, inviteSuit :: Situations
 
 -- TODO:
 --   - Include auctions that start P-1C-2S and thus could bid 4D-4H to sign off
+--   - For trump suits besides hearts, make 4D the weakest bid and make 4C a
+--     slighly stronger bid. When hearts will be trump, don't do this. Make
+--     situations that clarify these distinctions
 
 
 topic :: Topic
