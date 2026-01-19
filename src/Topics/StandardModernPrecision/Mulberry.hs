@@ -581,12 +581,162 @@ keycardResponse = let
         ]
 
 
+inviteInit, inviteRelay, inviteSuit :: Situations
+(inviteInit, inviteRelay, inviteSuit) = (inviteInit', inviteRelay', inviteSuit')
+  where
+    inviteInit' = let
+        sit (setup, preRelay, trumpBids) = let
+            action = do setup `andNextBidderIs` T.South
+                        alternatives trumpBids
+            explanation =
+                "Partner has shown a 4441 shape. We don't have any slam " .+
+                "interest on our own, but partner is unlimited and " .+
+                "might not want to sign off in game. Make a very mild " .+
+                "slam try by bidding " .+ preRelay .+ ". Partner will " .+
+                "relay to " .+ Mul.b4C4D .+ ", after which you can set " .+
+                "trump. Partner can then decide whether to pass or " .+
+                "investigate slam."
+          in
+            situation "invinit" action preRelay explanation
+      in
+        wrapDlr $ return sit <~ auctions
+
+    inviteRelay' = let
+        sit (setup, preRelay, trumpBids) = let
+            action = do setup `andNextBidderIs` T.North
+                        alternatives trumpBids
+                        _ <- preRelay
+                        makePass
+            explanation =
+                "We've shown our 4441 shape. Partner doesn't have " .+
+                "obvious slam interest, but is giving us a chance to " .+
+                "make a slam try if we're interested. Relay to " .+
+                Mul.b4C4D .+ ", after which partner will set trump, " .+
+                "and we can decide whether to pass or look for slam."
+          in
+            situation "invrel" action Mul.b4C4D explanation
+      in
+        wrapDlr $ return sit <~ auctions
+
+    inviteSuit' = let
+        sit (setup, preRelay, trumpBids) = let
+            sit' answer = let
+                action = do setup `andNextBidderIs` T.South
+                            _ <- preRelay
+                            makePass
+                            Mul.b4C4D
+                            makePass
+                explanation =
+                    "Partner showed their 4441 shape. We bid " .+
+                    T.Bid 4 T.Clubs .+ " to show that we don't have slam " .+
+                    "interest on our own, but are open to partner having " .+
+                    "some. Partner relayed " .+ Mul.b4C4D .+ ", and now " .+
+                    "it's time for us to bid the trump suit. Partner can " .+
+                    "then pass or try looking for slam, depending on how " .+
+                    "strong they really are."
+              in
+                situation "invsuit" action answer explanation
+          in
+            return sit' <~ trumpBids
+      in
+        wrapDlr . join $ return sit <~ auctions
+
+    auctions = [ -- Focus on setting trump to something you couldn't bid at the
+                 -- 3 level.
+                 --( do OC.b1C       >> noInterference T.Clubs
+                 --     OC.b1C2S     >> noInterference T.Clubs
+                 --     OC.b1C2S2N   >> makePass
+                 --     OC.b1C2S2N3C >> makePass
+                 --, Mul.b1C2S2N3A4C
+                 --, [ Mul.b1C2S2N3C4C4D4H
+                 --  , Mul.b1C2S2N3C4C4D4S
+                 --  , Mul.b1C2S2N3C4C4D5D
+                 --  ]
+                 --)
+                 ( do OC.b1C       >> noInterference T.Clubs
+                      OC.b1C2S     >> noInterference T.Clubs
+                      OC.b1C2S2N   >> makePass
+                      OC.b1C2S2N3D >> makePass
+                 , Mul.b1C2S2N3A4C
+                 , [ --Mul.b1C2S2N3D4C4D4H
+                   --, Mul.b1C2S2N3D4C4D4S
+                     Mul.b1C2S2N3D4C4D5C
+                   ]
+                 )
+               , ( do OC.b1C       >> noInterference T.Clubs
+                      OC.b1C2S     >> noInterference T.Clubs
+                      OC.b1C2S2N   >> makePass
+                      OC.b1C2S2N3H >> makePass
+                 , Mul.b1C2S2N3A4C
+                 , [ --Mul.b1C2S2N3S4C4D4S
+                     Mul.b1C2S2N3S4C4D5C
+                   , Mul.b1C2S2N3S4C4D5D
+                   ]
+                 )
+               , ( do OC.b1C       >> noInterference T.Clubs
+                      OC.b1C2S     >> noInterference T.Clubs
+                      OC.b1C2S2N   >> makePass
+                      OC.b1C2S2N3S >> makePass
+                 , Mul.b1C2S2N3A4C
+                 , [ Mul.b1C2S2N3S4C4D4H
+                   , Mul.b1C2S2N3S4C4D5C
+                   , Mul.b1C2S2N3S4C4D5D
+                   ]
+                 )
+                 --( do OC.b1C         >> noInterference T.Clubs
+                 --     OC.b1C1H       >> noInterference T.Clubs
+                 --     OC.b1C1H2S     >> makePass
+                 --     OC.b1C1H2S2N   >> makePass
+                 --     OC.b1C1H2S2N3C >> makePass
+                 --, Mul.b1C1H2S2N3A4C
+                 --, [ Mul.b1C2S2N3C4C4D4H
+                 --  , Mul.b1C2S2N3C4C4D4S
+                 --  , Mul.b1C2S2N3C4C4D5D
+                 --  ]
+                 --)
+               , ( do OC.b1C         >> noInterference T.Clubs
+                      OC.b1C1H       >> noInterference T.Clubs
+                      OC.b1C1H2S     >> makePass
+                      OC.b1C1H2S2N   >> makePass
+                      OC.b1C1H2S2N3D >> makePass
+                 , Mul.b1C1H2S2N3A4C
+                 , [ --Mul.b1C2S2N3D4C4D4H
+                   --, Mul.b1C2S2N3D4C4D4S
+                     Mul.b1C2S2N3D4C4D5C
+                   ]
+                 )
+               , ( do OC.b1C         >> noInterference T.Clubs
+                      OC.b1C1H       >> noInterference T.Clubs
+                      OC.b1C1H2S     >> makePass
+                      OC.b1C1H2S2N   >> makePass
+                      OC.b1C1H2S2N3H >> makePass
+                 , Mul.b1C1H2S2N3A4C
+                 , [ --Mul.b1C2S2N3H4C4D4S
+                     Mul.b1C2S2N3H4C4D5C
+                   , Mul.b1C2S2N3H4C4D5D
+                   ]
+                 )
+               , ( do OC.b1C         >> noInterference T.Clubs
+                      OC.b1C1H       >> noInterference T.Clubs
+                      OC.b1C1H2S     >> noInterference T.Clubs
+                      OC.b1C1H2S2N   >> makePass
+                      OC.b1C1H2S2N3S >> makePass
+                 , Mul.b1C1H2S2N3A4C
+                 , [ Mul.b1C2S2N3S4C4D4H
+                   , Mul.b1C2S2N3S4C4D5C
+                   , Mul.b1C2S2N3S4C4D5D
+                   ]
+                 )
+               ]
+
+
 -- TODO:
---   - Over auctions starting 1C, bid 4C
---   - Over auctions starting 1C and a 4C bid, relay 4D
---   - Over auctions starting 1C and a 4C-4D relay, bid trump
---   - Over auctions starting 1C and a 4C-4D-trump, pass
---   - Over auctions starting 1C and a 4C-4D-trump, investigate slam
+--   - Make a situation to bid naturally at the 3 level when we definitely don't
+--     want to stop in game.
+--   - Include auctions that start P-1C-2S and thus could bid 4D-4H to sign off
+--   - For trump suits besides hearts, make 4D the weakest bid and make 4C a
+--     slighly stronger bid. When hearts will be trump, don't do this. Make
+--     situations that clarify these distinctions
 
 
 topic :: Topic
@@ -597,4 +747,7 @@ topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
                       , completeSignoff
                       , keycardAsk
                       , keycardResponse
+                      , inviteInit
+                      , inviteRelay
+                      , inviteSuit
                       ]

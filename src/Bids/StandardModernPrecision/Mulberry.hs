@@ -114,35 +114,25 @@ import qualified Terminology as T
 
 
 slamInterestOver1C_ :: Action
-slamInterestOver1C_ = do
-    E.maxLoserCount 6
-    E.pointRange 15 40
+slamInterestOver1C_ = E.maxLoserCount 6
 
 
 slamInterestOver1C2S_ :: Action
-slamInterestOver1C2S_ = do
-    E.maxLoserCount 5
-    E.pointRange 19 40
+slamInterestOver1C2S_ = E.maxLoserCount 5
 
 
 {-
 slamInterestOverP1C2S_ :: Action
-slamInterestOverP1C2S_ = do
-    E.maxLoserCount 4
-    E.pointRange 21 40
+slamInterestOverP1C2S_ = E.maxLoserCount 4
 -}
 
 
 slamInterestOver2DMin_ :: Action
-slamInterestOver2DMin_ = do
-    E.maxLoserCount 5
-    E.pointRange 20 40
+slamInterestOver2DMin_ = E.maxLoserCount 5
 
 
 slamInterestOver2DMax_ :: Action
-slamInterestOver2DMax_ = do
-    E.maxLoserCount 5
-    E.pointRange 17 40
+slamInterestOver2DMax_ = E.maxLoserCount 5
 
 
 -- 4C bids
@@ -179,84 +169,84 @@ setTrump_ singleton trump = do
 
 
 b1C2S2N3C4C4D4H :: Action
-b1C2S2N3C4C4D4H = E.nameAction "b1C2S2N3C4C4D4H" $ do
+b1C2S2N3C4C4D4H = E.nameAction "smp_b1C2S2N3C4C4D4H" $ do
     E.forbid slamInterestOver1C2S_
     setTrump_ T.Clubs T.Hearts
     E.makeCall $ T.Bid 4 T.Hearts
 
 
 b1C2S2N3C4C4D4S :: Action
-b1C2S2N3C4C4D4S = E.nameAction "b1C2S2N3C4C4D4S" $ do
+b1C2S2N3C4C4D4S = E.nameAction "smp_b1C2S2N3C4C4D4S" $ do
     E.forbid slamInterestOver1C2S_
     setTrump_ T.Clubs T.Spades
     E.makeCall $ T.Bid 4 T.Spades
 
 
 b1C2S2N3C4C4D5D :: Action
-b1C2S2N3C4C4D5D = E.nameAction "b1C2S2N3C4C4D5D" $ do
+b1C2S2N3C4C4D5D = E.nameAction "smp_b1C2S2N3C4C4D5D" $ do
     E.forbid slamInterestOver1C2S_
     setTrump_ T.Clubs T.Diamonds
     E.makeCall $ T.Bid 4 T.Diamonds
 
 
 b1C2S2N3D4C4D4H :: Action
-b1C2S2N3D4C4D4H = E.nameAction "b1C2S2N3D4C4D4H" $ do
+b1C2S2N3D4C4D4H = E.nameAction "smp_b1C2S2N3D4C4D4H" $ do
     E.forbid slamInterestOver1C2S_
     setTrump_ T.Diamonds T.Hearts
     E.makeCall $ T.Bid 4 T.Hearts
 
 
 b1C2S2N3D4C4D4S :: Action
-b1C2S2N3D4C4D4S = E.nameAction "b1C2S2N3D4C4D4S" $ do
+b1C2S2N3D4C4D4S = E.nameAction "smp_b1C2S2N3D4C4D4S" $ do
     E.forbid slamInterestOver1C2S_
     setTrump_ T.Diamonds T.Spades
     E.makeCall $ T.Bid 4 T.Spades
 
 
 b1C2S2N3D4C4D5C :: Action
-b1C2S2N3D4C4D5C = E.nameAction "b1C2S2N3D4C4D5C" $ do
+b1C2S2N3D4C4D5C = E.nameAction "smp_b1C2S2N3D4C4D5C" $ do
     E.forbid slamInterestOver1C2S_
     setTrump_ T.Diamonds T.Clubs
     E.makeCall $ T.Bid 5 T.Clubs
 
 
 b1C2S2N3H4C4D4S :: Action
-b1C2S2N3H4C4D4S = E.nameAction "b1C2S2N3H4C4D4S" $ do
+b1C2S2N3H4C4D4S = E.nameAction "smp_b1C2S2N3H4C4D4S" $ do
     E.forbid slamInterestOver1C2S_
     setTrump_ T.Hearts T.Spades
     E.makeCall $ T.Bid 4 T.Spades
 
 
 b1C2S2N3H4C4D5C :: Action
-b1C2S2N3H4C4D5C = E.nameAction "b1C2S2N3H4C4D5C" $ do
+b1C2S2N3H4C4D5C = E.nameAction "smp_b1C2S2N3H4C4D5C" $ do
     E.forbid slamInterestOver1C2S_
     setTrump_ T.Hearts T.Clubs
     E.makeCall $ T.Bid 5 T.Clubs
 
 
 b1C2S2N3H4C4D5D :: Action
-b1C2S2N3H4C4D5D = E.nameAction "b1C2S2N3H4C4D5D" $ do
+b1C2S2N3H4C4D5D = E.nameAction "smp_b1C2S2N3H4C4D5D" $ do
     E.forbid slamInterestOver1C2S_
     setTrump_ T.Hearts T.Diamonds
     E.makeCall $ T.Bid 5 T.Diamonds
 
 
 b1C2S2N3S4C4D4H :: Action
-b1C2S2N3S4C4D4H = E.nameAction "b1C2S2N3S4C4D4H" $ do
+b1C2S2N3S4C4D4H = E.nameAction "smp_b1C2S2N3S4C4D4H" $ do
     E.forbid slamInterestOver1C2S_
     setTrump_ T.Spades T.Hearts
     E.makeCall $ T.Bid 4 T.Hearts
 
 
 b1C2S2N3S4C4D5C :: Action
-b1C2S2N3S4C4D5C = E.nameAction "b1C2S2N3S4C4D5C" $ do
+b1C2S2N3S4C4D5C = E.nameAction "smp_b1C2S2N3S4C4D5C" $ do
     E.forbid slamInterestOver1C2S_
     setTrump_ T.Spades T.Clubs
     E.makeCall $ T.Bid 5 T.Clubs
 
 
 b1C2S2N3S4C4D5D :: Action
-b1C2S2N3S4C4D5D = E.nameAction "b1C2S2N3S4C4D5D" $ do
+b1C2S2N3S4C4D5D = E.nameAction "smp_b1C2S2N3S4C4D5D" $ do
     E.forbid slamInterestOver1C2S_
     setTrump_ T.Spades T.Diamonds
     E.makeCall $ T.Bid 5 T.Diamonds
@@ -413,7 +403,7 @@ b2D2N3D4D4H5C = b2D2N3C3D3N4D4H5C
 -- Keycard asks
 
 b1C2S2N3C4H :: Action
-b1C2S2N3C4H = E.nameAction "b1C2S2N3C4H" $ do
+b1C2S2N3C4H = E.nameAction "smp_b1C2S2N3C4H" $ do
     slamInterestOver1C2S_
     setTrump_ T.Clubs T.Diamonds
     E.makeAlertableCall (T.Bid 4 T.Hearts)
@@ -421,7 +411,7 @@ b1C2S2N3C4H = E.nameAction "b1C2S2N3C4H" $ do
 
 
 b1C2S2N3C4S :: Action
-b1C2S2N3C4S = E.nameAction "b1C2S2N3C4S" $ do
+b1C2S2N3C4S = E.nameAction "smp_b1C2S2N3C4S" $ do
     slamInterestOver1C2S_
     setTrump_ T.Clubs T.Hearts
     E.makeAlertableCall (T.Bid 4 T.Spades)
@@ -429,7 +419,7 @@ b1C2S2N3C4S = E.nameAction "b1C2S2N3C4S" $ do
 
 
 b1C2S2N3C4N :: Action
-b1C2S2N3C4N = E.nameAction "b1C2S2N3C4N" $ do
+b1C2S2N3C4N = E.nameAction "smp_b1C2S2N3C4N" $ do
     slamInterestOver1C2S_
     setTrump_ T.Clubs T.Spades
     E.makeAlertableCall (T.Bid 4 T.Notrump)
@@ -437,7 +427,7 @@ b1C2S2N3C4N = E.nameAction "b1C2S2N3C4N" $ do
 
 
 b1C2S2N3D4H :: Action
-b1C2S2N3D4H = E.nameAction "b1C2S2N3D4H" $ do
+b1C2S2N3D4H = E.nameAction "smp_b1C2S2N3D4H" $ do
     slamInterestOver1C2S_
     setTrump_ T.Diamonds T.Clubs
     E.makeAlertableCall (T.Bid 4 T.Hearts)
@@ -445,7 +435,7 @@ b1C2S2N3D4H = E.nameAction "b1C2S2N3D4H" $ do
 
 
 b1C2S2N3D4S :: Action
-b1C2S2N3D4S = E.nameAction "b1C2S2N3D4S" $ do
+b1C2S2N3D4S = E.nameAction "smp_b1C2S2N3D4S" $ do
     slamInterestOver1C2S_
     setTrump_ T.Diamonds T.Hearts
     E.makeAlertableCall (T.Bid 4 T.Spades)
@@ -453,7 +443,7 @@ b1C2S2N3D4S = E.nameAction "b1C2S2N3D4S" $ do
 
 
 b1C2S2N3D4N :: Action
-b1C2S2N3D4N = E.nameAction "b1C2S2N3D4N" $ do
+b1C2S2N3D4N = E.nameAction "smp_b1C2S2N3D4N" $ do
     slamInterestOver1C2S_
     setTrump_ T.Diamonds T.Spades
     E.makeAlertableCall (T.Bid 4 T.Notrump)
@@ -461,7 +451,7 @@ b1C2S2N3D4N = E.nameAction "b1C2S2N3D4N" $ do
 
 
 b1C2S2N3H4H :: Action
-b1C2S2N3H4H = E.nameAction "b1C2S2N3H4H" $ do
+b1C2S2N3H4H = E.nameAction "smp_b1C2S2N3H4H" $ do
     slamInterestOver1C2S_
     setTrump_ T.Hearts T.Clubs
     E.makeAlertableCall (T.Bid 4 T.Hearts)
@@ -469,7 +459,7 @@ b1C2S2N3H4H = E.nameAction "b1C2S2N3H4H" $ do
 
 
 b1C2S2N3H4S :: Action
-b1C2S2N3H4S = E.nameAction "b1C2S2N3H4S" $ do
+b1C2S2N3H4S = E.nameAction "smp_b1C2S2N3H4S" $ do
     slamInterestOver1C2S_
     setTrump_ T.Hearts T.Diamonds
     E.makeAlertableCall (T.Bid 4 T.Spades)
@@ -477,7 +467,7 @@ b1C2S2N3H4S = E.nameAction "b1C2S2N3H4S" $ do
 
 
 b1C2S2N3H4N :: Action
-b1C2S2N3H4N = E.nameAction "b1C2S2N3H4N" $ do
+b1C2S2N3H4N = E.nameAction "smp_b1C2S2N3H4N" $ do
     slamInterestOver1C2S_
     setTrump_ T.Hearts T.Spades
     E.makeAlertableCall (T.Bid 4 T.Notrump)
@@ -485,7 +475,7 @@ b1C2S2N3H4N = E.nameAction "b1C2S2N3H4N" $ do
 
 
 b1C2S2N3S4H :: Action
-b1C2S2N3S4H = E.nameAction "b1C2S2N3S4H" $ do
+b1C2S2N3S4H = E.nameAction "smp_b1C2S2N3S4H" $ do
     slamInterestOver1C2S_
     setTrump_ T.Spades T.Clubs
     E.makeAlertableCall (T.Bid 4 T.Hearts)
@@ -493,7 +483,7 @@ b1C2S2N3S4H = E.nameAction "b1C2S2N3S4H" $ do
 
 
 b1C2S2N3S4S :: Action
-b1C2S2N3S4S = E.nameAction "b1C2S2N3S4S" $ do
+b1C2S2N3S4S = E.nameAction "smp_b1C2S2N3S4S" $ do
     slamInterestOver1C2S_
     setTrump_ T.Spades T.Diamonds
     E.makeAlertableCall (T.Bid 4 T.Spades)
@@ -501,7 +491,7 @@ b1C2S2N3S4S = E.nameAction "b1C2S2N3S4S" $ do
 
 
 b1C2S2N3S4N :: Action
-b1C2S2N3S4N = E.nameAction "b1C2S2N3S4N" $ do
+b1C2S2N3S4N = E.nameAction "smp_b1C2S2N3S4N" $ do
     slamInterestOver1C2S_
     setTrump_ T.Spades T.Hearts
     E.makeAlertableCall (T.Bid 4 T.Notrump)
