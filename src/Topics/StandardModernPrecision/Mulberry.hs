@@ -596,7 +596,7 @@ inviteInit, inviteRelay :: Situations
                 "trump. Partner can then decide whether to pass or " .+
                 "investigate slam."
           in
-            situation "initinv" action preRelay explanation
+            situation "invinit" action preRelay explanation
       in
         wrapDlr $ return sit <~ auctions
     inviteRelay' = let
@@ -611,7 +611,7 @@ inviteInit, inviteRelay :: Situations
                 Mul.b4C4D .+ ", after which partner will set trump, " .+
                 "and we can decide whether to pass or look for slam."
           in
-            situation "initrel" action Mul.b4C4D explanation
+            situation "invrel" action Mul.b4C4D explanation
       in
         wrapDlr $ return sit <~ auctions
     auctions = [ -- Focus on setting trump to something you coudln't bid at the
