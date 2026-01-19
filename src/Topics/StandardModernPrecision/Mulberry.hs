@@ -581,6 +581,127 @@ keycardResponse = let
         ]
 
 
+inviteInit, inviteRelay :: Situations
+(inviteInit, inviteRelay) = (inviteInit', inviteRelay')
+  where
+    inviteInit' = let
+        sit (setup, preRelay) = let
+            action = setup `andNextBidderIs` T.South
+            explanation =
+                "Partner has shown a 4441 shape. We don't have any slam " .+
+                "interest on our own, but partner is unlimited and " .+
+                "might not want to sign off in game. Make a very mild " .+
+                "slam try by bidding " .+ preRelay .+ ". Partner will " .+
+                "relay to " .+ Mul.b4C4D .+ ", after which you can set " .+
+                "trump. Partner can then decide whether to pass or " .+
+                "investigate slam."
+          in
+            situation "initinv" action preRelay explanation
+      in
+        wrapDlr $ return sit <~ auctions
+    inviteRelay' = let
+        sit (setup, preRelay) = let
+            action = do setup `andNextBidderIs` T.North
+                        _ <- preRelay
+                        makePass
+            explanation =
+                "We've shown our 4441 shape. Partner doesn't have " .+
+                "obvious slam interest, but is giving us a chance to " .+
+                "make a slam try if we're interested. Relay to " .+
+                Mul.b4C4D .+ ", after which partner will set trump, " .+
+                "and we can decide whether to pass or look for slam."
+          in
+            situation "initrel" action Mul.b4C4D explanation
+      in
+        wrapDlr $ return sit <~ auctions
+    auctions = [ -- Focus on setting trump to something you coudln't bid at the
+                 -- 3 level.
+                 --( do OC.b1C       >> noInterference T.Clubs
+                 --     OC.b1C2S     >> noInterference T.Clubs
+                 --     OC.b1C2S2N   >> makePass
+                 --     OC.b1C2S2N3C >> makePass
+                 --, do alternatives [ Mul.b1C2S2N3C4C4D4H
+                 --                  , Mul.b1C2S2N3C4C4D4S
+                 --                  , Mul.b1C2S2N3C4C4D5D
+                 --                  ]
+                 --     Mul.b1C2S2N3A4C
+                 --)
+                 ( do OC.b1C       >> noInterference T.Clubs
+                      OC.b1C2S     >> noInterference T.Clubs
+                      OC.b1C2S2N   >> makePass
+                      OC.b1C2S2N3D >> makePass
+                 , do alternatives [ --Mul.b1C2S2N3D4C4D4H
+                                   --, Mul.b1C2S2N3D4C4D4S
+                                     Mul.b1C2S2N3D4C4D5C
+                                   ]
+                      Mul.b1C2S2N3A4C
+                 )
+               , ( do OC.b1C       >> noInterference T.Clubs
+                      OC.b1C2S     >> noInterference T.Clubs
+                      OC.b1C2S2N   >> makePass
+                      OC.b1C2S2N3H >> makePass
+                 , do alternatives [ --Mul.b1C2S2N3S4C4D4S
+                                     Mul.b1C2S2N3S4C4D5C
+                                   , Mul.b1C2S2N3S4C4D5D
+                                   ]
+                      Mul.b1C2S2N3A4C
+                 )
+               , ( do OC.b1C       >> noInterference T.Clubs
+                      OC.b1C2S     >> noInterference T.Clubs
+                      OC.b1C2S2N   >> makePass
+                      OC.b1C2S2N3S >> makePass
+                 , do alternatives [ Mul.b1C2S2N3S4C4D4H
+                                   , Mul.b1C2S2N3S4C4D5C
+                                   , Mul.b1C2S2N3S4C4D5D
+                                   ]
+                      Mul.b1C2S2N3A4C
+                 )
+                 --( do OC.b1C         >> noInterference T.Clubs
+                 --     OC.b1C1H       >> noInterference T.Clubs
+                 --     OC.b1C1H2S     >> makePass
+                 --     OC.b1C1H2S2N   >> makePass
+                 --     OC.b1C1H2S2N3C >> makePass
+                 --, do alternatives [ Mul.b1C2S2N3C4C4D4H
+                 --                  , Mul.b1C2S2N3C4C4D4S
+                 --                  , Mul.b1C2S2N3C4C4D5D
+                 --     Mul.b1C1H2S2N3A4C
+                 --)
+               , ( do OC.b1C         >> noInterference T.Clubs
+                      OC.b1C1H       >> noInterference T.Clubs
+                      OC.b1C1H2S     >> makePass
+                      OC.b1C1H2S2N   >> makePass
+                      OC.b1C1H2S2N3D >> makePass
+                 , do alternatives [ --Mul.b1C2S2N3D4C4D4H
+                                   --, Mul.b1C2S2N3D4C4D4S
+                                     Mul.b1C2S2N3D4C4D5C
+                                   ]
+                      Mul.b1C1H2S2N3A4C
+                 )
+               , ( do OC.b1C         >> noInterference T.Clubs
+                      OC.b1C1H       >> noInterference T.Clubs
+                      OC.b1C1H2S     >> makePass
+                      OC.b1C1H2S2N   >> makePass
+                      OC.b1C1H2S2N3H >> makePass
+                 , do alternatives [ --Mul.b1C2S2N3H4C4D4S
+                                     Mul.b1C2S2N3H4C4D5C
+                                   , Mul.b1C2S2N3H4C4D5D
+                                   ]
+                      Mul.b1C1H2S2N3A4C
+                 )
+               , ( do OC.b1C         >> noInterference T.Clubs
+                      OC.b1C1H       >> noInterference T.Clubs
+                      OC.b1C1H2S     >> noInterference T.Clubs
+                      OC.b1C1H2S2N   >> makePass
+                      OC.b1C1H2S2N3S >> makePass
+                 , do alternatives [ Mul.b1C2S2N3S4C4D4H
+                                   , Mul.b1C2S2N3S4C4D5C
+                                   , Mul.b1C2S2N3S4C4D5D
+                                   ]
+                      Mul.b1C1H2S2N3A4C
+                 )
+               ]
+
+
 -- TODO:
 --   - Over auctions starting 1C, bid 4C
 --   - Over auctions starting 1C and a 4C bid, relay 4D
@@ -592,9 +713,12 @@ keycardResponse = let
 topic :: Topic
 topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
   where
-    situations = wrap [ initiateSignoff
+    situations = wrap [ inviteInit, inviteRelay]
+    _situations = wrap [ initiateSignoff
                       , relaySignoff
                       , completeSignoff
                       , keycardAsk
                       , keycardResponse
+                      , inviteInit
+                      , inviteRelay
                       ]
