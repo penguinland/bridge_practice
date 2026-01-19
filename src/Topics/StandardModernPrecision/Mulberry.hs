@@ -585,8 +585,10 @@ inviteInit, inviteRelay :: Situations
 (inviteInit, inviteRelay) = (inviteInit', inviteRelay')
   where
     inviteInit' = let
-        sit (setup, preRelay) = let
+        sit (setup, preRelay, trumpBids) = let
             action = setup `andNextBidderIs` T.South
+            answer = do alternatives trumpBids
+                        preRelay
             explanation =
                 "Partner has shown a 4441 shape. We don't have any slam " .+
                 "interest on our own, but partner is unlimited and " .+
@@ -596,12 +598,13 @@ inviteInit, inviteRelay :: Situations
                 "trump. Partner can then decide whether to pass or " .+
                 "investigate slam."
           in
-            situation "invinit" action preRelay explanation
+            situation "invinit" action answer explanation
       in
         wrapDlr $ return sit <~ auctions
     inviteRelay' = let
-        sit (setup, preRelay) = let
+        sit (setup, preRelay, trumpBids) = let
             action = do setup `andNextBidderIs` T.North
+                        alternatives trumpBids
                         _ <- preRelay
                         makePass
             explanation =
@@ -620,84 +623,85 @@ inviteInit, inviteRelay :: Situations
                  --     OC.b1C2S     >> noInterference T.Clubs
                  --     OC.b1C2S2N   >> makePass
                  --     OC.b1C2S2N3C >> makePass
-                 --, do alternatives [ Mul.b1C2S2N3C4C4D4H
-                 --                  , Mul.b1C2S2N3C4C4D4S
-                 --                  , Mul.b1C2S2N3C4C4D5D
-                 --                  ]
-                 --     Mul.b1C2S2N3A4C
+                 --, Mul.b1C2S2N3A4C
+                 --, [ Mul.b1C2S2N3C4C4D4H
+                 --  , Mul.b1C2S2N3C4C4D4S
+                 --  , Mul.b1C2S2N3C4C4D5D
+                 --  ]
                  --)
                  ( do OC.b1C       >> noInterference T.Clubs
                       OC.b1C2S     >> noInterference T.Clubs
                       OC.b1C2S2N   >> makePass
                       OC.b1C2S2N3D >> makePass
-                 , do alternatives [ --Mul.b1C2S2N3D4C4D4H
-                                   --, Mul.b1C2S2N3D4C4D4S
-                                     Mul.b1C2S2N3D4C4D5C
-                                   ]
-                      Mul.b1C2S2N3A4C
+                 , Mul.b1C2S2N3A4C
+                 , [ --Mul.b1C2S2N3D4C4D4H
+                   --, Mul.b1C2S2N3D4C4D4S
+                     Mul.b1C2S2N3D4C4D5C
+                   ]
                  )
                , ( do OC.b1C       >> noInterference T.Clubs
                       OC.b1C2S     >> noInterference T.Clubs
                       OC.b1C2S2N   >> makePass
                       OC.b1C2S2N3H >> makePass
-                 , do alternatives [ --Mul.b1C2S2N3S4C4D4S
-                                     Mul.b1C2S2N3S4C4D5C
-                                   , Mul.b1C2S2N3S4C4D5D
-                                   ]
-                      Mul.b1C2S2N3A4C
+                 , Mul.b1C2S2N3A4C
+                 , [ --Mul.b1C2S2N3S4C4D4S
+                     Mul.b1C2S2N3S4C4D5C
+                   , Mul.b1C2S2N3S4C4D5D
+                   ]
                  )
                , ( do OC.b1C       >> noInterference T.Clubs
                       OC.b1C2S     >> noInterference T.Clubs
                       OC.b1C2S2N   >> makePass
                       OC.b1C2S2N3S >> makePass
-                 , do alternatives [ Mul.b1C2S2N3S4C4D4H
-                                   , Mul.b1C2S2N3S4C4D5C
-                                   , Mul.b1C2S2N3S4C4D5D
-                                   ]
-                      Mul.b1C2S2N3A4C
+                 , Mul.b1C2S2N3A4C
+                 , [ Mul.b1C2S2N3S4C4D4H
+                   , Mul.b1C2S2N3S4C4D5C
+                   , Mul.b1C2S2N3S4C4D5D
+                   ]
                  )
                  --( do OC.b1C         >> noInterference T.Clubs
                  --     OC.b1C1H       >> noInterference T.Clubs
                  --     OC.b1C1H2S     >> makePass
                  --     OC.b1C1H2S2N   >> makePass
                  --     OC.b1C1H2S2N3C >> makePass
-                 --, do alternatives [ Mul.b1C2S2N3C4C4D4H
-                 --                  , Mul.b1C2S2N3C4C4D4S
-                 --                  , Mul.b1C2S2N3C4C4D5D
-                 --     Mul.b1C1H2S2N3A4C
+                 --, Mul.b1C1H2S2N3A4C
+                 --, [ Mul.b1C2S2N3C4C4D4H
+                 --  , Mul.b1C2S2N3C4C4D4S
+                 --  , Mul.b1C2S2N3C4C4D5D
+                 --  ]
                  --)
                , ( do OC.b1C         >> noInterference T.Clubs
                       OC.b1C1H       >> noInterference T.Clubs
                       OC.b1C1H2S     >> makePass
                       OC.b1C1H2S2N   >> makePass
                       OC.b1C1H2S2N3D >> makePass
-                 , do alternatives [ --Mul.b1C2S2N3D4C4D4H
-                                   --, Mul.b1C2S2N3D4C4D4S
-                                     Mul.b1C2S2N3D4C4D5C
-                                   ]
-                      Mul.b1C1H2S2N3A4C
+                 , Mul.b1C1H2S2N3A4C
+                 , [ --Mul.b1C2S2N3D4C4D4H
+                   --, Mul.b1C2S2N3D4C4D4S
+                     Mul.b1C2S2N3D4C4D5C
+                   ]
                  )
                , ( do OC.b1C         >> noInterference T.Clubs
                       OC.b1C1H       >> noInterference T.Clubs
                       OC.b1C1H2S     >> makePass
                       OC.b1C1H2S2N   >> makePass
                       OC.b1C1H2S2N3H >> makePass
-                 , do alternatives [ --Mul.b1C2S2N3H4C4D4S
-                                     Mul.b1C2S2N3H4C4D5C
-                                   , Mul.b1C2S2N3H4C4D5D
-                                   ]
-                      Mul.b1C1H2S2N3A4C
+                 , Mul.b1C1H2S2N3A4C
+                 , [ --Mul.b1C2S2N3H4C4D4S
+                     Mul.b1C2S2N3H4C4D5C
+                   , Mul.b1C2S2N3H4C4D5D
+                   ]
                  )
                , ( do OC.b1C         >> noInterference T.Clubs
                       OC.b1C1H       >> noInterference T.Clubs
                       OC.b1C1H2S     >> noInterference T.Clubs
                       OC.b1C1H2S2N   >> makePass
                       OC.b1C1H2S2N3S >> makePass
-                 , do alternatives [ Mul.b1C2S2N3S4C4D4H
-                                   , Mul.b1C2S2N3S4C4D5C
-                                   , Mul.b1C2S2N3S4C4D5D
-                                   ]
-                      Mul.b1C1H2S2N3A4C
+                 , Mul.b1C1H2S2N3A4C
+                 , [ Mul.b1C2S2N3S4C4D4H
+                   , Mul.b1C2S2N3S4C4D5C
+                   , Mul.b1C2S2N3S4C4D5D
+                   ]
                  )
                ]
 
