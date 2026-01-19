@@ -43,7 +43,7 @@ situation r a c s d v = Situation r bidding deal answer (toDescription s) d v
 -- explain to me _why_ that's important, but empirically it is (without it, you
 -- get compiler errors about overlapping instances for Collectable).
 (<~) :: (Collectable a a) => State StdGen (a -> b) -> [a] -> State StdGen b
-sf <~ as = sf <*> (choose . collect $ as)
+sf <~ as = sf <<~ (collect as)
 
 
 (<<~) :: State StdGen (a -> b) -> Collection a -> State StdGen b
