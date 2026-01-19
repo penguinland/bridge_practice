@@ -581,8 +581,8 @@ keycardResponse = let
         ]
 
 
-inviteInit, inviteRelay :: Situations
-(inviteInit, inviteRelay) = (inviteInit', inviteRelay')
+inviteInit, inviteRelay, inviteSuit :: Situations
+(inviteInit, inviteRelay, inviteSuit) = (inviteInit', inviteRelay', inviteSuit')
   where
     inviteInit' = let
         sit (setup, preRelay, trumpBids) = let
@@ -601,6 +601,7 @@ inviteInit, inviteRelay :: Situations
             situation "invinit" action answer explanation
       in
         wrapDlr $ return sit <~ auctions
+
     inviteRelay' = let
         sit (setup, preRelay, trumpBids) = let
             action = do setup `andNextBidderIs` T.North
@@ -617,6 +618,30 @@ inviteInit, inviteRelay :: Situations
             situation "invrel" action Mul.b4C4D explanation
       in
         wrapDlr $ return sit <~ auctions
+
+    inviteSuit' = let
+        sit (setup, preRelay, trumpBids) = let
+            sit' answer = let
+                action = do setup `andNextBidderIs` T.South
+                            _ <- preRelay
+                            makePass
+                            Mul.b4C4D
+                            makePass
+                explanation =
+                    "Partner showed their 4441 shape. We bid " .+
+                    T.Bid 4 T.Clubs .+ " to show that we don't have slam " .+
+                    "interest on our own, but are open to partner having " .+
+                    "some. Partner relayed " .+ Mul.b4C4D .+ ", and now " .+
+                    "it's time for us to bid the trump suit. Partner can " .+
+                    "then pass or try looking for slam, depending on how " .+
+                    "strong they really are."
+              in
+                situation "invsuit" action answer explanation
+          in
+            return sit' <~ trumpBids
+      in
+        wrapDlr . join $ return sit <~ auctions
+
     auctions = [ -- Focus on setting trump to something you coudln't bid at the
                  -- 3 level.
                  --( do OC.b1C       >> noInterference T.Clubs
@@ -707,7 +732,6 @@ inviteInit, inviteRelay :: Situations
 
 
 -- TODO:
---   - Over auctions starting 1C and a 4C-4D relay, bid trump
 --   - Include auctions that start P-1C-2S and thus could bid 4D-4H to sign off
 
 
@@ -721,4 +745,5 @@ topic = makeTopic "mulberry over SMP 3-suiters" "mulb" situations
                       , keycardResponse
                       , inviteInit
                       , inviteRelay
+                      , inviteSuit
                       ]
