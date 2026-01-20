@@ -29,18 +29,18 @@ module Bids.StandardModernPrecision.Mulberry(
   , b1C2S2N3S4S
   , b1C2S2N3S4N
 
-  , bP1C2S2N3C4C4D4H  -- Avoid: might bid 3H then nonserious 3N
-  , bP1C2S2N3C4C4D4S  -- Avoid: might bid 3S then nonserious 3N
-  , bP1C2S2N3C4C4D5D  -- Avoid: might bid 3D then nonserious 3N
-  , bP1C2S2N3D4C4D4H  -- Avoid: might bid 3H then nonserious 3N
-  , bP1C2S2N3D4C4D4S  -- Avoid: might bid 3S then nonserious 3N
-  , bP1C2S2N3D4C4D5C
-  , bP1C2S2N3H4C4D4S  -- Avoid: might bid 3S then nonserious 3N
-  , bP1C2S2N3H4C4D5C
-  , bP1C2S2N3H4C4D5D
-  , bP1C2S2N3S4C4D4H
-  , bP1C2S2N3S4C4D5C
-  , bP1C2S2N3S4C4D5D
+  , bP1C2S2N3C4D4HP   -- Avoid: might bid 3H then nonserious 3N
+  , bP1C2S2N3C4D4H4S  -- Avoid: might bid 3S then nonserious 3N
+  , bP1C2S2N3C4D4H5D  -- Avoid: might bid 3D then nonserious 3N
+  , bP1C2S2N3D4D4HP   -- Avoid: might bid 3H then nonserious 3N
+  , bP1C2S2N3D4D4H4S  -- Avoid: might bid 3S then nonserious 3N
+  , bP1C2S2N3D4D4H5C
+  , bP1C2S2N3H4D4H4S  -- Avoid: might bid 3S then nonserious 3N
+  , bP1C2S2N3H4D4H5C
+  , bP1C2S2N3H4D4H5D
+  , bP1C2S2N3S4D4HP
+  , bP1C2S2N3S4D4H5C
+  , bP1C2S2N3S4D4H5D
   , bP1C2S2N3C4H  -- Avoid: might have bid 3D instead of 4H
   , bP1C2S2N3C4S  -- Avoid: might have bid 3H instead of 4S
   , bP1C2S2N3C4N  -- Avoid: might have bid 3S instead of 4N
@@ -53,7 +53,6 @@ module Bids.StandardModernPrecision.Mulberry(
   , bP1C2S2N3S4H
   , bP1C2S2N3S4S
   , bP1C2S2N3S4N
-  -- TODO: include more 1C-1H-2S auctions
   -- TODO: include 1C auctions where responder is a passed hand
   -- TODO: include 1C auctions where opener makes the cheapest jump-shift
   -- TODO: include 1C auctions where responder makes the cheapest jump-shift
