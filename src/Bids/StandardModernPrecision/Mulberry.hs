@@ -286,91 +286,6 @@ b1C2S2N3S4C4D5D = E.nameAction "smp_b1C2S2N3S4C4D5D" $ do
     E.makeCall $ T.Bid 5 T.Diamonds
 
 
-
-bP1C2S2N3C4C4D4H :: Action
-bP1C2S2N3C4C4D4H = E.nameAction "smp_bP1C2S2N3C4C4D4H" $ do
-    E.forbid slamInterestOverP1C2S_
-    setTrump_ T.Clubs T.Hearts
-    E.makeCall $ T.Bid 4 T.Hearts
-
-
-bP1C2S2N3C4C4D4S :: Action
-bP1C2S2N3C4C4D4S = E.nameAction "smp_bP1C2S2N3C4C4D4S" $ do
-    E.forbid slamInterestOverP1C2S_
-    setTrump_ T.Clubs T.Spades
-    E.makeCall $ T.Bid 4 T.Spades
-
-
-bP1C2S2N3C4C4D5D :: Action
-bP1C2S2N3C4C4D5D = E.nameAction "smp_bP1C2S2N3C4C4D5D" $ do
-    E.forbid slamInterestOverP1C2S_
-    setTrump_ T.Clubs T.Diamonds
-    E.makeCall $ T.Bid 4 T.Diamonds
-
-
-bP1C2S2N3D4C4D4H :: Action
-bP1C2S2N3D4C4D4H = E.nameAction "smp_bP1C2S2N3D4C4D4H" $ do
-    E.forbid slamInterestOverP1C2S_
-    setTrump_ T.Diamonds T.Hearts
-    E.makeCall $ T.Bid 4 T.Hearts
-
-
-bP1C2S2N3D4C4D4S :: Action
-bP1C2S2N3D4C4D4S = E.nameAction "smp_bP1C2S2N3D4C4D4S" $ do
-    E.forbid slamInterestOverP1C2S_
-    setTrump_ T.Diamonds T.Spades
-    E.makeCall $ T.Bid 4 T.Spades
-
-
-bP1C2S2N3D4C4D5C :: Action
-bP1C2S2N3D4C4D5C = E.nameAction "smp_bP1C2S2N3D4C4D5C" $ do
-    E.forbid slamInterestOverP1C2S_
-    setTrump_ T.Diamonds T.Clubs
-    E.makeCall $ T.Bid 5 T.Clubs
-
-
-bP1C2S2N3H4C4D4S :: Action
-bP1C2S2N3H4C4D4S = E.nameAction "smp_bP1C2S2N3H4C4D4S" $ do
-    E.forbid slamInterestOverP1C2S_
-    setTrump_ T.Hearts T.Spades
-    E.makeCall $ T.Bid 4 T.Spades
-
-
-bP1C2S2N3H4C4D5C :: Action
-bP1C2S2N3H4C4D5C = E.nameAction "smp_bP1C2S2N3H4C4D5C" $ do
-    E.forbid slamInterestOverP1C2S_
-    setTrump_ T.Hearts T.Clubs
-    E.makeCall $ T.Bid 5 T.Clubs
-
-
-bP1C2S2N3H4C4D5D :: Action
-bP1C2S2N3H4C4D5D = E.nameAction "smp_bP1C2S2N3H4C4D5D" $ do
-    E.forbid slamInterestOverP1C2S_
-    setTrump_ T.Hearts T.Diamonds
-    E.makeCall $ T.Bid 5 T.Diamonds
-
-
-bP1C2S2N3S4C4D4H :: Action
-bP1C2S2N3S4C4D4H = E.nameAction "smp_bP1C2S2N3S4C4D4H" $ do
-    E.forbid slamInterestOverP1C2S_
-    setTrump_ T.Spades T.Hearts
-    E.makeCall $ T.Bid 4 T.Hearts
-
-
-bP1C2S2N3S4C4D5C :: Action
-bP1C2S2N3S4C4D5C = E.nameAction "smp_bP1C2S2N3S4C4D5C" $ do
-    E.forbid slamInterestOverP1C2S_
-    setTrump_ T.Spades T.Clubs
-    E.makeCall $ T.Bid 5 T.Clubs
-
-
-bP1C2S2N3S4C4D5D :: Action
-bP1C2S2N3S4C4D5D = E.nameAction "smp_bP1C2S2N3S4C4D5D" $ do
-    E.forbid slamInterestOverP1C2S_
-    setTrump_ T.Spades T.Diamonds
-    E.makeCall $ T.Bid 5 T.Diamonds
-
-
 -- 4D bids
 
 b2D4D_ :: Action
@@ -446,6 +361,27 @@ b2D2N3D4D4HP :: Action
 b2D2N3D4D4HP = b2D2N3C3D3N4D4HP
 
 
+bP1C2S2N3C4D4HP :: Action
+bP1C2S2N3C4D4HP = E.nameAction "smp_bP1C2S2N3C4D4HP" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Clubs T.Hearts
+    E.makePass
+
+
+bP1C2S2N3D4D4HP :: Action
+bP1C2S2N3D4D4HP = E.nameAction "smp_bP1C2S2N3D4D4HP" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Diamonds T.Hearts
+    E.makePass
+
+
+bP1C2S2N3S4D4HP :: Action
+bP1C2S2N3S4D4HP = E.nameAction "smp_bP1C2S2N3S4D4HP" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Spades T.Hearts
+    E.makePass
+
+
 -- 4D-4H-4S
 
 b2D2N3C3D3H4D4H4S :: Action
@@ -479,6 +415,27 @@ b2D2N3C3D3N4D4H4S = E.nameAction "mul_b2D2N3C3D3N4D4H4S" $ do
 
 b2D2N3D4D4H4S :: Action
 b2D2N3D4D4H4S = b2D2N3C3D3N4D4H4S
+
+
+bP1C2S2N3C4D4H4S :: Action
+bP1C2S2N3C4D4H4S = E.nameAction "smp_bP1C2S2N3C4D4H4S" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Clubs T.Spades
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+bP1C2S2N3D4D4H4S :: Action
+bP1C2S2N3D4D4H4S = E.nameAction "smp_bP1C2S2N3D4D4H4S" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Diamonds T.Spades
+    E.makeCall $ T.Bid 4 T.Spades
+
+
+bP1C2S2N3H4D4H4S :: Action
+bP1C2S2N3H4D4H4S = E.nameAction "smp_bP1C2S2N3H4D4H4S" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Hearts T.Spades
+    E.makeCall $ T.Bid 4 T.Spades
 
 
 -- 4D-4H-5C
@@ -517,6 +474,50 @@ b2D2N3C3D3N4D4H5C = E.nameAction "mul_b2D2N3C3D3N4D4H5C" $ do
 
 b2D2N3D4D4H5C :: Action
 b2D2N3D4D4H5C = b2D2N3C3D3N4D4H5C
+
+
+bP1C2S2N3D4D4H5C :: Action
+bP1C2S2N3D4D4H5C = E.nameAction "smp_bP1C2S2N3D4D4H5C" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Diamonds T.Clubs
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+bP1C2S2N3H4D4H5C :: Action
+bP1C2S2N3H4D4H5C = E.nameAction "smp_bP1C2S2N3H4D4H5C" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Hearts T.Clubs
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+bP1C2S2N3S4D4H5C :: Action
+bP1C2S2N3S4D4H5C = E.nameAction "smp_bP1C2S2N3S4D4H5C" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Spades T.Clubs
+    E.makeCall $ T.Bid 5 T.Clubs
+
+
+-- 4D-4H-5D
+
+bP1C2S2N3C4D4H5D :: Action
+bP1C2S2N3C4D4H5D = E.nameAction "smp_bP1C2S2N3C4D4H5D" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Clubs T.Diamonds
+    E.makeCall $ T.Bid 5 T.Diamonds
+
+
+bP1C2S2N3H4D4H5D :: Action
+bP1C2S2N3H4D4H5D = E.nameAction "smp_bP1C2S2N3H4D4H5D" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Hearts T.Diamonds
+    E.makeCall $ T.Bid 5 T.Diamonds
+
+
+bP1C2S2N3S4D4H5D :: Action
+bP1C2S2N3S4D4H5D = E.nameAction "smp_bP1C2S2N3S4D4H5D" $ do
+    E.forbid slamInterestOverP1C2S_
+    setTrump_ T.Spades T.Diamonds
+    E.makeCall $ T.Bid 5 T.Diamonds
 
 
 -- Keycard asks
