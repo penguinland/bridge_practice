@@ -178,11 +178,20 @@ andNextBidderIs action direction = let
     action
 
 
+-- TODO: allow takeout doubles to be 4333 with extra strength (14 useful HCPs?)
 takeoutDouble :: T.Suit -> Action
-takeoutDouble shortSuit = nameAction ("toX_" ++ T.suitLetter shortSuit) $ do
-    pointRange 11 40
+takeoutDouble shortSuit = nameAction ("toX_" ++ suitLetter) $ do
+    -- Have at least 11 HCPs, but don't count queens and jacks in the opponents'
+    -- suit.
+    define ("wasted_tox_points_" ++ suitLetter)
+           ["2 * hascard(", ", Q" ++ suitLetter ++ ") + " ++
+                "hascard(", ", J" ++ suitLetter ++ ")"]
+    constrain ("enough_tox_points_" ++ suitLetter)
+              ["hcp(", ") - wasted_tox_points_" ++ suitLetter ++ "_", " >= 11"]
+    --pointRange 11 40
     forEach T.allSuits setSuitLength
   where
+    suitLetter = T.suitLetter shortSuit
     setSuitLength suit =
         if suit == shortSuit
         then maxSuitLength suit 2

@@ -77,7 +77,7 @@ main = let
               , TransfersOver1MX.topic
               , RKC.topic1430
               ]
-    topics = [ Mulberry.topic
+    topics = [ Jacoby2NT.topic
              ]
   in do
     runStateT (outputLatex 100 topics "test") (mkStdGen 0) >>= return . fst
