@@ -33,6 +33,7 @@ import qualified Topics.StandardModernPrecision.MafiaResponses as MafiaResponses
 import qualified Topics.StandardModernPrecision.TwoDiamondOpeners as TwoDiamondOpeners
 import qualified Topics.StandardModernPrecision.TripleFourOne as TripleFourOne
 import qualified Topics.StandardModernPrecision.Mulberry as Mulberry
+import qualified Topics.StandardModernPrecision.Transfers1D1MLin as Transfers1D1MLin
 
 -- I don't think I ever finished making these topics...
 --import qualified Topics.MinorTransfersScott as MinorTransfers
@@ -77,4 +78,5 @@ topicList = [ (10, False, StandardOpeners.topic)
             --, (70, False, Lampe.topic)
             , (56, False, TwoDiamondOpeners.topic)
             , (58, False, Mulberry.topic)
+            , (59, False, Transfers1D1MLin.topic)
             ]
