@@ -25,20 +25,18 @@ jd2nt = let
         situation "jd2n" action answer explanation
   in
     wrapDlr $ return sit <~ [
-        (
-        T.Hearts,
-        do 
-            setOpener T.North
-            S.b1H
-            TD.b1HoX
+        ( T.Hearts
+        , do setOpener T.North
+             S.b1H
+             TD.b1HoX
         , J.b1HoX2N
         )
-    , (T.Spades,
-        do
-            setOpener T.North
-            S.b1S
-            TD.b1SoX
-        , J.b1SoX2N)
+      , ( T.Spades
+        , do setOpener T.North
+             S.b1S
+             TD.b1SoX
+        , J.b1SoX2N
+        )
     ]
 
 -- TODOs:
