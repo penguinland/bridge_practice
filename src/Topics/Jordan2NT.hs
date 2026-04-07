@@ -49,6 +49,6 @@ jd2nt = let
 --   - Likewise, we should pass 1M-X-3M as the opener knowing that our partner has a weak hand
 
 topic :: Topic
-topic = makeTopic ("Jordan ".+ T.Bid 2 T.Notrump)  "Jd2NT" $
+topic = makeTopic ("Jordan " .+ T.Bid 2 T.Notrump)  "Jd2NT" $
     wrap [ jd2nt
          ]
