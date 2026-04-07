@@ -22,6 +22,7 @@ import qualified Topics.Cappelletti as Cappelletti
 import qualified Topics.MultiLandy as MultiLandy
 import qualified Topics.Lebensohl as Lebensohl
 import qualified Topics.Jacoby2NT as Jacoby2NT
+import qualified Topics.Jordan2NT as Jordan2NT
 import qualified Topics.RomanKeycardBlackwood as RKC
 
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
@@ -64,6 +65,7 @@ topicList = [ (10, False, StandardOpeners.topic)
             , (21, False, MultiLandy.topic)
             , (20, False, Lebensohl.topic)
             , (17, True,  Jacoby2NT.topic)
+            , (32, True,  Jordan2NT.topic)
             , (30, True,  RKC.topic1430)
             , (31, False, RKC.topic3014)
             , (25, False, TransfersOver1MX.topic)
