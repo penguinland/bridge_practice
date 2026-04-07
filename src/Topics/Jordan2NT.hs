@@ -19,8 +19,8 @@ jd2nt = let
         explanation =
             "We've got at least invitational strength with at least 4-card support " .+
             "for partner's " .+ show suit .+ ". Bid Jordan " .+
-            T.Bid 2 T.Notrump .+ " to show this. Now that we've set trump " .+
-            "then partner can show their strength further."
+            T.Bid 2 T.Notrump .+ " to show this. Now that we've set trump, " .+
+            "partner can show their strength further."
       in
         situation "jd2n" action answer explanation
   in
