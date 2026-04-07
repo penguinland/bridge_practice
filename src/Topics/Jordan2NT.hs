@@ -41,6 +41,14 @@ jd2nt = let
         , J.b1SoX2N)
     ]
 
+-- TODOs:
+--   - Add situation where partner has bid Jordan 2NT and as opener:
+--     - sign off with a minimum in 3M
+--     - help-suit game try with 4+ 
+--     - sign off with a maximum in 4M
+--   - Do the same thing for 1m opening
+--   - Have a situation where we would like to respond 3M with a weak hand
+--   - Likewise, we should pass 1M-X-3M as the opener knowing that our partner has a weak hand
 
 topic :: Topic
 topic = makeTopic ("Jordan ".+ T.Bid 2 T.Notrump)  "Jd2NT" $
