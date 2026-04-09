@@ -115,6 +115,8 @@ passBlackSignoff = let
       in
         situation "3CP" action (makePass) explanation direction vul
   in
+    -- There are slightly different constraints when responder is a passed hand,
+    -- so use different bids for different dealer directions.
     wrap $ return sit <~ [ (B.bP2D2S, TO.b1SoX, T.West)
                          , (B.bP2D2S, TO.b1SoX, T.North)
                          , (B.b2D2S,  TO.b1SoX, T.East)
