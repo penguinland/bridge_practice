@@ -1,9 +1,9 @@
 module Topics.StandardModernPrecision.Transfers1D1MLin(topic) where
 
-import Bids.StandardModernPrecision.BasicBids(oppsPass, setOpener)
+import Bids.StandardModernPrecision.BasicBids(setOpener)
 import qualified Bids.StandardModernPrecision.Transfers1D1MLin as B
 import qualified EDSL as E
-import Output(Punct(..), (.+))
+import Output((.+))
 import Situation(situation, (<~))
 import qualified Terminology as T
 import Topic(Topic, makeTopic, Situations, wrap, wrapDlr, stdWrap)
@@ -21,7 +21,7 @@ nonNegativeDouble = let
             "After a " .+ B.b1Do1H .+ " overcall, the double shows 4 or " .+
             "more spades, not merely 4."
       in
-        return $ situation "1SX" action B.b1Do1SX explanation
+        situation "1HX" action B.b1Do1SX explanation
   in
     wrapDlr $ return sit <~ [4, 5, 6]
 
