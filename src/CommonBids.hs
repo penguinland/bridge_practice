@@ -188,8 +188,8 @@ noInterference suit = nameAction ("pass_over_" ++ T.suitLetter suit) $ do
         constrain "no_five_card_suit" [
             "shape(", ", any 4441, any 4333, any 4432)"]
       , pointRange 0 7]
-    -- Also make sure the opponent can't make a takeout double: either they're
-    -- not strong enough or they don't length in every unbid suit.
+    -- Also make sure we can't make a takeout double: either we not strong
+    -- enough or we don't have length in every unbid suit.
     alternatives [ pointRange 0 10
                  , atLeastOneOf (filter (/= suit) T.allSuits)
                                 (`maxSuitLength` 2)
