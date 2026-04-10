@@ -177,17 +177,6 @@ andNextBidderIs action direction = let
     action
 
 
-_takeoutDouble :: T.Suit -> Action
-_takeoutDouble shortSuit = nameAction ("toX_" ++ T.suitLetter shortSuit) $ do
-    pointRange 11 40
-    forEach T.allSuits setSuitLength
-  where
-    setSuitLength suit =
-        if suit == shortSuit
-        then maxSuitLength suit 2
-        else minSuitLength suit 3
-
-
 noInterference :: T.Suit -> Action
 noInterference suit = nameAction ("pass_over_" ++ T.suitLetter suit) $ do
     cannotPreempt
@@ -195,9 +184,14 @@ noInterference suit = nameAction ("pass_over_" ++ T.suitLetter suit) $ do
     -- it here is too complicated for now. Let's just say the opponent has at
     -- most 14 HCP, and either doesn't have a 5-card suit or has at most 7 HCP.
     pointRange 0 14
-    forbid $ _takeoutDouble suit
     alternatives [
         constrain "no_five_card_suit" [
             "shape(", ", any 4441, any 4333, any 4432)"]
       , pointRange 0 7]
+    -- Also make sure the opponent can't make a takeout double: either they're
+    -- not strong enough or they don't length in every unbid suit.
+    alternatives [ pointRange 0 10
+                 , atLeastOneOf (filter (/= suit) T.allSuits)
+                                (`maxSuitLength` 2)
+                 ]
     makePass
