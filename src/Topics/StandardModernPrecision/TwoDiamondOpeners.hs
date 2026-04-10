@@ -2,8 +2,8 @@ module Topics.StandardModernPrecision.TwoDiamondOpeners(topic) where
 
 import Action(Action)
 import Bids.StandardModernPrecision.BasicBids(setOpener)
+import qualified Bids.TakeoutDoubles as TO
 import qualified Bids.StandardModernPrecision.TwoDiamonds as B
-import CommonBids(takeoutDouble)
 import EDSL(forbid, suitLength, makePass)
 import Output((.+))
 import Situation(situation, (<~))
@@ -95,13 +95,18 @@ immediateSignoffClubs = let
 
 passBlackSignoff :: Situations
 passBlackSignoff = let
-    sit (bid, suit, direction) vul = let
+    sit (bid, takeoutDouble, direction) vul = let
         action = do
             setOpener T.South
             B.b2D
             B.noDirectOvercall
             _ <- bid
-            forbid $ takeoutDouble suit
+            -- Ensure that the next player can't make a takeout double. Doing so
+            -- up this high requires a stronger hand than a takeout double at
+            -- the 1 level, but forbidding the kind of hand that would do it at
+            -- a lower level covers everything we need and more, and it's not
+            -- worth the hassle to get rid of the "more" for now.
+            forbid $ takeoutDouble
             B.noDirectOvercall
         explanation =
             "Partner has less-than-invitational values and is signing off. " .+
@@ -110,14 +115,16 @@ passBlackSignoff = let
       in
         situation "3CP" action (makePass) explanation direction vul
   in
-    wrap $ return sit <~ [ (B.bP2D2S, T.Spades, T.West)
-                         , (B.bP2D2S, T.Spades, T.North)
-                         , (B.b2D2S, T.Spades, T.East)
-                         , (B.b2D2S, T.Spades, T.South)
-                         , (B.bP2D3C, T.Clubs, T.West)
-                         , (B.bP2D3C, T.Clubs, T.North)
-                         , (B.b2D3C, T.Clubs, T.East)
-                         , (B.b2D3C, T.Clubs, T.South)
+    -- There are slightly different constraints when responder is a passed hand,
+    -- so use different bids for different dealer directions.
+    wrap $ return sit <~ [ (B.bP2D2S, TO.b1SoX, T.West)
+                         , (B.bP2D2S, TO.b1SoX, T.North)
+                         , (B.b2D2S,  TO.b1SoX, T.East)
+                         , (B.b2D2S,  TO.b1SoX, T.South)
+                         , (B.bP2D3C, TO.b1CoX, T.West)
+                         , (B.bP2D3C, TO.b1CoX, T.North)
+                         , (B.b2D3C,  TO.b1CoX, T.East)
+                         , (B.b2D3C,  TO.b1CoX, T.South)
                          ]
                       <~ T.allVulnerabilities
 
