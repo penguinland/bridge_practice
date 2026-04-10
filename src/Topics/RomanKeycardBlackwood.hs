@@ -185,8 +185,8 @@ firstResponse1430, firstResponse3014 :: Situations
            ]
 
 
-signoffPartscore1430, signoffPartscore3014 :: Situations
-(signoffPartscore1430, signoffPartscore3014) = (signoff1430', signoff3014')
+signoffGame1430, signoffGame3014 :: Situations
+(signoffGame1430, signoffGame3014) = (signoff1430', signoff3014')
   where
     signoff (setups, followups) = let
         inner setup (response, signoffBid) = let
@@ -1112,7 +1112,7 @@ topic1430 = makeTopic "Roman Keycard Blackwood 1430" "RKC1430" sits
   where
     sits = wrap [ initiate
                 , firstResponse1430
-                , signoffPartscore1430
+                , signoffGame1430
                 , wrap [oddVoid, evenVoid]
                 , queenAsk1430
                 , noQueen1430
@@ -1130,7 +1130,7 @@ topic3014 = makeTopic "Roman Keycard Blackwood 3014" "RKC3014" sits
   where
     sits = wrap [ initiate
                 , firstResponse3014
-                , signoffPartscore3014
+                , signoffGame3014
                 , wrap [oddVoid, evenVoid]
                 , queenAsk3014
                 , noQueen3014
