@@ -21,7 +21,7 @@ import Control.Monad.Trans.State.Strict(get, put, runState)
 import Action(Action, constrain, define, newAuction)
 import EDSL(forbid, pointRange, balancedHand, makeCall, makeAlertableCall,
             makePass, suitLength, minSuitLength, maxSuitLength, alternatives,
-            forEach, nameAction)
+            forEach, nameAction, atLeastOneOf)
 import Output(Punct(..), (.+))
 import Structures(currentBidder, startBidding)
 import qualified Terminology as T
