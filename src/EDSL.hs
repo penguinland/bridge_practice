@@ -41,9 +41,9 @@ import Data.List.Utils(join)
 
 import Action(Action, newAuction, constrain, define, predealLength, predealCard,
               extractLastCall)
+import Bidding(addCall, currentBidder)
 import DealerProg(invert, nameAll)
 import Output(Showable, toDescription)
-import Structures(addCall, currentBidder)
 import qualified Terminology as T
 
 

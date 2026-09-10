@@ -19,11 +19,11 @@ import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(get, put, runState)
 
 import Action(Action, constrain, define, newAuction)
+import Bidding(currentBidder, startBidding)
 import EDSL(forbid, pointRange, balancedHand, makeCall, makeAlertableCall,
             makePass, suitLength, minSuitLength, maxSuitLength, alternatives,
             forEach, nameAction, atLeastOneOf)
 import Output(Punct(..), (.+))
-import Structures(currentBidder, startBidding)
 import qualified Terminology as T
 
 

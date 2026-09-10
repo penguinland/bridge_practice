@@ -24,9 +24,9 @@ module Action (
 import Control.Monad.Trans.State.Strict(State, execState, get, put)
 import Data.List.Utils(join)
 
+import Bidding(Bidding, startBidding, lastCall, currentBidder)
 import DealerProg(DealerProg, addNewReq, addDefn, Predeal(..), addNewPredeal)
 import Output(Showable(..))
-import Structures(Bidding, startBidding, lastCall, currentBidder)
 import qualified Terminology as T
 
 
