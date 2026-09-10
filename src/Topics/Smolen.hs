@@ -31,7 +31,7 @@ stayman = let
 
 smolen :: Situations
 smolen = let
-    sit bid = let
+    sit (ourSuit, bid) = let
         action = do
             setOpener T.North
             B.b1N
@@ -44,11 +44,12 @@ smolen = let
             "Partner opened a strong " .+ B.b1N .+ ", we bid Stayman, and " .+
             "partner denied a 4-card major. They might still have a 3-card " .+
             "major, though. Jump in our shorter major to show our 5" .+ NDash .+
-            "4 shape: partner then has a choice of games, depending on " .+
-            "whether we have a major-suit fit."
+            "4 shape: partner then has a choice of games, " .+
+            T.Bid 3 T.Notrump .+ " or " .+ T.Bid 4 ourSuit .+ ", depending " .+
+            "on whether we have a major-suit fit."
       in situation "smol" action bid explanation
   in
-    wrapDlr $ return sit <~ [B.b1N2C2D3H, B.b1N2C2D3S]
+    wrapDlr $ return sit <~ [(T.Spades, B.b1N2C2D3H), (T.Hearts, B.b1N2C2D3S)]
 
 
 haveFitH :: Situations
