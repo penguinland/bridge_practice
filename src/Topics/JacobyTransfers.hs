@@ -263,7 +263,7 @@ rebidMinor = let
             "started with a Jacoby transfer into our major, and now it's " .+
             "time to rebid our minor. Partner can now find the right game: " .+
             "if they've got a fit in our major suit, they'll rebid that " .+
-            "(likely at the 3 level, so we can get in a round of cue " .+
+            "(likely at the 3 level, so we can get in a round of control " .+
             "bidding if we've got slam interest). If we don't have a fit " .+
             "in either suit, they'll likely bid " .+ T.Bid 3 T.Notrump .+
             ". If we've got a minor-suit fit, partner might raise our " .+
