@@ -13,10 +13,11 @@ import Data.List.Utils(join)
 import Data.Map(fromList)
 import System.Random(genWord64)
 
+import Bidding(Bidding)
 import DealerProg(eval)
 import Output(Showable(..), Description)
 import Situation(Situation(..))
-import Structures(Bidding, Deal)
+import Structures(Deal)
 import Terminology(CompleteCall)
 import Types(StIO)
 

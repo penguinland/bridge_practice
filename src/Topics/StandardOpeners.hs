@@ -2,13 +2,13 @@ module Topics.StandardOpeners(topic) where
 
 import Control.Monad.Trans.State.Strict(get)
 
+import Bidding(currentBidder)
 import qualified Bids.StandardOpenings as SO
 import qualified CommonBids as B
 import EDSL(forbid, suitLength, minSuitLength, maxSuitLength, alternatives,
             pointRange, makePass, balancedHand)
 import Output((.+))
 import Situation(situation, (<~))
-import Structures(currentBidder)
 import qualified Terminology as T
 import Topic(Topic, wrap, stdWrap, stdWrapSE, wrapDlr, Situations, makeTopic)
 

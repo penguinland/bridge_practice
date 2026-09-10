@@ -17,13 +17,13 @@ module Bids.StandardModernPrecision.BasicBids(
 import Control.Monad.Trans.State.Strict(get)
 
 import Action(Action, constrain)
+import Bidding(currentBidder)
 import CommonBids(cannotPreempt, cannotPreempt2H)
 import EDSL(forbid, pointRange, suitLength, minSuitLength, hasTopN,
             balancedHand, makeCall, makeAlertableCall, makePass, alternatives,
             minLoserCount, maxLoserCount, forEach, forbidAll, longerThan,
             atLeastAsLong, nameAction)
 import Output(Punct(..), (.+))
-import Structures(currentBidder)
 import qualified Terminology as T
 
 

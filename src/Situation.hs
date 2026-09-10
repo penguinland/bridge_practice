@@ -10,10 +10,10 @@ import Control.Monad.Trans.State.Strict(State)
 import System.Random(StdGen)
 
 import Action(Action, finish, extractLastCall, withholdBid)
+import Bidding(Bidding)
 import Collection(choose, collect, Collectable, Collection)
 import DealerProg(DealerProg)
 import Output(Showable, Description, toDescription)
-import Structures(Bidding)
 import Terminology(CompleteCall, Direction, Vulnerability)
 
 
