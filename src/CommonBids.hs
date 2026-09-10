@@ -17,6 +17,7 @@ module CommonBids(
 
 import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(get, put, runState)
+import Data.Tuple.Extra(fst3)
 
 import Action(Action, constrain, define, newAuction)
 import Bidding(currentBidder, startBidding)
@@ -135,7 +136,7 @@ fourthSeatOpener = do
 
 setOpener :: T.Direction -> Action
 setOpener opener = do
-    (bidding, _) <- get
+    (bidding, _, _) <- get
     helper openingRules (currentBidder bidding)
   where
     openingRules = [firstSeatOpener, secondSeatOpener,
@@ -160,8 +161,8 @@ setOpener opener = do
 -- previous actions.
 andNextBidderIs :: Action -> T.Direction -> Action
 andNextBidderIs action direction = let
-    (_, naiveAuction) = runState action (newAuction T.North)
-    naiveNextBidder = currentBidder . fst $ naiveAuction
+    (_, naiveAuction) = runState action (newAuction T.None T.North)
+    naiveNextBidder = currentBidder . fst3 $ naiveAuction
     initialBidder naiveNext wantedNext
       | wantedNext ==                   naiveNext = T.North
       | wantedNext ==           T.next  naiveNext = T.East
@@ -169,10 +170,10 @@ andNextBidderIs action direction = let
       | otherwise                                 = T.West
     wantedOpener = initialBidder naiveNextBidder direction
   in do
-    auction <- get
-    let dealer = currentBidder . fst $ auction
+    (bidding, _, vul) <- get
+    let dealer = currentBidder bidding
     when (dealer /= wantedOpener && T.next dealer /= wantedOpener)
-        (put (startBidding . T.next . T.next $ dealer, mempty))
+        (put (startBidding . T.next . T.next $ dealer, mempty, vul))
     setOpener wantedOpener
     action
 
