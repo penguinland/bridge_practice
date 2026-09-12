@@ -33,8 +33,10 @@ module EDSL (
 , maxLoserCount
 , hasCard
 , keycardCount
+, whenVulnerable
 ) where
 
+import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(execState, get, put, modify)
 import Data.List.Utils(join)
 import Data.Tuple.Extra(first3)
@@ -255,3 +257,9 @@ keycardCount suit countA countB = do
     constrain ("keycards_" ++ show suit ++ show countA ++ show countB)
         ["keycards_" ++ show suit ++ "_", " == " ++ show countA ++ " || " ++
          "keycards_" ++ show suit ++ "_", " == " ++ show countB]
+
+
+whenVulnerable :: Action -> Action
+whenVulnerable action = do
+    (bidding, _, vul) <- get
+    when (T.isVulnerable (currentBidder bidding) vul) action

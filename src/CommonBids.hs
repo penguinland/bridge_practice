@@ -23,7 +23,7 @@ import Action(Action, constrain, define, newAuction)
 import Bidding(currentBidder, startBidding)
 import EDSL(forbid, pointRange, balancedHand, makeCall, makeAlertableCall,
             makePass, suitLength, minSuitLength, maxSuitLength, alternatives,
-            forEach, nameAction, atLeastOneOf)
+            forEach, nameAction, atLeastOneOf, whenVulnerable, soundHolding)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
 
@@ -45,6 +45,7 @@ weak1NT = nameAction "bid_weak_1n" $ do
 preempt4 :: T.Suit -> Action
 preempt4 suit = nameAction ("preempt4_" ++ show suit) $ do
     minSuitLength suit 8
+    whenVulnerable (soundHolding suit)
     pointRange 5 13  -- TODO: figure out the correct point range
     makeCall (T.Bid 4 suit)
 
@@ -54,12 +55,14 @@ preempt3 T.Clubs = nameAction "preempt3C" $ do
     minSuitLength T.Clubs 6
     maxSuitLength T.Clubs 7
     pointRange 5 11
+    whenVulnerable (soundHolding T.Clubs)
     -- TODO: Clarify the nuance of opening 3C.
     makeCall (T.Bid 3 T.Clubs)
 preempt3 suit = nameAction ("preempt3_" ++ show suit) $ do
     forbid (preempt4 suit)
     suitLength suit 7
     pointRange 5 9  -- TODO: figure out this point range, too.
+    whenVulnerable (soundHolding suit)
     makeCall (T.Bid 3 suit)
 
 weak2 :: T.Suit -> Action
@@ -69,6 +72,7 @@ weak2 suit = nameAction ("weak2_" ++ show suit) $ do
     forbid (preempt3 suit)
     suitLength suit 6
     pointRange 5 11
+    whenVulnerable (soundHolding suit)
     -- TODO: clarify hands with 11 HCP and a 6-card suit that should open at the
     -- 1 level from hands that should open at the 2 level.
     makeCall (T.Bid 2 suit)
