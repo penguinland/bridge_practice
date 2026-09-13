@@ -33,11 +33,13 @@ module EDSL (
 , maxLoserCount
 , hasCard
 , keycardCount
+, whenVulnerable
 ) where
 
+import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(execState, get, put, modify)
-import Data.Bifunctor(first)
 import Data.List.Utils(join)
+import Data.Tuple.Extra(first3)
 
 import Action(Action, newAuction, constrain, define, predealLength, predealCard,
               extractLastCall)
@@ -49,19 +51,21 @@ import qualified Terminology as T
 
 nameAction :: String -> Action -> Action
 nameAction name action = do
-    (bidding, dealerProg) <- get
-    let freshAuction = newAuction . currentBidder $ bidding
-        (extraBidding, dealerToName) = execState action freshAuction
+    (bidding, dealerProg, vul) <- get
+    let freshAuction = newAuction vul . currentBidder $ bidding
+        (extraBidding, dealerToName, _) = execState action freshAuction
         fullName = name ++ "_" ++ (show . currentBidder $ bidding)
-    put (bidding <> extraBidding, dealerProg <> nameAll fullName dealerToName)
+    put ( bidding <> extraBidding
+        , dealerProg <> nameAll fullName dealerToName
+        , vul)
 
 
 forbid :: Action -> Action
 forbid action = do
-    (bidding, dealerProg) <- get
-    let freshAuction = newAuction . currentBidder $ bidding
-        (_, dealerToInvert) = execState action freshAuction
-    put (bidding, dealerProg <> invert dealerToInvert)
+    (bidding, dealerProg, vul) <- get
+    let freshAuction = newAuction vul . currentBidder $ bidding
+        (_, dealerToInvert, _) = execState action freshAuction
+    put (bidding, dealerProg <> invert dealerToInvert, vul)
 
 
 forbidAll :: [Action] -> Action
@@ -86,7 +90,7 @@ atLeastOneOf as f = alternatives . map f $ as
 
 
 makeCompleteCall_ :: T.CompleteCall -> Action
-makeCompleteCall_ = modify . first . addCall
+makeCompleteCall_ = modify . first3 . addCall
 
 makeCall :: T.Call -> Action
 makeCall call = makeCompleteCall_ $ T.CompleteCall call Nothing
@@ -253,3 +257,9 @@ keycardCount suit countA countB = do
     constrain ("keycards_" ++ show suit ++ show countA ++ show countB)
         ["keycards_" ++ show suit ++ "_", " == " ++ show countA ++ " || " ++
          "keycards_" ++ show suit ++ "_", " == " ++ show countB]
+
+
+whenVulnerable :: Action -> Action
+whenVulnerable action = do
+    (bidding, _, vul) <- get
+    when (T.isVulnerable (currentBidder bidding) vul) action

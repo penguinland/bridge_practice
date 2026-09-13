@@ -134,7 +134,7 @@ b1D = nameAction "smp_b1D" $ do
 -- cannotPreempt2H instead of the more general version.
 setOpener :: T.Direction -> Action
 setOpener opener = do
-    (bidding, _) <- get
+    (bidding, _, _) <- get
     if opener == currentBidder bidding
     then _canOpen
     else cantOpen _canOpen >> setOpener opener

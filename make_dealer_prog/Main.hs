@@ -7,6 +7,8 @@
 --   - Suppose we have the auction we had at the club last week. How often do we
 --     have a spade stopper?
 
+import Data.Tuple.Extra(snd3)
+
 import Action(finish)
 import DealerProg(toProgram)
 import qualified Terminology as T
@@ -25,4 +27,4 @@ main = let
         --MW.b1No2S
         --Leb.b1No2S2N
   in
-    putStrLn . toProgram . snd . finish T.South $ auction
+    putStrLn . toProgram . snd3 . finish T.None T.South $ auction

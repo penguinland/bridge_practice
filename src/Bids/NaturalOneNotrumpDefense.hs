@@ -17,7 +17,7 @@ module Bids.NaturalOneNotrumpDefense(
 
 import Action(Action)
 import EDSL(pointRange, minSuitLength, maxSuitLength, makeCall, alternatives,
-            soundHolding, forEach, forbidAll, nameAction)
+            soundHolding, forEach, forbidAll, nameAction, whenVulnerable)
 import qualified Terminology as T
 
 
@@ -36,7 +36,7 @@ singleSuited suit = nameAction ("single_suited_" ++ show suit) $ do
     pointsToCompete
     minSuitLength suit 6
     shouldntPreempt
-    soundHolding suit
+    soundHolding suit -- Your bid should also have some lead-directing value!
     forEach (filter (/= suit) T.allSuits) (`maxSuitLength` 3)
 
 
@@ -55,6 +55,7 @@ twoSuited a b = nameAction ("two_suited_" ++ show a ++ "_" ++ show b) $ do
     forEach [a, b] (`minSuitLength` 4)
     forEach [a, b] (`maxSuitLength` 5)
     alternatives [minSuitLength a 5, minSuitLength b 5]
+    whenVulnerable (soundHolding a >> soundHolding b)
     -- For simplicity, we also forbid having any type of 3-suited hand. It's
     -- easy enough to say "don't show both minors if you've got a major," but
     -- deciding which minor to show requires nuance that I don't have the

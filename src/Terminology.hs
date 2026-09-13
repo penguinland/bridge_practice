@@ -16,6 +16,7 @@ module Terminology (
 , removeAlert
 , Vulnerability(..)
 , allVulnerabilities
+, isVulnerable
 ) where
 
 import Data.Aeson(ToJSON, toJSON, object, (.=))
@@ -188,3 +189,11 @@ instance Showable Vulnerability where
 
 allVulnerabilities :: [Vulnerability]
 allVulnerabilities = [NS, EW, Both, None]
+
+isVulnerable :: Direction -> Vulnerability -> Bool
+isVulnerable _     Both = True
+isVulnerable North NS   = True
+isVulnerable South NS   = True
+isVulnerable East  EW   = True
+isVulnerable West  EW   = True
+isVulnerable _     _    = False
