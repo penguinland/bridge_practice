@@ -35,7 +35,7 @@ situation :: Showable s => String -> Action -> Action -> s -> Direction ->
     Vulnerability -> Situation
 situation r a c s d v = Situation r bidding deal answer (toDescription s) d v
   where
-    (bidding, deal) = finish d (a >> withholdBid c)
+    (bidding, deal, _) = finish v d (a >> withholdBid c)
     answer = extractLastCall c
 
 

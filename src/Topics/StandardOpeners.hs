@@ -215,7 +215,7 @@ pass = let
     action = do
         -- We can't use B.setOpener because that ensures that we *can* open the
         -- bidding, and we want to ensure we cannot. So, do it manually.
-        (bidding, _) <- get
+        (bidding, _, _) <- get
         if currentBidder bidding == T.East then do
             forbid B.firstSeatOpener
             B.cannotPreempt

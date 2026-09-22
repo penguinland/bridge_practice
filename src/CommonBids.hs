@@ -17,12 +17,13 @@ module CommonBids(
 
 import Control.Monad(when)
 import Control.Monad.Trans.State.Strict(get, put, runState)
+import Data.Tuple.Extra(fst3)
 
 import Action(Action, constrain, define, newAuction)
 import Bidding(currentBidder, startBidding)
 import EDSL(forbid, pointRange, balancedHand, makeCall, makeAlertableCall,
             makePass, suitLength, minSuitLength, maxSuitLength, alternatives,
-            forEach, nameAction, atLeastOneOf)
+            forEach, nameAction, atLeastOneOf, whenVulnerable, soundHolding)
 import Output(Punct(..), (.+))
 import qualified Terminology as T
 
@@ -44,6 +45,7 @@ weak1NT = nameAction "bid_weak_1n" $ do
 preempt4 :: T.Suit -> Action
 preempt4 suit = nameAction ("preempt4_" ++ show suit) $ do
     minSuitLength suit 8
+    whenVulnerable (soundHolding suit)
     pointRange 5 13  -- TODO: figure out the correct point range
     makeCall (T.Bid 4 suit)
 
@@ -53,12 +55,14 @@ preempt3 T.Clubs = nameAction "preempt3C" $ do
     minSuitLength T.Clubs 6
     maxSuitLength T.Clubs 7
     pointRange 5 11
+    whenVulnerable (soundHolding T.Clubs)
     -- TODO: Clarify the nuance of opening 3C.
     makeCall (T.Bid 3 T.Clubs)
 preempt3 suit = nameAction ("preempt3_" ++ show suit) $ do
     forbid (preempt4 suit)
     suitLength suit 7
     pointRange 5 9  -- TODO: figure out this point range, too.
+    whenVulnerable (soundHolding suit)
     makeCall (T.Bid 3 suit)
 
 weak2 :: T.Suit -> Action
@@ -68,6 +72,7 @@ weak2 suit = nameAction ("weak2_" ++ show suit) $ do
     forbid (preempt3 suit)
     suitLength suit 6
     pointRange 5 11
+    whenVulnerable (soundHolding suit)
     -- TODO: clarify hands with 11 HCP and a 6-card suit that should open at the
     -- 1 level from hands that should open at the 2 level.
     makeCall (T.Bid 2 suit)
@@ -135,7 +140,7 @@ fourthSeatOpener = do
 
 setOpener :: T.Direction -> Action
 setOpener opener = do
-    (bidding, _) <- get
+    (bidding, _, _) <- get
     helper openingRules (currentBidder bidding)
   where
     openingRules = [firstSeatOpener, secondSeatOpener,
@@ -160,8 +165,8 @@ setOpener opener = do
 -- previous actions.
 andNextBidderIs :: Action -> T.Direction -> Action
 andNextBidderIs action direction = let
-    (_, naiveAuction) = runState action (newAuction T.North)
-    naiveNextBidder = currentBidder . fst $ naiveAuction
+    (_, naiveAuction) = runState action (newAuction T.None T.North)
+    naiveNextBidder = currentBidder . fst3 $ naiveAuction
     initialBidder naiveNext wantedNext
       | wantedNext ==                   naiveNext = T.North
       | wantedNext ==           T.next  naiveNext = T.East
@@ -169,10 +174,10 @@ andNextBidderIs action direction = let
       | otherwise                                 = T.West
     wantedOpener = initialBidder naiveNextBidder direction
   in do
-    auction <- get
-    let dealer = currentBidder . fst $ auction
+    (bidding, _, vul) <- get
+    let dealer = currentBidder bidding
     when (dealer /= wantedOpener && T.next dealer /= wantedOpener)
-        (put (startBidding . T.next . T.next $ dealer, mempty))
+        (put (startBidding . T.next . T.next $ dealer, mempty, vul))
     setOpener wantedOpener
     action
 
