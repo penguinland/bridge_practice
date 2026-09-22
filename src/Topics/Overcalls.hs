@@ -150,6 +150,53 @@ preempt = let
                       <~ T.allVulnerabilities
 
 
+unsoundPreempt :: Situations
+unsoundPreempt = let
+    sit (opening, badOvercall, len, suit) dealer vul = let
+        action = do
+            setOpener T.East
+            _ <- opening
+            -- If partner is an unpassed hand, overcall at the 1 level if you
+            -- can, to avoid preempting partner.
+            when (dealer == T.East) (pointRange 0 7)
+            forbid badOvercall
+            suitLength suit len
+        explanation =
+            "RHO has opened the bidding. We have the shape to preempt, but " .+
+            "we're vulnerable and have a pretty bad suit. We could go for a " .+
+            "number if we get the contract, and if we're on defense, we " .+
+            "don't want partner leading this suit to us. Just pass."
+      in situation "usPre" action (makeCall T.Pass) explanation dealer vul
+  in
+    wrap $ return sit <~ [ (B.b1C, B.b1Co3D, 7, T.Diamonds)
+                         , (B.b1C, B.b1Co3H, 7, T.Hearts)
+                         , (B.b1C, B.b1Co3S, 7, T.Spades)
+                         , (B.b1C, B.b1Co4D, 8, T.Diamonds)
+                         , (B.b1C, B.b1Co4H, 8, T.Hearts)
+                         , (B.b1C, B.b1Co4S, 8, T.Spades)
+                         , (B.b1D, B.b1Do3C, 7, T.Clubs)
+                         , (B.b1D, B.b1Do3H, 7, T.Hearts)
+                         , (B.b1D, B.b1Do3S, 7, T.Spades)
+                         , (B.b1D, B.b1Do4C, 8, T.Clubs)
+                         , (B.b1D, B.b1Do4H, 8, T.Hearts)
+                         , (B.b1D, B.b1Do4S, 8, T.Spades)
+                         , (B.b1H, B.b1Ho3C, 7, T.Clubs)
+                         , (B.b1H, B.b1Ho3D, 7, T.Diamonds)
+                         , (B.b1H, B.b1Ho3S, 7, T.Spades)
+                         , (B.b1H, B.b1Ho4C, 8, T.Clubs)
+                         , (B.b1H, B.b1Ho4D, 8, T.Diamonds)
+                         , (B.b1H, B.b1Ho4S, 8, T.Spades)
+                         , (B.b1S, B.b1So3C, 7, T.Clubs)
+                         , (B.b1S, B.b1So3D, 7, T.Diamonds)
+                         , (B.b1S, B.b1So3H, 7, T.Hearts)
+                         , (B.b1S, B.b1So4C, 8, T.Clubs)
+                         , (B.b1S, B.b1So4D, 8, T.Diamonds)
+                         , (B.b1S, B.b1So4H, 8, T.Hearts)
+                         ]
+                      <~ [T.West, T.North, T.East]
+                      <~ [T.NS, T.Both]
+
+
 passNot1 :: Situations
 passNot1 = let
     sit (opening, suit) = let
@@ -210,6 +257,6 @@ topic = makeTopic "immediate overcalls" "overC" situations
     situations = wrap [ oneLevelOvercall
                       , twoLevelOvercall
                       , notrumpOvercall
-                      , wrap [weakTwo, preempt]
+                      , wrap [weakTwo, wrap [preempt, preempt, unsoundPreempt]]
                       , wrap [passNot1, passNot2]
                       ]
