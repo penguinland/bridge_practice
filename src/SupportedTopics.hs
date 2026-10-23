@@ -7,6 +7,7 @@ import qualified Topics.TwoOverOne as TwoOverOne
 import qualified Topics.MajorSuitRaises as MajorSuitRaises
 import qualified Topics.Overcalls as Overcalls
 import qualified Topics.TakeoutDoubles as TakeoutDoubles
+import qualified Topics.NegativeDoubles as NegativeDoubles
 import qualified Topics.TransfersOver1MX as TransfersOver1MX
 import qualified Topics.ForcingOneNotrump as ForcingOneNotrump
 import qualified Topics.JacobyTransfers as JacobyTransfers
@@ -51,6 +52,7 @@ topicList = [ (10, False, StandardOpeners.topic)
             , (11, True,  MajorSuitRaises.topic)
             , (26, True,  Overcalls.topic)
             , (24, True,  TakeoutDoubles.topic)
+            , (32, True,  NegativeDoubles.topic)
             , (14, True,  Stayman.topic)
             , (13, True,  JacobyTransfers.topic)
             , (15, True,  TexasTransfers.topic)
