@@ -23,6 +23,7 @@ import qualified Topics.MultiLandy as MultiLandy
 import qualified Topics.Lebensohl as Lebensohl
 import qualified Topics.Jacoby2NT as Jacoby2NT
 import qualified Topics.RomanKeycardBlackwood as RKC
+import qualified Topics.TwoWayNewMinor as TwoWayNewMinor
 
 import qualified Topics.StandardModernPrecision.OpeningBids as SmpOpenings
 import qualified Topics.StandardModernPrecision.OneClubResponses as Smp1CResponses
@@ -67,6 +68,7 @@ topicList = [ (10, False, StandardOpeners.topic)
             , (30, True,  RKC.topic1430)
             , (31, False, RKC.topic3014)
             , (25, False, TransfersOver1MX.topic)
+            , (32, True,  TwoWayNewMinor.topic)
             , (50, False, SmpOpenings.topic)
             , (51, False, Smp1CResponses.topic)
             , (52, False, Smp1CResponses.topicExtras)
